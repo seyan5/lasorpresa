@@ -65,7 +65,7 @@
         <div class="overlay-container" id="overlayCon">
             <div class="overlay">
                 <div class="overlay-panel overlay-left">
-                    <h1>Welcome Back !</h1>
+                    <h1>Welcome Back kupal!</h1>
                     <p>To keep connected with us please login with your personal info</p>
                     <button>Sign In</button>
                 </div>
