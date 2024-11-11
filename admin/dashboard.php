@@ -16,17 +16,6 @@ $row_registered_accounts = mysqli_fetch_assoc($result_registered_accounts);
 $total_accounts = $row_registered_accounts['total_accounts'];
 
 
-// Query to count total orders
-$count_query = "SELECT COUNT(*) AS total_orders FROM orders";
-$count_result = mysqli_query($conn, $count_query);
-
-// Check if query executed successfully
-if ($count_result) {
-    $row = mysqli_fetch_assoc($count_result);
-    $total_orders = $row['total_orders'];
-} else {
-    $total_orders = 'Error fetching total orders';
-}
 
 
 // Fetch user data from the database
