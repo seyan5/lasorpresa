@@ -17,11 +17,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $password = $_POST['password'];
 
         // Fetch user from the database
-        $sql = "SELECT * FROM users WHERE email = '$usernameoremail' OR username = '$usernameoremail'";
-        $result = mysqli_query($conn, $sql);
+        $stmt = $conn->prepare("SELECT * FROM users WHERE email = ? OR username = ?");
+        $stmt->bind_param("ss", $usernameoremail, $usernameoremail);
+        $stmt->execute();
+        $result = $stmt->get_result();
 
-        if ($result && mysqli_num_rows($result) > 0) {
-            $user = mysqli_fetch_assoc($result);
+        if ($result && $result->num_rows > 0) {
+            $user = $result->fetch_assoc();
 
             // Verify the password
             if (password_verify($password, $user['password'])) {
@@ -57,6 +59,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         // Basic validation
         if ($password !== $confirmpassword) {
             $error = "Passwords do not match.";
+        } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            $error = "Invalid email format.";
         } else {
             // Hash the password
             $passwordHash = password_hash($password, PASSWORD_BCRYPT);
@@ -94,12 +98,12 @@ $conn->close();
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sign in Sign up Form</title>
-    <!-- Font Awesome icons -->
+    <title>Sign in Sign up form</title>
+    <!-- font awesome icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"
-        integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g=="
+        integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g =="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <!-- CSS stylesheet -->
+    <!-- css stylesheet -->
     <link rel="stylesheet" href="css/index.css">
 </head>
 
@@ -114,52 +118,74 @@ $conn->close();
     </div>
 
     <div class="container" id="container">
-        < div class="form-container sign-up-container">
-            <form method="POST" action="">
+        <div class="form-container sign-up-container">
+            <form action="#" method="POST">
                 <h1>Create Account</h1>
                 <span>or use your email for registration</span>
                 <div class="infield">
+                    <label for="name" class="form-label"></label>
                     <input type="text" name="firstname" placeholder="First Name" required>
+                    <label></label>
                 </div>
                 <div class="infield">
+                    <label for="name" class="form-label"></label>
                     <input type="text" name="lastname" placeholder="Last Name" required>
+                    <label></label>
                 </div>
                 <div class="infield">
+                    <label for="useremail" class="form-label"></label>
                     <input type="text" name="username" placeholder="Username" required>
+                    <label></label>
                 </div>
                 <div class="infield">
-                    <input type="email" name="email" placeholder="Email" required>
+                    <label for="email" class="form-label"></label>
+                    <input type="email" placeholder="Email" name="email" required />
+                    <label></label>
                 </div>
                 <div class="infield">
-                    <input type="text" name="contact" placeholder="Contact Number" required>
+                    <label for="contact" class="form-label"></label>
+                    <input type="text" name="contact" class="input-text" placeholder="Contact Number" required>
+                    <label></label>
                 </div>
                 <div class="infield">
                     <input type="password" name="password" placeholder="Password" required>
+                    <label></label>
                 </div>
                 <div class="infield">
-                    <input type="password" name="confirmpassword" placeholder="Confirm Password" required>
+                    <input type="password" name="confirmpassword" class="input-text" placeholder="Confirm Password" required>
+                    <label></label>
                 </div>
                 <button type="submit" name="register">Sign Up</button>
+                <?php if ($success) echo "<p class='success'>$success</p>"; ?>
+                <?php if ($error) echo "<p class='error'>$error</p>"; ?>
             </form>
         </div>
         <div class="form-container sign-in-container">
-            <form method="POST" action="">
+            <form action="#" method="POST" class="form-body">
                 <h1>Sign in</h1>
-                <div class="infield">
-                    <input type="text" name="usernameoremail" placeholder="Username or Email" required>
+                <div class="tulip-container">
+                    <img src="images/flower1.png" alt="Flower" class="tulip" />
                 </div>
                 <div class="infield">
-                    <input type="password" name="password" placeholder="Password" required>
+                    <label for="useremail" class="form-label"></label>
+                    <input type="text" placeholder="Email or Username" name="usernameoremail" required>
+                    <label></label>
+                </div>
+                <div class="infield">
+                    <label for="password" class="form-label"></label>
+                    <input type="password" placeholder="Password" name="password" required>
+                    <label></label>
                 </div>
                 <a href="#" class="forgot">Forgot your password?</a>
                 <button type="submit" name="login">Sign In</button>
+                <?php if ($error) echo "<p class='error'>$error</p>"; ?>
             </form>
         </div>
         <div class="overlay-container" id="overlayCon">
             <div class="overlay">
                 <div class="overlay-panel overlay-left">
                     <h1>Welcome Back!</h1>
-                    <p>To keep connected with us please login with your Personal Info!</p>
+                    <p>To keep connected with us please login with your personal info</p>
                     <button id="signIn">Sign In</button>
                 </div>
                 <div class="overlay-panel overlay-right">
@@ -168,19 +194,21 @@ $conn->close();
                     <button id="signUp">Sign Up</button>
                 </div>
             </div>
+            <button id="overlayBtn"></button>
         </div>
     </div>
 
-    <!-- JavaScript code -->
+    <!-- js code -->
     <script>
         const container = document.getElementById('container');
-        const overlayBtn = document.getElementById('overlayBtn');
+        const signInButton = document.getElementById('signIn');
+        const signUpButton = document.getElementById('signUp');
 
-        document.getElementById('signIn').addEventListener('click', () => {
+        signInButton.addEventListener('click', () => {
             container.classList.remove('right-panel-active');
         });
 
-        document.getElementById('signUp').addEventListener('click', () => {
+        signUpButton.addEventListener('click', () => {
             container.classList.add('right-panel-active');
         });
     </script>
