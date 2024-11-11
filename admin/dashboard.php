@@ -5,26 +5,20 @@ session_start();
 include '../config.php';
 
 // Ensure the user is logged in and is an admin
-if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] != 'admin') {
+if (!isset($_SESSION['id']) || $_SESSION['user_type'] != 'admin') {
     header('Location: ../login.php');
     exit();
 }
 
-$sql_registered_accounts = "SELECT COUNT(*) AS total_accounts FROM users";
-$result_registered_accounts = mysqli_query($conn, $sql_registered_accounts);
-$row_registered_accounts = mysqli_fetch_assoc($result_registered_accounts);
-$total_accounts = $row_registered_accounts['total_accounts'];
-
-
 
 
 // Fetch user data from the database
-$user_id = $_SESSION['user_id'];
+$id = $_SESSION['id'];
 $stmt = $conn->prepare("SELECT * FROM users WHERE id = ?");
 if ($stmt === false) {
     die('prepare() failed: ' . htmlspecialchars($conn->error));
 }
-$stmt->bind_param("i", $user_id);
+$stmt->bind_param("i", $id);
 $stmt->execute();
 $result = $stmt->get_result();
 
@@ -35,24 +29,6 @@ if ($result->num_rows > 0) {
     $row = null;
 }
 
-
-$sql1 = "SELECT * FROM pets";
-$result1 = mysqli_query($conn, $sql1);
-
-if ($result1->num_rows > 0) {
-    $row1 = $result1->fetch_assoc();
-} else {
-    $row1 = null;
-}
-
-$sql2 = "SELECT * FROM appointments";
-$result2 = mysqli_query($conn, $sql2);
-
-if ($result2->num_rows > 0) {
-    $row2 = $result1->fetch_assoc();
-} else {
-    $row2 = null;
-}
 
 ?>
 
