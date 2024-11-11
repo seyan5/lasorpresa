@@ -201,8 +201,8 @@ $conn->close();
     <!-- js code -->
     <script>
         const container = document.getElementById('container');
-        const signInButton = document.getElementById('signIn');
-        const signUpButton = document.getElementById('signUp');
+        const signInButton = document.getElementById('overlayBtn');
+        const signUpButton = document.getElementById('overlayBtn');
 
         signInButton.addEventListener('click', () => {
             container.classList.remove('right-panel-active');
