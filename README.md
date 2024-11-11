@@ -1,0 +1,1 @@
+capstone ng mga tamad!
