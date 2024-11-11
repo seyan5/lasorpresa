@@ -70,7 +70,7 @@ if ($result->num_rows > 0) {
                 </li>
 
                 <li>
-                    <a href="#">
+                    <a href="users.php">
                         <span class="icon">
                             <ion-icon name="people-outline"></ion-icon>
                         </span>

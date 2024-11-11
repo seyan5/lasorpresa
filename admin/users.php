@@ -79,7 +79,7 @@ if ($result->num_rows > 0) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>La Sorpresa Admin</title>
     <!-- ======= Styles ====== -->
-    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="../css/style.css">
 </head>
 
 <body>
@@ -90,14 +90,14 @@ if ($result->num_rows > 0) {
                 <li>
                     <a href="#">
                         <div class="logo-container">
-                            <img src="../assets/images/logo.png" alt="Logo" class="logo" />
+                            <img src="../images/logo.png" alt="Logo" class="logo" />
                         </div>
                         <span class="title"></span>
                     </a>
                 </li>
 
                 <li>
-                    <a href="#">
+                    <a href="dashboard.php">
                         <span class="icon">
                             <ion-icon name="home-outline"></ion-icon>
                         </span>
