@@ -159,7 +159,7 @@ $conn->close();
             <div class="overlay">
                 <div class="overlay-panel overlay-left">
                     <h1>Welcome Back!</h1>
-                    <p>To keep connected with us please login with your personal info</p>
+                    <p>To keep connected with us please login with your Personal Info!</p>
                     <button id="signIn">Sign In</button>
                 </div>
                 <div class="overlay-panel overlay-right">
