@@ -4,52 +4,87 @@ include 'config.php'; // Include your database connection file
 
 date_default_timezone_set('Asia/Kolkata');
 $date = date('Y-m-d');
+$_SESSION["date"] = $date;
 
-$_SESSION["date"]=$date;
+$error = ''; // Initialize error variable
+$success = ''; // Initialize success variable
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    
+    // Check if the form is for login or registration
+    if (isset($_POST['login'])) {
+        // Login functionality
+        $usernameoremail = $_POST['usernameoremail'];
+        $password = $_POST['password'];
 
-    $firstname = $_POST['firstname'];
-    $lastname = $_POST['lastname'];
-    $username = $_POST['username'];
-    $name = $firstname . " " . $lastname;
-    $email = $_POST['email'];
-    $contact = $_POST['contact'];
-    $password = $_POST['password'];
-    $confirmpassword = $_POST['confirmpassword'];
-    $user_type = 'user';
+        // Fetch user from the database
+        $sql = "SELECT * FROM users WHERE email = '$usernameoremail' OR username = '$usernameoremail'";
+        $result = mysqli_query($conn, $sql);
 
-    
-    // Basic validation
-    if ($password !== $confirmpassword) {
-        $error = "Passwords do not match.";
-    } else {
-        // Hash the password
-        $passwordHash = password_hash($password, PASSWORD_BCRYPT);
+        if ($result && mysqli_num_rows($result) > 0) {
+            $user = mysqli_fetch_assoc($result);
 
-        // Prepare SQL statement
-        $stmt = $conn->prepare("INSERT INTO users (name, username, email, contact, password, user_type) VALUES ('$name', '$username', '$email', '$contact', '$passwordHash', '$user_type')");
-        if ($stmt === false) {
-            die('prepare() failed: ' . htmlspecialchars($conn->error));
-        }
+            // Verify the password
+            if (password_verify($password, $user['password'])) {
+                $_SESSION['user_id'] = $user['id'];
+                $_SESSION['user_type'] = $user['user_type'];
+                $_SESSION['firstname'] = $user['firstname'];
+                $_SESSION['lastname'] = $user['lastname'];
 
-     //   $stmt->bind_param($firstname, $lastname, $email, $contact, $passwordHash, $user_type);
-
-        // Execute statement
-        if ($stmt->execute()) {
-            echo
-            "<script> alert('Registration successful')</script>";
-            $success = "Registration successful!";
+                if ($user['user_type'] == 'admin') {
+                    header('Location: admin/dashboard.php');
+                } else {
+                    header('Location: users/index.php');
+                }
+                exit();
+            } else {
+                $error = "Invalid password.";
+            }
         } else {
-            $error = "Error: " . htmlspecialchars($stmt->error);
+            $error = "No user found with that email or username.";
         }
+    } elseif (isset($_POST['register'])) {
+        // Registration functionality
+        $firstname = $_POST['firstname'];
+        $lastname = $_POST['lastname'];
+        $username = $_POST['username'];
+        $name = $firstname . " " . $lastname;
+        $email = $_POST['email'];
+        $contact = $_POST['contact'];
+        $password = $_POST['password'];
+        $confirmpassword = $_POST['confirmpassword'];
+        $user_type = 'user';
 
-        // Close statement and connection
-        $stmt->close();
-        $conn->close();
+        // Basic validation
+        if ($password !== $confirmpassword) {
+            $error = "Passwords do not match.";
+        } else {
+            // Hash the password
+            $passwordHash = password_hash($password, PASSWORD_BCRYPT);
+
+            // Prepare SQL statement
+            $stmt = $conn->prepare("INSERT INTO users (name, username, email, contact, password, user_type) VALUES (?, ?, ?, ?, ?, ?)");
+            if ($stmt === false) {
+                die('prepare() failed: ' . htmlspecialchars($conn->error));
+            }
+
+            // Bind parameters
+            $stmt->bind_param("ssssss", $name, $username, $email, $contact, $passwordHash, $user_type);
+
+            // Execute statement
+            if ($stmt->execute()) {
+                $success = "Registration successful!";
+            } else {
+                $error = "Error: " . htmlspecialchars($stmt->error);
+            }
+
+            // Close statement
+            $stmt->close();
+        }
     }
 }
+
+// Close connection
+$conn->close();
 ?>
 
 
