@@ -1,0 +1,539 @@
+:root{
+    --pink: #e84393;
+}
+
+*{
+    margin: 0;
+    padding: 0;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    outline: none;
+    border: none;
+    text-decoration: none;
+    text-transform: capitalize;
+    transition: .2s linear;
+}
+
+html{
+    font-size: 62.5%;
+    scroll-behavior: smooth;
+    scroll-padding-top: 6rem;
+    overflow-x: hidden;
+}
+
+section{
+    padding: 2rem 9%;
+}
+
+.heading{
+    text-align: center;
+    font-size: 4rem;
+    color: #333;
+    padding: 1rem;
+    margin: 2rem 0;
+    background: rgba(225, 51, 153, .05);
+}
+
+.heading span{
+    color: var(--pink);
+}
+
+.btn{
+    display: inline-block;
+    margin-top: 1rem;
+    border-radius: 8px;
+    background: #333;
+    color: #fff;
+    padding: .9rem 3.5rem;
+    cursor: pointer;
+    font-size: 1.7rem;
+    margin-top: 100px;
+}
+
+.shop h1{
+    margin: 1rem;
+    font-size: 2.5rem;
+}
+
+.shop h3{
+    margin: 1rem;
+    font-family: "Poppins", sans-serif;
+    color: #9b9b9b;
+    font-size: 1.5rem;
+}
+
+
+.btn:hover{
+    background: var(--pink);
+}
+
+.search-container {
+    position: absolute;
+    display: flex; /* Use flexbox to align items */
+    border-radius: 5px; /* Rounded corners */
+    overflow: hidden; /* Prevents overflow of child elements */
+    left: 220px;
+    bottom: 220px;
+    height: 55px; /* Set a fixed height for the search bar */
+    width: 500px;
+}
+
+.search-input {
+    border: none; /* Remove default border */
+    padding: 10px; /* Add padding */
+    font-size: 16px; /* Increase font size */
+    flex: 1; /* Allow input to grow and fill space */
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.search-input:focus {
+    outline: none; /* Remove outline on focus */
+}
+
+.search-button {
+    background-color: var(--pink); /* Button color */
+    color: white; /* Text color */
+    border: none; /* Remove default border */
+    padding: 0 10px; /* Padding for the button */
+    cursor: pointer; /* Change cursor on hover */
+    height: 100%; /* Fill the height of the container */
+    display: flex; /* Center the icon */
+    align-items: center; /* Center vertically */
+    justify-content: center; /* Center horizontally */
+}
+
+.search-button:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+}
+
+.search-button i {
+    font-size: 18px; /* Icon size */
+}
+
+header{
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background: #fff;
+    padding: 2rem 9%;
+    display: flex;
+    align-items: center; 
+    justify-content: space-between; 
+    z-index: 1000;
+    box-shadow: 0 .5rem 1rem rgba(0, 0, 0, .1);    
+}
+ 
+
+header .logo{
+    font-size: 3rem;
+    color: #333;
+    font-weight: bolder;
+}
+
+header .logo span{
+    color: var(--pink);
+}
+
+header .navbar a{
+    font-size: 2rem;
+    padding:0 1.5rem;
+    color: #666;
+}
+
+header .navbar a:hover{
+    color: var(--pink);
+}
+
+header .icons a{
+    font-size: 2.5rem;
+    color: #333;
+    margin-right: 5rem;
+}
+
+header #toggler{
+    display: none;
+}
+
+header .fa-bars{
+    font-size: 3rem;
+    color: #333;
+    border-radius: .5rem;
+    padding: .5rem 1.5rem;
+    cursor: pointer;
+    border: .1rem rgba(0, 0, 0, .3);
+    display: none;
+}
+
+.home{
+    display: flex;
+    align-items: center;
+    min-height: 100vh;
+    background: url() no-repeat;
+    background-size: contain;
+    background-position: center;
+}
+
+.home .content{
+    max-width: 50rem;
+    max-width: 1500px; /* Maximum width of the box */
+    width: 100%; /* Set a width percentage to make it responsive */
+    min-height: 500px; /* Minimum height for the box */
+    border: 2px solid #ccc; /* Border around the box */
+    border-radius: 30px; /* Rounded corners */
+    padding: 40px; /* Increased padding inside the box */
+    background-color: #c294ce; /* Background color */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    text-align: left; /* Center text */
+    margin: 0 auto; /* Center the box horizontally */
+    position: relative;
+}
+
+.circle {
+    position: absolute; /* Position the circle absolutely */
+    top: 61.3%; /* Center it vertically */
+    right: 150px; /* Distance from the right side */
+    transform: translateY(-50%); /* Adjust for vertical centering */
+    width: 500px; /* Width of the circle */
+    height: 450px; /* Height of the circle */
+    background-color: #1a1919; /* Circle color */
+    border-radius: 230px 230px 0px 230px; /* Makes it a circle */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Shadow for the circle */
+}
+
+.line {
+    border-left: 1px solid black; /* Left border */
+    padding-left: 2%;             /* Padding on the left */
+    padding-right: 2%;            /* Padding on the right */
+    margin-left: 4%;              /* Moves the entire element to the right */
+}
+.container {
+    display: flex;
+    padding: 20px;
+}
+  
+.item {
+    text-align: center;
+}
+  
+.item h1 {
+    font-size: 3em;
+    font-family: Arial, Helvetica, sans-serif;
+}
+  
+.item p {
+    font-size: 1em;
+    margin: 0;
+}
+
+.home .content h3{
+    font-size: 6rem;
+    color: #000000;
+}
+
+.home .content span{
+    font-size: 3.5rem;
+    color: var(--pink);
+    padding: 1rem 0;
+    line-height: 1.5;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.home .content p{
+    font-size: 1.5rem;
+    color: #000000;
+    padding: 1rem 0;
+    line-height: 1.5;
+}
+
+.about .row{
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    flex-wrap: wrap;
+    padding: 2rem 0;
+    padding-bottom: 3rem;
+}
+
+.about .row .video-container{
+    flex: 1 1 40rem;
+    position: relative;
+}
+
+.about .row .video-container video{
+    width: 90%;
+    border: 1.5rem solid #fff;
+    box-sizing: 0 .5rem;
+    box-shadow: 1rem rgba(0,0,0,.1);
+    height: 100%;
+    object-fit: cover;
+}
+
+.about .row .video-container h3{
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 3rem;
+    background: #fff;
+    width: 90%;
+    padding: 1rem 2rem;
+    text-align: center;
+    -ms-content-zoom-limit-max: screen;
+}
+
+.about .row .content{
+    flex: 1 1 40rem;
+}
+
+.about .row .content h3{
+    font-size: 3rem;
+    color: #333;
+}
+
+.about .row .content p{
+    font-size: 1.5rem;
+    color: #999;
+    padding: .5rem 0;
+    padding-top: 1rem;
+    line-height: 1.5;
+}
+
+.icons-container{
+    background: #eee;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    padding-top: 5rem;
+    padding-bottom: 5rem;
+}
+
+.icons-container .icons{
+    background: #fff;
+    border: .1rem solid rgba(0, 0, 0, .1);
+    padding: .2rem;
+    display: flex;
+    align-items: center;
+    flex: 1 1 25rem;
+}
+
+icons-container .icons img{
+    height: 5rem;
+    margin-right: 2rem;
+}
+
+icons-container .icons h3{
+    color: #333;
+    padding-bottom: .5rem;
+    font-size: 1.5rem;
+}
+
+icons-container .icons span{
+    color: #999;
+    font-size: 1.3rem;
+}
+
+
+
+.products .box-container{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+}
+
+.products .box-container .box{
+    flex: 1 1 30rem;
+    box-shadow: 0 .5rem 1.5rem rgba(0, 0, 0, .1);
+    border-radius: .5rem;
+    border: .1rem solid rgba(0, 0, 0, .1);
+    position: relative;
+}
+
+.products .box-container .box .discount{
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    padding: .7rem 1rem;
+    font-size: 2rem;
+    color: var(--pink);
+    background: rgba(225, 51, 153, .05);
+    z-index: 1;
+    border-radius: .5rem;
+}
+
+.products .box-container .box .image{
+    position: relative;
+    text-align: center;
+    padding-top: 2rem;
+    overflow: hidden;
+}
+
+.products .box-container .box .image img{
+    height: 25rem;
+}
+
+.products .box-container .box:hover .image img{
+    transform: scale(1.1);
+}
+
+.products .box-container .box .image .icons{
+    position: absolute;
+    bottom: -7rem;
+    left: 0;
+    right: 0;
+    display: flex;
+}
+
+.products .box-container .box:hover .image .icons{
+    bottom: 0;
+}
+
+.products .box-container .box .image .icons a{
+    height: 5rem;
+    line-height: 5rem;
+    font-size: 2rem;
+    width: 50%;
+    background: var(--pink);
+    color: #fff;
+}
+
+.products .box-container .box .image .icons .cart-btn{
+    border-left: .1rem solid #fff7;
+    border-right: .1rem solid #fff7;
+    width: 100%;
+}
+
+.products .box-container .box .image .icons a:hover{
+    background: #333;
+}
+
+.products .box-container .box .content{
+    padding: 2rem;
+    text-align: center;
+}
+
+.products .box-container .box .content h3{
+    font-size: 2.5rem;
+    color: #333;
+}
+
+
+.products .box-container .box .content .price{
+    font-size: 2.5rem;
+    color: var(--pink);
+    font-weight: bolder;
+    padding-top: 1rem;
+}
+
+.products .box-container .box .content .price span{
+    font-size: 1.5rem;
+    color: #666;
+    font-weight: lighter;
+    text-decoration: line-through;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* media */
+
+@media (max-width:991px){
+    html{
+        font-size: 55%;
+    }
+
+    header{
+        padding: 2rem;
+    }
+
+    section{
+        padding: 2rem;
+    }
+}
+
+@media (max-width:768px){
+    html .fa-bars{ 
+        display: block; 
+    }
+    header .navbar{
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: #eee;
+        border-top: .1rem solid rgba(0, 0, 0, .1);
+        clip-path: polygon(0 0, 100% 0, 100% 0, 0 0);
+    }
+
+    header #toggler:checked .navbar{
+        clip-path: polygon(0 0, 100% 0, 100% 0, 0 0);
+    }
+
+    header .navbar a{
+        margin: 1.5rem;
+        padding: 1.5rem;
+        background: #fff;
+        border: .1rem solid rgba(0, 0, 0, .1);
+        display: block;
+    }
+
+    .home .content h3{
+        font-size: 5rem;
+    }
+
+    .home .content span{
+        font-size: 2.5rem;
+    }
+
+    icons-container .icons h3{
+        font-size: 2rem;
+    }
+    
+    icons-container .icons span{
+        font-size: 1.7rem;
+    } 
+
+    .circle {
+        position: absolute; /* Position the circle absolutely */
+        top: 50%; /* Center it vertically */
+        right: 20px; /* Distance from the right side */
+        transform: translateY(-50%); /* Adjust for vertical centering */
+        width: 300px; /* Width of the circle */
+        height: 300px; /* Height of the circle */
+        background-color: #1a1919; /* Circle color */
+        border-radius: 50%; /* Makes it a perfect circle */
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Shadow for the circle */
+    }
+
+}
+
+@media (max-width:450px){ 
+    html{ 
+        font-size: 50%; 
+    }
+
+    .heading{
+        padding: 3rem;
+    }
+}

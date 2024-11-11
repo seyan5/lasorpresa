@@ -66,9 +66,7 @@ body {
     transform: rotate(30deg); 
     transition: transform 0.3s; 
 }
-.flower-container:hover .flower {
-    transform: rotate(-330deg);
-}
+
 
 
 .sign-up-container {
@@ -167,6 +165,7 @@ button{
     border-radius: 20px;
     border: 1px solid var(--grad-clr1);
     background: var(--grad-clr2);
+    position: fixed;
     color: #fff;
     font-size: 12px;
     font-weight: bold;
