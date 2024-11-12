@@ -35,7 +35,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 if ($user['user_type'] == 'admin') {
                     header('Location: admin/dashboard.php');
                 } else {
-                    header('Location: users/index.php');
+                    header('Location: users/home.php');
                 }
                 exit();
             } else {
@@ -201,8 +201,8 @@ $conn->close();
     <!-- js code -->
     <script>
         const container = document.getElementById('container');
-        const signInButton = document.getElementById('signIn');
-        const signUpButton = document.getElementById('signUp');
+        const signInButton = document.getElementById('overlayCon');
+        const signUpButton = document.getElementById('overlayCon');
 
         signInButton.addEventListener('click', () => {
             container.classList.remove('right-panel-active');
