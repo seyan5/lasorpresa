@@ -377,6 +377,24 @@ body{
    color:#fff;
 }
 
+.filter-condition{
+   padding: 20px;
+   height: 100px;
+   font-size: 20px;
+   font-weight: bold;
+}
+.filter-condition select{
+   width: 120px;
+    padding: 0 0 0 10px;
+    border: none;
+    outline: none;
+    font-weight: bold;
+    color: purple;
+    background: transparent;
+    cursor: pointer;
+}
+
+
 
 @media (max-width:991px){
 
