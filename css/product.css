@@ -61,6 +61,43 @@ section{
     color: var(--pink);
 }
 
+/* Base styles for the indicator */
+.indicator {
+   list-style: none; /* Remove default list styling */
+   padding: 0; /* Remove default padding */
+   display: flex; /* Use flexbox for horizontal layout */
+   justify-content: center; /* Center items horizontally */
+   margin: 20px 0; /* Add some margin above and below the indicator */
+}
+
+/* Styles for each indicator item */
+.indicator li {
+   margin: 0 15px; /* Space between items */
+   cursor: pointer; /* Change cursor to pointer on hover */
+   transition: all 0.3s ease; /* Smooth transition for hover effects */
+}
+
+/* Styles for the anchor tags inside the indicator items */
+.indicator li a {
+   text-decoration: none; /* Remove underline from links */
+   color: #333; /* Default text color */
+   font-weight: bold; /* Make the text bold */
+   padding: 10px 15px; /* Add padding for clickable area */
+   border-radius: 5px; /* Rounded corners */
+}
+
+/* Active state for the currently selected filter */
+.indicator li.active a {
+   background-color: #4CAF50; /* Green background for active item */
+   color: white; /* White text for active item */
+}
+
+/* Hover effect for filter items */
+.indicator li:hover a {
+   background-color: #f0f0f0; /* Light gray background on hover */
+   color: #4CAF50; /* Change text color on hover */
+}
+
 .btn{
     display: inline-block;
     margin-top: 1rem;
@@ -393,8 +430,6 @@ body{
     background: transparent;
     cursor: pointer;
 }
-
-
 
 @media (max-width:991px){
 
