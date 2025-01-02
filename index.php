@@ -126,7 +126,7 @@ $conn->close();
 
     <div class="container" id="container">
         <div class="form-container sign-up-container">
-            <form action="#" method="POST">
+        <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="POST">
                 <h1>Create Account</h1>
                 <span>or use your email for registration</span>
                 <div class="infield">
@@ -218,6 +218,17 @@ $conn->close();
         signUpButton.addEventListener('click', () => {
             container.classList.add('right-panel-active');
         });
+
+        const signUpForm = document.querySelector('.sign-up-container form');
+signUpForm.addEventListener('submit', (e) => {
+    const password = document.querySelector('input[name="password"]').value;
+    const confirmPassword = document.querySelector('input[name="confirmpassword"]').value;
+
+    if (password !== confirmPassword) {
+        e.preventDefault(); // Prevent form submission
+        alert('Passwords do not match.');
+    }
+});
     </script>
 
 </body>
