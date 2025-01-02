@@ -187,6 +187,7 @@ $conn->close();
                     <h1>Welcome Back!</h1>
                     <p>To keep connected with us please login with your personal info.</p>
                     <button id="signIn">Sign In</button>
+                    
                 </div>
                 <div class="overlay-panel overlay-right">
                     <h1>Hello, Friend!</h1>
@@ -202,13 +203,15 @@ $conn->close();
     <script>
         const container = document.getElementById('container');
         const signInButton = document.getElementById('signIn');
-        const signUpButton = document.getElementById('signUp');
+        const signUpButton = document.getElementById('overlayBtn');
 
         signInButton.addEventListener('click', () => {
+            console.log("Sign In button clicked");
             container.classList.remove('right-panel-active');
         });
 
         signUpButton.addEventListener('click', () => {
+            console.log("Sign Up button clicked");
             container.classList.add('right-panel-active');
         });
     </script>
