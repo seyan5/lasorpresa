@@ -23,7 +23,7 @@ body {
 .container {
     position: relative;
     width: 850px;
-    height: 500px;
+    height: 600px;
     background-color: #ffff;
     box-shadow: 25px 30px 55px #5557;
     border-radius: 13px;
@@ -165,11 +165,10 @@ button{
     border-radius: 20px;
     border: 1px solid var(--grad-clr1);
     background: var(--grad-clr2);
-    position: fixed;
     color: #fff;
     font-size: 12px;
     font-weight: bold;
-    padding: 12px 45px;
+    padding: 12px 40px;
     letter-spacing: 1px;
     text-transform: uppercase;
 }
@@ -199,7 +198,7 @@ button{
     cursor: pointer;
     position: absolute;
     left: 50%;
-    top: 304px;
+    top: 355px;
     transform: translate(-50%);
     width: 143.67px;
     height: 40px;
@@ -282,6 +281,12 @@ P {
     opacity: 1;
     z-index: 5;
     animation: show 0.6s;
+}
+
+.success, .error {
+    color: #ff0000; /* Error color */
+    margin-top: 10px; /* Spacing above messages */
+    font-size: 14px; /* Font size for messages */
 }
 
 @keyframes show {

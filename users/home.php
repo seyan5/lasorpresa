@@ -3,14 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-
     <!-- font -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
-
     <!-- css -->
     <link rel="stylesheet" href="../style.css">
 </head>
@@ -23,13 +20,13 @@
     <input type="checkbox" name="" id="toggler">
     <label for="toggler" class="fas fa-bars"></label>
 
-    <a href="#" class="logo">Flower<span>.</span></a>
+    <!-- <a href="#" class="logo">La Sorpresa<span>.</span></a> -->
+    <img src="../images/logo.png" alt="" class="logos" href="">
     <nav class="navbar">
 
-    </nav>
         <a href="#home">Home</a>
         <a href="#about">About</a>
-        <a href="#product">Product</a>
+        <a href="   products.html">Product</a>
         <a href="#review">Review</a>
         <a href="#contacts">Contacts</a>
     </nav>
@@ -37,7 +34,7 @@
     <div class="icons">
         <a href="#" class="fas fa-heart"></a>
         <a href="cart.html" class="fas fa-shopping-cart"></a>
-
+        <a href="cart.html" class="fas fa-shopping-cart"></a>
         <a href="#" class="fas fa-user"></a>
     </div>
 
@@ -48,7 +45,7 @@
     <section class="home" id="home">
         <div class="content">
             <h3>Buy your</h3>
-            <h3>BURAT</h3>
+            <h3>Dreams Flowers</h3>
             <h3>of your Love</h3>
             <h3>Ones</h3>
             <div class="container">
@@ -146,7 +143,7 @@
         <div class="box">
             <span class="discount">-10%</span>
             <div class="image">
-                <img src="ivd/flower1.jpg" alt="">
+                <img src="../ivd/flower1.jpg" alt="">
                 <div class="icons">
                     <!-- <a href="#" class="fas fa-heart"></a> -->
                     <a href="" class="cart-btn">Add to cart</a>
@@ -162,7 +159,7 @@
         <div class="box">
             <span class="discount">-10%</span>
             <div class="image">
-                <img src="ivd/flower2.jpg" alt="">
+                <img src="../ivd/flower2.jpg" alt="">
                 <div class="icons">
                     <!-- <a href="#" class="fas fa-heart"></a> -->
                     <a href="#" class="cart-btn">Add to cart</a>
@@ -178,7 +175,7 @@
         <div class="box">
             <span class="discount">-10%</span>
             <div class="image">
-                <img src="ivd/flower3.jpg" alt="">
+                <img src="../ivd/flower3.jpg" alt="">
                 <div class="icons">
                     <!-- <a href="#" class="fas fa-heart"></a> -->
                     <a href="#" class="cart-btn">Add to cart</a>

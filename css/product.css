@@ -1,0 +1,474 @@
+:root{
+    --pink: #e84393;
+}
+
+*{
+    margin: 0;
+    padding: 0;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    outline: none;
+    border: none;
+    text-decoration: none;
+    text-transform: capitalize;
+    transition: .2s linear;
+}
+
+.home{
+    display: flex;
+    align-items: center;
+    min-height: 100vh;
+    background: url() no-repeat;
+    background-size: contain;
+    background-position: center;
+}
+
+.home .content{
+    max-width: 50rem;
+    max-width: 1500px; /* Maximum width of the box */
+    width: 100%; /* Set a width percentage to make it responsive */
+    min-height: 500px; /* Minimum height for the box */
+    border: 2px solid #ccc; /* Border around the box */
+    border-radius: 30px; /* Rounded corners */
+    padding: 40px; /* Increased padding inside the box */
+    background-color: #c294ce; /* Background color */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    text-align: left; /* Center text */
+    margin: 0 auto; /* Center the box horizontally */
+    position: relative;
+}
+
+html{
+    font-size: 62.5%;
+    scroll-behavior: smooth;
+    scroll-padding-top: 6rem;
+    overflow-x: hidden;
+}
+
+section{
+    padding: 2rem 9%;
+}
+
+.heading{
+    text-align: center;
+    font-size: 4rem;
+    color: #333;
+    padding: 1rem;
+    margin: 2rem 0;
+    background: rgba(225, 51, 153, .05);
+}
+
+.heading span{
+    color: var(--pink);
+}
+
+/* Base styles for the indicator */
+.indicator {
+   list-style: none; /* Remove default list styling */
+   padding: 0; /* Remove default padding */
+   display: flex; /* Use flexbox for horizontal layout */
+   justify-content: center; /* Center items horizontally */
+   margin: 20px 0; /* Add some margin above and below the indicator */
+}
+
+/* Styles for each indicator item */
+.indicator li {
+   margin: 0 15px; /* Space between items */
+   cursor: pointer; /* Change cursor to pointer on hover */
+   transition: all 0.3s ease; /* Smooth transition for hover effects */
+}
+
+/* Styles for the anchor tags inside the indicator items */
+.indicator li a {
+   text-decoration: none; /* Remove underline from links */
+   color: #333; /* Default text color */
+   font-weight: bold; /* Make the text bold */
+   padding: 10px 15px; /* Add padding for clickable area */
+   border-radius: 5px; /* Rounded corners */
+}
+
+/* Active state for the currently selected filter */
+.indicator li.active a {
+   background-color: #4CAF50; /* Green background for active item */
+   color: white; /* White text for active item */
+}
+
+/* Hover effect for filter items */
+.indicator li:hover a {
+   background-color: #f0f0f0; /* Light gray background on hover */
+   color: #4CAF50; /* Change text color on hover */
+}
+
+.btn{
+    display: inline-block;
+    margin-top: 1rem;
+    border-radius: 8px;
+    background: #333;
+    color: #fff;
+    padding: .9rem 3.5rem;
+    cursor: pointer;
+    font-size: 1.7rem;
+    margin-top: 100px;
+}
+
+.shop h1{
+    margin: 1rem;
+    font-size: 2.5rem;
+}
+
+.shop h3{
+    margin: 1rem;
+    font-family: "Poppins", sans-serif;
+    color: #9b9b9b;
+    font-size: 1.5rem;
+}
+
+
+.btn:hover{
+    background: var(--pink);
+}
+
+.search-container {
+    position: absolute;
+    display: flex; /* Use flexbox to align items */
+    border-radius: 5px; /* Rounded corners */
+    overflow: hidden; /* Prevents overflow of child elements */
+    left: 220px;
+    bottom: 220px;
+    height: 55px; /* Set a fixed height for the search bar */
+    width: 500px;
+}
+
+.search-input {
+    border: none; /* Remove default border */
+    padding: 10px; /* Add padding */
+    font-size: 16px; /* Increase font size */
+    flex: 1; /* Allow input to grow and fill space */
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.search-input:focus {
+    outline: none; /* Remove outline on focus */
+}
+
+.search-button {
+    background-color: var(--pink); /* Button color */
+    color: white; /* Text color */
+    border: none; /* Remove default border */
+    padding: 0 10px; /* Padding for the button */
+    cursor: pointer; /* Change cursor on hover */
+    height: 100%; /* Fill the height of the container */
+    display: flex; /* Center the icon */
+    align-items: center; /* Center vertically */
+    justify-content: center; /* Center horizontally */
+}
+
+.search-button:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+}
+
+.search-button i {
+    font-size: 18px; /* Icon size */
+}
+
+header{
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background: #fff;
+    padding: 2rem 9%;
+    display: flex;
+    align-items: center; 
+    justify-content: space-between; 
+    z-index: 1000;
+    box-shadow: 0 .5rem 1rem rgba(0, 0, 0, .1);    
+}
+ 
+
+header .logo{
+    font-size: 3rem;
+    color: #333;
+    font-weight: bolder;
+}
+
+header .logo span{
+    color: var(--pink);
+}
+
+header .navbar a{
+    font-size: 2rem;
+    padding:0 1.5rem;
+    color: #666;
+}
+
+header .navbar a:hover{
+    color: var(--pink);
+}
+
+header .icons a{
+    font-size: 2.5rem;
+    color: #333;
+    margin-right: 5rem;
+}
+
+header #toggler{
+    display: none;
+}
+
+header .fa-bars{
+    font-size: 3rem;
+    color: #333;
+    border-radius: .5rem;
+    padding: .5rem 1.5rem;
+    cursor: pointer;
+    border: .1rem rgba(0, 0, 0, .3);
+    display: none;
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@200;300;400;500;600&display=swap');
+
+*{
+   font-family: 'Nunito', sans-serif;
+   margin:0; padding:0;
+   box-sizing: border-box;
+   outline: none; border:none;
+   text-decoration: none;
+   transition: all .2s linear;
+   text-transform: capitalize;
+}
+
+.logos{
+    width: 10rem;
+    margin-top: -2rem;
+    margin-bottom: -3rem;
+}
+
+
+html{
+   font-size: 62.5%;
+   overflow-x: hidden;
+}
+
+body{
+   background: #eee;
+}
+
+.container{
+   max-width: 1300px;
+   margin:0 auto;
+   padding:3rem 2rem;
+}
+
+.container .title{
+   font-size: 3.5rem;
+   color:#444;
+   margin-bottom: 3rem;
+   text-transform: uppercase;
+   text-align: center;
+   padding-top: 8rem;
+}
+
+.container .products-container{
+   display: grid;
+   grid-template-columns: repeat(auto-fit, minmax(30rem, 1fr));
+   gap:2rem;
+}
+
+.container .products-container .product{
+   text-align: center;
+   padding:3rem 2rem;
+   background: #fff;
+   box-shadow: 0 .5rem 1rem rgba(0,0,0,.1);
+   outline: .1rem solid #ccc;
+   outline-offset: -1.5rem;
+   cursor: pointer;
+}
+
+.container .products-container .product:hover{
+   outline: .2rem solid #222;
+   outline-offset: 0;
+}
+
+.container .products-container .product img{
+   height: 25rem;
+}
+
+.container .products-container .product:hover img{
+   transform: scale(.9);
+}
+
+.container .products-container .product h3{
+   padding:.5rem 0;
+   font-size: 2rem;
+   color:#444;
+}
+
+.container .products-container .product:hover h3{
+   color:#27ae60;
+}
+
+.container .products-container .product .price{
+   font-size: 2rem;
+   color:#444;
+}
+
+.products-preview{
+   position: fixed;
+   top:0; left:0;
+   min-height: 100vh;
+   width: 100%;
+   background: rgba(0,0,0,.8);
+   display: none;
+   align-items: center;
+   justify-content: center;
+}
+
+.products-preview .preview{
+   display: none;
+   padding:2rem;
+   text-align: center;
+   background: #fff;
+   position: relative;
+   margin:2rem;
+   width: 40rem;
+}
+
+.products-preview .preview.active{
+   display: inline-block;
+}
+
+.products-preview .preview img{
+   height: 30rem;
+}
+
+.products-preview .preview .fa-times{
+   position: absolute;
+   top:1rem; right:1.5rem;
+   cursor: pointer;
+   color:#444;
+   font-size: 4rem;
+}
+
+.products-preview .preview .fa-times:hover{
+   transform: rotate(90deg);
+}
+
+.products-preview .preview h3{
+   color:#444;
+   padding:.5rem 0;
+   font-size: 2.5rem;
+}
+
+.products-preview .preview .stars{
+   padding:1rem 0;
+   font-size: 1.7rem;
+}
+
+.products-preview .preview .stars i{
+   color:#27ae60;
+}
+
+.products-preview .preview .stars span{
+   color:#999;
+}
+
+.products-preview .preview p{
+   line-height: 1.5;
+   padding:1rem 0;
+   font-size: 1.6rem;
+   color:#777;
+}
+
+.products-preview .preview .price{
+   padding:1rem 0;
+   font-size: 2.5rem;
+   color:#27ae60;
+}
+
+.products-preview .preview .buttons{
+   display: flex;
+   gap:1.5rem;
+   flex-wrap: wrap;
+   margin-top: 1rem;
+}
+
+.products-preview .preview .buttons a{
+   flex:1 1 16rem;
+   padding:1rem;
+   font-size: 1.8rem;
+   color:#444;
+   border:.1rem solid #444;
+}
+
+.products-preview .preview .buttons a.cart{
+   background: #444;
+   color:#fff;
+}
+
+.products-preview .preview .buttons a.cart:hover{
+   background: #111;
+}
+
+.products-preview .preview .buttons a.buy:hover{
+   background: #444;
+   color:#fff;
+}
+
+.filter-condition{
+   padding: 20px;
+   height: 100px;
+   font-size: 20px;
+   font-weight: bold;
+}
+.filter-condition select{
+   width: 120px;
+    padding: 0 0 0 10px;
+    border: none;
+    outline: none;
+    font-weight: bold;
+    color: purple;
+    background: transparent;
+    cursor: pointer;
+}
+
+.listPage{
+   padding:10px;
+   text-align: center;
+   list-style: none;
+}
+.listPage li{
+   background-color: #ffffffBD;
+   padding:20px;
+   display: inline-block;
+   margin:0 10px;
+   cursor: pointer;
+}
+.listPage .active{
+   background-color: #B192EF;
+   color:#fff;
+}
+
+@media (max-width:991px){
+
+   html{
+      font-size: 55%;
+   }
+
+}
+
+@media (max-width:768px){
+
+   .products-preview .preview img{
+      height: 25rem;
+   }
+
+}
+
+@media (max-width:450px){
+
+   html{
+      font-size: 50%;
+   }
+
+}
+

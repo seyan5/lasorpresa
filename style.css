@@ -123,6 +123,11 @@ header{
     box-shadow: 0 .5rem 1rem rgba(0, 0, 0, .1);    
 }
  
+.logos{
+    width: 10rem;
+    margin-top: -2rem;
+    margin-bottom: -3rem;
+}
 
 header .logo{
     font-size: 3rem;
@@ -163,6 +168,7 @@ header .fa-bars{
     border: .1rem rgba(0, 0, 0, .3);
     display: none;
 }
+
 
 .home{
     display: flex;
