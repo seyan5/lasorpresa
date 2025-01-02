@@ -1,7 +1,7 @@
 @import url('font-inter.css');
 :root {
-  --primarycolor: #0A76D8;
-  --primarycolorhover: #006dd3;
+  --primarycolor: #dd91ad;
+  --primarycolorhover: #dd91ad;
   --btnice:#D8EBFA;
   --btnnicetext:#1b62b3;
 }
@@ -122,8 +122,8 @@ body{
 }
 
 .btn-primary-soft{
-    background-color: #D8EBFA ;
-    /*border: 1px solid rgba(57,108,240,0.1) ;*/    color: #1969AA;
+    background-color: #dd91ad ;
+    /*border: 1px solid rgba(57,108,240,0.1) ;*/    color: #c2c2c2;
     font-weight: 500;
     font-size: 16px;
     border: none;
