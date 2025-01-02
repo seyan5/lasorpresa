@@ -13,7 +13,6 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] != 'admin') {
 if (isset($_GET['id'])) {
     $id = intval($_GET['id']);
 
-    // Prepare and execute the delete query
     if ($stmt = $conn->prepare("DELETE FROM users WHERE id = ?")) {
         $stmt->bind_param("i", $id);
 
