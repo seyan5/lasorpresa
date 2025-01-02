@@ -1,6 +1,5 @@
 <?php
 session_start();
-
 // Include database configuration
 include '../config.php';
 
@@ -15,15 +14,20 @@ if (isset($_GET['id'])) {
     $id = intval($_GET['id']);
 
     // Prepare and execute the delete query
-    $stmt = $conn->prepare("DELETE FROM users WHERE id = ?");
-    $stmt->bind_param("i", $id);
-    if ($stmt->execute()) {
-        header('Location: users.php');
-        exit();
+    if ($stmt = $conn->prepare("DELETE FROM users WHERE id = ?")) {
+        $stmt->bind_param("i", $id);
+
+        if ($stmt->execute()) {
+            $stmt->close();
+            header('Location: users.php');
+            exit();
+        } else {
+            $stmt->close();
+            die('Error deleting record: ' . $conn->error);
+        }
     } else {
-        die('Error deleting record: ' . $conn->error);
+        die('Error preparing statement: ' . $conn->error);
     }
-    $stmt->close();
 } else {
     die('Invalid request.');
 }

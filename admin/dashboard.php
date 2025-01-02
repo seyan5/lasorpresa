@@ -1,9 +1,6 @@
 
 <?php
-$servername = "localhost";
-$username = "root"; // Replace with your DB username
-$password = ""; // Replace with your DB password
-$dbname = "your_database_name"; // Replace with your DB name
+include("../config.php");
 
 $conn = new mysqli($servername, $username, $password, $dbname);
 
@@ -28,7 +25,6 @@ $stmt->bind_param("i", $user_id);
 $stmt->execute();
 $result = $stmt->get_result();
 
-// Check if the result contains data
 if ($result->num_rows > 0) {
     $row = $result->fetch_assoc();
 } else {
