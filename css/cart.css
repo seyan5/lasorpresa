@@ -1,0 +1,164 @@
+/* General Styles */
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #f6f5f7;
+    margin: 0;
+    padding: 20px;
+}
+
+/* Product Container */
+.product-container {
+    position: relative;
+    width: 400px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+}
+
+/* Product Title */
+.product-title {
+    color: #252525;
+    font-size: 27px;
+    font-weight: 600;
+    margin-bottom: 20px;
+}
+
+/* Product Image Container */
+
+
+/* Product Image Container */
+.product-image-container {
+    display: flex; /* Use flexbox for centering */
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+    flex-direction: column; /* Stack items vertically */
+    width: 100%; /* Full width of the parent */
+    max-width: 220px; /* Set a max width for the container */
+    margin: 0 auto; /* Center the container */
+    padding: 20px; /* Add padding around the container */
+    background: #f9f9f9; /* Light background for contrast */
+    border-radius: 15px; /* Rounded corners */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+}
+
+/* Product Image */
+.product-image {
+    width: 100%; /* Full width of the container */
+    height: auto; /* Maintain aspect ratio */
+    border-radius: 10px; /* Rounded corners */
+    border: 1px solid #EDEEF0; /* Light border for definition */
+    margin-bottom: 10px; /* Space between images if multiple */
+}
+
+/* Optional: If you want to add a hover effect to the image */
+.product-image:hover {
+    transform: scale(1.05); /* Slightly enlarge on hover */
+    transition: transform 0.3s; /* Smooth transition */
+}
+/* Order Summary */
+/* Order Summary */
+.order-summary {
+    background: #ECECEC;
+    border-radius: 10px;
+    padding: 20px; /* Increased padding for better spacing */
+    margin-bottom: 20px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Added shadow for depth */
+}
+
+.order-summary-title {
+    font-size: 18px; /* Increased font size for better visibility */
+    font-weight: 600;
+    color: #333; /* Darker color for better contrast */
+    margin-bottom: 15px; /* Increased margin for spacing */
+}
+
+/* Order Summary Item */
+.order-summary-item {
+    display: flex;
+    justify-content: space-between;
+    margin: 10px 0; /* Increased margin for better spacing */
+    padding: 10px; /* Added padding for better touch targets */
+    border-radius: 5px; /* Rounded corners */
+    transition: background 0.3s; /* Smooth background transition */
+}
+
+/* Highlight on hover */
+.order-summary-item:hover {
+    background: #d1d1d1; /* Light gray background on hover */
+}
+
+/* Labels and Values */
+.order-summary-label {
+    font-size: 16px;
+    color: #696969;
+}
+
+.order-summary-value {
+    font-size: 16px;
+    font-weight: 600;
+    color: #333; /* Darker color for better visibility */
+    background: #f9f9f9; /* Light background for price highlights */
+    padding: 5px 10px; /* Padding for better spacing */
+    border-radius: 5px; /* Rounded corners */
+    border: 1px solid #ccc; /* Light border for definition */
+    transition: background 0.3s, transform 0.3s; /* Smooth transition for hover effects */
+}
+
+/* Highlight on hover for values */
+.order-summary-value:hover {
+    background: #e4e4e4; /* Slightly darker background on hover */
+    transform: scale(1.05); /* Slightly enlarge on hover */
+}
+
+/* Addons */
+.addons {
+
+    margin-top: 10px;
+}
+
+.addons-value{
+    font-size: 16px;
+    font-weight: 600;
+    color: #333; /* Darker color for better visibility */
+    background: #f9f9f9; /* Light background for price highlights */
+    padding: 5px 10px; /* Padding for better spacing */
+    border-radius: 5px; /* Rounded corners */
+    border: 1px solid #ccc; /* Light border for definition */
+    transition: background 0.3s, transform 0.3s; /* Smooth transition for hover effects */
+}
+
+.addons-label{
+    font-size: 16px;
+    color: #696969;
+}
+
+.addons-title {
+    font-size: 18px; /* Increased font size for better visibility */
+    font-weight: 600;
+    color: #333; /* Darker color for better contrast */
+    margin-bottom: 15px; /* Increased margin for spacing */
+}
+
+.addons-item {
+    display: flex;
+    justify-content: space-between;
+}
+
+/* Proceed Button */
+.proceed-button {
+    width: 100%;
+    padding: 10px;
+    background: #659182;
+    border: none;
+    border-radius: 10px;
+    color: white;
+    font-size: 18px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.proceed-button:hover {
+    background: #5a7a6b;
+}

@@ -258,10 +258,12 @@ P {
 
 .right-panel-active .overlay-container {
     transform: translateX(-150%);
+    z-index: 1;
 }
 
 .right-panel-active .overlay {
     transform: translateX(50%);
+    pointer-events: none;
 }
 
 .right-panel-active .overlay-left {
@@ -273,6 +275,7 @@ P {
 }
 
 .right-panel-active .sign-in-container {
+    z-index: 10; /* Higher z-index for the sign-in container */
     transform: translateX(20%); 
     opacity: 0;
 }
