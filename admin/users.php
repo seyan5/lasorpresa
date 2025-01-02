@@ -1,11 +1,14 @@
 <?php
-// users.php
+session_start();
 
-// Database connection
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "lasorpresa";
+// Include database configuration
+include '../config.php';
+
+// Ensure the user is logged in and is an admin
+if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] != 'admin') {
+    header('Location: ../login.php');
+    exit();
+}
 
 $conn = new mysqli($servername, $username, $password, $dbname);
 
