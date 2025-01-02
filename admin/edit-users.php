@@ -2,7 +2,6 @@
 <?php
     include("../config.php");
     if($_POST){
-        //print_r($_POST);
         $result= $conn->query("select * from users");
         $name=$_POST['name'];
         $oldemail=$_POST["oldemail"];
@@ -15,7 +14,6 @@
         $result = mysqli_query($conn, $sql);
     
         if ($result) {
-            // Redirect to users.php after updating
             header('Location: users.php');
             exit();
         } else {
