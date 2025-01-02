@@ -85,22 +85,24 @@ previewBox.forEach(close => {
                     return (item.getAttribute('data-category') === currentFilter || currentFilter === "all");
                 });
             } else if (this.value === 'LowToHigh') {
+                // Sort from lowest to highest
                 filteredItems.sort((a, b) => {
                     const ax = Number(a.getAttribute('data-price'));
                     const bx = Number(b.getAttribute('data-price'));
-                    return ax - bx; // Sort from lowest to highest
+                    return ax - bx;
                 });
             } else if (this.value === 'HighToLow') {
+                // Sort from highest to lowest
                 filteredItems.sort((a, b) => {
                     const ax = Number(a.getAttribute('data-price'));
                     const bx = Number(b.getAttribute('data-price'));
-                    return bx - ax; // Sort from highest to lowest
+                    return bx - ax;
                 });
             }
-    
+        
             // Reset to the first page when sorting
             thisPage = 1;
-    
+        
             // Load sorted items
             loadItem();
         }

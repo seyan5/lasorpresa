@@ -28,6 +28,7 @@ body {
     box-shadow: 25px 30px 55px #5557;
     border-radius: 13px;
     overflow: hidden;
+    transition: transform 0.6s ease-in-out;
 
 }
 
@@ -202,7 +203,7 @@ button{
     transform: translate(-50%);
     width: 143.67px;
     height: 40px;
-    border: 1px solid #fff;
+    border: 1px solid #a01414;
     background: transparent;
     border-radius: 20px;
 }
