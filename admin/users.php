@@ -197,70 +197,11 @@ if ($result->num_rows > 0) {
                                     <th class="table-headin">
                                         User Type
                                     </th>
-
                                     <th class="table-headin">
                                         Events
                                     </th>
 
                             </thead>
-                            <tbody>
-
-                                <?php
-
-                                $result = mysqli_query($conn, $sql);
-
-
-                                if ($result->num_rows == 0) {
-                                    echo '<tr>
-                                    <td colspan="4">
-                                    <br><br><br><br>
-                                    <center>
-                                    <img src="../img/notfound.svg" width="25%">
-                                    
-                                    <br>
-                                    <p class="heading-main12" style="margin-left: 45px;font-size:20px;color:rgb(49, 49, 49)">We  couldnt find anything related to your keywords !</p>
-                                    <a class="non-style-link" href="users.php"><button  class="login-btn btn-primary-soft btn"  style="display: flex;justify-content: center;align-items: center;margin-left:20px;">&nbsp;  &nbsp;</font></button>
-                                    </a>
-                                    </center>
-                                    <br><br><br><br>
-                                    </td>
-                                    </tr>';
-
-                                } else {
-                                    for ($x = 0; $x < $result->num_rows; $x++) {
-                                        $row = $result->fetch_assoc();
-                                        $id = $row["id"];
-                                        $name = $row["name"];
-                                        $email = $row["email"];
-                                        $user_type = $row["user_type"];
-                                        echo '<tr>
-                                        <td> &nbsp;' .
-                                            substr($name, 0, 30)
-                                            . '</td>
-                                        <td>
-                                        ' . substr($email, 0, 20) . '
-                                        </td>
-                                        <td>
-                                            ' . substr($user_type, 0, 20) . '
-                                        </td>
-
-                                        <td>
-                                        <div style="display:flex;justify-content: center;">
-                                        <a href="?action=edit&id=' . $id . '&error=0" class="non-style-link"><button  class="btn-primary-soft btn button-icon btn-edit"  style="padding-left: 40px;padding-top: 12px;padding-bottom: 12px;margin-top: 10px;"><font class="tn-in-text">Edit</font></button></a>
-                                        &nbsp;&nbsp;&nbsp;
-                                        <a href="?action=view&id=' . $id . '" class="non-style-link"><button  class="btn-primary-soft btn button-icon btn-view"  style="padding-left: 40px;padding-top: 12px;padding-bottom: 12px;margin-top: 10px;"><font class="tn-in-text">View</font></button></a>
-                                       &nbsp;&nbsp;&nbsp;
-                                       <a href="?action=drop&id=' . $id . '&name=' . $name . '" class="non-style-link"><button  class="btn-primary-soft btn button-icon btn-delete"  style="padding-left: 40px;padding-top: 12px;padding-bottom: 12px;margin-top: 10px;"><font class="tn-in-text">Remove</font></button></a>
-                                        </div>
-                                        </td>
-                                    </tr>';
-
-                                    }
-                                }
-
-                                ?>
-
-                            </tbody>
 
                         </table>
                     </div>
