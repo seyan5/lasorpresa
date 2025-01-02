@@ -1,5 +1,7 @@
 <?php
-// users.php
+session_start();
+
+// Include database configuration
 include("../config.php");
 $conn = new mysqli($servername, $username, $password, $dbname);
 
@@ -101,37 +103,35 @@ $result = $conn->query($sql);
             </ul>
         </div>
 
-        <body>
-            <h1>Users</h1>
-            <table>
-                <tr>
-                    <td colspan="4">
-                        <div class="abc scroll">
-                            <table width="93%" class="sub-table scrolldown" border="0">
-                                <thead>
-                                    <tr>
-                                        <th class="table-headin">
-                                            Name
-                                        </th>
-
-                                        <th class="table-headin">
-                                            Email
-                                        </th>
-                                        <th class="table-headin">
-                                            User Type
-                                        </th>
-
-                                        <th class="table-headin">
-                                            Events
-                                        </th>
-
-                                </thead>
-                                <tbody>
+        <h1>Users</h1>
+        <table>
+            <tr>
+                <td colspan="4">
+                    <div class="abc scroll">
+                        <table width="93%" class="sub-table scrolldown" border="0">
+                            <thead>
+                                <tr>
+                                    <th class="table-headin">
+                                        ID
+                                    </th>
+                                    <th class="table-headin">
+                                        Username
+                                    </th>
+                                    <th class="table-headin">
+                                        Email
+                                    </th>
+                                    <th class="table-headin">
+                                        Actions
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php if ($result->num_rows > 0): ?>
                                     <?php while ($row = $result->fetch_assoc()): ?>
                                         <tr>
-                                            <td><?php echo $row['id']; ?></td>
-                                            <td><?php echo $row['username']; ?></td>
-                                            <td><?php echo $row['email']; ?></td>
+                                            <td><?php echo htmlspecialchars($row['id']); ?></td>
+                                            <td><?php echo htmlspecialchars($row['username']); ?></td>
+                                            <td><?php echo htmlspecialchars($row['email']); ?></td>
                                             <td>
                                                 <a href="delete-users.php?id=<?php echo $row['id']; ?>"
                                                     class="btn btn-danger"
@@ -141,9 +141,19 @@ $result = $conn->query($sql);
                                             </td>
                                         </tr>
                                     <?php endwhile; ?>
-                            </table>
-
-        </body>
+                                <?php else: ?>
+                                    <tr>
+                                        <td colspan="4">No users found.</td>
+                                    </tr>
+                                <?php endif; ?>
+                            </tbody>
+                        </table>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </div>
+</body>
 
 </html>
 
