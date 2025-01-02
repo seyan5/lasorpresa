@@ -1,5 +1,7 @@
 <?php
-// users.php
+session_start();
+
+// Include database configuration
 include("../config.php");
 $conn = new mysqli($servername, $username, $password, $dbname);
 
@@ -37,7 +39,7 @@ $result = $conn->query($sql);
                 </li>
 
                 <li>
-                    <a href="#">
+                    <a href="dashboard.php">
                         <span class="icon">
                             <ion-icon name="home-outline"></ion-icon>
                         </span>
@@ -100,30 +102,59 @@ $result = $conn->query($sql);
                 </li>
             </ul>
         </div>
-<body>
-    <h1>Users</h1>
 
-    <table>
-        <tr>
-            <th>ID</th>
-            <th>Username</th>
-            <th>Email</th>
-            <th>Actions</th>
-        </tr>
-        <?php while ($row = $result->fetch_assoc()): ?>
+        <h1>Users</h1>
+        <table>
             <tr>
-                <td><?php echo $row['id']; ?></td>
-                <td><?php echo $row['username']; ?></td>
-                <td><?php echo $row['email']; ?></td>
-                <td>
-                    <a href="delete-users.php?id=<?php echo $row['id']; ?>" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this user?');">Delete</a>
-                    <a href="edit-users.php?id=<?php echo $row['id']; ?>" class="btn btn-edit">Edit</a>
+                <td colspan="4">
+                    <div class="abc scroll">
+                        <table width="93%" class="sub-table scrolldown" border="0">
+                            <thead>
+                                <tr>
+                                    <th class="table-headin">
+                                        ID
+                                    </th>
+                                    <th class="table-headin">
+                                        Username
+                                    </th>
+                                    <th class="table-headin">
+                                        Email
+                                    </th>
+                                    <th class="table-headin">
+                                        Actions
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php if ($result->num_rows > 0): ?>
+                                    <?php while ($row = $result->fetch_assoc()): ?>
+                                        <tr>
+                                            <td><?php echo htmlspecialchars($row['id']); ?></td>
+                                            <td><?php echo htmlspecialchars($row['username']); ?></td>
+                                            <td><?php echo htmlspecialchars($row['email']); ?></td>
+                                            <td>
+                                                <a href="delete-users.php?id=<?php echo $row['id']; ?>"
+                                                    class="btn btn-danger"
+                                                    onclick="return confirm('Are you sure you want to delete this user?');">Delete</a>
+                                                <a href="edit-users.php?id=<?php echo $row['id']; ?>"
+                                                    class="btn btn-edit">Edit</a>
+                                            </td>
+                                        </tr>
+                                    <?php endwhile; ?>
+                                <?php else: ?>
+                                    <tr>
+                                        <td colspan="4">No users found.</td>
+                                    </tr>
+                                <?php endif; ?>
+                            </tbody>
+                        </table>
+                    </div>
                 </td>
             </tr>
-        <?php endwhile; ?>
-    </table>
-
+        </table>
+    </div>
 </body>
+
 </html>
 
 <?php $conn->close(); ?>
