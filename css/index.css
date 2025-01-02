@@ -283,6 +283,12 @@ P {
     z-index: 5;
     animation: show 0.6s;
 }
+.container.right-panel-active .sign-up-container {
+    transform: translateX(100%);
+    z-index: 5;
+    opacity: 1;
+    visibility: visible;
+}
 
 .success, .error {
     color: #ff0000; /* Error color */

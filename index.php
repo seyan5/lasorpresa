@@ -45,7 +45,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $error = "No user found with that email or username.";
         }
     } elseif (isset($_POST['register'])) {
-        // Registration functionality
+         // Registration functionality
         $firstname = $_POST['firstname'];
         $lastname = $_POST['lastname'];
         $username = $_POST['username'];
@@ -55,34 +55,41 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $password = $_POST['password'];
         $confirmpassword = $_POST['confirmpassword'];
         $user_type = 'user';
-
+    
         // Basic validation
         if ($password !== $confirmpassword) {
             $error = "Passwords do not match.";
         } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
             $error = "Invalid email format.";
+        } elseif (empty($firstname) || empty($lastname) || empty($username)) {
+            $error = "Please fill in all required fields.";
         } else {
             // Hash the password
             $passwordHash = password_hash($password, PASSWORD_BCRYPT);
-
-            // Prepare SQL statement
-            $stmt = $conn->prepare("INSERT INTO users (name, username, email, contact, password, user_type) VALUES (?, ?, ?, ?, ?, ?)");
-            if ($stmt === false) {
-                die('prepare() failed: ' . htmlspecialchars($conn->error));
-            }
-
-            // Bind parameters
-            $stmt->bind_param("ssssss", $name, $username, $email, $contact, $passwordHash, $user_type);
-
-            // Execute statement
-            if ($stmt->execute()) {
-                $success = "Registration successful!";
+    
+            // Check if the username or email already exists
+            $stmt = $conn->prepare("SELECT * FROM users WHERE email = ? OR username = ?");
+            $stmt->bind_param("ss", $email, $username);
+            $stmt->execute();
+            $result = $stmt->get_result();
+    
+            if ($result && $result->num_rows > 0) {
+                $error = "Username or email already exists.";
             } else {
-                $error = "Error: " . htmlspecialchars($stmt->error);
+                // Insert the user into the database
+                $stmt = $conn->prepare("INSERT INTO users (name, username, email, contact, password, user_type) VALUES (?, ?, ?, ?, ?, ?)");
+                if ($stmt) {
+                    $stmt->bind_param("ssssss", $name, $username, $email, $contact, $passwordHash, $user_type);
+                    if ($stmt->execute()) {
+                        $success = "Registration successful!";
+                    } else {
+                        $error = "Error in registration: " . $stmt->error;
+                    }
+                    $stmt->close();
+                } else {
+                    $error = "Database error: " . $conn->error;
+                }
             }
-
-            // Close statement
-            $stmt->close();
         }
     }
 }
@@ -119,7 +126,7 @@ $conn->close();
 
     <div class="container" id="container">
         <div class="form-container sign-up-container">
-            <form action="#" method="POST">
+        <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="POST">
                 <h1>Create Account</h1>
                 <span>or use your email for registration</span>
                 <div class="infield">
@@ -201,19 +208,33 @@ $conn->close();
 
     <!-- js code -->
     <script>
-        const container = document.getElementById('container');
-        const signInButton = document.getElementById('signIn');
-        const signUpButton = document.getElementById('overlayBtn');
+        document.addEventListener('DOMContentLoaded', () => {
+    const container = document.getElementById('container');
+    const signInButton = document.getElementById('signIn');
+    const signUpButton = document.getElementById('signUp');
 
-        signInButton.addEventListener('click', () => {
-            console.log("Sign In button clicked");
-            container.classList.remove('right-panel-active');
-        });
+    signInButton.addEventListener('click', () => {
+        container.classList.remove('right-panel-active');
+    });
 
-        signUpButton.addEventListener('click', () => {
-            console.log("Sign Up button clicked");
+    signUpButton.addEventListener('click', () => {
+        container.classList.add('right-panel-active');
+    });
+});
+      signUpButton.addEventListener('click', () => {
             container.classList.add('right-panel-active');
         });
+
+        const signUpForm = document.querySelector('.sign-up-container form');
+signUpForm.addEventListener('submit', (e) => {
+    const password = document.querySelector('input[name="password"]').value;
+    const confirmPassword = document.querySelector('input[name="confirmpassword"]').value;
+
+    if (password !== confirmPassword) {
+        e.preventDefault(); // Prevent form submission
+        alert('Passwords do not match.');
+    }
+});
     </script>
 
 </body>
