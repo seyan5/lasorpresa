@@ -13,20 +13,12 @@ if ($conn->connect_error) {
 ?>
 <?php
 session_start();
-
-// Include database configuration
 include '../config.php';
-
-// Ensure the user is logged in and is an admin
 if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] != 'admin') {
     header('Location: ../login.php');
     exit();
 }
 
-
-
-
-// Fetch user data from the database
 $user_id = $_SESSION['user_id'];
 $stmt = $conn->prepare("SELECT * FROM users WHERE id = ?");
 if ($stmt === false) {
@@ -55,12 +47,10 @@ if ($result->num_rows > 0) {
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>La Sorpresa Admin</title>
-    <!-- ======= Styles ====== -->
     <link rel="stylesheet" href="../css/style.css">
 </head>
 
 <body>
-    <!-- =============== Navigation ================ -->
     <div class="container">
         <div class="navigation">
             <ul>
