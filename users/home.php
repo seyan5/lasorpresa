@@ -69,26 +69,8 @@
     </section>
 
     <!-- home-sec -->
-<!-- <section class="about" id="about">
-    <h1 class="heading"><span> about </span> us </h1>
 
-    <div class="row">
-        <div class="video-container">
-            <video src="ivd/vid.mp4" loop autoplay muted></video>
-            <h3>best flower sellers</h3>
-        </div>
-    
-
-        <div class="content">
-            <h3>why choose us?</h3>
-            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ipsum fugit, nulla similique eius ipsa reiciendis. A delectus commodi fugiat. Vitae, voluptatum sequi. Itaque omnis facere harum nostrum beatae maiores delectus.</p>
-            <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Voluptatem, temporibus tempore aliquam cum laboriosam atque nostrum expedita perspiciatis aut, veniam sequi deserunt, ducimus qui! Quasi officia velit aperiam quia sit!</p>
-            <a href="#" class="btn">Learn More!</a>
-        </div>
-    </div>
-
-
-</section> -->
+</section>
     <!-- lhome-sec -->
  
     <!-- icons -->
@@ -188,10 +170,96 @@
             </div>    
         </div>
         
-    </div>
+    </div>  
 
 </section>
     <!-- prod sec -->
+
+<section class="about" id="about">
+    <h1 class="heading"><span> about </span> us </h1>
+    
+    <div class="row">
+        <div class="video-container">
+            <video src="../ivd/vid.mp4" loop autoplay muted></video>
+            <h3>best flower sellers</h3>
+        </div>
+        
+    
+        <div class="content">
+            <h3>why choose us?</h3>
+            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ipsum fugit, nulla similique eius ipsa reiciendis. A delectus commodi fugiat. Vitae, voluptatum sequi. Itaque omnis facere harum nostrum beatae maiores delectus.</p>
+            <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Voluptatem, temporibus tempore aliquam cum laboriosam atque nostrum expedita perspiciatis aut, veniam sequi deserunt, ducimus qui! Quasi officia velit aperiam quia sit!</p>
+            <a href="#" class="btn">Learn More!</a>
+        </div>
+    </div>
+</section>
+
+    <!-- review --> 
+<section class="review" id="review">
+<h1 class="heading">Customer's <span>Review</span></h1>
+<div class="box-container">
+    <div class="box">
+        <div class="stars">
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+        </div>
+        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Repudiandae natus hic ducimus repellat ipsam? Sit laborum labore explicabo earum! Consequuntur molestiae nostrum corrupti nam cum porro repudiandae nihil ut laudantium.</p>
+        <div class="user">
+            <img src="../ivd/flower.png" alt="">
+            <div class="user-info">
+                <h3>John Doe</h3>
+                <span>Happy Customer</span>
+            </div>
+            <span class="fas fa-quote-right"></span>
+        </div>
+
+    </div>
+
+    <div class="box">
+        <div class="stars">
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+        </div>
+        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Repudiandae natus hic ducimus repellat ipsam? Sit laborum labore explicabo earum! Consequuntur molestiae nostrum corrupti nam cum porro repudiandae nihil ut laudantium.</p>
+        <div class="user">
+            <img src="../ivd/flower.png" alt="">
+            <div class="user-info">
+                <h3>John Doe</h3>
+                <span>Happy Customer</span>
+            </div>
+            <span class="fas fa-quote-right"></span>
+        </div>
+
+    </div>
+
+    <div class="box">
+        <div class="stars">
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+        </div>
+        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Repudiandae natus hic ducimus repellat ipsam? Sit laborum labore explicabo earum! Consequuntur molestiae nostrum corrupti nam cum porro repudiandae nihil ut laudantium.</p>
+        <div class="user">
+            <img src="../ivd/flower.png" alt="">
+            <div class="user-info">
+                <h3>John Doe</h3>
+                <span>Happy Customer</span>
+            </div>
+            <span class="fas fa-quote-right"></span>
+        </div>
+
+    </div>
+</div>
+</section>
+    <!-- review --> 
 
 
 </body>
