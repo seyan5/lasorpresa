@@ -37,7 +37,7 @@ $result = $conn->query($sql);
                 </li>
 
                 <li>
-                    <a href="#">
+                    <a href="dashboard.php">
                         <span class="icon">
                             <ion-icon name="home-outline"></ion-icon>
                         </span>
@@ -100,30 +100,51 @@ $result = $conn->query($sql);
                 </li>
             </ul>
         </div>
-<body>
-    <h1>Users</h1>
 
-    <table>
-        <tr>
-            <th>ID</th>
-            <th>Username</th>
-            <th>Email</th>
-            <th>Actions</th>
-        </tr>
-        <?php while ($row = $result->fetch_assoc()): ?>
-            <tr>
-                <td><?php echo $row['id']; ?></td>
-                <td><?php echo $row['username']; ?></td>
-                <td><?php echo $row['email']; ?></td>
-                <td>
-                    <a href="delete-users.php?id=<?php echo $row['id']; ?>" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this user?');">Delete</a>
-                    <a href="edit-users.php?id=<?php echo $row['id']; ?>" class="btn btn-edit">Edit</a>
-                </td>
-            </tr>
-        <?php endwhile; ?>
-    </table>
+        <body>
+            <h1>Users</h1>
+            <table>
+                <tr>
+                    <td colspan="4">
+                        <div class="abc scroll">
+                            <table width="93%" class="sub-table scrolldown" border="0">
+                                <thead>
+                                    <tr>
+                                        <th class="table-headin">
+                                            Name
+                                        </th>
 
-</body>
+                                        <th class="table-headin">
+                                            Email
+                                        </th>
+                                        <th class="table-headin">
+                                            User Type
+                                        </th>
+
+                                        <th class="table-headin">
+                                            Events
+                                        </th>
+
+                                </thead>
+                                <tbody>
+                                    <?php while ($row = $result->fetch_assoc()): ?>
+                                        <tr>
+                                            <td><?php echo $row['id']; ?></td>
+                                            <td><?php echo $row['username']; ?></td>
+                                            <td><?php echo $row['email']; ?></td>
+                                            <td>
+                                                <a href="delete-users.php?id=<?php echo $row['id']; ?>"
+                                                    class="btn btn-danger"
+                                                    onclick="return confirm('Are you sure you want to delete this user?');">Delete</a>
+                                                <a href="edit-users.php?id=<?php echo $row['id']; ?>"
+                                                    class="btn btn-edit">Edit</a>
+                                            </td>
+                                        </tr>
+                                    <?php endwhile; ?>
+                            </table>
+
+        </body>
+
 </html>
 
 <?php $conn->close(); ?>
