@@ -1,4 +1,3 @@
-
 <?php
     include("../config.php");
     if($_POST){
@@ -8,9 +7,9 @@
         $contact=$_POST['contact'];
         $email=$_POST['email'];
         $id=$_POST['id00'];
-        
 
-        $sql = "UPDATE users SET name='$name', email='$email', contact='$contact', WHERE id=$id";    
+        // Corrected SQL query
+        $sql = "UPDATE users SET name='$name', email='$email', contact='$contact' WHERE id=$id";
         $result = mysqli_query($conn, $sql);
     
         if ($result) {
@@ -20,7 +19,7 @@
             die('Error updating record: ' . mysqli_error($conn));
         }
     }
-    ?>
-    
+?>
+
 </body>
 </html>
