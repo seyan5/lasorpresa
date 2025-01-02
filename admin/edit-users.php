@@ -1,5 +1,18 @@
 
 <?php
+$servername = "localhost";
+$username = "root"; // Replace with your DB username
+$password = ""; // Replace with your DB password
+$dbname = "lasorpresa"; // Replace with your DB name
+
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+?>
+
+<?php
     
     
 
@@ -15,7 +28,7 @@
         $oldemail=$_POST["oldemail"];
         $contact=$_POST['contact'];
         $email=$_POST['email'];
-        $id=$_POST['id00'];
+        $id=$_POST['id'];
         
 
         $sql = "UPDATE users SET name='$name', email='$email', contact='$contact', WHERE id=$id";    
