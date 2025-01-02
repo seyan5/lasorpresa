@@ -26,7 +26,7 @@
     <nav class="navbar">
         <a href="#home">Home</a>
         <a href="#about">About</a>
-        <a href="#product">Product</a>
+        <a href="products.html">Product</a>
         <a href="#review">Review</a>
         <a href="#contacts">Contacts</a>
     </nav>
@@ -120,7 +120,7 @@
             <h1>Flowers</h1>
             <h3>Cheap and</h3>
             <h3>Affordable Flowers</h3>
-            <a href="#" class="btn">See more -></a>
+            <a href="products.html" class="btn">See more -></a>
         </div>
         <div class="box">
             <span class="discount">-10%</span>
