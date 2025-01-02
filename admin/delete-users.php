@@ -1,41 +1,30 @@
-
 <?php
-$servername = "localhost";
-$username = "root"; // Replace with your DB username
-$password = ""; // Replace with your DB password
-$dbname = "lasorpresa"; // Replace with your DB name
+session_start();
 
-$conn = new mysqli($servername, $username, $password, $dbname);
+// Include database configuration
+include '../config.php';
 
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
+// Check if user is logged in and is an admin
+if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] != 'admin') {
+    header('Location: ../login.php');
+    exit();
 }
-?>
 
-<?php
+// Handle Delete
+if (isset($_GET['id'])) {
+    $id = intval($_GET['id']);
 
-    session_start();
-
-    if(isset($_SESSION["user"])){
-        if(($_SESSION["user"])=="" or $_SESSION['usertype']!='admin'){
-            header("location: ../login.php");
-        }
-
-    }else{
-        header("location: ../login.php");
+    // Prepare and execute the delete query
+    $stmt = $conn->prepare("DELETE FROM users WHERE id = ?");
+    $stmt->bind_param("i", $id);
+    if ($stmt->execute()) {
+        header('Location: users.php');
+        exit();
+    } else {
+        die('Error deleting record: ' . $conn->error);
     }
-    
-    
-    if($_GET){
-        //import database
-        include("../config.php");
-        $id=$_GET["id"];
-        $result= $conn->query("select * from users where id=$id;");
-        $email=($result->fetch_assoc())["email"];
-        $sql= $conn->query("delete from users where email='$email';");
-        //print_r($email);
-        header("location: users.php");
-    }
-
-
+    $stmt->close();
+} else {
+    die('Invalid request.');
+}
 ?>
