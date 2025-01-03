@@ -2,8 +2,8 @@
 ob_start();
 session_start();
 include("../../config.php");
-include("../inc/functions.php");
-include("../inc/CSRF_Protect.php");
+include("../../inc/functions.php");
+include("../../inc/CSRF_Protect.php");
 
 
 $csrf = new CSRF_Protect();
