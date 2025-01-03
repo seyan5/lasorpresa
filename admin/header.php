@@ -12,11 +12,6 @@ $success_message = '';
 $error_message1 = '';
 $success_message1 = '';
 
-// Check if the user is logged in or not
-if(!isset($_SESSION['user'])) {
-	header('location: ../../login.php');
-	exit;
-}
 ?>
 
 <!DOCTYPE html>
