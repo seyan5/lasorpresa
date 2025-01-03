@@ -6,8 +6,18 @@ body {
     padding: 20px;
 }
 
+.containers{
+    display: grid;
+    margin: 0px 50px 0px 50px;
+    grid-template-columns: repeat(3, 1fr); /* Create 3 equal columns */
+    gap: 10px; /* Space between grid items */
+    background-color: #ffffff;
+    padding: 10px;
+}
+
 /* Product Container */
 .product-container {
+    margin: 0px 50px 0px 50px;
     position: relative;
     width: 400px;
     background: white;
