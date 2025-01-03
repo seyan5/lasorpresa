@@ -19,23 +19,23 @@ if(isset($_POST['form1'])) {
         $error_message .= "You must have to select an end level category<br>";
     }
 
-    if(empty($_POST['p_name'])) {
+    if(empty($_POST['name'])) {
         $valid = 0;
         $error_message .= "Product name can not be empty<br>";
     }
 
-    if(empty($_POST['p_current_price'])) {
+    if(empty($_POST['current_price'])) {
         $valid = 0;
         $error_message .= "Current Price can not be empty<br>";
     }
 
-    if(empty($_POST['p_qty'])) {
+    if(empty($_POST['quantity'])) {
         $valid = 0;
         $error_message .= "Quantity can not be empty<br>";
     }
 
-    $path = $_FILES['p_featured_photo']['name'];
-    $path_tmp = $_FILES['p_featured_photo']['tmp_name'];
+    $path = $_FILES['product_photo']['name'];
+    $path_tmp = $_FILES['product_photo']['tmp_name'];
 
     if($path!='') {
         $ext = pathinfo( $path, PATHINFO_EXTENSION );
@@ -52,7 +52,7 @@ if(isset($_POST['form1'])) {
 
     if($valid == 1) {
 
-    	$statement = $pdo->prepare("SHOW TABLE STATUS LIKE 'tbl_product'");
+    	$statement = $pdo->prepare("SHOW TABLE STATUS LIKE 'product'");
 		$statement->execute();
 		$result = $statement->fetchAll();
 		foreach($result as $row) {
@@ -83,7 +83,7 @@ if(isset($_POST['form1'])) {
                 $my_ext1 = pathinfo( $photo[$i], PATHINFO_EXTENSION );
 		        if( $my_ext1=='jpg' || $my_ext1=='png' || $my_ext1=='jpeg' || $my_ext1=='gif' ) {
 		            $final_name1[$m] = $z.'.'.$my_ext1;
-                    move_uploaded_file($photo_temp[$i],"../assets/uploads/product_photos/".$final_name1[$m]);
+                    move_uploaded_file($photo_temp[$i],"../uploads/product/".$final_name1[$m]);
                     $m++;
                     $z++;
 		        }
@@ -92,7 +92,7 @@ if(isset($_POST['form1'])) {
             if(isset($final_name1)) {
             	for($i=0;$i<count($final_name1);$i++)
 		        {
-		        	$statement = $pdo->prepare("INSERT INTO tbl_product_photo (photo,p_id) VALUES (?,?)");
+		        	$statement = $pdo->prepare("INSERT INTO product_photo (photo,p_id) VALUES (?,?)");
 		        	$statement->execute(array($final_name1[$i],$ai_id));
 		        }
             }            
@@ -134,7 +134,7 @@ if(isset($_POST['form1'])) {
 
 		if(isset($_POST['color'])) {
 			foreach($_POST['color'] as $value) {
-				$statement = $pdo->prepare("INSERT INTO tbl_product_color (color_id,p_id) VALUES (?,?)");
+				$statement = $pdo->prepare("INSERT INTO product_color (color_id,p_id) VALUES (?,?)");
 				$statement->execute(array($value,$ai_id));
 			}
 		}
