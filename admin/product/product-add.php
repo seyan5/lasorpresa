@@ -114,7 +114,7 @@ if(isset($_POST['form1'])) {
 										condition,
 										total_view,
 										is_featured,
-										p_is_active,
+										is_active,
 										ecat_id
 									) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)");
 		$statement->execute(array(
