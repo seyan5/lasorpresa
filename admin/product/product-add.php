@@ -1,4 +1,4 @@
-<?php require_once('header.php'); ?>
+<?php require_once('../header.php'); ?>
 
 <?php
 if(isset($_POST['form1'])) {
@@ -102,47 +102,35 @@ if(isset($_POST['form1'])) {
         move_uploaded_file( $path_tmp, '../assets/uploads/'.$final_name );
 
 		//Saving data into the main table tbl_product
-		$statement = $pdo->prepare("INSERT INTO tbl_product(
-										p_name,
-										p_old_price,
-										p_current_price,
-										p_qty,
-										p_featured_photo,
-										p_description,
-										p_short_description,
-										p_feature,
-										p_condition,
-										p_return_policy,
-										p_total_view,
-										p_is_featured,
+		$statement = $pdo->prepare("INSERT INTO product(
+										name,
+										old_price,
+										price,
+										quantity,
+										product_photo,
+										description,
+										short_description,
+										other_photo,
+										condition,
+										total_view,
+										is_featured,
 										p_is_active,
 										ecat_id
-									) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+									) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)");
 		$statement->execute(array(
-										$_POST['p_name'],
-										$_POST['p_old_price'],
-										$_POST['p_current_price'],
-										$_POST['p_qty'],
+										$_POST['name'],
+										$_POST['old_price'],
+										$_POST['current_price'],
+										$_POST['quantity'],
 										$final_name,
-										$_POST['p_description'],
-										$_POST['p_short_description'],
-										$_POST['p_feature'],
-										$_POST['p_condition'],
-										$_POST['p_return_policy'],
-										0,
-										$_POST['p_is_featured'],
-										$_POST['p_is_active'],
+										$_POST['description'],
+										$_POST['short_description'],
+										$_POST['product_photo'],
+										$_POST['condition'],
+										$_POST['is_featured'],
+										$_POST['is_active'],
 										$_POST['ecat_id']
 									));
-
-		
-
-        if(isset($_POST['size'])) {
-			foreach($_POST['size'] as $value) {
-				$statement = $pdo->prepare("INSERT INTO tbl_product_size (size_id,p_id) VALUES (?,?)");
-				$statement->execute(array($value,$ai_id));
-			}
-		}
 
 		if(isset($_POST['color'])) {
 			foreach($_POST['color'] as $value) {
@@ -228,43 +216,27 @@ if(isset($_POST['form1'])) {
 						<div class="form-group">
 							<label for="" class="col-sm-3 control-label">Product Name <span>*</span></label>
 							<div class="col-sm-4">
-								<input type="text" name="p_name" class="form-control">
+								<input type="text" name="name" class="form-control">
 							</div>
 						</div>	
 						<div class="form-group">
 							<label for="" class="col-sm-3 control-label">Old Price <br><span style="font-size:10px;font-weight:normal;">(In USD)</span></label>
 							<div class="col-sm-4">
-								<input type="text" name="p_old_price" class="form-control">
+								<input type="text" name="old_price" class="form-control">
 							</div>
 						</div>
 						<div class="form-group">
 							<label for="" class="col-sm-3 control-label">Current Price <span>*</span><br><span style="font-size:10px;font-weight:normal;">(In USD)</span></label>
 							<div class="col-sm-4">
-								<input type="text" name="p_current_price" class="form-control">
+								<input type="text" name="current_price" class="form-control">
 							</div>
 						</div>	
 						<div class="form-group">
 							<label for="" class="col-sm-3 control-label">Quantity <span>*</span></label>
 							<div class="col-sm-4">
-								<input type="text" name="p_qty" class="form-control">
+								<input type="text" name="quantity" class="form-control">
 							</div>
 						</div>
-						<div class="form-group">
-							<label for="" class="col-sm-3 control-label">Select Size</label>
-							<div class="col-sm-4">
-								<select name="size[]" class="form-control select2" multiple="multiple">
-									<?php
-									$statement = $pdo->prepare("SELECT * FROM tbl_size ORDER BY size_id ASC");
-									$statement->execute();
-									$result = $statement->fetchAll(PDO::FETCH_ASSOC);			
-									foreach ($result as $row) {
-										?>
-										<option value="<?php echo $row['size_id']; ?>"><?php echo $row['size_name']; ?></option>
-										<?php
-									}
-									?>
-								</select>
-							</div>
 						</div>
 						<div class="form-group">
 							<label for="" class="col-sm-3 control-label">Select Color</label>
@@ -286,7 +258,7 @@ if(isset($_POST['form1'])) {
 						<div class="form-group">
 							<label for="" class="col-sm-3 control-label">Featured Photo <span>*</span></label>
 							<div class="col-sm-4" style="padding-top:4px;">
-								<input type="file" name="p_featured_photo">
+								<input type="file" name="product_photo">
 							</div>
 						</div>
 						<div class="form-group">
@@ -312,37 +284,31 @@ if(isset($_POST['form1'])) {
 						<div class="form-group">
 							<label for="" class="col-sm-3 control-label">Description</label>
 							<div class="col-sm-8">
-								<textarea name="p_description" class="form-control" cols="30" rows="10" id="editor1"></textarea>
+								<textarea name="description" class="form-control" cols="30" rows="10" id="editor1"></textarea>
 							</div>
 						</div>
 						<div class="form-group">
 							<label for="" class="col-sm-3 control-label">Short Description</label>
 							<div class="col-sm-8">
-								<textarea name="p_short_description" class="form-control" cols="30" rows="10" id="editor2"></textarea>
+								<textarea name="short_description" class="form-control" cols="30" rows="10" id="editor2"></textarea>
 							</div>
 						</div>
 						<div class="form-group">
 							<label for="" class="col-sm-3 control-label">Features</label>
 							<div class="col-sm-8">
-								<textarea name="p_feature" class="form-control" cols="30" rows="10" id="editor3"></textarea>
+								<textarea name="feature" class="form-control" cols="30" rows="10" id="editor3"></textarea>
 							</div>
 						</div>
 						<div class="form-group">
 							<label for="" class="col-sm-3 control-label">Conditions</label>
 							<div class="col-sm-8">
-								<textarea name="p_condition" class="form-control" cols="30" rows="10" id="editor4"></textarea>
-							</div>
-						</div>
-						<div class="form-group">
-							<label for="" class="col-sm-3 control-label">Return Policy</label>
-							<div class="col-sm-8">
-								<textarea name="p_return_policy" class="form-control" cols="30" rows="10" id="editor5"></textarea>
+								<textarea name="condition" class="form-control" cols="30" rows="10" id="editor4"></textarea>
 							</div>
 						</div>
 						<div class="form-group">
 							<label for="" class="col-sm-3 control-label">Is Featured?</label>
 							<div class="col-sm-8">
-								<select name="p_is_featured" class="form-control" style="width:auto;">
+								<select name="is_featured" class="form-control" style="width:auto;">
 									<option value="0">No</option>
 									<option value="1">Yes</option>
 								</select> 
@@ -351,7 +317,7 @@ if(isset($_POST['form1'])) {
 						<div class="form-group">
 							<label for="" class="col-sm-3 control-label">Is Active?</label>
 							<div class="col-sm-8">
-								<select name="p_is_active" class="form-control" style="width:auto;">
+								<select name="is_active" class="form-control" style="width:auto;">
 									<option value="0">No</option>
 									<option value="1">Yes</option>
 								</select> 
