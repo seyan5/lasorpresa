@@ -34,8 +34,8 @@ if(isset($_POST['form1'])) {
         $error_message .= "Quantity can not be empty<br>";
     }
 
-    $path = $_FILES['p_featured_photo']['name'];
-    $path_tmp = $_FILES['p_featured_photo']['tmp_name'];
+    $path = $_FILES['product_photo']['name'];
+    $path_tmp = $_FILES['product_photo']['tmp_name'];
 
     if($path!='') {
         $ext = pathinfo( $path, PATHINFO_EXTENSION );
@@ -60,7 +60,7 @@ if(isset($_POST['form1'])) {
             $photo_temp = $_FILES['photo']["tmp_name"];
             $photo_temp = array_values(array_filter($photo_temp));
 
-        	$statement = $pdo->prepare("SHOW TABLE STATUS LIKE 'tbl_product_photo'");
+        	$statement = $pdo->prepare("SHOW TABLE STATUS LIKE 'product_photo'");
 			$statement->execute();
 			$result = $statement->fetchAll();
 			foreach($result as $row) {
@@ -74,7 +74,7 @@ if(isset($_POST['form1'])) {
                 $my_ext1 = pathinfo( $photo[$i], PATHINFO_EXTENSION );
 		        if( $my_ext1=='jpg' || $my_ext1=='png' || $my_ext1=='jpeg' || $my_ext1=='gif' ) {
 		            $final_name1[$m] = $z.'.'.$my_ext1;
-                    move_uploaded_file($photo_temp[$i],"../assets/uploads/product_photos/".$final_name1[$m]);
+                    move_uploaded_file($photo_temp[$i],"../uploads/product_photos/".$final_name1[$m]);
                     $m++;
                     $z++;
 		        }
@@ -83,7 +83,7 @@ if(isset($_POST['form1'])) {
             if(isset($final_name1)) {
             	for($i=0;$i<count($final_name1);$i++)
 		        {
-		        	$statement = $pdo->prepare("INSERT INTO tbl_product_photo (photo,p_id) VALUES (?,?)");
+		        	$statement = $pdo->prepare("INSERT INTO product_photo (photo,p_id) VALUES (?,?)");
 		        	$statement->execute(array($final_name1[$i],$_REQUEST['id']));
 		        }
             }            
@@ -91,72 +91,67 @@ if(isset($_POST['form1'])) {
 
         if($path == '') {
         	$statement = $pdo->prepare("UPDATE tbl_product SET 
-        							p_name=?, 
-        							p_old_price=?, 
-        							p_current_price=?, 
-        							p_qty=?,
-        							p_description=?,
-        							p_short_description=?,
-        							p_feature=?,
-        							p_condition=?,
-        							p_return_policy=?,
-        							p_is_featured=?,
-        							p_is_active=?,
+        							name=?, 
+        							old_price=?, 
+        							current_price=?, 
+        							quantity=?,
+        							description=?,
+        							short_description=?,
+        							feature=?,
+        							condition=?,
+        							is_featured=?,
+        							is_active=?,
         							ecat_id=?
 
         							WHERE p_id=?");
         	$statement->execute(array(
-        							$_POST['p_name'],
-        							$_POST['p_old_price'],
-        							$_POST['p_current_price'],
-        							$_POST['p_qty'],
-        							$_POST['p_description'],
-        							$_POST['p_short_description'],
-        							$_POST['p_feature'],
-        							$_POST['p_condition'],
-        							$_POST['p_return_policy'],
-        							$_POST['p_is_featured'],
-        							$_POST['p_is_active'],
+        							$_POST['name'],
+        							$_POST['old_price'],
+        							$_POST['current_price'],
+        							$_POST['quantity'],
+        							$_POST['description'],
+        							$_POST['short_description'],
+        							$_POST['feature'],
+        							$_POST['condition'],
+        							$_POST['is_featured'],
+        							$_POST['is_active'],
         							$_POST['ecat_id'],
         							$_REQUEST['id']
         						));
         } else {
 
-        	unlink('../assets/uploads/'.$_POST['current_photo']);
+        	unlink('../uploads/'.$_POST['current_photo']);
 
 			$final_name = 'product-featured-'.$_REQUEST['id'].'.'.$ext;
-        	move_uploaded_file( $path_tmp, '../assets/uploads/'.$final_name );
+        	move_uploaded_file( $path_tmp, '../uploads/'.$final_name );
 
 
         	$statement = $pdo->prepare("UPDATE tbl_product SET 
-        							p_name=?, 
-        							p_old_price=?, 
-        							p_current_price=?, 
-        							p_qty=?,
-        							p_featured_photo=?,
-        							p_description=?,
-        							p_short_description=?,
-        							p_feature=?,
-        							p_condition=?,
-        							p_return_policy=?,
-        							p_is_featured=?,
-        							p_is_active=?,
+         							name=?, 
+        							old_price=?, 
+        							current_price=?, 
+        							quantity=?,
+        							description=?,
+        							short_description=?,
+        							feature=?,
+        							condition=?,
+        							is_featured=?,
+        							is_active=?,
         							ecat_id=?
 
         							WHERE p_id=?");
         	$statement->execute(array(
-        							$_POST['p_name'],
-        							$_POST['p_old_price'],
-        							$_POST['p_current_price'],
-        							$_POST['p_qty'],
+        							$_POST['name'],
+        							$_POST['old_price'],
+        							$_POST['current_price'],
+        							$_POST['quantity'],
         							$final_name,
-        							$_POST['p_description'],
-        							$_POST['p_short_description'],
-        							$_POST['p_feature'],
-        							$_POST['p_condition'],
-        							$_POST['p_return_policy'],
-        							$_POST['p_is_featured'],
-        							$_POST['p_is_active'],
+        							$_POST['description'],
+        							$_POST['short_description'],
+        							$_POST['feature'],
+        							$_POST['condition'],
+        							$_POST['is_featured'],
+        							$_POST['is_active'],
         							$_POST['ecat_id'],
         							$_REQUEST['id']
         						));
@@ -165,29 +160,29 @@ if(isset($_POST['form1'])) {
 
         if(isset($_POST['size'])) {
 
-        	$statement = $pdo->prepare("DELETE FROM tbl_product_size WHERE p_id=?");
+        	$statement = $pdo->prepare("DELETE FROM product_size WHERE p_id=?");
         	$statement->execute(array($_REQUEST['id']));
 
 			foreach($_POST['size'] as $value) {
-				$statement = $pdo->prepare("INSERT INTO tbl_product_size (size_id,p_id) VALUES (?,?)");
+				$statement = $pdo->prepare("INSERT INTO product_size (size_id,p_id) VALUES (?,?)");
 				$statement->execute(array($value,$_REQUEST['id']));
 			}
 		} else {
-			$statement = $pdo->prepare("DELETE FROM tbl_product_size WHERE p_id=?");
+			$statement = $pdo->prepare("DELETE FROM product_size WHERE p_id=?");
         	$statement->execute(array($_REQUEST['id']));
 		}
 
 		if(isset($_POST['color'])) {
 			
-			$statement = $pdo->prepare("DELETE FROM tbl_product_color WHERE p_id=?");
+			$statement = $pdo->prepare("DELETE FROM product_color WHERE p_id=?");
         	$statement->execute(array($_REQUEST['id']));
 
 			foreach($_POST['color'] as $value) {
-				$statement = $pdo->prepare("INSERT INTO tbl_product_color (color_id,p_id) VALUES (?,?)");
+				$statement = $pdo->prepare("INSERT INTO product_color (color_id,p_id) VALUES (?,?)");
 				$statement->execute(array($value,$_REQUEST['id']));
 			}
 		} else {
-			$statement = $pdo->prepare("DELETE FROM tbl_product_color WHERE p_id=?");
+			$statement = $pdo->prepare("DELETE FROM product_color WHERE p_id=?");
         	$statement->execute(array($_REQUEST['id']));
 		}
 	
@@ -202,7 +197,7 @@ if(!isset($_REQUEST['id'])) {
 	exit;
 } else {
 	// Check the id is valid or not
-	$statement = $pdo->prepare("SELECT * FROM tbl_product WHERE p_id=?");
+	$statement = $pdo->prepare("SELECT * FROM product WHERE p_id=?");
 	$statement->execute(array($_REQUEST['id']));
 	$total = $statement->rowCount();
 	$result = $statement->fetchAll(PDO::FETCH_ASSOC);
@@ -223,30 +218,29 @@ if(!isset($_REQUEST['id'])) {
 </section>
 
 <?php
-$statement = $pdo->prepare("SELECT * FROM tbl_product WHERE p_id=?");
+$statement = $pdo->prepare("SELECT * FROM product WHERE p_id=?");
 $statement->execute(array($_REQUEST['id']));
 $result = $statement->fetchAll(PDO::FETCH_ASSOC);
 foreach ($result as $row) {
-	$p_name = $row['p_name'];
-	$p_old_price = $row['p_old_price'];
-	$p_current_price = $row['p_current_price'];
-	$p_qty = $row['p_qty'];
-	$p_featured_photo = $row['p_featured_photo'];
-	$p_description = $row['p_description'];
-	$p_short_description = $row['p_short_description'];
-	$p_feature = $row['p_feature'];
-	$p_condition = $row['p_condition'];
-	$p_return_policy = $row['p_return_policy'];
-	$p_is_featured = $row['p_is_featured'];
-	$p_is_active = $row['p_is_active'];
+	$name = $row['name'];
+	$old_price = $row['old_price'];
+	$current_price = $row['current_price'];
+	$qty = $row['quantity'];
+	$featured_photo = $row['featured_photo'];
+	$description = $row['description'];
+	$short_description = $row['short_description'];
+	$feature = $row['feature'];
+	$condition = $row['condition'];
+	$is_featured = $row['is_featured'];
+	$is_active = $row['is_active'];
 	$ecat_id = $row['ecat_id'];
 }
 
 $statement = $pdo->prepare("SELECT * 
-                        FROM tbl_end_category t1
-                        JOIN tbl_mid_category t2
+                        FROM end_category t1
+                        JOIN mid_category t2
                         ON t1.mcat_id = t2.mcat_id
-                        JOIN tbl_top_category t3
+                        JOIN top_category t3
                         ON t2.tcat_id = t3.tcat_id
                         WHERE t1.ecat_id=?");
 $statement->execute(array($ecat_id));
@@ -257,14 +251,14 @@ foreach ($result as $row) {
     $tcat_id = $row['tcat_id'];
 }
 
-$statement = $pdo->prepare("SELECT * FROM tbl_product_size WHERE p_id=?");
+$statement = $pdo->prepare("SELECT * FROM product_size WHERE p_id=?");
 $statement->execute(array($_REQUEST['id']));
 $result = $statement->fetchAll(PDO::FETCH_ASSOC);							
 foreach ($result as $row) {
 	$size_id[] = $row['size_id'];
 }
 
-$statement = $pdo->prepare("SELECT * FROM tbl_product_color WHERE p_id=?");
+$statement = $pdo->prepare("SELECT * FROM product_color WHERE p_id=?");
 $statement->execute(array($_REQUEST['id']));
 $result = $statement->fetchAll(PDO::FETCH_ASSOC);							
 foreach ($result as $row) {
@@ -304,7 +298,7 @@ foreach ($result as $row) {
 								<select name="tcat_id" class="form-control select2 top-cat">
 		                            <option value="">Select Top Level Category</option>
 		                            <?php
-		                            $statement = $pdo->prepare("SELECT * FROM tbl_top_category ORDER BY tcat_name ASC");
+		                            $statement = $pdo->prepare("SELECT * FROM top_category ORDER BY tcat_name ASC");
 		                            $statement->execute();
 		                            $result = $statement->fetchAll(PDO::FETCH_ASSOC);   
 		                            foreach ($result as $row) {
@@ -322,7 +316,7 @@ foreach ($result as $row) {
 								<select name="mcat_id" class="form-control select2 mid-cat">
 		                            <option value="">Select Mid Level Category</option>
 		                            <?php
-		                            $statement = $pdo->prepare("SELECT * FROM tbl_mid_category WHERE tcat_id = ? ORDER BY mcat_name ASC");
+		                            $statement = $pdo->prepare("SELECT * FROM mid_category WHERE tcat_id = ? ORDER BY mcat_name ASC");
 		                            $statement->execute(array($tcat_id));
 		                            $result = $statement->fetchAll(PDO::FETCH_ASSOC);   
 		                            foreach ($result as $row) {
@@ -340,9 +334,9 @@ foreach ($result as $row) {
 								<select name="ecat_id" class="form-control select2 end-cat">
 		                            <option value="">Select End Level Category</option>
 		                            <?php
-		                            $statement = $pdo->prepare("SELECT * FROM tbl_end_category WHERE mcat_id = ? ORDER BY ecat_name ASC");
+		                            $statement = $pdo->prepare("SELECT * FROM end_category WHERE mcat_id = ? ORDER BY ecat_name ASC");
 		                            $statement->execute(array($mcat_id));
-		                            $result = $statement->fetchAll(PDO::FETCH_ASSOC);   
+		                            $result = $statement->fetchAll(PDO::FETCH_ASSOC); 
 		                            foreach ($result as $row) {
 		                                ?>
 		                                <option value="<?php echo $row['ecat_id']; ?>" <?php if($row['ecat_id'] == $ecat_id){echo 'selected';} ?>><?php echo $row['ecat_name']; ?></option>
@@ -355,25 +349,25 @@ foreach ($result as $row) {
 						<div class="form-group">
 							<label for="" class="col-sm-3 control-label">Product Name <span>*</span></label>
 							<div class="col-sm-4">
-								<input type="text" name="p_name" class="form-control" value="<?php echo $p_name; ?>">
+								<input type="text" name="name" class="form-control" value="<?php echo $name; ?>">
 							</div>
 						</div>	
 						<div class="form-group">
 							<label for="" class="col-sm-3 control-label">Old Price<br><span style="font-size:10px;font-weight:normal;">(In USD)</span></label>
 							<div class="col-sm-4">
-								<input type="text" name="p_old_price" class="form-control" value="<?php echo $p_old_price; ?>">
+								<input type="text" name="old_price" class="form-control" value="<?php echo $old_price; ?>">
 							</div>
 						</div>	
 						<div class="form-group">
 							<label for="" class="col-sm-3 control-label">Current Price <span>*</span><br><span style="font-size:10px;font-weight:normal;">(In USD)</span></label>
 							<div class="col-sm-4">
-								<input type="text" name="p_current_price" class="form-control" value="<?php echo $p_current_price; ?>">
+								<input type="text" name="current_price" class="form-control" value="<?php echo $current_price; ?>">
 							</div>
 						</div>	
 						<div class="form-group">
 							<label for="" class="col-sm-3 control-label">Quantity <span>*</span></label>
 							<div class="col-sm-4">
-								<input type="text" name="p_qty" class="form-control" value="<?php echo $p_qty; ?>">
+								<input type="text" name="quantity" class="form-control" value="<?php echo $p_qty; ?>">
 							</div>
 						</div>
 						<div class="form-group">
@@ -382,7 +376,7 @@ foreach ($result as $row) {
 								<select name="size[]" class="form-control select2" multiple="multiple">
 									<?php
 									$is_select = '';
-									$statement = $pdo->prepare("SELECT * FROM tbl_size ORDER BY size_id ASC");
+									$statement = $pdo->prepare("SELECT * FROM size ORDER BY size_id ASC");
 									$statement->execute();
 									$result = $statement->fetchAll(PDO::FETCH_ASSOC);			
 									foreach ($result as $row) {
@@ -407,7 +401,7 @@ foreach ($result as $row) {
 								<select name="color[]" class="form-control select2" multiple="multiple">
 									<?php
 									$is_select = '';
-									$statement = $pdo->prepare("SELECT * FROM tbl_color ORDER BY color_id ASC");
+									$statement = $pdo->prepare("SELECT * FROM color ORDER BY color_id ASC");
 									$statement->execute();
 									$result = $statement->fetchAll(PDO::FETCH_ASSOC);			
 									foreach ($result as $row) {
@@ -445,7 +439,7 @@ foreach ($result as $row) {
 								<table id="ProductTable" style="width:100%;">
 			                        <tbody>
 			                        	<?php
-			                        	$statement = $pdo->prepare("SELECT * FROM tbl_product_photo WHERE p_id=?");
+			                        	$statement = $pdo->prepare("SELECT * FROM product_photo WHERE p_id=?");
 			                        	$statement->execute(array($_REQUEST['id']));
 			                        	$result = $statement->fetchAll(PDO::FETCH_ASSOC);
 			                        	foreach ($result as $row) {
@@ -471,37 +465,32 @@ foreach ($result as $row) {
 						<div class="form-group">
 							<label for="" class="col-sm-3 control-label">Description</label>
 							<div class="col-sm-8">
-								<textarea name="p_description" class="form-control" cols="30" rows="10" id="editor1"><?php echo $p_description; ?></textarea>
+								<textarea name="description" class="form-control" cols="30" rows="10" id="editor1"><?php echo $description; ?></textarea>
 							</div>
 						</div>
 						<div class="form-group">
 							<label for="" class="col-sm-3 control-label">Short Description</label>
 							<div class="col-sm-8">
-								<textarea name="p_short_description" class="form-control" cols="30" rows="10" id="editor1"><?php echo $p_short_description; ?></textarea>
+								<textarea name="short_description" class="form-control" cols="30" rows="10" id="editor1"><?php echo $short_description; ?></textarea>
 							</div>
 						</div>
 						<div class="form-group">
 							<label for="" class="col-sm-3 control-label">Features</label>
 							<div class="col-sm-8">
-								<textarea name="p_feature" class="form-control" cols="30" rows="10" id="editor3"><?php echo $p_feature; ?></textarea>
+								<textarea name="feature" class="form-control" cols="30" rows="10" id="editor3"><?php echo $feature; ?></textarea>
 							</div>
 						</div>
 						<div class="form-group">
 							<label for="" class="col-sm-3 control-label">Conditions</label>
 							<div class="col-sm-8">
-								<textarea name="p_condition" class="form-control" cols="30" rows="10" id="editor4"><?php echo $p_condition; ?></textarea>
+								<textarea name="condition" class="form-control" cols="30" rows="10" id="editor4"><?php echo $condition; ?></textarea>
 							</div>
 						</div>
-						<div class="form-group">
-							<label for="" class="col-sm-3 control-label">Return Policy</label>
-							<div class="col-sm-8">
-								<textarea name="p_return_policy" class="form-control" cols="30" rows="10" id="editor5"><?php echo $p_return_policy; ?></textarea>
-							</div>
 						</div>
 						<div class="form-group">
 							<label for="" class="col-sm-3 control-label">Is Featured?</label>
 							<div class="col-sm-8">
-								<select name="p_is_featured" class="form-control" style="width:auto;">
+								<select name="is_featured" class="form-control" style="width:auto;">
 									<option value="0" <?php if($p_is_featured == '0'){echo 'selected';} ?>>No</option>
 									<option value="1" <?php if($p_is_featured == '1'){echo 'selected';} ?>>Yes</option>
 								</select> 
@@ -510,7 +499,7 @@ foreach ($result as $row) {
 						<div class="form-group">
 							<label for="" class="col-sm-3 control-label">Is Active?</label>
 							<div class="col-sm-8">
-								<select name="p_is_active" class="form-control" style="width:auto;">
+								<select name="is_active" class="form-control" style="width:auto;">
 									<option value="0" <?php if($p_is_active == '0'){echo 'selected';} ?>>No</option>
 									<option value="1" <?php if($p_is_active == '1'){echo 'selected';} ?>>Yes</option>
 								</select> 

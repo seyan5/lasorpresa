@@ -6,7 +6,7 @@ if( !isset($_REQUEST['id']) || !isset($_REQUEST['id1']) ) {
 	exit;
 } else {
 	// Check the id is valid or not
-	$statement = $pdo->prepare("SELECT * FROM tbl_product_photo WHERE pp_id=?");
+	$statement = $pdo->prepare("SELECT * FROM product_photo WHERE pp_id=?");
 	$statement->execute(array($_REQUEST['id']));
 	$total = $statement->rowCount();
 	if( $total == 0 ) {
@@ -19,7 +19,7 @@ if( !isset($_REQUEST['id']) || !isset($_REQUEST['id1']) ) {
 <?php
 
 	// Getting photo ID to unlink from folder
-	$statement = $pdo->prepare("SELECT * FROM tbl_product_photo WHERE pp_id=?");
+	$statement = $pdo->prepare("SELECT * FROM product_photo WHERE pp_id=?");
 	$statement->execute(array($_REQUEST['id']));
 	$result = $statement->fetchAll(PDO::FETCH_ASSOC);							
 	foreach ($result as $row) {
@@ -28,11 +28,11 @@ if( !isset($_REQUEST['id']) || !isset($_REQUEST['id1']) ) {
 
 	// Unlink the photo
 	if($photo!='') {
-		unlink('../assets/uploads/product_photos/'.$photo);	
+		unlink('../uploads/product_photos/'.$photo);	
 	}
 
 	// Delete from tbl_testimonial
-	$statement = $pdo->prepare("DELETE FROM tbl_product_photo WHERE pp_id=?");
+	$statement = $pdo->prepare("DELETE FROM product_photo WHERE pp_id=?");
 	$statement->execute(array($_REQUEST['id']));
 
 	header('location: product-edit.php?id='.$_REQUEST['id1']);

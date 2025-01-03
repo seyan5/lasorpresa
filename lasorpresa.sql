@@ -65,6 +65,24 @@ ALTER TABLE `users`
   MODIFY `id` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 COMMIT;
 
+CREATE TABLE `product` (
+  `p_id` int(11) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `old_price` varchar(10) NOT NULL,
+  `current_price` varchar(10) NOT NULL,
+  `quantity` int(10) NOT NULL,
+  `product_photo` varchar(255) NOT NULL,
+  `description` text NOT NULL,
+  `short_description` text NOT NULL,
+  `other_photo` text NOT NULL,
+  `condition` text NOT NULL,
+  `total_view` int(11) NOT NULL,
+  `is_featured` int(1) NOT NULL,
+  `is_active` int(1) NOT NULL,
+  `ecat_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
