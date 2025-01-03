@@ -1,27 +1,30 @@
 <?php
+session_start();
+include '../config.php';
 
-    session_start();
+if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] != 'admin') {
+    header('Location: ../login.php');
+    exit();
+}
 
-    if(isset($_SESSION["user"])){
-        if(($_SESSION["user"])=="" or $_SESSION['usertype']!='admin'){
-            header("location: ../login.php");
+if (isset($_GET['id'])) {
+    $id = intval($_GET['id']);
+
+    if ($stmt = $conn->prepare("DELETE FROM users WHERE id = ?")) {
+        $stmt->bind_param("i", $id);
+
+        if ($stmt->execute()) {
+            $stmt->close();
+            header('Location: users.php');
+            exit();
+        } else {
+            $stmt->close();
+            die('Error deleting record: ' . $conn->error);
         }
-
-    }else{
-        header("location: ../login.php");
+    } else {
+        die('Error preparing statement: ' . $conn->error);
     }
-    
-    
-    if($_GET){
-        //import database
-        include("../config.php");
-        $id=$_GET["id"];
-        $result= $conn->query("select * from users where id=$id;");
-        $email=($result->fetch_assoc())["email"];
-        $sql= $conn->query("delete from users where email='$email';");
-        //print_r($email);
-        header("location: users.php");
-    }
-
-
+} else {
+    die('Invalid request.');
+}
 ?>

@@ -194,6 +194,7 @@ $conn->close();
                     <h1>Welcome Back!</h1>
                     <p>To keep connected with us please login with your personal info.</p>
                     <button id="signIn">Sign In</button>
+                    
                 </div>
                 <div class="overlay-panel overlay-right">
                     <h1>Hello, Friend!</h1>
@@ -207,33 +208,17 @@ $conn->close();
 
     <!-- js code -->
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-    const container = document.getElementById('container');
-    const signInButton = document.getElementById('signIn');
-    const signUpButton = document.getElementById('signUp');
-
-    signInButton.addEventListener('click', () => {
-        container.classList.remove('right-panel-active');
-    });
-
-    signUpButton.addEventListener('click', () => {
-        container.classList.add('right-panel-active');
-    });
-});
-      signUpButton.addEventListener('click', () => {
+        const container = document.getElementById('container');
+        const signInButton = document.getElementById('signIn');
+        const signUpButton = document.getElementById('overlayBtn');
+        signInButton.addEventListener('click', () => {
+            console.log("Sign In button clicked");
+            container.classList.remove('right-panel-active');
+        });
+        signUpButton.addEventListener('click', () => {
+            console.log("Sign Up button clicked");
             container.classList.add('right-panel-active');
         });
-
-        const signUpForm = document.querySelector('.sign-up-container form');
-signUpForm.addEventListener('submit', (e) => {
-    const password = document.querySelector('input[name="password"]').value;
-    const confirmPassword = document.querySelector('input[name="confirmpassword"]').value;
-
-    if (password !== confirmPassword) {
-        e.preventDefault(); // Prevent form submission
-        alert('Passwords do not match.');
-    }
-});
     </script>
 
 </body>

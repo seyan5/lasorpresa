@@ -3,125 +3,114 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Checkout</title>
 
-    <!-- font -->
+    <!-- Font Awesome and Google Fonts -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 
-    <!-- css -->
+    <!-- CSS -->
     <link rel="stylesheet" href="../css/checkout.css">
 </head>
-
 <body>
-    <!-- header -->
+    <!-- Header -->
+    <header>
+        <input type="checkbox" id="toggler">
+        <label for="toggler" class="fas fa-bars"></label>
 
-<header>
+        <a href="#" class="logo">Flower<span>.</span></a>
+        <nav class="navbar">
+            <a href="#home">Home</a>
+            <a href="#about">About</a>
+            <a href="#product">Product</a>
+            <a href="#review">Review</a>
+            <a href="#contacts">Contacts</a>
+        </nav>
 
-    <input type="checkbox" name="" id="toggler">
-    <label for="toggler" class="fas fa-bars"></label>
+        <div class="icons">
+            <a href="#" class="fas fa-heart"></a>
+            <a href="cart.html" class="fas fa-shopping-cart"></a>
+            <a href="#" class="fas fa-user"></a>
+        </div>
+    </header>
 
-    <a href="#" class="logo">Flower<span>.</span></a>
-    <nav class="navbar">
-        <a href="#home">Home</a>
-
-        <a href="#about">About</a>
-        <a href="#product">Product</a>
-        <a href="#review">Review</a>
-        <a href="#contacts">Contacts</a>
-
-    </nav>
-     
-    <div class="icons">
-        <a href="#" class="fas fa-heart"></a>
-
-        <a href="cart.html" class="fas fa-shopping-cart"></a>
-
-        <a href="#" class="fas fa-user"></a>
-    </div>
-
-</header>
-
-<section>
-  <div class="container">
-    <div class="checkoutLayout">
-
-        
-        <div class="returnCart">
-            <h1>List Product in Cart</h1>
-            <div class="list">
-
-                <div class="item">
-                    <img src="../ivd/flower1.jpg">
-                    <div class="info">
-                        <div class="name">PRODUCT 1</div>
-                        <div class="price">$22/1 product</div>
+    <!-- Main Section -->
+    <section>
+        <div class="container">
+            <div class="checkoutLayout">
+                <!-- Shopping Cart -->
+                <div>
+                    <h2>My Shopping Cart</h2>
+                    <div class="cart">
+                        <div class="cart-item">
+                            <div class="row">
+                                <div class="col-md-7 center-item">
+                                    <img src="../ivd/flower.png" alt="iPhone 11">
+                                    <h5>iPhone 11 128GB Black ($1219)</h5>
+                                </div>
+                                <div class="col-md-5 center-item">
+                                    <div class="input-group number-spinner">
+                                        <button class="btn btn-default" id="phone-minus"><i class="fas fa-minus"></i></button>
+                                        <input id="phone-number" type="number" min="0" class="form-control text-center" value="1">
+                                        <button class="btn btn-default" id="phone-plus"><i class="fas fa-plus"></i></button>
+                                    </div>
+                                    <h5>$<span id="phone-total">1219</span></h5>
+                                        <img src="images/remove.png" alt="Remove" class="remove-item">
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="quantity">5</div>
-                    <div class="returnPrice">$433.3</div>
                 </div>
-
+                <!-- Checkout Form -->
+                <div class="right">
+                    <h1>Checkout</h1>
+                    <form class="form">
+                        <div class="group">
+                            <label for="name">Full Name</label>
+                            <input type="text" id="name" placeholder="Enter your name">
+                        </div>
+                        <div class="group">
+                            <label for="phone">Phone Number</label>
+                            <input type="text" id="phone" placeholder="Enter your phone number">
+                        </div>
+                        <div class="group">
+                            <label for="address">Address</label>
+                            <input type="text" id="address" placeholder="Enter your address">
+                        </div>
+                        <div class="group">
+                            <label for="country">Country</label>
+                            <select id="country">
+                                <option value="">Choose...</option>
+                                <option value="kingdom">Kingdom</option>
+                            </select>
+                        </div>
+                        <div class="group">
+                            <label for="city">City</label>
+                            <select id="city">
+                                <option value="">Choose...</option>
+                                <option value="london">London</option>
+                            </select>
+                        </div>
+                    </form>
+                    <div class="return">
+                        <div class="row">
+                            <div>Total Quantity</div>
+                            <div class="totalQuantity">$<span id="total-price">1278</div>
+                        </div>
+                        <div class="row">
+                            <div>Subtotal: </div>
+                            <div class="totalPrice">$<span id="sub-total">1278</div>
+                        </div>
+                    </div>
+                    <button class="buttonCheckout">CHECKOUT</button>
+                </div>
             </div>
         </div>
+    </section>
 
-
-        <div class="right">
-            <h1>Checkout</h1>
-
-            <div class="form">
-                <div class="group">
-                    <label for="name">Full Name</label>
-                    <input type="text" name="name" id="name">
-                </div>
-    
-                <div class="group">
-                    <label for="phone">Phone Number</label>
-                    <input type="text" name="phone" id="phone">
-                </div>
-    
-                <div class="group">
-                    <label for="address">Address</label>
-                    <input type="text" name="address" id="address">
-                </div>
-    
-                <div class="group">
-                    <label for="country">Country</label>
-                    <select name="country" id="country">
-                        <option value="">Choose..</option>
-                        <option value="">Kingdom</option>
-                    </select>
-                </div>
-    
-                <div class="group">
-                    <label for="city">City</label>
-                    <select name="city" id="city">
-                        <option value="">Choose..</option>
-                        <option value="">London</option>
-                    </select>
-                </div>
-            </div>
-            <div class="return">
-                <div class="row">
-                    <div>Total Quantity</div>
-                    <div class="totalQuantity">70</div>
-                </div>
-                <div class="row">
-                    <div>Total Price</div>
-                    <div class="totalPrice">$900</div>
-                </div>
-            </div>
-            <button class="buttonCheckout">CHECKOUT</button>
-            </div>
-    </div>
-</div>
-
-
-<script src="../js/checkout.js"></script>
-
-</section>
-    
-
+    <!-- JavaScript -->
+    <script src="js/checkout.js"></script>
 </body>
 </html>
