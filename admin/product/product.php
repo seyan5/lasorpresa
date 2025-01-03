@@ -34,14 +34,14 @@
 							$i=0;
 							$statement = $pdo->prepare("SELECT
 														
-														t1.p_id,
-														t1.p_name,
-														t1.p_old_price,
-														t1.p_current_price,
-														t1.p_qty,
-														t1.p_featured_photo,
-														t1.p_is_featured,
-														t1.p_is_active,
+														t1.id,
+														t1.name,
+														t1.old_price,
+														t1.current_price,
+														t1.quantity,
+														t1.product_photo,
+														t1.is_featured,
+														t1.is_active,
 														t1.ecat_id,
 
 														t2.ecat_id,
@@ -53,12 +53,12 @@
 														t4.tcat_id,
 														t4.tcat_name
 
-							                           	FROM tbl_product t1
-							                           	JOIN tbl_end_category t2
+							                           	FROM product t1
+							                           	JOIN end_category t2
 							                           	ON t1.ecat_id = t2.ecat_id
 							                           	JOIN tbl_mid_category t3
 							                           	ON t2.mcat_id = t3.mcat_id
-							                           	JOIN tbl_top_category t4
+							                           	JOIN top_category t4
 							                           	ON t3.tcat_id = t4.tcat_id
 							                           	ORDER BY t1.p_id DESC
 							                           	");
