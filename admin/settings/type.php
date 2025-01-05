@@ -119,7 +119,7 @@
 	                    <td><?php echo $row['type_name']; ?></td>
 	                    <td>
 	                        <a href="type-edit.php?id=<?php echo $row['type_id']; ?>" class="btn btn-primary btn-xs">Edit</a>
-	                        <a href="#" class="btn btn-danger btn-xs" data-href="type-delete.php?id=<?php echo $row['type_id']; ?>" data-toggle="modal" data-target="#confirm-delete">Delete</a>
+	                        <a href="#" class="btn btn-danger btn-xs" data-href="type-delete.php?id=<?php echo $row['type_id']; ?>" data-toggle="modal" data-target="#confirm-delete">
 	                    </td>
 	                </tr>
             		<?php
@@ -142,7 +142,7 @@
                 <h4 class="modal-title" id="myModalLabel">Delete Confirmation</h4>
             </div>
             <div class="modal-body">
-                Are you sure want to delete this item?
+                Are you sure you want to delete this item?
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
@@ -152,3 +152,16 @@
     </div>
 </div>
 
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        // When the delete button is clicked
+        $('#confirm-delete').on('show.bs.modal', function (e) {
+            // Get the data-href attribute from the clicked link
+            var href = $(e.relatedTarget).data('href');
+            // Set the href attribute of the confirmation button
+            $(this).find('.btn-ok').attr('href', href);
+        });
+    });
+</script>
