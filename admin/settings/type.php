@@ -78,8 +78,6 @@
             </ul>
         </div>
 
-        <?php require_once('header.php'); ?>
-
 <section class="content-header">
 	<div class="content-header-left">
 		<h1>View Sizes</h1>
