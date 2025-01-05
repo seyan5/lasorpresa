@@ -98,7 +98,7 @@
 
                         <tbody>
                             <tr>
-                                <td><a href="settings/type.php"></a>Type</td>
+                                <td><a href="settings/type.php">Type</td>
                             </tr>
 
                             <tr>
