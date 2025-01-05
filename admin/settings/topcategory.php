@@ -59,7 +59,7 @@
                 </li>
 
                 <li>
-                    <a href="#../settings.php">
+                    <a href="../settings.php">
                         <span class="icon">
                             <ion-icon name="settings-outline"></ion-icon>
                         </span>
