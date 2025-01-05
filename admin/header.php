@@ -57,7 +57,7 @@ $(document).ready(function() {
 
         if (tcat_id) {
             $.ajax({
-                url: 'get_mid_categories.php',  // Ensure the path is correct
+                url: 'settings/fetch-category.php',  // Ensure the path is correct
                 type: 'POST',
                 data: { tcat_id: tcat_id },
                 success: function(data) {
