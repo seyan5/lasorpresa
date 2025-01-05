@@ -1,8 +1,10 @@
-
-
 <?php
+// Initialize variables
+$error_message = '';
+$success_message = '';
+
 if(isset($_POST['form1'])) {
-	$valid = 1;
+    $valid = 1;
 
     if(empty($_POST['tcat_id'])) {
         $valid = 0;
@@ -21,17 +23,17 @@ if(isset($_POST['form1'])) {
 
     if(empty($_POST['name'])) {
         $valid = 0;
-        $error_message .= "Product name can not be empty<br>";
+        $error_message .= "Product name cannot be empty<br>";
     }
 
     if(empty($_POST['current_price'])) {
         $valid = 0;
-        $error_message .= "Current Price can not be empty<br>";
+        $error_message .= "Current Price cannot be empty<br>";
     }
 
     if(empty($_POST['quantity'])) {
         $valid = 0;
-        $error_message .= "Quantity can not be empty<br>";
+        $error_message .= "Quantity cannot be empty<br>";
     }
 
     $path = $_FILES['product_photo']['name'];
