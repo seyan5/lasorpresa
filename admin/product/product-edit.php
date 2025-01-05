@@ -209,7 +209,7 @@ foreach ($result as $row) {
 	$name = $row['name'];
 	$old_price = $row['old_price'];
 	$current_price = $row['current_price'];
-	$qty = $row['quantity'];
+	$quantity = $row['quantity'];
 	$featured_photo = $row['featured_photo'];
 	$description = $row['description'];
 	$short_description = $row['short_description'];
