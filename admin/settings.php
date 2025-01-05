@@ -79,44 +79,38 @@
         </div>
 
         <section class="content">
-
-  <div class="row">
-    <div class="col-md-12">
-
-
-      <div class="box box-info">
-        
-        <div class=>
-          <table>
-			<thead>
-			    <tr>
-	    
-			      <th>Settings</th>
-			
-			    </tr>
-			</thead>
-            <tbody>
-                            <tr>
-                                <td><a href="settings/type.php">Type</td>
-                            </tr>
-
-                            <tr>
-                                <td><a href="settings/color.php">Color</td>
-                            </tr>
-
-                            <tr>
-                                <td><a href="settings/topcategory.php">Top Level Category </td>
-                            </tr>
-
-                            <tr>
-                                <td><a href="settings/midcategory.php">Mid Level Cartegory</td>
-                            </tr>
-
-                            <tr>
-                                <td><a href="settings/endcategory.php">End Level Cartegory</td>
-                            </tr>
-                        </tbody>
-          </table>
-        </div>
-      </div>
-  
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="box box-info">
+                        <div class="box-body">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Settings</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><a href="settings/type.php">Type</a></td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href="settings/color.php">Color</a></td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href="settings/topcategory.php">Top Level Category</a></td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href="settings/midcategory.php">Mid Level Category</a></td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href="settings/endcategory.php">End Level Category</a></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+</body>
