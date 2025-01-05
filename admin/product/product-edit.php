@@ -18,17 +18,17 @@ if(isset($_POST['form1'])) {
         $error_message .= "You must have to select an end level category<br>";
     }
 
-    if(empty($_POST['p_name'])) {
+    if(empty($_POST['name'])) {
         $valid = 0;
         $error_message .= "Product name can not be empty<br>";
     }
 
-    if(empty($_POST['p_current_price'])) {
+    if(empty($_POST['current_price'])) {
         $valid = 0;
         $error_message .= "Current Price can not be empty<br>";
     }
 
-    if(empty($_POST['p_qty'])) {
+    if(empty($_POST['quantity'])) {
         $valid = 0;
         $error_message .= "Quantity can not be empty<br>";
     }
@@ -155,21 +155,6 @@ if(isset($_POST['form1'])) {
         							$_REQUEST['id']
         						));
         }
-		
-
-        if(isset($_POST['size'])) {
-
-        	$statement = $pdo->prepare("DELETE FROM product_size WHERE p_id=?");
-        	$statement->execute(array($_REQUEST['id']));
-
-			foreach($_POST['size'] as $value) {
-				$statement = $pdo->prepare("INSERT INTO product_size (size_id,p_id) VALUES (?,?)");
-				$statement->execute(array($value,$_REQUEST['id']));
-			}
-		} else {
-			$statement = $pdo->prepare("DELETE FROM product_size WHERE p_id=?");
-        	$statement->execute(array($_REQUEST['id']));
-		}
 
 		if(isset($_POST['color'])) {
 			
@@ -248,13 +233,6 @@ foreach ($result as $row) {
 	$ecat_name = $row['ecat_name'];
     $mcat_id = $row['mcat_id'];
     $tcat_id = $row['tcat_id'];
-}
-
-$statement = $pdo->prepare("SELECT * FROM product_size WHERE p_id=?");
-$statement->execute(array($_REQUEST['id']));
-$result = $statement->fetchAll(PDO::FETCH_ASSOC);							
-foreach ($result as $row) {
-	$size_id[] = $row['size_id'];
 }
 
 $statement = $pdo->prepare("SELECT * FROM product_color WHERE p_id=?");
@@ -369,30 +347,6 @@ foreach ($result as $row) {
 								<input type="text" name="quantity" class="form-control" value="<?php echo $p_qty; ?>">
 							</div>
 						</div>
-						<div class="form-group">
-							<label for="" class="col-sm-3 control-label">Select Size</label>
-							<div class="col-sm-4">
-								<select name="size[]" class="form-control select2" multiple="multiple">
-									<?php
-									$is_select = '';
-									$statement = $pdo->prepare("SELECT * FROM size ORDER BY size_id ASC");
-									$statement->execute();
-									$result = $statement->fetchAll(PDO::FETCH_ASSOC);			
-									foreach ($result as $row) {
-										if(isset($size_id)) {
-											if(in_array($row['size_id'],$size_id)) {
-												$is_select = 'selected';
-											} else {
-												$is_select = '';
-											}
-										}
-										?>
-										<option value="<?php echo $row['size_id']; ?>" <?php echo $is_select; ?>><?php echo $row['size_name']; ?></option>
-										<?php
-									}
-									?>
-								</select>
-							</div>
 						</div>
 						<div class="form-group">
 							<label for="" class="col-sm-3 control-label">Select Color</label>
