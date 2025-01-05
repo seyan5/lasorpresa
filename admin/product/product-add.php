@@ -19,7 +19,7 @@ if(isset($_POST['form1'])) {
         $error_message .= "You must have to select an end level category<br>";
     }
 
-    if(empty($_POST['p_name'])) {
+    if(empty($_POST['name'])) {
         $valid = 0;
         $error_message .= "Product name can not be empty<br>";
     }
