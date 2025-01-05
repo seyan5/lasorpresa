@@ -415,5 +415,3 @@ foreach ($result as $row) {
 	</div>
 
 </section>
-
-<?php require_once('footer.php'); ?>
