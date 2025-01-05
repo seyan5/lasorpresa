@@ -371,49 +371,49 @@ if(isset($_POST['form1'])) {
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     $(document).ready(function() {
-        // When the top-level category is changed
-        $('#tcat_id').change(function() {
-            var tcat_id = $(this).val();
+    // When the top-level category is changed
+    $('#tcat_id').change(function() {
+        var tcat_id = $(this).val();
 
-            if (tcat_id != '') {
-                // Send an AJAX request to fetch mid-level categories
-                $.ajax({
-                    url: '../settings/fetch-category.php',
-                    type: 'POST',
-                    data: { tcat_id: tcat_id },
-                    success: function(data) {
-                        // Populate the Mid Level Category dropdown
-                        $('#mcat_id').html(data);
-                        // Clear the End Level Category dropdown
-                        $('#ecat_id').html('<option value="">Select End Level Category</option>');
-                    }
-                });
-            } else {
-                // If no top category is selected, clear both mid-level and end-level options
-                $('#mcat_id').html('<option value="">Select Mid Level Category</option>');
-                $('#ecat_id').html('<option value="">Select End Level Category</option>');
-            }
-        });
-
-        // When the mid-level category is changed
-        $('#mcat_id').change(function() {
-            var mcat_id = $(this).val();
-
-            if (mcat_id != '') {
-                // Send an AJAX request to fetch end-level categories
-                $.ajax({
-                    url: '../settings/fetch-category.php',
-                    type: 'POST',
-                    data: { mcat_id: mcat_id },
-                    success: function(data) {
-                        // Populate the End Level Category dropdown
-                        $('#ecat_id').html(data);
-                    }
-                });
-            } else {
-                // If no mid category is selected, clear the end-level category options
-                $('#ecat_id').html('<option value="">Select End Level Category</option>');
-            }
-        });
+        if (tcat_id != '') {
+            // Send an AJAX request to fetch mid-level categories
+            $.ajax({
+                url: 'fetch-category.php',
+                type: 'POST',
+                data: { tcat_id: tcat_id },
+                success: function(data) {
+                    // Populate the Mid Level Category dropdown
+                    $('#mcat_id').html(data);
+                    // Clear the End Level Category dropdown
+                    $('#ecat_id').html('<option value="">Select End Level Category</option>');
+                }
+            });
+        } else {
+            // If no top category is selected, clear both mid-level and end-level options
+            $('#mcat_id').html('<option value="">Select Mid Level Category</option>');
+            $('#ecat_id').html('<option value="">Select End Level Category</option>');
+        }
     });
+
+    // When the mid-level category is changed
+    $('#mcat_id').change(function() {
+        var mcat_id = $(this).val();
+
+        if (mcat_id != '') {
+            // Send an AJAX request to fetch end-level categories
+            $.ajax({
+                url: 'fetch-category.php',
+                type: 'POST',
+                data: { mcat_id: mcat_id },
+                success: function(data) {
+                    // Populate the End Level Category dropdown
+                    $('#ecat_id').html(data);
+                }
+            });
+        } else {
+            // If no mid category is selected, clear the end-level category options
+            $('#ecat_id').html('<option value="">Select End Level Category</option>');
+        }
+    });
+});
 </script>
