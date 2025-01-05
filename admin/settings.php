@@ -78,22 +78,24 @@
             </ul>
         </div>
 
-        <div class="details">
-                <div class="recentOrders">
-                    <div class="cardHeader">
-                        <h2>Settings</h2>
-                        
-                    </div>
+        <section class="content">
 
-                    <table>
-                        <thead>
-                            <tr>
-                                <td>Name</td>
-                                
-                            </tr>
-                        </thead>
+  <div class="row">
+    <div class="col-md-12">
 
-                        <tbody>
+
+      <div class="box box-info">
+        
+        <div class="box-body table-responsive">
+          <table id="example1" class="table table-bordered table-hover table-striped">
+			<thead>
+			    <tr>
+	    
+			      <th>Settings</th>
+			
+			    </tr>
+			</thead>
+            <tbody>
                             <tr>
                                 <td><a href="settings/type.php">Type</td>
                             </tr>
@@ -114,5 +116,7 @@
                                 <td><a href="settings/endcategory.php">End Level Cartegory</td>
                             </tr>
                         </tbody>
-                    </table>
-                </div>
+          </table>
+        </div>
+      </div>
+  
