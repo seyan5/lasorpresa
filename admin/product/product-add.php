@@ -378,7 +378,7 @@ if(isset($_POST['form1'])) {
             if (tcat_id != '') {
                 // Send an AJAX request to fetch mid-level categories
                 $.ajax({
-                    url: 'fetch-category.php',
+                    url: '../settings/fetch-category.php',
                     type: 'POST',
                     data: { tcat_id: tcat_id },
                     success: function(data) {
