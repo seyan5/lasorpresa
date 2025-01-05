@@ -68,8 +68,6 @@ require_once('../inc/config.php');
 								echo "SQL Error: " . $e->getMessage();
 							}
 							?>
-
-							?>
 						</tbody>
 					</table>
 				</div>
