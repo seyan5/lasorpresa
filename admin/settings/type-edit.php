@@ -139,4 +139,3 @@ foreach ($result as $row) {
     </div>
 </div>
 
-<?php require_once('footer.php'); ?>
