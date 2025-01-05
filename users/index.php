@@ -77,7 +77,7 @@
 
     <!-- home-sec -->
 
-</section>
+
     <!-- lhome-sec -->
  
     <!-- icons -->
