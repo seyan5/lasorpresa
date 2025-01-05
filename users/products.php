@@ -12,24 +12,20 @@
    <ul class="indicator">
     <li data-filter="all" class="active"><a href="#">All</a></li>
     <?php
-    // Replace `specific_tcat_id` with the ID of the desired top category
-    $specific_tcat_id = 3; // Example: Top Category ID = 1
-
-    // Fetch mid-level categories for the specific top category
+    // Fetch mid-level categories
     $statement = $pdo->prepare("SELECT * 
                                 FROM mid_category t1
                                 JOIN top_category t2
                                 ON t1.tcat_id = t2.tcat_id
-                                WHERE t1.tcat_id = ? 
                                 ORDER BY t1.mcat_id DESC");
-    $statement->execute([$specific_tcat_id]);
+    $statement->execute();
     $result = $statement->fetchAll(PDO::FETCH_ASSOC);
-
+    
     foreach ($result as $row) {
         echo '<li data-filter="' . htmlspecialchars($row['mcat_name']) . '"><a href="#">' . htmlspecialchars($row['mcat_name']) . '</a></li>';
     }
     ?>
-   </ul>
+</ul>
 
     <div class="filter-condition">
       <select name="" id="select">
@@ -38,42 +34,6 @@
          <option value="HighToLow">High to Low</option>
       </select>
    </div>
-
-   <div class="products-container">
-    <?php
-    // Replace 'specific_mcat_id' with the mid-category ID you want to filter by
-    $specific_mcat_id = isset($_GET['mcat_id']) ? intval($_GET['mcat_id']) : null;
-
-    // Fetch products based on the selected mid-category
-    $query = "SELECT * FROM product";
-    $params = [];
-    if ($specific_mcat_id) {
-        $query .= " WHERE mcat_id = ?";
-        $params[] = $specific_mcat_id;
-    }
-    $query .= " ORDER BY name ASC"; // Order by product name or any other criteria
-
-    $statement = $pdo->prepare($query);
-    $statement->execute($params);
-    $products = $statement->fetchAll(PDO::FETCH_ASSOC);
-
-    // Display products
-    if ($products) {
-        foreach ($products as $product) {
-            $imagePath = "admin/upload/product_photos/" . htmlspecialchars($product['image_path']);
-            echo '
-            <div class="product" data-category="' . htmlspecialchars($product['category_name']) . '" data-name="p-' . htmlspecialchars($product['id']) . '">
-                <img src="' . $imagePath . '" alt="' . htmlspecialchars($product['name']) . '">
-                <h3>' . htmlspecialchars($product['name']) . '</h3>
-                <div class="price">$' . htmlspecialchars($product['price']) . '</div>
-            </div>';
-        }
-    } else {
-        echo '<p>No products found for this category.</p>';
-    }
-    ?>
-</div>
-
  
     <div class="products-container">
 
