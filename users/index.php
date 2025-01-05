@@ -62,10 +62,15 @@
             <!--<a href="#" class="btn">Shop now!</a>-->
             <div class="circle"></div>
         </div>
-        <div class="search-container">
-            <input type="text" placeholder="What are you looking for?" class="search-input">
-            <button class="search-button"><i class="fas fa-search"></i></button>
-        </div>
+        <div class="col-md-3 search-area">
+				<form class="navbar-form navbar-left" role="search" action="search-result.php" method="get">
+					<?php $csrf->echoInputField(); ?>
+					<div class="form-group">
+						<input type="text" class="form-control search-top" placeholder="<?php echo LANG_VALUE_2; ?>" name="search_text">
+					</div>
+					<button type="submit" class="btn btn-danger"><?php echo LANG_VALUE_3; ?></button>
+				</form>
+			</div>
     </section>
 
     <!-- home-sec -->
