@@ -1,4 +1,5 @@
 <?php
+require_once('../header.php');
 // Initialize variables
 $error_message = '';
 $success_message = '';
