@@ -16,7 +16,7 @@ require_once('../header.php');
                 </li>
 
                 <li>
-                    <a href="#">
+                    <a href="../dashboard.php">
                         <span class="icon">
                             <ion-icon name="home-outline"></ion-icon>
                         </span>
@@ -25,7 +25,7 @@ require_once('../header.php');
                 </li>
 
                 <li>
-                    <a href="users.php">
+                    <a href="../users.php">
                         <span class="icon">
                             <ion-icon name="people-outline"></ion-icon>
                         </span>
