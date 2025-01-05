@@ -1,27 +1,23 @@
-<?php require_once('../header.php'); ?>
-
 <?php
-// Preventing the direct access of this page.
-if(!isset($_REQUEST['id'])) {
-	header('location: ../../logout.php');
-	exit;
-} else {
-	// Check the id is valid or not
-	$statement = $pdo->prepare("SELECT * FROM type WHERE type_id=?");
-	$statement->execute(array($_REQUEST['id']));
-	$total = $statement->rowCount();
-	if( $total == 0 ) {
-		header('location: logout.php');
-		exit;
-	}
+require_once('../header.php');
+
+if (!isset($_REQUEST['id']) || empty($_REQUEST['id'])) {
+    header('location: ../logout.php');
+    exit;
 }
-?>
 
-<?php
+$id = intval($_REQUEST['id']);
 
-	// Delete from type
-	$statement = $pdo->prepare("DELETE FROM type WHERE type_id=?");
-	$statement->execute(array($_REQUEST['id']));
+$statement = $pdo->prepare("SELECT * FROM type WHERE type_id = ?");
+$statement->execute([$id]);
+if ($statement->rowCount() == 0) {
+    header('location: ../logout.php');
+    exit;
+}
 
-	header('location: type.php');
+$deleteStatement = $pdo->prepare("DELETE FROM type WHERE type_id = ?");
+$deleteStatement->execute([$id]);
+
+header('location: type.php');
+exit;
 ?>
