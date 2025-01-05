@@ -27,9 +27,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $_SESSION['user_type'] = $user['user_type'];
 
                 if ($user['user_type'] == 'admin') {
-                    header('Location: /path-to-project/admin/dashboard.php');
+                    header('Location: /admin/dashboard.php');
                 } else {
-                    header('Location: /path-to-project/users/home.php');
+                    header('Location: /users/home.php');
                 }
                 exit();
             } else {
