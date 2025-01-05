@@ -29,7 +29,6 @@
 </ul>
 
 
-
     <div class="filter-condition">
       <select name="" id="select">
          <option value="Default">Default</option>
@@ -37,49 +36,20 @@
          <option value="HighToLow">High to Low</option>
       </select>
    </div>
-
-   <?php
-// Fetch products for mcat_id = 3 (Regular Flowers)
-$statement_flowers = $pdo->prepare("SELECT * 
-                                    FROM product p
-                                    JOIN mid_category m
-                                    ON p.mcat_id = m.mcat_id
-                                    WHERE m.mcat_id = 3");  // Regular flowers
-$statement_flowers->execute();
-$flowers = $statement_flowers->fetchAll(PDO::FETCH_ASSOC);
-
-// Fetch products for mcat_id = 4 (Money Bouquets)
-$statement_money_bouquets = $pdo->prepare("SELECT * 
-                                           FROM product p
-                                           JOIN mid_category m
-                                           ON p.mcat_id = m.mcat_id
-                                           WHERE m.mcat_id = 8");  // Money bouquets
-$statement_money_bouquets->execute();
-$money_bouquets = $statement_money_bouquets->fetchAll(PDO::FETCH_ASSOC);
-?>
  
- <div class="products-container">
-    <!-- Display Regular Flowers (mcat_id = 3) -->
-    <h2>Regular Flowers</h2>
-    <?php foreach ($flowers as $flower): ?>
-        <div class="product" data-name="<?php echo htmlspecialchars($flower['p_id']); ?>">
-            <img src="../ivd/<?php echo htmlspecialchars($flower['featured_photo']); ?>" alt="">
-            <h3><?php echo htmlspecialchars($flower['name']); ?></h3>
-            <div class="price">$<?php echo htmlspecialchars($flower['current_price']); ?></div>
-        </div>
-    <?php endforeach; ?>
+    <div class="products-container">
 
-    <!-- Display Money Bouquets (mcat_id = 4) -->
-    <h2>Money Bouquets</h2>
-    <?php foreach ($money_bouquets as $money_bouquet): ?>
-        <div class="product" data-name="<?php echo htmlspecialchars($money_bouquet['p_id']); ?>">
-            <img src="../ivd/<?php echo htmlspecialchars($money_bouquet['featured_photo']); ?>" alt="">
-            <h3><?php echo htmlspecialchars($money_bouquet['name']); ?></h3>
-            <div class="price">$<?php echo htmlspecialchars($money_bouquet['current_price']); ?></div>
-        </div>
-    <?php endforeach; ?>
-</div>
-
+      <div class="product" data-name="p-4">
+         <img src="../ivd/flower.png" alt="">
+         <h3>Flower</h3>
+         <div class="price">$0.00</div>
+      </div>
+ 
+       <div class="product" data-name="p-1">
+          <img src="../ivd/flower1.jpg" alt="">
+          <h3>Flower1</h3>
+          <div class="price">$1.00</div>
+       </div>
  
        <div class="product" data-name="p-2">
           <img src="../ivd/flower2.jpg" alt="">
