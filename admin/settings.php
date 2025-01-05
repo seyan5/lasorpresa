@@ -84,8 +84,8 @@
         <div class="details">
                 <div class="recentOrders">
                     <div class="cardHeader">
-                        <h2>Recent Orders</h2>
-                        <a href="#" class="btn">View All</a>
+                        <h2>Settings</h2>
+                        
                     </div>
 
                     <table>
