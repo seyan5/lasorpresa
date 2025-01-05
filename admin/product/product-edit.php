@@ -1,196 +1,137 @@
 <?php
 require_once('../header.php');
-if(isset($_POST['form1'])) {
-	$valid = 1;
 
-    if(empty($_POST['tcat_id'])) {
+if (isset($_POST['form1'])) {
+    $valid = 1;
+    $error_message = '';
+
+    // Validation
+    if (empty($_POST['tcat_id'])) {
         $valid = 0;
-        $error_message .= "You must have to select a top level category<br>";
+        $error_message .= "You must select a top-level category.<br>";
+    }
+    if (empty($_POST['mcat_id'])) {
+        $valid = 0;
+        $error_message .= "You must select a mid-level category.<br>";
+    }
+    if (empty($_POST['ecat_id'])) {
+        $valid = 0;
+        $error_message .= "You must select an end-level category.<br>";
+    }
+    if (empty($_POST['name'])) {
+        $valid = 0;
+        $error_message .= "Product name cannot be empty.<br>";
+    }
+    if (empty($_POST['current_price'])) {
+        $valid = 0;
+        $error_message .= "Current price cannot be empty.<br>";
+    }
+    if (empty($_POST['quantity'])) {
+        $valid = 0;
+        $error_message .= "Quantity cannot be empty.<br>";
     }
 
-    if(empty($_POST['mcat_id'])) {
-        $valid = 0;
-        $error_message .= "You must have to select a mid level category<br>";
-    }
+    // File Handling
+    if (isset($_FILES['product_photo']['name']) && $_FILES['product_photo']['name'] !== '') {
+        $path = $_FILES['product_photo']['name'];
+        $path_tmp = $_FILES['product_photo']['tmp_name'];
 
-    if(empty($_POST['ecat_id'])) {
-        $valid = 0;
-        $error_message .= "You must have to select an end level category<br>";
-    }
-
-    if(empty($_POST['name'])) {
-        $valid = 0;
-        $error_message .= "Product name can not be empty<br>";
-    }
-
-    if(empty($_POST['current_price'])) {
-        $valid = 0;
-        $error_message .= "Current Price can not be empty<br>";
-    }
-
-    if(empty($_POST['quantity'])) {
-        $valid = 0;
-        $error_message .= "Quantity can not be empty<br>";
-    }
-
-    $path = $_FILES['product_photo']['name'];
-    $path_tmp = $_FILES['product_photo']['tmp_name'];
-
-    if($path!='') {
-        $ext = pathinfo( $path, PATHINFO_EXTENSION );
-        $file_name = basename( $path, '.' . $ext );
-        if( $ext!='jpg' && $ext!='png' && $ext!='jpeg' && $ext!='gif' ) {
+        $ext = pathinfo($path, PATHINFO_EXTENSION);
+        if (!in_array($ext, ['jpg', 'jpeg', 'png', 'gif'])) {
             $valid = 0;
-            $error_message .= 'You must have to upload jpg, jpeg, gif or png file<br>';
+            $error_message .= "Invalid file format. Only jpg, jpeg, png, and gif are allowed.<br>";
         }
+    } else {
+        $path = '';
     }
 
-
-    if($valid == 1) {
-
-    	if( isset($_FILES['photo']["name"]) && isset($_FILES['photo']["tmp_name"]) )
-        {
-
-        	$photo = array();
-            $photo = $_FILES['photo']["name"];
-            $photo = array_values(array_filter($photo));
-
-        	$photo_temp = array();
-            $photo_temp = $_FILES['photo']["tmp_name"];
-            $photo_temp = array_values(array_filter($photo_temp));
-
-        	$statement = $pdo->prepare("SHOW TABLE STATUS LIKE 'product_photo'");
-			$statement->execute();
-			$result = $statement->fetchAll();
-			foreach($result as $row) {
-				$next_id1=$row[10];
-			}
-			$z = $next_id1;
-
-            $m=0;
-            for($i=0;$i<count($photo);$i++)
-            {
-                $my_ext1 = pathinfo( $photo[$i], PATHINFO_EXTENSION );
-		        if( $my_ext1=='jpg' || $my_ext1=='png' || $my_ext1=='jpeg' || $my_ext1=='gif' ) {
-		            $final_name1[$m] = $z.'.'.$my_ext1;
-                    move_uploaded_file($photo_temp[$i],"../uploads/product_photos/".$final_name1[$m]);
-                    $m++;
-                    $z++;
-		        }
+    if ($valid === 1) {
+        if ($path === '') {
+            // Update without changing the photo
+            $statement = $pdo->prepare("UPDATE product SET 
+                name=?, 
+                old_price=?, 
+                current_price=?, 
+                quantity=?, 
+                description=?, 
+                short_description=?, 
+                feature=?, 
+                `condition`=?, 
+                is_featured=?, 
+                is_active=?, 
+                ecat_id=? 
+                WHERE p_id=?");
+            $statement->execute([
+                $_POST['name'],
+                $_POST['old_price'],
+                $_POST['current_price'],
+                $_POST['quantity'],
+                $_POST['description'],
+                $_POST['short_description'],
+                $_POST['feature'],
+                $_POST['condition'],
+                $_POST['is_featured'],
+                $_POST['is_active'],
+                $_POST['ecat_id'],
+                $_REQUEST['id']
+            ]);
+        } else {
+            // Delete the existing photo if it exists
+            if (!empty($_POST['current_photo']) && file_exists('../uploads/' . $_POST['current_photo'])) {
+                unlink('../uploads/' . $_POST['current_photo']);
             }
 
-            if(isset($final_name1)) {
-            	for($i=0;$i<count($final_name1);$i++)
-		        {
-		        	$statement = $pdo->prepare("INSERT INTO product_photo (photo,p_id) VALUES (?,?)");
-		        	$statement->execute(array($final_name1[$i],$_REQUEST['id']));
-		        }
-            }            
+            // Upload the new photo
+            $final_name = 'product-featured-' . $_REQUEST['id'] . '.' . $ext;
+            move_uploaded_file($path_tmp, '../uploads/' . $final_name);
+
+            // Update with new photo
+            $statement = $pdo->prepare("UPDATE product SET 
+                name=?, 
+                old_price=?, 
+                current_price=?, 
+                quantity=?, 
+                description=?, 
+                short_description=?, 
+                feature=?, 
+                `condition`=?, 
+                is_featured=?, 
+                is_active=?, 
+                ecat_id=?, 
+                featured_photo=? 
+                WHERE p_id=?");
+            $statement->execute([
+                $_POST['name'],
+                $_POST['old_price'],
+                $_POST['current_price'],
+                $_POST['quantity'],
+                $_POST['description'],
+                $_POST['short_description'],
+                $_POST['feature'],
+                $_POST['condition'],
+                $_POST['is_featured'],
+                $_POST['is_active'],
+                $_POST['ecat_id'],
+                $final_name,
+                $_REQUEST['id']
+            ]);
         }
 
-        if($path == '') {
-        	$statement = $pdo->prepare("UPDATE product SET 
-        							name=?, 
-        							old_price=?, 
-        							current_price=?, 
-        							quantity=?,
-        							description=?,
-        							short_description=?,
-        							feature=?,
-        							condition=?,
-        							is_featured=?,
-        							is_active=?,
-        							ecat_id=?
-
-        							WHERE p_id=?");
-        	$statement->execute(array(
-        							$_POST['name'],
-        							$_POST['old_price'],
-        							$_POST['current_price'],
-        							$_POST['quantity'],
-        							$_POST['description'],
-        							$_POST['short_description'],
-        							$_POST['feature'],
-        							$_POST['condition'],
-        							$_POST['is_featured'],
-        							$_POST['is_active'],
-        							$_POST['ecat_id'],
-        							$_REQUEST['id']
-        						));
-        } else {
-
-        	unlink('../uploads/'.$_POST['current_photo']);
-
-			$final_name = 'product-featured-'.$_REQUEST['id'].'.'.$ext;
-        	move_uploaded_file( $path_tmp, '../uploads/'.$final_name );
-
-
-        	$statement = $pdo->prepare("UPDATE product SET 
-         							name=?, 
-        							old_price=?, 
-        							current_price=?, 
-        							quantity=?,
-        							description=?,
-        							short_description=?,
-        							feature=?,
-        							condition=?,
-        							is_featured=?,
-        							is_active=?,
-        							ecat_id=?
-
-        							WHERE p_id=?");
-        	$statement->execute(array(
-        							$_POST['name'],
-        							$_POST['old_price'],
-        							$_POST['current_price'],
-        							$_POST['quantity'],
-        							$final_name,
-        							$_POST['description'],
-        							$_POST['short_description'],
-        							$_POST['feature'],
-        							$_POST['condition'],
-        							$_POST['is_featured'],
-        							$_POST['is_active'],
-        							$_POST['ecat_id'],
-        							$_REQUEST['id']
-        						));
+        // Handle colors
+        $statement = $pdo->prepare("DELETE FROM product_color WHERE p_id=?");
+        $statement->execute([$_REQUEST['id']]);
+        if (!empty($_POST['color'])) {
+            foreach ($_POST['color'] as $value) {
+                $statement = $pdo->prepare("INSERT INTO product_color (color_id, p_id) VALUES (?, ?)");
+                $statement->execute([$value, $_REQUEST['id']]);
+            }
         }
 
-		if(isset($_POST['color'])) {
-			
-			$statement = $pdo->prepare("DELETE FROM product_color WHERE p_id=?");
-        	$statement->execute(array($_REQUEST['id']));
-
-			foreach($_POST['color'] as $value) {
-				$statement = $pdo->prepare("INSERT INTO product_color (color_id,p_id) VALUES (?,?)");
-				$statement->execute(array($value,$_REQUEST['id']));
-			}
-		} else {
-			$statement = $pdo->prepare("DELETE FROM product_color WHERE p_id=?");
-        	$statement->execute(array($_REQUEST['id']));
-		}
-	
-    	$success_message = 'Product is updated successfully.';
+        $success_message = "Product has been updated successfully.";
     }
 }
 ?>
 
-<?php
-if(!isset($_REQUEST['id'])) {
-	header('location: logout.php');
-	exit;
-} else {
-	// Check the id is valid or not
-	$statement = $pdo->prepare("SELECT * FROM product WHERE p_id=?");
-	$statement->execute(array($_REQUEST['id']));
-	$total = $statement->rowCount();
-	$result = $statement->fetchAll(PDO::FETCH_ASSOC);
-	if( $total == 0 ) {
-		header('location: logout.php');
-		exit;
-	}
-}
-?>
 
 <section class="content-header">
 	<div class="content-header-left">
@@ -474,5 +415,3 @@ foreach ($result as $row) {
 	</div>
 
 </section>
-
-<?php require_once('footer.php'); ?>
