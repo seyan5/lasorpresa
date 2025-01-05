@@ -24,9 +24,11 @@ if (isset($_POST['tcat_id'])) {
     }
 }
 
-// Check if mid category ID is set, then fetch end-level categories
-elseif (isset($_POST['mcat_id'])) {
+if (isset($_POST['mcat_id'])) {
     $mcat_id = $_POST['mcat_id'];
+
+    // Debugging: print the mcat_id
+    echo "Selected Mid Category ID: " . $mcat_id;
 
     // Fetch end-level categories based on the mid category id
     $statement = $pdo->prepare("SELECT * FROM end_category WHERE mcat_id = ? ORDER BY ecat_name ASC");
@@ -34,7 +36,6 @@ elseif (isset($_POST['mcat_id'])) {
     $result = $statement->fetchAll(PDO::FETCH_ASSOC);
 
     if (count($result) > 0) {
-        // Return end-level categories as options
         echo '<option value="">Select End Level Category</option>';
         foreach ($result as $row) {
             echo '<option value="' . $row['ecat_id'] . '">' . $row['ecat_name'] . '</option>';
