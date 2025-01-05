@@ -49,6 +49,7 @@ if(!isset($_SESSION['user'])) {
 $(document).ready(function () {
     // Initialize Select2 Elements
     $(".select2").select2();
+    $('#ecat_id').select2();
 
     // Modal for delete confirmation
     $('#confirm-delete').on('show.bs.modal', function (e) {
