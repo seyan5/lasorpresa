@@ -89,7 +89,7 @@ if(isset($_POST['form1'])) {
         }
 
         if($path == '') {
-        	$statement = $pdo->prepare("UPDATE tbl_product SET 
+        	$statement = $pdo->prepare("UPDATE product SET 
         							name=?, 
         							old_price=?, 
         							current_price=?, 
@@ -125,7 +125,7 @@ if(isset($_POST['form1'])) {
         	move_uploaded_file( $path_tmp, '../uploads/'.$final_name );
 
 
-        	$statement = $pdo->prepare("UPDATE tbl_product SET 
+        	$statement = $pdo->prepare("UPDATE product SET 
          							name=?, 
         							old_price=?, 
         							current_price=?, 
