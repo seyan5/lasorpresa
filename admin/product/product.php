@@ -70,7 +70,7 @@ require_once('../header.php');
                 </li>
 
                 <li>
-                    <a href="../index.php">
+                    <a href="../logout.php">
                         <span class="icon">
                             <ion-icon name="log-out-outline"></ion-icon>
                         </span>
