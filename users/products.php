@@ -39,6 +39,27 @@
  
     <div class="products-container">
 
+    <div class="products-container">
+    <?php
+    // Fetch products for mcat_id = 3 (you can adjust this dynamically later)
+    $statement = $pdo->prepare("SELECT * 
+                                FROM product p
+                                JOIN mid_category m
+                                ON p.mcat_id = m.mcat_id
+                                WHERE m.mcat_id = 3");  // Fetch products for mid-category ID 3
+    $statement->execute();
+    $products = $statement->fetchAll(PDO::FETCH_ASSOC);
+
+    foreach ($products as $product) {
+        echo '<div class="product" data-name="' . htmlspecialchars($product['p_id']) . '" data-category="' . htmlspecialchars($product['mcat_id']) . '">';
+        echo '<img src="../ivd/' . htmlspecialchars($product['featured_photo']) . '" alt="">';
+        echo '<h3>' . htmlspecialchars($product['name']) . '</h3>';
+        echo '<div class="price">$' . htmlspecialchars($product['current_price']) . '</div>';
+        echo '</div>';
+    }
+    ?>
+</div>
+
       <div class="product" data-name="p-4">
          <img src="../ivd/flower.png" alt="">
          <h3>Flower</h3>
