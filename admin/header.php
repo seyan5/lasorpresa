@@ -36,7 +36,6 @@ if(!isset($_SESSION['user'])) {
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 </head>
@@ -96,13 +95,16 @@ if(!isset($_SESSION['user'])) {
 	    });
 
 	    $(document).ready(function () {
-    // When the modal is about to be shown
+    // When the modal is triggered
     $('#confirm-delete').on('show.bs.modal', function (e) {
-        // Get the URL from the data-href attribute of the clicked button
-        var deleteUrl = $(e.relatedTarget).data('href'); 
+        var deleteUrl = $(e.relatedTarget).data('href'); // Get the href value from the clicked delete button
+        $(this).find('.btn-confirm-delete').attr('href', deleteUrl); // Set it in the modal's delete button
+    });
 
-        // Set the href of the delete button in the modal to this URL
-        $(this).find('.btn-confirm-delete').attr('href', deleteUrl);
+    // Add click event for the confirm delete button
+    $('.btn-confirm-delete').on('click', function () {
+        var href = $(this).attr('href');
+        window.location.href = href; // Redirect the user to the delete URL
     });
 });
 		
