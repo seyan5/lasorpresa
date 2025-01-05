@@ -119,8 +119,9 @@
 	                    <td><?php echo $row['type_name']; ?></td>
 	                    <td>
 	                        <a href="type-edit.php?id=<?php echo $row['type_id']; ?>" class="btn btn-primary btn-xs">Edit</a>
-                            <a href="#" class="btn btn-danger btn-xs" data-href="type-delete.php?id=<?php echo $row['type_id']; ?>" data-toggle="modal" data-target="#confirm-delete">Delete</a>
-	                    </td>
+	                        <a href="#" class="btn btn-danger btn-xs" data-href="type-delete.php?id=<?php echo $row['type_id']; ?>" data-toggle="modal" data-target="#confirm-delete">Delete</a>
+
+                             </td>
 	                </tr>
             		<?php
             	}
@@ -134,23 +135,19 @@
 </section>
 
 
-<!-- Modal -->
-<div class="modal fade" id="confirm-delete" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
+<div class="modal fade" id="confirm-delete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Confirm Delete</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">Delete Confirmation</h4>
             </div>
             <div class="modal-body">
-                Are you sure you want to delete this type?
+                Are you sure want to delete this item?
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                <!-- Delete button -->
-                <a href="#" class="btn btn-danger btn-confirm-delete">Delete</a>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <a class="btn btn-danger btn-ok">Delete</a>
             </div>
         </div>
     </div>
