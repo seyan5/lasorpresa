@@ -39,9 +39,10 @@ if(!isset($_SESSION['user'])) {
 <script>
     $(document).ready(function () {
         // Trigger when the modal is about to be shown
-        $('#confirm-delete').on('show.bs.modal', function(e) {
-	      $(this).find('.btn-ok').attr('href', $(e.relatedTarget).data('href'));
-	    });
+        $('#confirm-delete').on('show.bs.modal', function (e) {
+    var deleteUrl = $(e.relatedTarget).data('href');
+    $(this).find('.btn-confirm-delete').attr('href', deleteUrl);
+});
 		
 		$('#confirm-approve').on('show.bs.modal', function(e) {
 	      $(this).find('.btn-ok').attr('href', $(e.relatedTarget).data('href'));
