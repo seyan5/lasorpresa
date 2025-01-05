@@ -45,7 +45,7 @@
     $specific_mcat_id = isset($_GET['mcat_id']) ? intval($_GET['mcat_id']) : null;
 
     // Fetch products based on the selected mid-category
-    $query = "SELECT * FROM products";
+    $query = "SELECT * FROM product";
     $params = [];
     if ($specific_mcat_id) {
         $query .= " WHERE mcat_id = ?";
