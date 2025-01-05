@@ -60,9 +60,10 @@
     // Display products
     if ($products) {
         foreach ($products as $product) {
+            $imagePath = "admin/upload/product_photos/" . htmlspecialchars($product['image_path']);
             echo '
-            <div class="product" data-name="p-' . htmlspecialchars($product['id']) . '">
-                <img src="' . htmlspecialchars($product['image_path']) . '" alt="' . htmlspecialchars($product['name']) . '">
+            <div class="product" data-category="' . htmlspecialchars($product['category_name']) . '" data-name="p-' . htmlspecialchars($product['id']) . '">
+                <img src="' . $imagePath . '" alt="' . htmlspecialchars($product['name']) . '">
                 <h3>' . htmlspecialchars($product['name']) . '</h3>
                 <div class="price">$' . htmlspecialchars($product['price']) . '</div>
             </div>';
@@ -71,6 +72,8 @@
         echo '<p>No products found for this category.</p>';
     }
     ?>
+</div>
+
  
     <div class="products-container">
 
