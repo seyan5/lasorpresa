@@ -59,7 +59,7 @@ if(!isset($_SESSION['user'])) {
 
             if (tcat_id) {
                 $.ajax({
-                    url: 'fetch_mid_categories.php', // Backend script to fetch data
+                    url: 'fetch-category.php', // Backend script to fetch data
                     type: 'POST',
                     data: { tcat_id: tcat_id }, // Send selected top-level category ID
                     success: function (response) {
