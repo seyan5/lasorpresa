@@ -155,21 +155,6 @@ if(isset($_POST['form1'])) {
         							$_REQUEST['id']
         						));
         }
-		
-
-        if(isset($_POST['size'])) {
-
-        	$statement = $pdo->prepare("DELETE FROM product_size WHERE p_id=?");
-        	$statement->execute(array($_REQUEST['id']));
-
-			foreach($_POST['size'] as $value) {
-				$statement = $pdo->prepare("INSERT INTO product_size (size_id,p_id) VALUES (?,?)");
-				$statement->execute(array($value,$_REQUEST['id']));
-			}
-		} else {
-			$statement = $pdo->prepare("DELETE FROM product_size WHERE p_id=?");
-        	$statement->execute(array($_REQUEST['id']));
-		}
 
 		if(isset($_POST['color'])) {
 			
@@ -248,13 +233,6 @@ foreach ($result as $row) {
 	$ecat_name = $row['ecat_name'];
     $mcat_id = $row['mcat_id'];
     $tcat_id = $row['tcat_id'];
-}
-
-$statement = $pdo->prepare("SELECT * FROM product_size WHERE p_id=?");
-$statement->execute(array($_REQUEST['id']));
-$result = $statement->fetchAll(PDO::FETCH_ASSOC);							
-foreach ($result as $row) {
-	$size_id[] = $row['size_id'];
 }
 
 $statement = $pdo->prepare("SELECT * FROM product_color WHERE p_id=?");
