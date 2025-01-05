@@ -1,3 +1,5 @@
+<?php require_once('header.php'); ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -26,7 +28,7 @@
     <nav class="navbar">
         <a href="#home">Home</a>
         <a href="#about">About</a>
-        <a href="products.html">Product</a>
+        <a href="products.php">Product</a>
         <a href="#review">Review</a>
         <a href="#contacts">Contacts</a>
     </nav>
@@ -70,7 +72,7 @@
 
     <!-- home-sec -->
 
-</section>
+
     <!-- lhome-sec -->
  
     <!-- icons -->

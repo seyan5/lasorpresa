@@ -1,8 +1,8 @@
-
+<?php require_once('../header.php'); ?>
 
 <?php
 if(!isset($_REQUEST['id'])) {
-	header('location: logout.php');
+	header('location: ../logout.php');
 	exit;
 } else {
 	// Check the id is valid or not
@@ -10,7 +10,7 @@ if(!isset($_REQUEST['id'])) {
 	$statement->execute(array($_REQUEST['id']));
 	$total = $statement->rowCount();
 	if( $total == 0 ) {
-		header('location: logout.php');
+		header('location: ../logout.php');
 		exit;
 	}
 }
@@ -22,8 +22,8 @@ if(!isset($_REQUEST['id'])) {
 	$statement->execute(array($_REQUEST['id']));
 	$result = $statement->fetchAll(PDO::FETCH_ASSOC);							
 	foreach ($result as $row) {
-		$p_featured_photo = $row['product_photo'];
-		unlink('../assets/uploads/'.$product_photo);
+		$p_featured_photo = $row['p_featured_photo'];
+		unlink('../uploads/'.$p_featured_photo);
 	}
 
 	// Getting other photo ID to unlink from folder
@@ -36,27 +36,27 @@ if(!isset($_REQUEST['id'])) {
 	}
 
 
-	// Delete from tbl_photo
+	// Delete from photo
 	$statement = $pdo->prepare("DELETE FROM product WHERE p_id=?");
 	$statement->execute(array($_REQUEST['id']));
 
-	// Delete from tbl_product_photo
+	// Delete from product_photo
 	$statement = $pdo->prepare("DELETE FROM product_photo WHERE p_id=?");
 	$statement->execute(array($_REQUEST['id']));
 
-	// Delete from tbl_product_size
+	// Delete from product_size
 	$statement = $pdo->prepare("DELETE FROM product_size WHERE p_id=?");
 	$statement->execute(array($_REQUEST['id']));
 
-	// Delete from tbl_product_color
+	// Delete from product_color
 	$statement = $pdo->prepare("DELETE FROM product_color WHERE p_id=?");
 	$statement->execute(array($_REQUEST['id']));
 
-	// Delete from tbl_rating
+	// Delete from rating
 	$statement = $pdo->prepare("DELETE FROM rating WHERE p_id=?");
 	$statement->execute(array($_REQUEST['id']));
 
-	// Delete from tbl_payment
+	// Delete from payment
 	$statement = $pdo->prepare("SELECT * FROM order WHERE product_id=?");
 	$statement->execute(array($_REQUEST['id']));
 	$result = $statement->fetchAll(PDO::FETCH_ASSOC);							
@@ -65,7 +65,7 @@ if(!isset($_REQUEST['id'])) {
 		$statement1->execute(array($row['payment_id']));
 	}
 
-	// Delete from tbl_order
+	// Delete from order
 	$statement = $pdo->prepare("DELETE FROM order WHERE product_id=?");
 	$statement->execute(array($_REQUEST['id']));
 

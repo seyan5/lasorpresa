@@ -1,14 +1,5 @@
 
 <?php
-include("../config.php");
-
-$conn = new mysqli($servername, $username, $password, $dbname);
-
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
-?>
-<?php
 session_start();
 include '../config.php';
 if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] != 'admin') {
@@ -37,7 +28,6 @@ if ($result->num_rows > 0) {
 
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -46,7 +36,6 @@ if ($result->num_rows > 0) {
     <link rel="stylesheet" href="../css/style.css">
     
 </head>
-
 <body>
     <div class="container">
         <div class="navigation">
@@ -59,16 +48,14 @@ if ($result->num_rows > 0) {
                         <span class="title"></span>
                     </a>
                 </li>
-
                 <li>
-                    <a href="#">
+                    <a href="dashboard.php">
                         <span class="icon">
                             <ion-icon name="home-outline"></ion-icon>
                         </span>
                         <span class="title">Dashboard</span>
                     </a>
                 </li>
-
                 <li>
                     <a href="users.php">
                         <span class="icon">
@@ -77,7 +64,6 @@ if ($result->num_rows > 0) {
                         <span class="title">Users</span>
                     </a>
                 </li>
-
                 <li>
                     <a href="#">
                         <span class="icon">
@@ -86,16 +72,14 @@ if ($result->num_rows > 0) {
                         <span class="title">Messages</span>
                     </a>
                 </li>
-
                 <li>
-                    <a href="#">
+                    <a href="product/product.php">
                         <span class="icon">
                             <ion-icon name="cube-outline"></ion-icon>
                         </span>
                         <span class="title">Manage Products</span>
                     </a>
                 </li>
-
                 <li>
                     <a href="#">
                         <span class="icon">
@@ -104,18 +88,16 @@ if ($result->num_rows > 0) {
                         <span class="title">Manage Orders</span>
                     </a>
                 </li>
-
                 <li>
-                    <a href="#">
+                    <a href="settings.php">
                         <span class="icon">
                             <ion-icon name="settings-outline"></ion-icon>
                         </span>
                         <span class="title">Settings</span>
                     </a>
                 </li>
-
                 <li>
-                    <a href="../index.php">
+                    <a href="logout.php">
                         <span class="icon">
                             <ion-icon name="log-out-outline"></ion-icon>
                         </span>
