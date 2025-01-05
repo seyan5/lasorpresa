@@ -38,6 +38,13 @@ if(!isset($_SESSION['user'])) {
 	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
+
+<!-- Include Select2 CSS -->
+<link href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" rel="stylesheet" />
+
+<!-- Include Select2 JS -->
+<script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js"></script>
+
 </head>
 
 <script>
@@ -93,6 +100,16 @@ if(!isset($_SESSION['user'])) {
 	      "info": true,
 	      "autoWidth": false
 	    });
+
+        $(document).ready(function() {
+    // Check if select2 is available
+    if ($.fn.select2) {
+        console.log("select2 is loaded");
+        $('#yourSelectElement').select2(); // Replace with your actual select element
+    } else {
+        console.log("select2 is not loaded");
+    }
+});
 
 	    $(document).ready(function () {
     // When the modal is triggered
