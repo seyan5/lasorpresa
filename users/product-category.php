@@ -274,5 +274,3 @@ if( !isset($_REQUEST['id']) || !isset($_REQUEST['type']) ) {
         </div>
     </div>
 </div>
-
-<?php require_once('footer.php'); ?>
