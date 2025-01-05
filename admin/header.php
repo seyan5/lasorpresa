@@ -77,5 +77,32 @@ $(document).ready(function () {
         $(this).parent().parent().fadeOut('slow').remove();
         return false;
     });
+
+    $(document).ready(function() {
+    // When a top-level category is selected
+    $('#tcat_id').change(function() {
+        var tcat_id = $(this).val(); // Get the selected top-level category ID
+        
+        if (tcat_id) {
+            // If a top-level category is selected, fetch the related mid-level categories
+            $.ajax({
+                url: 'fetch-midcategories.php',  // Adjust the path if necessary
+                type: 'POST',
+                data: { tcat_id: tcat_id },  // Pass the selected top-level category ID
+                success: function(data) {
+                    // Populate the mid-level categories dropdown
+                    $('.mid-cat').html(data);
+                },
+                error: function(xhr, status, error) {
+                    console.error("AJAX Error: " + xhr.responseText);
+                    alert('Error loading mid-level categories: ' + error);
+                }
+            });
+        } else {
+            // If no top-level category is selected, reset the mid-level categories dropdown
+            $('.mid-cat').html('<option value="">Select Mid Level Category</option>');
+        }
+    });
+});
 });
 </script>
