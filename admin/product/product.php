@@ -1,5 +1,5 @@
 <?php
-require_once('../inc/config.php');
+require_once('../header.php');
 ?>
 
 <section class="content-header">
