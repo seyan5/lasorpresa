@@ -120,7 +120,6 @@
 	                    <td>
 	                        <a href="type-edit.php?id=<?php echo $row['type_id']; ?>" class="btn btn-primary btn-xs">Edit</a>
                             <a href="#" class="btn btn-danger btn-xs" data-href="type-delete.php?id=<?php echo $row['type_id']; ?>" data-toggle="modal" data-target="#confirm-delete">Delete</a>
-
 	                    </td>
 	                </tr>
             		<?php

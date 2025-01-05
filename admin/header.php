@@ -39,13 +39,28 @@ if(!isset($_SESSION['user'])) {
 <script>
     $(document).ready(function () {
         // Trigger when the modal is about to be shown
-        $('#confirm-delete').on('show.bs.modal', function (e) {
-            // Get the data-href attribute from the clicked link
-            var href = $(e.relatedTarget).data('href');
-            // Update the href attribute of the confirmation button
-            $(this).find('.btn-ok').attr('href', href);
-        });
+        $('#confirm-delete').on('show.bs.modal', function(e) {
+	      $(this).find('.btn-ok').attr('href', $(e.relatedTarget).data('href'));
+	    });
+		
+		$('#confirm-approve').on('show.bs.modal', function(e) {
+	      $(this).find('.btn-ok').attr('href', $(e.relatedTarget).data('href'));
+	    });
     });
+
+    function confirmDelete()
+	    {
+	        return confirm("Are you sure want to delete this data?");
+	    }
+	    function confirmActive()
+	    {
+	        return confirm("Are you sure want to Active?");
+	    }
+	    function confirmInactive()
+	    {
+	        return confirm("Are you sure want to Inactive?");
+	    }
+
 </script>
 
 
