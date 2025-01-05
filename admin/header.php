@@ -51,6 +51,7 @@ if(!isset($_SESSION['user'])) {
 
 <script>
 $(document).ready(function() {
+    // Fetch mid-level categories when a top-level category is selected
     $('#tcat_id').change(function() {
         var tcat_id = $(this).val();
         console.log('Selected Top Level Category ID:', tcat_id);  // Log tcat_id
@@ -61,8 +62,9 @@ $(document).ready(function() {
                 type: 'POST',
                 data: { tcat_id: tcat_id },
                 success: function(data) {
-                    console.log('AJAX Response:', data);  // Log the server response
+                    console.log('AJAX Response for Mid-Level Categories:', data);  // Log the server response
                     $('.mid-cat').html(data);  // Update the mid-level category dropdown
+                    $('.end-cat').html('<option value="">Select End Level Category</option>');  // Reset the end-level category dropdown
                 },
                 error: function(xhr, status, error) {
                     console.error("AJAX Error: " + xhr.responseText);
@@ -71,58 +73,32 @@ $(document).ready(function() {
             });
         } else {
             $('.mid-cat').html('<option value="">Select Mid Level Category</option>');
+            $('.end-cat').html('<option value="">Select End Level Category</option>');  // Reset end-level category dropdown
+        }
+    });
+
+    // Fetch end-level categories when a mid-level category is selected
+    $('.mid-cat').change(function() {
+        var mcat_id = $(this).val();
+        console.log('Selected Mid Level Category ID:', mcat_id);  // Log mcat_id
+        
+        if (mcat_id) {
+            $.ajax({
+                url: '/lasorpresa/admin/settings/fetch-category.php',  // Updated to the correct path
+                type: 'POST',
+                data: { mcat_id: mcat_id },
+                success: function(data) {
+                    console.log('AJAX Response for End-Level Categories:', data);  // Log the server response
+                    $('.end-cat').html(data);  // Update the end-level category dropdown
+                },
+                error: function(xhr, status, error) {
+                    console.error("AJAX Error: " + xhr.responseText);
+                    alert('Error loading end-level categories: ' + error);
+                }
+            });
+        } else {
+            $('.end-cat').html('<option value="">Select End Level Category</option>');
         }
     });
 });
-
 </script>
-
-<script>
-		$(document).ready(function() {
-	        $('#editor1').summernote({
-	        	height: 300
-	        });
-	        $('#editor2').summernote({
-	        	height: 300
-	        });
-	        $('#editor3').summernote({
-	        	height: 300
-	        });
-	        $('#editor4').summernote({
-	        	height: 300
-	        });
-	        $('#editor5').summernote({
-	        	height: 300
-	        });
-	    });
-		$(".top-cat").on('change',function(){
-			var id=$(this).val();
-			var dataString = 'id='+ id;
-			$.ajax
-			({
-				type: "POST",
-				url: "get-mid-category.php",
-				data: dataString,
-				cache: false,
-				success: function(html)
-				{
-					$(".mid-cat").html(html);
-				}
-			});			
-		});
-		$(".mid-cat").on('change',function(){
-			var id=$(this).val();
-			var dataString = 'id='+ id;
-			$.ajax
-			({
-				type: "POST",
-				url: "get-end-category.php",
-				data: dataString,
-				cache: false,
-				success: function(html)
-				{
-					$(".end-cat").html(html);
-				}
-			});			
-		});
-	</script>
