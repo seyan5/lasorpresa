@@ -11,6 +11,7 @@ $success = ''; // Initialize success variable
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (isset($_POST['login'])) {
+        // Login functionality
         $usernameoremail = $_POST['usernameoremail'];
         $password = $_POST['password'];
 
@@ -23,7 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $user = $result->fetch_assoc();
             if (password_verify($password, $user['password'])) {
                 $_SESSION['user_id'] = $user['id'];
-                $_SESSION['user'] = $user['username']; // Add this line
+                $_SESSION['user'] = $user['username'];
                 $_SESSION['user_type'] = $user['user_type'];
 
                 if ($user['user_type'] == 'admin') {
@@ -38,11 +39,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         } else {
             $error = "No user found with that email or username.";
         }
-    }
-}
-
     } elseif (isset($_POST['register'])) {
-         // Registration functionality
+        // Registration functionality
         $firstname = $_POST['firstname'];
         $lastname = $_POST['lastname'];
         $username = $_POST['username'];
@@ -52,8 +50,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $password = $_POST['password'];
         $confirmpassword = $_POST['confirmpassword'];
         $user_type = 'user';
-    
-        // Basic validation
+
+        // Validation and registration logic
         if ($password !== $confirmpassword) {
             $error = "Passwords do not match.";
         } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
@@ -61,19 +59,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         } elseif (empty($firstname) || empty($lastname) || empty($username)) {
             $error = "Please fill in all required fields.";
         } else {
-            // Hash the password
             $passwordHash = password_hash($password, PASSWORD_BCRYPT);
-    
-            // Check if the username or email already exists
             $stmt = $conn->prepare("SELECT * FROM users WHERE email = ? OR username = ?");
             $stmt->bind_param("ss", $email, $username);
             $stmt->execute();
             $result = $stmt->get_result();
-    
+
             if ($result && $result->num_rows > 0) {
                 $error = "Username or email already exists.";
             } else {
-                // Insert the user into the database
                 $stmt = $conn->prepare("INSERT INTO users (name, username, email, contact, password, user_type) VALUES (?, ?, ?, ?, ?, ?)");
                 if ($stmt) {
                     $stmt->bind_param("ssssss", $name, $username, $email, $contact, $passwordHash, $user_type);
@@ -90,6 +84,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
     }
 }
+
 
 // Close connection
 $conn->close();
