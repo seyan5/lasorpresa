@@ -119,7 +119,7 @@
 	                    <td><?php echo $row['color_name']; ?></td>
 	                    <td>
 	                        <a href="color-edit.php?id=<?php echo $row['color_id']; ?>" class="btn btn-primary btn-xs">Edit</a>
-                            <a href="#" class="btn btn-danger btn-xs" data-href="color-delete.php?id=<?php echo $row['color']; ?>" data-toggle="modal" data-target="#confirm-delete">Delete</a>
+                            <a href="#" class="btn btn-danger btn-xs" data-href="color-delete.php?id=<?php echo $row['color_id']; ?>" data-toggle="modal" data-target="#confirm-delete">Delete</a>
 
 	                    </td>
 	                </tr>
