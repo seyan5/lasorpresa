@@ -10,7 +10,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
 
     <!-- css -->
-    <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="css/style.css">
 </head>
 
 <body>
@@ -22,7 +22,7 @@
     <label for="toggler" class="fas fa-bars"></label>
 
     <!-- <a href="#" class="logo">Flower<span>.</span></a> -->
-    <img src="../images/logo.png" alt="" class="logos" href="">
+    <img src="images/logo.png" alt="" class="logos" href="">
     <nav class="navbar">
         <a href="#home">Home</a>
         <a href="#about">About</a>
@@ -33,7 +33,7 @@
      
     <div class="icons">
         <a href="#" class="fas fa-heart"></a>
-        <a href="cart.html" class="fas fa-shopping-cart"></a>
+        <a href="users/cart.html" class="fas fa-shopping-cart"></a>
 
         <a href="#" class="fas fa-user"></a>
     </div>
