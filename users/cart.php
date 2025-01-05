@@ -12,7 +12,7 @@ if(isset($_POST['form1'])) {
     foreach ($result as $row) {
         $i++;
         $table_product_id[$i] = $row['p_id'];
-        $table_quantity[$i] = $row['p_qty'];
+        $table_quantity[$i] = $row['quantity'];
     }
 
     $i=0;
@@ -43,7 +43,7 @@ if(isset($_POST['form1'])) {
         	$allow_update = 0;
             $error_message .= '"'.$arr2[$i].'" items are not available for "'.$arr3[$i].'"\n';
         } else {
-            $_SESSION['cart_p_qty'][$i] = $arr2[$i];
+            $_SESSION['cart_quantity'][$i] = $arr2[$i];
         }
     }
     $error_message .= '\nOther items quantity are updated successfully!';
@@ -123,10 +123,10 @@ if(isset($_POST['form1'])) {
                         }
 
                         $i=0;
-                        foreach($_SESSION['cart_p_qty'] as $key => $value) 
+                        foreach($_SESSION['cart_quantity'] as $key => $value) 
                         {
                             $i++;
-                            $arr_cart_p_qty[$i] = $value;
+                            $arr_cart_quantity[$i] = $value;
                         }
 
                         $i=0;
@@ -162,12 +162,12 @@ if(isset($_POST['form1'])) {
                             <td><?php echo LANG_VALUE_1; ?><?php echo $arr_cart_p_current_price[$i]; ?></td>
                             <td>
                                 <input type="hidden" name="product_id[]" value="<?php echo $arr_cart_p_id[$i]; ?>">
-                                <input type="hidden" name="product_name[]" value="<?php echo $arr_cart_p_name[$i]; ?>">
-                                <input type="number" class="input-text qty text" step="1" min="1" max="" name="quantity[]" value="<?php echo $arr_cart_p_qty[$i]; ?>" title="Qty" type="4" pattern="[0-9]*" inputmode="numeric">
+                                <input type="hidden" name="product_name[]" value="<?php echo $arr_cart_name[$i]; ?>">
+                                <input type="number" class="input-text qty text" step="1" min="1" max="" name="quantity[]" value="<?php echo $arr_cart_quantity[$i]; ?>" title="Quantity" type="4" pattern="[0-9]*" inputmode="numeric">
                             </td>
                             <td class="text-right">
                                 <?php
-                                $row_total_price = $arr_cart_p_current_price[$i]*$arr_cart_p_qty[$i];
+                                $row_total_price = $arr_cart_p_current_price[$i]*$arr_cart_quantity[$i];
                                 $table_total_price = $table_total_price + $row_total_price;
                                 ?>
                                 <?php echo LANG_VALUE_1; ?><?php echo $row_total_price; ?>
