@@ -111,11 +111,11 @@ if(isset($_POST['form1'])) {
 			description,
 			short_description,
 			feature,
-			condition,
+			`condition`,  -- Enclosed in backticks to escape the reserved word
 			is_featured,
 			is_active,
 			ecat_id
-		) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)");
+		) VALUES (?,?,?,?,?,?,?,?,?,?,?)");
 		$statement->execute(array(
 			$_POST['name'],
 			$_POST['old_price'],
