@@ -19,7 +19,7 @@ if(isset($_POST['form1'])) {
         $error_message .= "You must have to select an end level category<br>";
     }
 
-    if(empty($_POST['p_name'])) {
+    if(empty($_POST['name'])) {
         $valid = 0;
         $error_message .= "Product name can not be empty<br>";
     }
@@ -103,34 +103,35 @@ if(isset($_POST['form1'])) {
 
 		//Saving data into the main table product
 		$statement = $pdo->prepare("INSERT INTO product(
-										name,
-										old_price,
-										current_price,
-										quantity,
-										featured_photo,
-										description,
-										short_description,
-										feature,
-										condition,
-										total_view,
-										is_featured,
-										is_active,
-										ecat_id
-									) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)");
+			name,
+			old_price,
+			current_price,
+			quantity,
+			featured_photo,
+			description,
+			short_description,
+			feature,
+			`condition`,  -- Enclosed in backticks to escape the reserved word
+			is_featured,
+			is_active,
+			ecat_id
+		) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)");
+		
 		$statement->execute(array(
-										$_POST['name'],
-										$_POST['old_price'],
-										$_POST['current_price'],
-										$_POST['quantity'],
-										$final_name,
-										$_POST['description'],
-										$_POST['short_description'],
-										$_POST['feature'],
-										$_POST['condition'],
-										$_POST['is_featured'],
-										$_POST['is_active'],
-										$_POST['ecat_id']
-									));
+			$_POST['name'],
+			$_POST['old_price'],
+			$_POST['current_price'],
+			$_POST['quantity'],
+			$final_name,
+			$_POST['description'],
+			$_POST['short_description'],
+			$_POST['feature'],
+			$_POST['condition'],
+			isset($_POST['is_featured']) ? $_POST['is_featured'] : 0,  // Default to 0 if not set
+			isset($_POST['is_active']) ? $_POST['is_active'] : 0,      // Default to 0 if not set
+			$_POST['ecat_id']
+		));
+		
 
 		
 
