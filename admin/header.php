@@ -42,6 +42,7 @@ if(!isset($_SESSION['user'])) {
 
     <!-- Include Select2 JS -->
     <script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js"></script>
+
 </head>
 
 <script>
@@ -83,6 +84,9 @@ $(document).ready(function () {
 </script>
 
 <script>
+    $(document).ready(function() {
+    $(".select2").select2();
+});
 		$(document).ready(function() {
 	        $('#editor1').summernote({
 	        	height: 300
