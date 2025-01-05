@@ -89,7 +89,7 @@ if(isset($_POST['form1'])) {
         }
 
         if($path == '') {
-        	$statement = $pdo->prepare("UPDATE tbl_product SET 
+        	$statement = $pdo->prepare("UPDATE product SET 
         							name=?, 
         							old_price=?, 
         							current_price=?, 
@@ -125,7 +125,7 @@ if(isset($_POST['form1'])) {
         	move_uploaded_file( $path_tmp, '../uploads/'.$final_name );
 
 
-        	$statement = $pdo->prepare("UPDATE tbl_product SET 
+        	$statement = $pdo->prepare("UPDATE product SET 
          							name=?, 
         							old_price=?, 
         							current_price=?, 
@@ -209,7 +209,7 @@ foreach ($result as $row) {
 	$name = $row['name'];
 	$old_price = $row['old_price'];
 	$current_price = $row['current_price'];
-	$qty = $row['quantity'];
+	$quantity = $row['quantity'];
 	$featured_photo = $row['featured_photo'];
 	$description = $row['description'];
 	$short_description = $row['short_description'];
@@ -344,7 +344,7 @@ foreach ($result as $row) {
 						<div class="form-group">
 							<label for="" class="col-sm-3 control-label">Quantity <span>*</span></label>
 							<div class="col-sm-4">
-								<input type="text" name="quantity" class="form-control" value="<?php echo $p_qty; ?>">
+								<input type="text" name="quantity" class="form-control" value="<?php echo $quantity; ?>">
 							</div>
 						</div>
 						</div>
@@ -376,14 +376,14 @@ foreach ($result as $row) {
 						<div class="form-group">
 							<label for="" class="col-sm-3 control-label">Existing Featured Photo</label>
 							<div class="col-sm-4" style="padding-top:4px;">
-								<img src="../assets/uploads/<?php echo $p_featured_photo; ?>" alt="" style="width:150px;">
-								<input type="hidden" name="current_photo" value="<?php echo $p_featured_photo; ?>">
+								<img src="../assets/uploads/<?php echo $featured_photo; ?>" alt="" style="width:150px;">
+								<input type="hidden" name="current_photo" value="<?php echo $featured_photo; ?>">
 							</div>
 						</div>
 						<div class="form-group">
 							<label for="" class="col-sm-3 control-label">Change Featured Photo </label>
 							<div class="col-sm-4" style="padding-top:4px;">
-								<input type="file" name="p_featured_photo">
+								<input type="file" name="featured_photo">
 							</div>
 						</div>
 						<div class="form-group">
@@ -399,7 +399,7 @@ foreach ($result as $row) {
 			                        		?>
 											<tr>
 				                                <td>
-				                                    <img src="../assets/uploads/product_photos/<?php echo $row['photo']; ?>" alt="" style="width:150px;margin-bottom:5px;">
+				                                    <img src="../uploads/product_photos/<?php echo $row['photo']; ?>" alt="" style="width:150px;margin-bottom:5px;">
 				                                </td>
 				                                <td style="width:28px;">
 				                                	<a onclick="return confirmDelete();" href="product-other-photo-delete.php?id=<?php echo $row['pp_id']; ?>&id1=<?php echo $_REQUEST['id']; ?>" class="btn btn-danger btn-xs">X</a>
@@ -444,8 +444,8 @@ foreach ($result as $row) {
 							<label for="" class="col-sm-3 control-label">Is Featured?</label>
 							<div class="col-sm-8">
 								<select name="is_featured" class="form-control" style="width:auto;">
-									<option value="0" <?php if($p_is_featured == '0'){echo 'selected';} ?>>No</option>
-									<option value="1" <?php if($p_is_featured == '1'){echo 'selected';} ?>>Yes</option>
+									<option value="0" <?php if($is_featured == '0'){echo 'selected';} ?>>No</option>
+									<option value="1" <?php if($is_featured == '1'){echo 'selected';} ?>>Yes</option>
 								</select> 
 							</div>
 						</div>
@@ -453,8 +453,8 @@ foreach ($result as $row) {
 							<label for="" class="col-sm-3 control-label">Is Active?</label>
 							<div class="col-sm-8">
 								<select name="is_active" class="form-control" style="width:auto;">
-									<option value="0" <?php if($p_is_active == '0'){echo 'selected';} ?>>No</option>
-									<option value="1" <?php if($p_is_active == '1'){echo 'selected';} ?>>Yes</option>
+									<option value="0" <?php if($is_active == '0'){echo 'selected';} ?>>No</option>
+									<option value="1" <?php if($is_active == '1'){echo 'selected';} ?>>Yes</option>
 								</select> 
 							</div>
 						</div>
