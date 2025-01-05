@@ -80,9 +80,9 @@
 
         <section class="content">
             <div class="row">
-                <div class="col-md-12">
-                    <div class="box box-info">
-                        <div class="box-body">
+                <div class="">
+                    <div class="">
+                        <div class="">
                             <table>
                                 <thead>
                                     <tr>
