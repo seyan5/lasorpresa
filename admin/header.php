@@ -50,6 +50,7 @@ $(document).ready(function () {
     // Initialize Select2 Elements
     $(".select2").select2();
 
+
     // Modal for delete confirmation
     $('#confirm-delete').on('show.bs.modal', function (e) {
         var deleteUrl = $(e.relatedTarget).data('href'); // Get href of the clicked button

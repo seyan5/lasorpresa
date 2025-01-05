@@ -14,11 +14,6 @@ if(isset($_POST['form1'])) {
         $error_message .= "You must have to select a mid level category<br>";
     }
 
-    if(empty($_POST['ecat_id'])) {
-        $valid = 0;
-        $error_message .= "You must have to select an end level category<br>";
-    }
-
     if(empty($_POST['name'])) {
         $valid = 0;
         $error_message .= "Product name can not be empty<br>";
@@ -189,40 +184,42 @@ if(isset($_POST['form1'])) {
 
 				<div class="box box-info">
 					<div class="box-body">
-						<div class="form-group">
-							<label for="" class="col-sm-3 control-label">Top Level Category Name <span>*</span></label>
-							<div class="col-sm-4">
-								<select id="tcat_id" name="tcat_id" class="form-control select2 top-cat">
-									<option value="">Select Top Level Category</option>
-									<?php
-									$statement = $pdo->prepare("SELECT * FROM top_category ORDER BY tcat_name ASC");
-									$statement->execute();
-									$result = $statement->fetchAll(PDO::FETCH_ASSOC);	
-									foreach ($result as $row) {
-										?>
-										<option value="<?php echo $row['tcat_id']; ?>"><?php echo $row['tcat_name']; ?></option>
-										<?php
-									}
-									?>
-								</select>
-							</div>
-						</div>
-						<div class="form-group">
-							<label for="" class="col-sm-3 control-label">Mid Level Category Name <span>*</span></label>
-							<div class="col-sm-4">
-								<select name="mcat_id" name="mcat_id"class="form-control select2 mid-cat">
-									<option value="">Select Mid Level Category</option>
-								</select>
-							</div>
-						</div>
-						<div class="form-group">
-							<label for="" class="col-sm-3 control-label">End Level Category Name <span>*</span></label>
-							<div class="col-sm-4">
-								<select name="ecat_id" class="form-control select2 end-cat">
-									<option value="">Select End Level Category</option>
-								</select>
-							</div>
-						</div>
+					<div class="form-group">
+                <label for="" class="col-sm-3 control-label">Top Level Category Name <span>*</span></label>
+                <div class="col-sm-4">
+                    <select id="tcat_id" name="tcat_id" class="form-control select2 top-cat">
+                        <option value="">Select Top Level Category</option>
+                        <?php
+                        $statement = $pdo->prepare("SELECT * FROM top_category ORDER BY tcat_name ASC");
+                        $statement->execute();
+                        $result = $statement->fetchAll(PDO::FETCH_ASSOC);
+                        foreach ($result as $row) {
+                            ?>
+                            <option value="<?php echo $row['tcat_id']; ?>"><?php echo $row['tcat_name']; ?></option>
+                            <?php
+                        }
+                        ?>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="" class="col-sm-3 control-label">Mid Level Category Name <span>*</span></label>
+                <div class="col-sm-4">
+                    <select id="mcat_id" name="mcat_id" class="form-control select2 mid-cat">
+                        <option value="">Select Mid Level Category</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="" class="col-sm-3 control-label">End Level Category Name <span></span></label>
+                <div class="col-sm-4">
+                    <select id="ecat_id" name="ecat_id" class="form-control select2 end-cat">
+                        <option value="">Select End Level Category</option>
+                    </select>
+                </div>
+            </div>
 						<div class="form-group">
 							<label for="" class="col-sm-3 control-label">Product Name <span>*</span></label>
 							<div class="col-sm-4">
@@ -365,3 +362,72 @@ if(isset($_POST['form1'])) {
 	</div>
 
 </section>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function() {
+        // When the top-level category is changed
+        $('#tcat_id').change(function() {
+            var tcat_id = $(this).val();
+
+            if (tcat_id != '') {
+                // Send an AJAX request to fetch mid-level categories
+                $.ajax({
+                    url: '../settings/fetch-category.php',  // Ensure this URL is correct
+                    type: 'POST',
+                    data: { tcat_id: tcat_id }, // Send tcat_id to the PHP script
+                    success: function(data) {
+                        // Check if the data is empty
+                        if (data.trim() !== '') {
+                            // Populate the Mid Level Category dropdown
+                            $('#mcat_id').html(data);
+                        } else {
+                            $('#mcat_id').html('<option value="">No mid-level categories found</option>');
+                        }
+                        // Clear the End Level Category dropdown
+                        $('#ecat_id').html('<option value="">Select End Level Category</option>');
+                    },
+                    error: function(xhr, status, error) {
+                        console.error("AJAX Error: " + error);
+                        $('#mcat_id').html('<option value="">Error loading categories</option>');
+                    }
+                });
+            } else {
+                // If no top category is selected, clear both mid-level and end-level options
+                $('#mcat_id').html('<option value="">Select Mid Level Category</option>');
+                $('#ecat_id').html('<option value="">Select End Level Category</option>');
+            }
+        });
+
+        // When the mid-level category is changed
+        $('#mcat_id').change(function() {
+            var mcat_id = $(this).val();
+
+            if (mcat_id != '') {
+                // Send an AJAX request to fetch end-level categories
+                $.ajax({
+                    url: '../settings/fetch-category.php',  // Ensure this URL is correct
+                    type: 'POST',
+                    data: { mcat_id: mcat_id }, // Send mcat_id to the PHP script
+                    success: function(data) {
+                        // Check if the data is empty
+                        if (data.trim() !== '') {
+                            // Populate the End Level Category dropdown
+                            $('#ecat_id').html(data);
+                        } else {
+                            $('#ecat_id').html('<option value="">No end-level categories found</option>');
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error("AJAX Error: " + error);
+                        $('#ecat_id').html('<option value="">Error loading end-level categories</option>');
+                    }
+                });
+            } else {
+                // If no mid category is selected, clear the end-level category options
+                $('#ecat_id').html('<option value="">Select End Level Category</option>');
+            }
+        });
+    });
+</script>
+
