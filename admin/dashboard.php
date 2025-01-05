@@ -49,7 +49,7 @@ if ($result->num_rows > 0) {
                     </a>
                 </li>
                 <li>
-                    <a href="#">
+                    <a href="dashboard.php">
                         <span class="icon">
                             <ion-icon name="home-outline"></ion-icon>
                         </span>
@@ -89,7 +89,7 @@ if ($result->num_rows > 0) {
                     </a>
                 </li>
                 <li>
-                    <a href="settings/type.php">
+                    <a href="settings.php">
                         <span class="icon">
                             <ion-icon name="settings-outline"></ion-icon>
                         </span>
