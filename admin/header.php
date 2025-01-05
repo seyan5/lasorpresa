@@ -37,19 +37,70 @@ if(!isset($_SESSION['user'])) {
 </head>
 
 <script>
-    $(document).ready(function () {
-        // Trigger when the modal is about to be shown
-        $('#confirm-delete').on('show.bs.modal', function (e) {
-    var deleteUrl = $(e.relatedTarget).data('href');
-    $(this).find('.btn-confirm-delete').attr('href', deleteUrl);
-});
+	  $(function () {
+
+	    //Initialize Select2 Elements
+	    $(".select2").select2();
+
+	    //Datemask dd/mm/yyyy
+	    $("#datemask").inputmask("dd-mm-yyyy", {"placeholder": "dd-mm-yyyy"});
+	    //Datemask2 mm/dd/yyyy
+	    $("#datemask2").inputmask("mm-dd-yyyy", {"placeholder": "mm-dd-yyyy"});
+	    //Money Euro
+	    $("[data-mask]").inputmask();
+
+	    //Date picker
+	    $('#datepicker').datepicker({
+	      autoclose: true,
+	      format: 'dd-mm-yyyy',
+	      todayBtn: 'linked',
+	    });
+
+	    $('#datepicker1').datepicker({
+	      autoclose: true,
+	      format: 'dd-mm-yyyy',
+	      todayBtn: 'linked',
+	    });
+
+	    //iCheck for checkbox and radio inputs
+	    $('input[type="checkbox"].minimal, input[type="radio"].minimal').iCheck({
+	      checkboxClass: 'icheckbox_minimal-blue',
+	      radioClass: 'iradio_minimal-blue'
+	    });
+	    //Red color scheme for iCheck
+	    $('input[type="checkbox"].minimal-red, input[type="radio"].minimal-red').iCheck({
+	      checkboxClass: 'icheckbox_minimal-red',
+	      radioClass: 'iradio_minimal-red'
+	    });
+	    //Flat red color scheme for iCheck
+	    $('input[type="checkbox"].flat-red, input[type="radio"].flat-red').iCheck({
+	      checkboxClass: 'icheckbox_flat-green',
+	      radioClass: 'iradio_flat-green'
+	    });
+
+
+
+	    $("#example1").DataTable();
+	    $('#example2').DataTable({
+	      "paging": true,
+	      "lengthChange": false,
+	      "searching": false,
+	      "ordering": true,
+	      "info": true,
+	      "autoWidth": false
+	    });
+
+	    $('#confirm-delete').on('show.bs.modal', function(e) {
+	      $(this).find('.btn-ok').attr('href', $(e.relatedTarget).data('href'));
+	    });
 		
 		$('#confirm-approve').on('show.bs.modal', function(e) {
 	      $(this).find('.btn-ok').attr('href', $(e.relatedTarget).data('href'));
 	    });
-    });
+ 
+	  });
 
-    function confirmDelete()
+		function confirmDelete()
 	    {
 	        return confirm("Are you sure want to delete this data?");
 	    }
@@ -62,7 +113,8 @@ if(!isset($_SESSION['user'])) {
 	        return confirm("Are you sure want to Inactive?");
 	    }
 
-</script>
+	</script>
+
 
 
 <script>
