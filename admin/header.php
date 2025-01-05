@@ -48,6 +48,7 @@ if(!isset($_SESSION['user'])) {
     });
 </script>
 
+
 <script>
 $(document).ready(function() {
     $('#tcat_id').change(function() {
@@ -56,18 +57,18 @@ $(document).ready(function() {
         
         if (tcat_id) {
             $.ajax({
-    url: '/settings/fetch-category.php',  // Absolute path
-    type: 'POST',
-    data: { tcat_id: tcat_id },
-    success: function(data) {
-        console.log('AJAX Response:', data);  // Log the server response
-        $('.mid-cat').html(data);  // Update the mid-level category dropdown
-    },
-    error: function(xhr, status, error) {
-        console.error("AJAX Error: " + xhr.responseText);
-        alert('Error loading mid-level categories: ' + error);
-    }
-});
+                url: '/settings/fetch-category.php',  // Updated to the correct path
+                type: 'POST',
+                data: { tcat_id: tcat_id },
+                success: function(data) {
+                    console.log('AJAX Response:', data);  // Log the server response
+                    $('.mid-cat').html(data);  // Update the mid-level category dropdown
+                },
+                error: function(xhr, status, error) {
+                    console.error("AJAX Error: " + xhr.responseText);
+                    alert('Error loading mid-level categories: ' + error);
+                }
+            });
         } else {
             $('.mid-cat').html('<option value="">Select Mid Level Category</option>');
         }
