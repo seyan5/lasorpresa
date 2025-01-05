@@ -101,14 +101,14 @@
 			<thead>
 			    <tr>
 			        <th>#</th>
-			        <th>Size Name</th>
+			        <th>Type Name</th>
 			        <th>Action</th>
 			    </tr>
 			</thead>
             <tbody>
             	<?php
             	$i=0;
-            	$statement = $pdo->prepare("SELECT * FROM tbl_size ORDER BY size_id ASC");
+            	$statement = $pdo->prepare("SELECT * FROM type ORDER BY type_id ASC");
             	$statement->execute();
             	$result = $statement->fetchAll(PDO::FETCH_ASSOC);							
             	foreach ($result as $row) {
@@ -116,10 +116,10 @@
             		?>
 					<tr>
 	                    <td><?php echo $i; ?></td>
-	                    <td><?php echo $row['size_name']; ?></td>
+	                    <td><?php echo $row['type_name']; ?></td>
 	                    <td>
-	                        <a href="size-edit.php?id=<?php echo $row['size_id']; ?>" class="btn btn-primary btn-xs">Edit</a>
-	                        <a href="#" class="btn btn-danger btn-xs" data-href="size-delete.php?id=<?php echo $row['size_id']; ?>" data-toggle="modal" data-target="#confirm-delete">Delete</a>
+	                        <a href="type-edit.php?id=<?php echo $row['size_id']; ?>" class="btn btn-primary btn-xs">Edit</a>
+	                        <a href="#" class="btn btn-danger btn-xs" data-href="type-delete.php?id=<?php echo $row['type_id']; ?>" data-toggle="modal" data-target="#confirm-delete">Delete</a>
 	                    </td>
 	                </tr>
             		<?php
