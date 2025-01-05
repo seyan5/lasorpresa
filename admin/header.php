@@ -47,3 +47,27 @@ if(!isset($_SESSION['user'])) {
         });
     });
 </script>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#tcat_id').on('change', function () {
+            var tcat_id = $(this).val(); // Get selected top-level category ID
+
+            // Clear the mid-level category dropdown
+            $('.mid-cat').html('<option value="">Select Mid Level Category</option>');
+
+            if (tcat_id) {
+                $.ajax({
+                    url: 'fetch_mid_categories.php', // Backend script to fetch data
+                    type: 'POST',
+                    data: { tcat_id: tcat_id }, // Send selected top-level category ID
+                    success: function (response) {
+                        // Populate the mid-level category dropdown
+                        $('.mid-cat').html(response);
+                    }
+                });
+            }
+        });
+    });
+</script>

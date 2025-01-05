@@ -35,7 +35,7 @@ if(isset($_POST['form1'])) {
 		<h1>Add End Level Category</h1>
 	</div>
 	<div class="content-header-right">
-		<a href="end-category.php" class="btn btn-primary btn-sm">View All</a>
+		<a href="endcategory.php" class="btn btn-primary btn-sm">View All</a>
 	</div>
 </section>
 
@@ -68,7 +68,7 @@ if(isset($_POST['form1'])) {
 						<div class="form-group">
 							<label for="" class="col-sm-3 control-label">Top Level Category Name <span>*</span></label>
 							<div class="col-sm-4">
-								<select name="tcat_id" class="form-control select2 top-cat">
+								<select name="tcat_id" id="tcat_id" class="form-control select2 top-cat">
 									<option value="">Select Top Level Category</option>
 									<?php
 									$statement = $pdo->prepare("SELECT * FROM top_category ORDER BY tcat_name ASC");
