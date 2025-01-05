@@ -71,7 +71,7 @@ if(isset($_POST['form1'])) {
             $photo_temp = $_FILES['photo']["tmp_name"];
             $photo_temp = array_values(array_filter($photo_temp));
 
-        	$statement = $pdo->prepare("SHOW TABLE STATUS LIKE 'tbl_product_photo'");
+        	$statement = $pdo->prepare("SHOW TABLE STATUS LIKE 'product_photo'");
 			$statement->execute();
 			$result = $statement->fetchAll();
 			foreach($result as $row) {
@@ -103,7 +103,6 @@ if(isset($_POST['form1'])) {
 		$final_name = 'product-featured-'.$ai_id.'.'.$ext;
         move_uploaded_file( $path_tmp, '../assets/uploads/'.$final_name );
 
-		//Saving data into the main table tbl_product
 		$statement = $pdo->prepare("INSERT INTO product(
 										name,
 										old_price,
@@ -187,7 +186,7 @@ if(isset($_POST['form1'])) {
 								<select name="tcat_id" class="form-control select2 top-cat">
 									<option value="">Select Top Level Category</option>
 									<?php
-									$statement = $pdo->prepare("SELECT * FROM tbl_top_category ORDER BY tcat_name ASC");
+									$statement = $pdo->prepare("SELECT * FROM top_category ORDER BY tcat_name ASC");
 									$statement->execute();
 									$result = $statement->fetchAll(PDO::FETCH_ASSOC);	
 									foreach ($result as $row) {
@@ -245,7 +244,7 @@ if(isset($_POST['form1'])) {
 							<div class="col-sm-4">
 								<select name="color[]" class="form-control select2" multiple="multiple">
 									<?php
-									$statement = $pdo->prepare("SELECT * FROM tbl_color ORDER BY color_id ASC");
+									$statement = $pdo->prepare("SELECT * FROM color ORDER BY color_id ASC");
 									$statement->execute();
 									$result = $statement->fetchAll(PDO::FETCH_ASSOC);			
 									foreach ($result as $row) {
