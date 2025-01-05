@@ -1,12 +1,4 @@
-<?php
-include("header.php");
 
-$conn = new mysqli($servername, $username, $password, $dbname);
-
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
-?>
 <?php
 session_start();
 include '../config.php';
