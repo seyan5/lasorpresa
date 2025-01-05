@@ -80,10 +80,10 @@
 
 <section class="content-header">
 	<div class="content-header-left">
-		<h1>View Sizes</h1>
+		<h1>View Type</h1>
 	</div>
 	<div class="content-header-right">
-		<a href="size-add.php" class="btn btn-primary btn-sm">Add New</a>
+		<a href="type-add.php" class="btn btn-primary btn-sm">Add New</a>
 	</div>
 </section>
 
