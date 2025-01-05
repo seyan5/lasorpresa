@@ -18,17 +18,17 @@ if(isset($_POST['form1'])) {
         $error_message .= "You must have to select an end level category<br>";
     }
 
-    if(empty($_POST['p_name'])) {
+    if(empty($_POST['name'])) {
         $valid = 0;
         $error_message .= "Product name can not be empty<br>";
     }
 
-    if(empty($_POST['p_current_price'])) {
+    if(empty($_POST['current_price'])) {
         $valid = 0;
         $error_message .= "Current Price can not be empty<br>";
     }
 
-    if(empty($_POST['p_qty'])) {
+    if(empty($_POST['quantity'])) {
         $valid = 0;
         $error_message .= "Quantity can not be empty<br>";
     }
