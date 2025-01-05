@@ -52,7 +52,7 @@ if(!isset($_SESSION['user'])) {
             // Get the data-href attribute from the clicked link
             var href = $(e.relatedTarget).data('href');
             // Update the href attribute of the confirmation button
-            $(this).find('.btn-ok').attr('href', href);
+            $(this).find('.btn-confirm-delete').attr('href', href);
         });
     });
 </script>
