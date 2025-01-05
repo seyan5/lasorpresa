@@ -112,11 +112,10 @@ if(isset($_POST['form1'])) {
 			short_description,
 			feature,
 			condition,
-			total_view,
 			is_featured,
 			is_active,
 			ecat_id
-		) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)");
+		) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)");
 		$statement->execute(array(
 			$_POST['name'],
 			$_POST['old_price'],
@@ -127,7 +126,6 @@ if(isset($_POST['form1'])) {
 			$_POST['short_description'],
 			$_POST['feature'],
 			$_POST['condition'],
-			$_POST['total_view'],  // Make sure this value exists
 			$_POST['is_featured'],
 			$_POST['is_active'],
 			$_POST['ecat_id']
