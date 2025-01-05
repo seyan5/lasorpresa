@@ -51,16 +51,17 @@ $(document).ready(function () {
     $(".select2").select2();
 
     // Modal for delete confirmation
-    $('#confirm-delete').on('show.bs.modal', function (e) {
-        var deleteUrl = $(e.relatedTarget).data('href'); // Get href of the clicked button
-        $(this).find('.btn-confirm-delete').attr('href', deleteUrl); // Set it in the modal's delete button
+     $('#confirm-delete').on('show.bs.modal', function (e) {
+        var deleteUrl = $(e.relatedTarget).data('href'); // Get the href from the clicked delete button
+        $(this).find('.btn-confirm-delete').attr('href', deleteUrl); // Set the href for the modal delete button
     });
 
-    // Confirm Delete action
+    // Perform the actual deletion when the "Delete" button in the modal is clicked
     $('.btn-confirm-delete').on('click', function () {
         var href = $(this).attr('href');
-        window.location.href = href; // Redirect to delete URL
+        window.location.href = href; // Redirect to the delete URL
     });
+});
 
     // Handle the dynamic addition and deletion of product photos
     $("#btnAddNew").click(function () {
