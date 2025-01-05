@@ -12,20 +12,24 @@
    <ul class="indicator">
     <li data-filter="all" class="active"><a href="#">All</a></li>
     <?php
-    // Fetch mid-level categories
+    // Replace `specific_tcat_id` with the ID of the desired top category
+    $specific_tcat_id = 3; // Example: Top Category ID = 1
+
+    // Fetch mid-level categories for the specific top category
     $statement = $pdo->prepare("SELECT * 
                                 FROM mid_category t1
                                 JOIN top_category t2
                                 ON t1.tcat_id = t2.tcat_id
+                                WHERE t1.tcat_id = ? 
                                 ORDER BY t1.mcat_id DESC");
-    $statement->execute();
+    $statement->execute([$specific_tcat_id]);
     $result = $statement->fetchAll(PDO::FETCH_ASSOC);
-    
+
     foreach ($result as $row) {
         echo '<li data-filter="' . htmlspecialchars($row['mcat_name']) . '"><a href="#">' . htmlspecialchars($row['mcat_name']) . '</a></li>';
     }
     ?>
-</ul>
+   </ul>
 
     <div class="filter-condition">
       <select name="" id="select">
