@@ -119,8 +119,7 @@
 	                    <td><?php echo $row['color_name']; ?></td>
 	                    <td>
 	                        <a href="color-edit.php?id=<?php echo $row['color_id']; ?>" class="btn btn-primary btn-xs">Edit</a>
-                            <a href="#" class="btn btn-danger btn-xs" data-href="color-delete.php?id=<?php echo $color['color_id']; ?>" data-toggle="modal" data-target="#confirm-delete">Delete</a>
-
+                            <a href="#" class="btn btn-danger btn-xs" data-href="color-delete.php?id=<?php echo $row['color']; ?>" data-toggle="modal" data-target="#confirm-delete">Delete</a>
 	                    </td>
 	                </tr>
             		<?php
@@ -134,7 +133,6 @@
 
 </section>
 
-
 <div class="modal fade" id="confirm-delete" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -143,7 +141,7 @@
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
             <div class="modal-body">
-                Are you sure you want to delete this color?
+                Are you sure you want to delete this type?
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
