@@ -3,7 +3,7 @@ require_once('../header.php');
 
 // Preventing direct access to the page
 if (!isset($_REQUEST['id'])) {
-    header('location: ../../logout.php');
+    header('location: ../logout.php');
     exit;
 } else {
     // Check if the color ID is valid
@@ -11,7 +11,7 @@ if (!isset($_REQUEST['id'])) {
     $statement->execute(array($_REQUEST['id']));
     $total = $statement->rowCount();
     if ($total == 0) {
-        header('location: logout.php');
+        header('location: ../logout.php');
         exit;
     }
 }
@@ -20,5 +20,5 @@ if (!isset($_REQUEST['id'])) {
 $statement = $pdo->prepare("DELETE FROM color WHERE color_id=?");
 $statement->execute(array($_REQUEST['id']));
 
-header('location: colors.php'); // Redirect back to the colors list page
+header('location: color.php'); // Redirect back to the colors list page
 ?>
