@@ -41,6 +41,14 @@
  
     <div class="products-container">
 
+    <ul class="indicator">
+    <li data-filter="all" class="active"><a href="#">All</a></li>
+    <li data-filter="Flower1"><a href="#">Flower1</a></li>
+    <li data-filter="Flower2"><a href="#">Flower2</a></li>
+    <li data-filter="Flower3"><a href="#">Flower3</a></li>
+   </ul>
+
+
       <div class="product" data-name="p-4">
          <img src="../ivd/flower.png" alt="">
          <h3>Flower</h3>
