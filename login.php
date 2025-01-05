@@ -10,13 +10,10 @@ $error = ''; // Initialize error variable
 $success = ''; // Initialize success variable
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    // Check if the form is for login or registration
     if (isset($_POST['login'])) {
-        // Login functionality
         $usernameoremail = $_POST['usernameoremail'];
         $password = $_POST['password'];
 
-        // Fetch user from the database
         $stmt = $conn->prepare("SELECT * FROM users WHERE email = ? OR username = ?");
         $stmt->bind_param("ss", $usernameoremail, $usernameoremail);
         $stmt->execute();
@@ -24,18 +21,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         if ($result && $result->num_rows > 0) {
             $user = $result->fetch_assoc();
-
-            // Verify the password
             if (password_verify($password, $user['password'])) {
                 $_SESSION['user_id'] = $user['id'];
+                $_SESSION['user'] = $user['username']; // Add this line
                 $_SESSION['user_type'] = $user['user_type'];
-                $_SESSION['firstname'] = $user['firstname'];
-                $_SESSION['lastname'] = $user['lastname'];
 
                 if ($user['user_type'] == 'admin') {
-                    header('Location: admin/dashboard.php');
+                    header('Location: /path-to-project/admin/dashboard.php');
                 } else {
-                    header('Location: users/home.php');
+                    header('Location: /path-to-project/users/home.php');
                 }
                 exit();
             } else {
@@ -44,6 +38,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         } else {
             $error = "No user found with that email or username.";
         }
+    }
+}
+
     } elseif (isset($_POST['register'])) {
          // Registration functionality
         $firstname = $_POST['firstname'];
