@@ -31,5 +31,19 @@ if(!isset($_SESSION['user'])) {
     <link rel="stylesheet" href="../css/style.css">
 	<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 </head>
+
+<script>
+    $(document).ready(function () {
+        // Trigger when the modal is about to be shown
+        $('#confirm-delete').on('show.bs.modal', function (e) {
+            // Get the data-href attribute from the clicked link
+            var href = $(e.relatedTarget).data('href');
+            // Update the href attribute of the confirmation button
+            $(this).find('.btn-ok').attr('href', href);
+        });
+    });
+</script>
