@@ -115,7 +115,7 @@ if(isset($_POST['form1'])) {
 			is_featured,
 			is_active,
 			ecat_id
-		) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)");
+		) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)");
 		
 		$statement->execute(array(
 			$_POST['name'],
@@ -127,10 +127,11 @@ if(isset($_POST['form1'])) {
 			$_POST['short_description'],
 			$_POST['feature'],
 			$_POST['condition'],
-			$_POST['is_featured'],
-			$_POST['is_active'],
+			isset($_POST['is_featured']) ? $_POST['is_featured'] : 0,  // Default to 0 if not set
+			isset($_POST['is_active']) ? $_POST['is_active'] : 0,      // Default to 0 if not set
 			$_POST['ecat_id']
 		));
+		
 
 		
 
