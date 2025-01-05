@@ -103,34 +103,35 @@ if(isset($_POST['form1'])) {
 
 		//Saving data into the main table product
 		$statement = $pdo->prepare("INSERT INTO product(
-										name,
-										old_price,
-										current_price,
-										quantity,
-										featured_photo,
-										description,
-										short_description,
-										feature,
-										condition,
-										total_view,
-										is_featured,
-										is_active,
-										ecat_id
-									) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)");
+			name,
+			old_price,
+			current_price,
+			quantity,
+			featured_photo,
+			description,
+			short_description,
+			feature,
+			condition,
+			total_view,
+			is_featured,
+			is_active,
+			ecat_id
+		) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)");
 		$statement->execute(array(
-										$_POST['name'],
-										$_POST['old_price'],
-										$_POST['current_price'],
-										$_POST['quantity'],
-										$final_name,
-										$_POST['description'],
-										$_POST['short_description'],
-										$_POST['feature'],
-										$_POST['condition'],
-										$_POST['is_featured'],
-										$_POST['is_active'],
-										$_POST['ecat_id']
-									));
+			$_POST['name'],
+			$_POST['old_price'],
+			$_POST['current_price'],
+			$_POST['quantity'],
+			$final_name[0],  // Assuming it's an array of file names
+			$_POST['description'],
+			$_POST['short_description'],
+			$_POST['feature'],
+			$_POST['condition'],
+			$_POST['total_view'],  // Make sure this value exists
+			$_POST['is_featured'],
+			$_POST['is_active'],
+			$_POST['ecat_id']
+		));
 
 		
 
