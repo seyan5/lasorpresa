@@ -86,7 +86,7 @@ if(isset($_POST['form1'])) {
 						<div class="form-group">
 							<label for="" class="col-sm-3 control-label">Mid Level Category Name <span>*</span></label>
 							<div class="col-sm-4">
-								<select name="mcat_id" class="form-control select2 mid-cat">
+								<select name="mcat_id"  id="mcat_id"class="form-control select2 mid-cat">
 									<option value="">Select Mid Level Category</option>
 								</select>
 							</div>
