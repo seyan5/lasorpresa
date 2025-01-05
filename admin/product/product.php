@@ -1,6 +1,16 @@
-<?php
-require_once('../header.php');
-?>
+<?php require_once('header.php'); ?>
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>La Sorpresa Admin</title>
+    <link rel="stylesheet" href="../css/style.css">
+    
+</head>
 
 <body>
     <div class="container">
@@ -43,7 +53,7 @@ require_once('../header.php');
                 </li>
 
                 <li>
-                    <a href="#">
+                    <a href="product/product.php">
                         <span class="icon">
                             <ion-icon name="cube-outline"></ion-icon>
                         </span>
@@ -61,7 +71,7 @@ require_once('../header.php');
                 </li>
 
                 <li>
-                    <a href="#">
+                    <a href="settings/type.php">
                         <span class="icon">
                             <ion-icon name="settings-outline"></ion-icon>
                         </span>
@@ -95,7 +105,7 @@ require_once('../header.php');
 			<div class="box box-info">
 				<div class="box-body table-responsive">
 					<table id="example1" class="table table-bordered table-hover table-striped">
-						<thead class="thead-dark">
+					<thead class="thead-dark">
 							<tr>
 								<th width="10">#</th>
 								<th>Photo</th>
@@ -111,41 +121,64 @@ require_once('../header.php');
 						</thead>
 						<tbody>
 							<?php
-							try {
-								$statement = $pdo->prepare("SELECT
-            						p.p_id, 
-            						p.name AS product_name, 
-            						p.old_price, 
-            						p.current_price, 
-           							p.quantity, 
-            						p.product_photo AS photo, 
-            						p.is_featured, 
-            						p.is_active, 
-            						mc.mcat_name AS category_name
-        							FROM product p
-        							JOIN mid_category mc ON p.ecat_id = mc.mcat_id
-    							");
-								$statement->execute();
-								$result = $statement->fetchAll(PDO::FETCH_ASSOC);
+							$i=0;
+							$statement = $pdo->prepare("SELECT
+														
+														t1.p_id,
+														t1.name,
+														t1.old_price,
+														t1.current_price,
+														t1.quantity,
+														t1.featured_photo,
+														t1.is_featured,
+														t1.is_active,
+														t1.ecat_id,
 
-								foreach ($result as $row) {
-									echo '<tr>';
-									echo '<td>' . $row['p_id'] . '</td>';
-									echo '<td><img src="' . $row['photo'] . '" alt="Product Photo"></td>';
-									echo '<td>' . $row['product_name'] . '</td>';
-									echo '<td>' . $row['old_price'] . '</td>';
-									echo '<td>' . $row['current_price'] . '</td>';
-									echo '<td>' . $row['quantity'] . '</td>';
-									echo '<td>' . ($row['is_featured'] ? 'Yes' : 'No') . '</td>';
-									echo '<td>' . ($row['is_active'] ? 'Yes' : 'No') . '</td>';
-									echo '<td>' . $row['category_name'] . '</td>';
-									echo '<td><a href="edit.php?id=' . $row['p_id'] . '">Edit</a> | <a href="delete.php?id=' . $row['p_id'] . '">Delete</a></td>';
-									echo '</tr>';
-								}
-							} catch (PDOException $e) {
-								echo "SQL Error: " . $e->getMessage();
+														t2.ecat_id,
+														t2.ecat_name,
+
+														t3.mcat_id,
+														t3.mcat_name,
+
+														t4.tcat_id,
+														t4.tcat_name
+
+							                           	FROM product t1
+							                           	JOIN end_category t2
+							                           	ON t1.ecat_id = t2.ecat_id
+							                           	JOIN mid_category t3
+							                           	ON t2.mcat_id = t3.mcat_id
+							                           	JOIN top_category t4
+							                           	ON t3.tcat_id = t4.tcat_id
+							                           	ORDER BY t1.p_id DESC
+							                           	");
+							$statement->execute();
+							$result = $statement->fetchAll(PDO::FETCH_ASSOC);
+							foreach ($result as $row) {
+								$i++;
+								?>
+								<tr>
+									<td><?php echo $i; ?></td>
+									<td style="width:82px;"><img src="../uploads/<?php echo $row['featured_photo']; ?>" alt="<?php echo $row['name']; ?>" style="width:80px;"></td>
+									<td><?php echo $row['name']; ?></td>
+									<td>$<?php echo $row['old_price']; ?></td>
+									<td>$<?php echo $row['current_price']; ?></td>
+									<td><?php echo $row['qty']; ?></td>
+									<td>
+										<?php if($row['is_featured'] == 1) {echo '<span class="badge badge-success" style="background-color:green;">Yes</span>';} else {echo '<span class="badge badge-success" style="background-color:red;">No</span>';} ?>
+									</td>
+									<td>
+										<?php if($row['is_active'] == 1) {echo '<span class="badge badge-success" style="background-color:green;">Yes</span>';} else {echo '<span class="badge badge-danger" style="background-color:red;">No</span>';} ?>
+									</td>
+									<td><?php echo $row['tcat_name']; ?><br><?php echo $row['mcat_name']; ?><br><?php echo $row['ecat_name']; ?></td>
+									<td>										
+										<a href="product-edit.php?id=<?php echo $row['p_id']; ?>" class="btn btn-primary btn-xs">Edit</a>
+										<a href="#" class="btn btn-danger btn-xs" data-href="product-delete.php?id=<?php echo $row['p_id']; ?>" data-toggle="modal" data-target="#confirm-delete">Delete</a>  
+									</td>
+								</tr>
+								<?php
 							}
-							?>
+							?>							
 						</tbody>
 					</table>
 				</div>
@@ -155,23 +188,21 @@ require_once('../header.php');
 </section>
 
 
-<div class="modal fade" id="confirm-delete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-	aria-hidden="true">
-	<div class="modal-dialog">
-		<div class="modal-content">
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-				<h4 class="modal-title" id="myModalLabel">Delete Confirmation</h4>
-			</div>
-			<div class="modal-body">
-				<p>Are you sure want to delete this item?</p>
-				<p style="color:red;">Be careful! This product will be deleted from the order table, payment table, size
-					table, color table and rating table also.</p>
-			</div>
-			<div class="modal-footer">
-				<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-				<a class="btn btn-danger btn-ok">Delete</a>
-			</div>
-		</div>
-	</div>
+<div class="modal fade" id="confirm-delete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">Delete Confirmation</h4>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure want to delete this item?</p>
+                <p style="color:red;">Be careful! This product will be deleted from the order table, payment table, size table, color table and rating table also.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <a class="btn btn-danger btn-ok">Delete</a>
+            </div>
+        </div>
+    </div>
 </div>

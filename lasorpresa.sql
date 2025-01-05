@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 05, 2025 at 09:54 AM
+-- Generation Time: Jan 05, 2025 at 10:38 AM
 -- Server version: 10.4.24-MariaDB
 -- PHP Version: 8.1.4
 
@@ -51,8 +51,10 @@ CREATE TABLE `end_category` (
 --
 
 INSERT INTO `end_category` (`ecat_id`, `ecat_name`, `mcat_id`) VALUES
-(0, 'hay finally', 3),
-(0, 'red', 4);
+(1, 'hay finally', 3),
+(2, 'red', 4),
+(3, 'seyan burat', 4),
+(4, 'Any', 3);
 
 -- --------------------------------------------------------
 
@@ -72,10 +74,10 @@ CREATE TABLE `mid_category` (
 
 INSERT INTO `mid_category` (`mcat_id`, `mcat_name`, `tcat_id`) VALUES
 (1, 'blue', 3),
-(2, 'test', 1),
-(3, 'blue11', 3),
-(4, 'Red11', 2),
-(5, 'Red1', 2);
+(2, 'Binyag', 1),
+(3, 'Flower', 3),
+(4, 'Tulip', 3),
+(5, 'Rose', 3);
 
 -- --------------------------------------------------------
 
@@ -89,7 +91,7 @@ CREATE TABLE `product` (
   `old_price` varchar(10) NOT NULL,
   `current_price` varchar(10) NOT NULL,
   `quantity` int(10) NOT NULL,
-  `product_photo` varchar(255) NOT NULL,
+  `featured_photo` varchar(255) NOT NULL,
   `description` text NOT NULL,
   `short_description` text NOT NULL,
   `other_photo` text NOT NULL,
@@ -117,9 +119,9 @@ CREATE TABLE `top_category` (
 --
 
 INSERT INTO `top_category` (`tcat_id`, `tcat_name`, `show_on_menu`) VALUES
-(1, '0', 1),
-(2, 'red', 1),
-(3, 'Blue', 0);
+(1, 'Ocassions', 1),
+(2, 'Money', 1),
+(3, 'Bouquet', 1);
 
 -- --------------------------------------------------------
 
@@ -171,6 +173,12 @@ INSERT INTO `users` (`id`, `name`, `email`, `username`, `contact`, `password`, `
 --
 
 --
+-- Indexes for table `end_category`
+--
+ALTER TABLE `end_category`
+  ADD PRIMARY KEY (`ecat_id`);
+
+--
 -- Indexes for table `mid_category`
 --
 ALTER TABLE `mid_category`
@@ -199,6 +207,12 @@ ALTER TABLE `users`
 --
 
 --
+-- AUTO_INCREMENT for table `end_category`
+--
+ALTER TABLE `end_category`
+  MODIFY `ecat_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
 -- AUTO_INCREMENT for table `mid_category`
 --
 ALTER TABLE `mid_category`
@@ -222,7 +236,3 @@ ALTER TABLE `type`
 ALTER TABLE `users`
   MODIFY `id` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 COMMIT;
-
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
