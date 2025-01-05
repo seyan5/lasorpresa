@@ -22,8 +22,8 @@ if(!isset($_REQUEST['id'])) {
 	$statement->execute(array($_REQUEST['id']));
 	$result = $statement->fetchAll(PDO::FETCH_ASSOC);							
 	foreach ($result as $row) {
-		$p_featured_photo = $row['p_featured_photo'];
-		unlink('../uploads/'.$p_featured_photo);
+		$p_featured_photo = $row['featured_photo'];
+		unlink('../uploads/'.$featured_photo);
 	}
 
 	// Getting other photo ID to unlink from folder
@@ -42,10 +42,6 @@ if(!isset($_REQUEST['id'])) {
 
 	// Delete from product_photo
 	$statement = $pdo->prepare("DELETE FROM product_photo WHERE p_id=?");
-	$statement->execute(array($_REQUEST['id']));
-
-	// Delete from product_size
-	$statement = $pdo->prepare("DELETE FROM product_size WHERE p_id=?");
 	$statement->execute(array($_REQUEST['id']));
 
 	// Delete from product_color
