@@ -52,21 +52,21 @@ if(!isset($_SESSION['user'])) {
 <script>
 $(document).ready(function() {
     $('#tcat_id').change(function() {
-        let tcat_id = $(this).val();
-        console.log('Selected tcat_id:', tcat_id);  // Log the tcat_id value
-
+        var tcat_id = $(this).val();
+        console.log('Selected Top Level Category ID:', tcat_id);  // Log tcat_id
+        
         if (tcat_id) {
             $.ajax({
-                url: 'settings/fetch-category.php',  // Ensure the path is correct
+                url: 'settings/fetch-category.php',  // Updated to the correct path
                 type: 'POST',
                 data: { tcat_id: tcat_id },
                 success: function(data) {
-                    console.log('Response:', data);  // Log the response
-                    $('.mid-cat').html(data);  // Update dropdown
+                    console.log('AJAX Response:', data);  // Log the server response
+                    $('.mid-cat').html(data);  // Update the mid-level category dropdown
                 },
                 error: function(xhr, status, error) {
-                    console.error("Error:", error);
-                    alert('Error loading mid-level categories');
+                    console.error("AJAX Error: " + xhr.responseText);
+                    alert('Error loading mid-level categories: ' + error);
                 }
             });
         } else {
@@ -74,4 +74,5 @@ $(document).ready(function() {
         }
     });
 });
+
 </script>
