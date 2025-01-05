@@ -95,13 +95,16 @@ if(!isset($_SESSION['user'])) {
 	      "autoWidth": false
 	    });
 
-	    $('#confirm-delete').on('show.bs.modal', function (e) {
+	    $(document).ready(function () {
+    // When the modal is about to be shown
+    $('#confirm-delete').on('show.bs.modal', function (e) {
         // Get the URL from the data-href attribute of the clicked button
         var deleteUrl = $(e.relatedTarget).data('href'); 
-        
+
         // Set the href of the delete button in the modal to this URL
         $(this).find('.btn-confirm-delete').attr('href', deleteUrl);
     });
+});
 		
 		$('#confirm-approve').on('show.bs.modal', function(e) {
 	      $(this).find('.btn-ok').attr('href', $(e.relatedTarget).data('href'));
