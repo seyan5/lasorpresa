@@ -1,5 +1,6 @@
 <?php require_once('../header.php'); ?>
 
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -8,7 +9,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>La Sorpresa Admin</title>
-    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/product.css">
     
 </head>
 
@@ -19,7 +20,7 @@
                 <li>
                     <a href="#">
                         <div class="logo-container">
-                            <img src="../images/logo.png" alt="Logo" class="logo" />
+                            <img src="../../images/logo.png" alt="Logo" class="logo" />
                         </div>
                         <span class="title"></span>
                     </a>
