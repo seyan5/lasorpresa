@@ -63,47 +63,49 @@ if(isset($_POST['form1'])) {
 
 			<form class="form-horizontal" action="" method="post">
 
-			<div class="box box-info">
-    <div class="box-body">
-        <!-- Top Level Category Selection -->
-        <div class="form-group">
-            <label for="" class="col-sm-3 control-label">Top Level Category Name <span>*</span></label>
-            <div class="col-sm-4">
-                <select name="tcat_id" id="tcat_id" class="form-control select2 top-cat">
-                    <option value="">Select Top Level Category</option>
-                    <?php
-                    $statement = $pdo->prepare("SELECT * FROM top_category ORDER BY tcat_name ASC");
-                    $statement->execute();
-                    $result = $statement->fetchAll(PDO::FETCH_ASSOC);    
-                    foreach ($result as $row) {
-                        ?>
-                        <option value="<?php echo $row['tcat_id']; ?>"><?php echo $row['tcat_name']; ?></option>
-                        <?php
-                    }
-                    ?>
-                </select>
-            </div>
-        </div>
-
-        <!-- Mid Level Category Selection (Initially empty) -->
-        <div class="form-group">
-            <label for="" class="col-sm-3 control-label">Mid Level Category Name <span>*</span></label>
-            <div class="col-sm-4">
-                <select name="mcat_id" id="mcat_id" class="form-control select2 mid-cat">
-                    <option value="">Select Mid Level Category</option>
-                </select>
-            </div>
-        </div>
-
-        <!-- Submit Button -->
-        <div class="form-group">
-            <label for="" class="col-sm-3 control-label"></label>
-            <div class="col-sm-6">
-                <button type="submit" class="btn btn-success pull-left" name="form1">Submit</button>
-            </div>
-        </div>
-    </div>
-</div>
+				<div class="box box-info">
+					<div class="box-body">
+						<div class="form-group">
+							<label for="" class="col-sm-3 control-label">Top Level Category Name <span>*</span></label>
+							<div class="col-sm-4">
+								<select name="tcat_id" id="tcat_id" class="form-control select2 top-cat">
+									<option value="">Select Top Level Category</option>
+									<?php
+									$statement = $pdo->prepare("SELECT * FROM top_category ORDER BY tcat_name ASC");
+									$statement->execute();
+									$result = $statement->fetchAll(PDO::FETCH_ASSOC);	
+									foreach ($result as $row) {
+										?>
+										<option value="<?php echo $row['tcat_id']; ?>"><?php echo $row['tcat_name']; ?></option>
+										<?php
+									}
+									?>
+								</select>
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="" class="col-sm-3 control-label">Mid Level Category Name <span>*</span></label>
+							<div class="col-sm-4">
+								<select name="mcat_id"  id="mcat_id"class="form-control select2 mid-cat">
+									<option value="">Select Mid Level Category</option>
+								</select>
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="" class="col-sm-3 control-label">End Level Category Name <span>*</span></label>
+							<div class="col-sm-4">
+								<input type="text" class="form-control" name="ecat_name">
+							</div>
+						</div>
+						
+						<div class="form-group">
+							<label for="" class="col-sm-3 control-label"></label>
+							<div class="col-sm-6">
+								<button type="submit" class="btn btn-success pull-left" name="form1">Submit</button>
+							</div>
+						</div>
+					</div>
+				</div>
 
 			</form>
 
@@ -112,36 +114,4 @@ if(isset($_POST['form1'])) {
 	</div>
 
 </section>
-
-<script>
-$(document).ready(function () {
-    // Initialize Select2 Elements
-    $(".select2").select2();
-
-    // When a Top Level Category is selected, fetch corresponding Mid Level Categories
-    $('#tcat_id').change(function() {
-        var tcatId = $(this).val(); // Get selected top category ID
-
-        // Reset the Mid Level Category dropdown
-        $('#mcat_id').html('<option value="">Select Mid Level Category</option>');
-
-        // If a Top Level Category is selected, make an AJAX request to fetch Mid Level Categories
-        if (tcatId) {
-            $.ajax({
-                url: 'fetch-category.php',  // URL for PHP script to fetch mid categories
-                type: 'POST',
-                data: { tcat_id: tcatId },  // Send top category ID
-                success: function(response) {
-                    $('#mcat_id').html(response); // Populate Mid Level Category dropdown with the response
-                    $(".select2").select2(); // Reinitialize Select2 for the new options
-                },
-                error: function(xhr, status, error) {
-                    console.error("Error fetching mid level categories: " + error);
-                    alert('Failed to load Mid Level Categories.');
-                }
-            });
-        }
-    });
-});
-</script>
 
