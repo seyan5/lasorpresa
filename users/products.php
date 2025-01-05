@@ -38,6 +38,39 @@
          <option value="HighToLow">High to Low</option>
       </select>
    </div>
+
+   <div class="products-container">
+    <?php
+    // Replace 'specific_mcat_id' with the mid-category ID you want to filter by
+    $specific_mcat_id = isset($_GET['mcat_id']) ? intval($_GET['mcat_id']) : null;
+
+    // Fetch products based on the selected mid-category
+    $query = "SELECT * FROM products";
+    $params = [];
+    if ($specific_mcat_id) {
+        $query .= " WHERE mcat_id = ?";
+        $params[] = $specific_mcat_id;
+    }
+    $query .= " ORDER BY name ASC"; // Order by product name or any other criteria
+
+    $statement = $pdo->prepare($query);
+    $statement->execute($params);
+    $products = $statement->fetchAll(PDO::FETCH_ASSOC);
+
+    // Display products
+    if ($products) {
+        foreach ($products as $product) {
+            echo '
+            <div class="product" data-name="p-' . htmlspecialchars($product['id']) . '">
+                <img src="' . htmlspecialchars($product['image_path']) . '" alt="' . htmlspecialchars($product['name']) . '">
+                <h3>' . htmlspecialchars($product['name']) . '</h3>
+                <div class="price">$' . htmlspecialchars($product['price']) . '</div>
+            </div>';
+        }
+    } else {
+        echo '<p>No products found for this category.</p>';
+    }
+    ?>
  
     <div class="products-container">
 
