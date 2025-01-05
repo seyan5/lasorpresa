@@ -1,4 +1,6 @@
-
+<?php
+require_once('../../config.php');
+?>
 
 <section class="content-header">
 	<div class="content-header-left">
