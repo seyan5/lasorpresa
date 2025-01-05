@@ -1,31 +1,29 @@
 <?php
 require_once('../header.php');
 
-// Check if an ID is passed in the URL
+// Check if the ID is passed and valid
 if (!isset($_GET['id']) || empty($_GET['id'])) {
-    // Redirect to the types list page if no ID is provided
     header('location: type.php');
     exit;
 }
 
 $type_id = $_GET['id'];
 
-// Check if the type exists
+// Check if the type exists before deleting
 $statement = $pdo->prepare("SELECT * FROM type WHERE type_id = ?");
 $statement->execute([$type_id]);
 
-// If no record found with the given ID
 if ($statement->rowCount() == 0) {
-    // Redirect to the types list page if the record doesn't exist
+    // If no record found, redirect to the list page
     header('location: type.php');
     exit;
 }
 
-// Delete the record from the type table
+// Proceed with the deletion
 $deleteStatement = $pdo->prepare("DELETE FROM type WHERE type_id = ?");
 $deleteStatement->execute([$type_id]);
 
-// Redirect back to the types list page after deletion
+// Redirect back to the types list page
 header('location: type.php');
 exit;
 ?>
