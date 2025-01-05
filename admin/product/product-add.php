@@ -14,11 +14,6 @@ if(isset($_POST['form1'])) {
         $error_message .= "You must have to select a mid level category<br>";
     }
 
-    if(empty($_POST['ecat_id'])) {
-        $valid = 0;
-        $error_message .= "You must have to select an end level category<br>";
-    }
-
     if(empty($_POST['name'])) {
         $valid = 0;
         $error_message .= "Product name can not be empty<br>";
@@ -218,7 +213,7 @@ if(isset($_POST['form1'])) {
             </div>
 
             <div class="form-group">
-                <label for="" class="col-sm-3 control-label">End Level Category Name <span>*</span></label>
+                <label for="" class="col-sm-3 control-label">End Level Category Name <span></span></label>
                 <div class="col-sm-4">
                     <select id="ecat_id" name="ecat_id" class="form-control select2 end-cat">
                         <option value="">Select End Level Category</option>
