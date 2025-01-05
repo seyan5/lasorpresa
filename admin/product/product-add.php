@@ -116,12 +116,13 @@ if(isset($_POST['form1'])) {
 			is_active,
 			ecat_id
 		) VALUES (?,?,?,?,?,?,?,?,?,?,?)");
+		
 		$statement->execute(array(
 			$_POST['name'],
 			$_POST['old_price'],
 			$_POST['current_price'],
 			$_POST['quantity'],
-			$final_name[0],  // Assuming it's an array of file names
+			$final_name,
 			$_POST['description'],
 			$_POST['short_description'],
 			$_POST['feature'],
