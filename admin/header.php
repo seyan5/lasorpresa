@@ -46,41 +46,68 @@ if(!isset($_SESSION['user'])) {
 </head>
 
 <script>
-$(document).ready(function () {
-    // Initialize Select2 Elements
-    $(".select2").select2();
-
-
-    // Modal for delete confirmation
-    $('#confirm-delete').on('show.bs.modal', function (e) {
-        var deleteUrl = $(e.relatedTarget).data('href'); // Get href of the clicked button
-        $(this).find('.btn-confirm-delete').attr('href', deleteUrl); // Set it in the modal's delete button
+    $(document).ready(function () {
+        // Trigger when the modal is about to be shown
+        $('#confirm-delete').on('show.bs.modal', function (e) {
+            // Get the data-href attribute from the clicked link
+            var href = $(e.relatedTarget).data('href');
+            // Update the href attribute of the confirmation button
+            $(this).find('.btn-confirm-delete').attr('href', href);
+        });
     });
-
-    // Confirm Delete action
-    $('.btn-confirm-delete').on('click', function () {
-        var href = $(this).attr('href');
-        window.location.href = href; // Redirect to delete URL
-    });
-
-    // Handle the dynamic addition and deletion of product photos
-    $("#btnAddNew").click(function () {
-        var rowNumber = $("#ProductTable tbody tr").length;
-        var addLink = "<div class=\"upload-btn" + rowNumber + "\"><input type=\"file\" name=\"photo[]\" style=\"margin-bottom:5px;\"></div>";
-        var deleteRow = "<a href=\"javascript:void()\" class=\"Delete btn btn-danger btn-xs\">X</a>";
-
-        var trNew = "<tr><td>" + addLink + "</td><td style=\"width:28px;\">" + deleteRow + "</td></tr>";
-
-        $("#ProductTable tbody").append(trNew); // Add new row to the table
-    });
-
-    // Remove a photo row when clicked
-    $('#ProductTable').delegate('a.Delete', 'click', function () {
-        $(this).parent().parent().fadeOut('slow').remove();
-        return false;
-    });
-
-    
-});
 </script>
 
+
+<script>
+$(document).ready(function() {
+    // Fetch mid-level categories when a top-level category is selected
+    $('#tcat_id').change(function() {
+        var tcat_id = $(this).val();
+        console.log('Selected Top Level Category ID:', tcat_id);  // Log tcat_id
+        
+        if (tcat_id) {
+            $.ajax({
+                url: '/lasorpresa/admin/settings/fetch-category.php',  // Updated to the correct path
+                type: 'POST',
+                data: { tcat_id: tcat_id },
+                success: function(data) {
+                    console.log('AJAX Response for Mid-Level Categories:', data);  // Log the server response
+                    $('.mid-cat').html(data);  // Update the mid-level category dropdown
+                    $('.end-cat').html('<option value="">Select End Level Category</option>');  // Reset the end-level category dropdown
+                },
+                error: function(xhr, status, error) {
+                    console.error("AJAX Error: " + xhr.responseText);
+                    alert('Error loading mid-level categories: ' + error);
+                }
+            });
+        } else {
+            $('.mid-cat').html('<option value="">Select Mid Level Category</option>');
+            $('.end-cat').html('<option value="">Select End Level Category</option>');  // Reset end-level category dropdown
+        }
+    });
+
+    // Fetch end-level categories when a mid-level category is selected
+    $('.mid-cat').change(function() {
+        var mcat_id = $(this).val();
+        console.log('Selected Mid Level Category ID:', mcat_id);  // Log mcat_id
+        
+        if (mcat_id) {
+            $.ajax({
+                url: '/lasorpresa/admin/settings/fetch-category.php',  // Updated to the correct path
+                type: 'POST',
+                data: { mcat_id: mcat_id },
+                success: function(data) {
+                    console.log('AJAX Response for End-Level Categories:', data);  // Log the server response
+                    $('.end-cat').html(data);  // Update the end-level category dropdown
+                },
+                error: function(xhr, status, error) {
+                    console.error("AJAX Error: " + xhr.responseText);
+                    alert('Error loading end-level categories: ' + error);
+                }
+            });
+        } else {
+            $('.end-cat').html('<option value="">Select End Level Category</option>');
+        }
+    });
+});
+</script>
