@@ -1,31 +1,4 @@
-<?php
-session_start();
-include 'header.php';
-
-include 'inc/config.php';
-if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] != 'admin') {
-    header('Location: ../login.php');
-    exit();
-}
-
-$user_id = $_SESSION['user_id'];
-$stmt = $conn->prepare("SELECT * FROM users WHERE id = ?");
-if ($stmt === false) {
-    die('prepare() failed: ' . htmlspecialchars($conn->error));
-}
-$stmt->bind_param("i", $user_id);
-$stmt->execute();
-$result = $stmt->get_result();
-
-if ($result->num_rows > 0) {
-    $row = $result->fetch_assoc();
-} else {
-    $row = null;
-}
-
-
-
-?>
+<?php require("header.php") ?>
 
 <!DOCTYPE html>
 <html lang="en">
