@@ -128,7 +128,7 @@ $(document).ready(function () {
         // If a Top Level Category is selected, make an AJAX request to fetch Mid Level Categories
         if (tcatId) {
             $.ajax({
-                url: 'fetch_mid_categories.php',  // URL for PHP script to fetch mid categories
+                url: 'fetch-category.php',  // URL for PHP script to fetch mid categories
                 type: 'POST',
                 data: { tcat_id: tcatId },  // Send top category ID
                 success: function(response) {
