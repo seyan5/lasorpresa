@@ -142,11 +142,11 @@
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
             <div class="modal-body">
-                Are you sure you want to delete this type?
+                Are you sure you want to delete this color?
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                <a href="#" class="btn btn-danger btn-confirm-delete">Delete</a>
+                <a href="#" class="btn btn-danger btn-confirm-delete">Delete</a> <!-- This button will execute the delete action -->
             </div>
         </div>
     </div>
