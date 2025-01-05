@@ -29,6 +29,7 @@
         <a href="#home">Home</a>
         <a href="#about">About</a>
         <a href="products.php">Product</a>
+        <a href="#occasion">Occasion</a>
         <a href="#review">Review</a>
         <a href="#contacts">Contacts</a>
     </nav>
