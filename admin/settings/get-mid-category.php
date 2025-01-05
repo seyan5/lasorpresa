@@ -1,16 +1,18 @@
 <?php
-include '../header.php';
-if($_POST['id'])
-{
-	$id = $_POST['id'];
-	
-	$statement = $pdo->prepare("SELECT * FROM end_category WHERE mcat_id=?");
-	$statement->execute(array($id));
-	$result = $statement->fetchAll(PDO::FETCH_ASSOC);
-	?><option value="">Select End Level Category</option><?php						
-	foreach ($result as $row) {
-		?>
-        <option value="<?php echo $row['ecat_id']; ?>"><?php echo $row['ecat_name']; ?></option>
-        <?php
-	}
+require_once('../header.php');
+if(isset($_POST['id'])) {
+    $tcat_id = $_POST['id'];
+    $statement = $pdo->prepare("SELECT * FROM mid_category WHERE tcat_id = ? ORDER BY mcat_name ASC");
+    $statement->execute([$tcat_id]);
+    $result = $statement->fetchAll(PDO::FETCH_ASSOC);
+    
+    if(count($result) > 0) {
+        echo '<option value="">Select Mid Level Category</option>';
+        foreach ($result as $row) {
+            echo '<option value="' . $row['mcat_id'] . '">' . $row['mcat_name'] . '</option>';
+        }
+    } else {
+        echo '<option value="">No mid-level categories found</option>';
+    }
 }
+?>
