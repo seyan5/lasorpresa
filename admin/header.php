@@ -26,13 +26,14 @@ if(!isset($_SESSION['user'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>La Sorpresa Admin</title>
     <link rel="stylesheet" href="../css/style.css">
+
     <!-- Include Bootstrap CSS -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 
     <!-- Include Select2 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" rel="stylesheet" />
 
-    <!-- Include jQuery -->
+    <!-- Include jQuery (Ensure jQuery is loaded before Bootstrap JS) -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <!-- Include Bootstrap JS -->
@@ -41,12 +42,10 @@ if(!isset($_SESSION['user'])) {
 
     <!-- Include Select2 JS -->
     <script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js"></script>
-
 </head>
 
 <script>
 $(document).ready(function () {
-
     // Initialize Select2 Elements
     $(".select2").select2();
 
@@ -66,14 +65,12 @@ $(document).ready(function () {
     // Handle the dynamic addition and deletion of product photos
     $("#btnAddNew").click(function () {
         var rowNumber = $("#ProductTable tbody tr").length;
-        var trNew = "";              
-        var addLink = "<div class=\"upload-btn" + rowNumber + "\"><input type=\"file\" name=\"photo[]\"  style=\"margin-bottom:5px;\"></div>";
+        var addLink = "<div class=\"upload-btn" + rowNumber + "\"><input type=\"file\" name=\"photo[]\" style=\"margin-bottom:5px;\"></div>";
         var deleteRow = "<a href=\"javascript:void()\" class=\"Delete btn btn-danger btn-xs\">X</a>";
-        trNew = trNew + "<tr> ";
-        trNew += "<td>" + addLink + "</td>";
-        trNew += "<td style=\"width:28px;\">" + deleteRow + "</td>";
-        trNew = trNew + " </tr>";
-        $("#ProductTable tbody").append(trNew);
+
+        var trNew = "<tr><td>" + addLink + "</td><td style=\"width:28px;\">" + deleteRow + "</td></tr>";
+
+        $("#ProductTable tbody").append(trNew); // Add new row to the table
     });
 
     // Remove a photo row when clicked
