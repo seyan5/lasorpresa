@@ -80,3 +80,42 @@
                 </li>
             </ul>
         </div>
+
+        <div class="details">
+                <div class="recentOrders">
+                    <div class="cardHeader">
+                        <h2>Recent Orders</h2>
+                        <a href="#" class="btn">View All</a>
+                    </div>
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <td>Name</td>
+                                
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            <tr>
+                                <td><a href="settings/type.php"></a>Type</td>
+                            </tr>
+
+                            <tr>
+                                <td><a href="settings/color.php">Color</td>
+                            </tr>
+
+                            <tr>
+                                <td><a href="settings/topcategory.php">Top Level Category </td>
+                            </tr>
+
+                            <tr>
+                                <td><a href="settings/midcategory.php">Mid Level Cartegory</td>
+                            </tr>
+
+                            <tr>
+                                <td><a href="settings/endcategory.php">End Level Cartegory</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
