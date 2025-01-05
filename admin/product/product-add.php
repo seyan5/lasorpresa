@@ -1,11 +1,8 @@
-<?php
-require_once('../header.php');
-// Initialize variables
-$error_message = '';
-$success_message = '';
+<?php require_once('../header.php'); ?>
 
+<?php
 if(isset($_POST['form1'])) {
-    $valid = 1;
+	$valid = 1;
 
     if(empty($_POST['tcat_id'])) {
         $valid = 0;
@@ -22,23 +19,23 @@ if(isset($_POST['form1'])) {
         $error_message .= "You must have to select an end level category<br>";
     }
 
-    if(empty($_POST['name'])) {
+    if(empty($_POST['p_name'])) {
         $valid = 0;
-        $error_message .= "Product name cannot be empty<br>";
+        $error_message .= "Product name can not be empty<br>";
     }
 
     if(empty($_POST['current_price'])) {
         $valid = 0;
-        $error_message .= "Current Price cannot be empty<br>";
+        $error_message .= "Current Price can not be empty<br>";
     }
 
     if(empty($_POST['quantity'])) {
         $valid = 0;
-        $error_message .= "Quantity cannot be empty<br>";
+        $error_message .= "Quantity can not be empty<br>";
     }
 
-    $path = $_FILES['product_photo']['name'];
-    $path_tmp = $_FILES['product_photo']['tmp_name'];
+    $path = $_FILES['featured_photo']['name'];
+    $path_tmp = $_FILES['featured_photo']['tmp_name'];
 
     if($path!='') {
         $ext = pathinfo( $path, PATHINFO_EXTENSION );
@@ -86,7 +83,7 @@ if(isset($_POST['form1'])) {
                 $my_ext1 = pathinfo( $photo[$i], PATHINFO_EXTENSION );
 		        if( $my_ext1=='jpg' || $my_ext1=='png' || $my_ext1=='jpeg' || $my_ext1=='gif' ) {
 		            $final_name1[$m] = $z.'.'.$my_ext1;
-                    move_uploaded_file($photo_temp[$i],"../uploads/product/".$final_name1[$m]);
+                    move_uploaded_file($photo_temp[$i],"../uploads/product_photos/".$final_name1[$m]);
                     $m++;
                     $z++;
 		        }
@@ -104,15 +101,16 @@ if(isset($_POST['form1'])) {
 		$final_name = 'product-featured-'.$ai_id.'.'.$ext;
         move_uploaded_file( $path_tmp, '../uploads/'.$final_name );
 
+		//Saving data into the main table product
 		$statement = $pdo->prepare("INSERT INTO product(
 										name,
 										old_price,
-										price,
+										current_price,
 										quantity,
-										product_photo,
+										featured_photo,
 										description,
 										short_description,
-										other_photo,
+										feature,
 										condition,
 										total_view,
 										is_featured,
@@ -127,12 +125,21 @@ if(isset($_POST['form1'])) {
 										$final_name,
 										$_POST['description'],
 										$_POST['short_description'],
-										$_POST['product_photo'],
+										$_POST['feature'],
 										$_POST['condition'],
 										$_POST['is_featured'],
 										$_POST['is_active'],
 										$_POST['ecat_id']
 									));
+
+		
+
+        if(isset($_POST['type'])) {
+			foreach($_POST['type'] as $value) {
+				$statement = $pdo->prepare("INSERT INTO product_type (type_id,p_id) VALUES (?,?)");
+				$statement->execute(array($value,$ai_id));
+			}
+		}
 
 		if(isset($_POST['color'])) {
 			foreach($_POST['color'] as $value) {
@@ -202,7 +209,7 @@ if(isset($_POST['form1'])) {
 						<div class="form-group">
 							<label for="" class="col-sm-3 control-label">Mid Level Category Name <span>*</span></label>
 							<div class="col-sm-4">
-								<select name="mcat_id" class="form-control select2 mid-cat">
+								<select name="mcat_id" name="mcat_id"class="form-control select2 mid-cat">
 									<option value="">Select Mid Level Category</option>
 								</select>
 							</div>
@@ -222,13 +229,13 @@ if(isset($_POST['form1'])) {
 							</div>
 						</div>	
 						<div class="form-group">
-							<label for="" class="col-sm-3 control-label">Old Price <br><span style="font-size:10px;font-weight:normal;">(In USD)</span></label>
+							<label for="" class="col-sm-3 control-label">Old Price <br><span style="font-type:10px;font-weight:normal;">(In USD)</span></label>
 							<div class="col-sm-4">
 								<input type="text" name="old_price" class="form-control">
 							</div>
 						</div>
 						<div class="form-group">
-							<label for="" class="col-sm-3 control-label">Current Price <span>*</span><br><span style="font-size:10px;font-weight:normal;">(In USD)</span></label>
+							<label for="" class="col-sm-3 control-label">Current Price <span>*</span><br><span style="font-type:10px;font-weight:normal;">(In USD)</span></label>
 							<div class="col-sm-4">
 								<input type="text" name="current_price" class="form-control">
 							</div>
@@ -239,6 +246,22 @@ if(isset($_POST['form1'])) {
 								<input type="text" name="quantity" class="form-control">
 							</div>
 						</div>
+						<div class="form-group">
+							<label for="" class="col-sm-3 control-label">Select type</label>
+							<div class="col-sm-4">
+								<select name="type[]" class="form-control select2" multiple="multiple">
+									<?php
+									$statement = $pdo->prepare("SELECT * FROM type ORDER BY type_id ASC");
+									$statement->execute();
+									$result = $statement->fetchAll(PDO::FETCH_ASSOC);			
+									foreach ($result as $row) {
+										?>
+										<option value="<?php echo $row['type_id']; ?>"><?php echo $row['type_name']; ?></option>
+										<?php
+									}
+									?>
+								</select>
+							</div>
 						</div>
 						<div class="form-group">
 							<label for="" class="col-sm-3 control-label">Select Color</label>
@@ -260,7 +283,7 @@ if(isset($_POST['form1'])) {
 						<div class="form-group">
 							<label for="" class="col-sm-3 control-label">Featured Photo <span>*</span></label>
 							<div class="col-sm-4" style="padding-top:4px;">
-								<input type="file" name="product_photo">
+								<input type="file" name="featured_photo">
 							</div>
 						</div>
 						<div class="form-group">
@@ -280,7 +303,7 @@ if(isset($_POST['form1'])) {
 			                    </table>
 							</div>
 							<div class="col-sm-2">
-			                    <input type="button" id="btnAddNew" value="Add Item" style="margin-top: 5px;margin-bottom:10px;border:0;color: #fff;font-size: 14px;border-radius:3px;" class="btn btn-warning btn-xs">
+			                    <input type="button" id="btnAddNew" value="Add Item" style="margin-top: 5px;margin-bottom:10px;border:0;color: #fff;font-type: 14px;border-radius:3px;" class="btn btn-warning btn-xs">
 			                </div>
 						</div>
 						<div class="form-group">
