@@ -402,7 +402,7 @@ if(isset($_POST['form1'])) {
             if (mcat_id != '') {
                 // Send an AJAX request to fetch end-level categories
                 $.ajax({
-                    url: 'fetch-category.php',
+                    url: '../settings/fetch-category.php',
                     type: 'POST',
                     data: { mcat_id: mcat_id },
                     success: function(data) {
