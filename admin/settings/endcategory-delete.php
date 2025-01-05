@@ -23,7 +23,10 @@ if(!isset($_REQUEST['id'])) {
 	// Getting all ecat ids
 	$statement = $pdo->prepare("SELECT * FROM product WHERE ecat_id=?");
 	$statement->execute(array($_REQUEST['id']));
-	$result = $statement->fetchAll(PDO::FETCH_ASSOC);							
+	$result = $statement->fetchAll(PDO::FETCH_ASSOC);		
+	
+	$p_ids = array(); 
+	
 	foreach ($result as $row) {
 		$p_ids[] = $row['p_id'];
 	}
