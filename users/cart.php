@@ -59,12 +59,6 @@ if(isset($_POST['form1'])) {
 }
 ?>
 
-<div class="page-banner" style="background-image: url(assets/uploads/<?php echo $banner_cart; ?>)">
-    <div class="overlay"></div>
-    <div class="page-banner-inner">
-        <h1><?php echo LANG_VALUE_18; ?></h1>
-    </div>
-</div>
 
 <div class="page">
 	<div class="container">
