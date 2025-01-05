@@ -1,20 +1,5 @@
 <?php require_once('header.php'); ?>
 <?php
-if (!isset($_REQUEST['id'])) {
-   header('location: index.php');
-   exit;
-} else {
-   // Check the id is valid or not
-   $statement = $pdo->prepare("SELECT * FROM product WHERE p_id=?");
-   $statement->execute(array($_REQUEST['id']));
-   $total = $statement->rowCount();
-   $result = $statement->fetchAll(PDO::FETCH_ASSOC);
-   if ($total == 0) {
-      header('location: index.php');
-      exit;
-   }
-}
-
 foreach ($result as $row) {
    $name = $row['name'];
    $old_price = $row['old_price'];
