@@ -1,6 +1,5 @@
-
-
 <?php
+require_once('../header.php');
 if(!isset($_REQUEST['id'])) {
 	header('location: logout.php');
 	exit;

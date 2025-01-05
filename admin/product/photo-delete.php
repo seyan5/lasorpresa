@@ -1,8 +1,7 @@
-
-
 <?php
+require_once('../header.php');
 if(!isset($_REQUEST['id'])) {
-	header('location: logout.php');
+	header('location: ../logout.php');
 	exit;
 } else {
 	// Check the id is valid or not

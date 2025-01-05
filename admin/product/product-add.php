@@ -1,4 +1,5 @@
 <?php
+require_once('../header.php');
 // Initialize variables
 $error_message = '';
 $success_message = '';
@@ -101,7 +102,7 @@ if(isset($_POST['form1'])) {
         }
 
 		$final_name = 'product-featured-'.$ai_id.'.'.$ext;
-        move_uploaded_file( $path_tmp, '../assets/uploads/'.$final_name );
+        move_uploaded_file( $path_tmp, '../uploads/'.$final_name );
 
 		$statement = $pdo->prepare("INSERT INTO product(
 										name,
@@ -183,7 +184,7 @@ if(isset($_POST['form1'])) {
 						<div class="form-group">
 							<label for="" class="col-sm-3 control-label">Top Level Category Name <span>*</span></label>
 							<div class="col-sm-4">
-								<select name="tcat_id" class="form-control select2 top-cat">
+								<select id="tcat_id" name="tcat_id" class="form-control select2 top-cat">
 									<option value="">Select Top Level Category</option>
 									<?php
 									$statement = $pdo->prepare("SELECT * FROM top_category ORDER BY tcat_name ASC");
