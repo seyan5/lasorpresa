@@ -57,7 +57,7 @@ $(document).ready(function() {
         
         if (tcat_id) {
             $.ajax({
-                url: '/admin/settings/fetch-category.php',  // Updated to the correct path
+                url: '/lasorpresa/admin/settings/fetch-category.php',  // Updated to the correct path
                 type: 'POST',
                 data: { tcat_id: tcat_id },
                 success: function(data) {
