@@ -340,5 +340,3 @@ if(isset($_POST['form1'])) {
 	</div>
 
 </section>
-
-<?php require_once('footer.php'); ?>
