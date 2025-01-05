@@ -51,7 +51,7 @@
                 </li>
 
                 <li>
-                    <a href="/product/product.php">
+                    <a href="product/product.php">
                         <span class="icon">
                             <ion-icon name="cube-outline"></ion-icon>
                         </span>
