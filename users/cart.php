@@ -95,17 +95,17 @@ if(isset($_POST['form1'])) {
                         }
 
                         $i=0;
-                        foreach($_SESSION['cart_size_id'] as $key => $value) 
+                        foreach($_SESSION['cart_type_id'] as $key => $value) 
                         {
                             $i++;
-                            $arr_cart_size_id[$i] = $value;
+                            $arr_cart_type_id[$i] = $value;
                         }
 
                         $i=0;
-                        foreach($_SESSION['cart_size_name'] as $key => $value) 
+                        foreach($_SESSION['cart_type_name'] as $key => $value) 
                         {
                             $i++;
-                            $arr_cart_size_name[$i] = $value;
+                            $arr_cart_type_name[$i] = $value;
                         }
 
                         $i=0;
@@ -157,13 +157,13 @@ if(isset($_POST['form1'])) {
                                 <img src="../admin/uploads/<?php echo $arr_cart_p_featured_photo[$i]; ?>" alt="">
                             </td>
                             <td><?php echo $arr_cart_p_name[$i]; ?></td>
-                            <td><?php echo $arr_cart_size_name[$i]; ?></td>
+                            <td><?php echo $arr_cart_type_name[$i]; ?></td>
                             <td><?php echo $arr_cart_color_name[$i]; ?></td>
                             <td><?php echo LANG_VALUE_1; ?><?php echo $arr_cart_p_current_price[$i]; ?></td>
                             <td>
                                 <input type="hidden" name="product_id[]" value="<?php echo $arr_cart_p_id[$i]; ?>">
                                 <input type="hidden" name="product_name[]" value="<?php echo $arr_cart_p_name[$i]; ?>">
-                                <input type="number" class="input-text qty text" step="1" min="1" max="" name="quantity[]" value="<?php echo $arr_cart_p_qty[$i]; ?>" title="Qty" size="4" pattern="[0-9]*" inputmode="numeric">
+                                <input type="number" class="input-text qty text" step="1" min="1" max="" name="quantity[]" value="<?php echo $arr_cart_p_qty[$i]; ?>" title="Qty" type="4" pattern="[0-9]*" inputmode="numeric">
                             </td>
                             <td class="text-right">
                                 <?php
@@ -173,7 +173,7 @@ if(isset($_POST['form1'])) {
                                 <?php echo LANG_VALUE_1; ?><?php echo $row_total_price; ?>
                             </td>
                             <td class="text-center">
-                                <a onclick="return confirmDelete();" href="cart-item-delete.php?id=<?php echo $arr_cart_p_id[$i]; ?>&size=<?php echo $arr_cart_size_id[$i]; ?>&color=<?php echo $arr_cart_color_id[$i]; ?>" class="trash"><i class="fa fa-trash" style="color:red;"></i></a>
+                                <a onclick="return confirmDelete();" href="cart-item-delete.php?id=<?php echo $arr_cart_p_id[$i]; ?>&type=<?php echo $arr_cart_type_id[$i]; ?>&color=<?php echo $arr_cart_color_id[$i]; ?>" class="trash"><i class="fa fa-trash" style="color:red;"></i></a>
                             </td>
                         </tr>
                         <?php endfor; ?>
