@@ -163,7 +163,7 @@
 									<td><?php echo $row['name']; ?></td>
 									<td>$<?php echo $row['old_price']; ?></td>
 									<td>$<?php echo $row['current_price']; ?></td>
-									<td><?php echo $row['qty']; ?></td>
+									<td><?php echo $row['quantity']; ?></td>
 									<td>
 										<?php if($row['is_featured'] == 1) {echo '<span class="badge badge-success" style="background-color:green;">Yes</span>';} else {echo '<span class="badge badge-success" style="background-color:red;">No</span>';} ?>
 									</td>
