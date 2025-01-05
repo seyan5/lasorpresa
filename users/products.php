@@ -41,7 +41,7 @@
    <?php
 // Fetch products for mcat_id = 3 (Regular Flowers)
 $statement_flowers = $pdo->prepare("SELECT * 
-                                    FROM products p
+                                    FROM product p
                                     JOIN mid_category m
                                     ON p.mcat_id = m.mcat_id
                                     WHERE m.mcat_id = 3");  // Regular flowers
@@ -50,7 +50,7 @@ $flowers = $statement_flowers->fetchAll(PDO::FETCH_ASSOC);
 
 // Fetch products for mcat_id = 4 (Money Bouquets)
 $statement_money_bouquets = $pdo->prepare("SELECT * 
-                                           FROM products p
+                                           FROM product p
                                            JOIN mid_category m
                                            ON p.mcat_id = m.mcat_id
                                            WHERE m.mcat_id = 8");  // Money bouquets
