@@ -10,13 +10,22 @@
    <h3 class="title"> Flower products </h3>
 
    <ul class="indicator">
-      <li data-filter="all" class="active"><a href="#">All</a></li>
-      <li data-filter="Flower"><a href="#">Flowers</a></li>
-      <li data-filter="Flower1"><a href="#">Flower1</a></li>
-      <li data-filter="Flower2"><a href="#">Flower2</a></li>
-      <li data-filter="Flower3"><a href="#">Flower3</a></li>
-      <li data-filter="Flower4"><a href="#">Flower4</a></li>
-   </ul>
+    <li data-filter="all" class="active"><a href="#">All</a></li>
+    <?php
+    // Fetch mid-level categories
+    $statement = $pdo->prepare("SELECT * 
+                                FROM mid_category t1
+                                JOIN top_category t2
+                                ON t1.tcat_id = t2.tcat_id
+                                ORDER BY t1.mcat_id DESC");
+    $statement->execute();
+    $result = $statement->fetchAll(PDO::FETCH_ASSOC);
+    
+    foreach ($result as $row) {
+        echo '<li data-filter="' . htmlspecialchars($row['mcat_name']) . '"><a href="#">' . htmlspecialchars($row['mcat_name']) . '</a></li>';
+    }
+    ?>
+</ul>
 
     <div class="filter-condition">
       <select name="" id="select">
