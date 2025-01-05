@@ -17,7 +17,7 @@ if (!isset($_REQUEST['id'])) {
 }
 
 // Delete color
-$statement = $pdo->prepare("DELETE FROM colors WHERE color_id=?");
+$statement = $pdo->prepare("DELETE FROM color WHERE color_id=?");
 $statement->execute(array($_REQUEST['id']));
 
 header('location: colors.php'); // Redirect back to the colors list page
