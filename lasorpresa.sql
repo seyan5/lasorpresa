@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 05, 2025 at 10:38 AM
+-- Generation Time: Jan 05, 2025 at 11:33 AM
 -- Server version: 10.4.24-MariaDB
 -- PHP Version: 8.1.4
 
@@ -94,13 +94,95 @@ CREATE TABLE `product` (
   `featured_photo` varchar(255) NOT NULL,
   `description` text NOT NULL,
   `short_description` text NOT NULL,
+  `feature` text NOT NULL,
   `other_photo` text NOT NULL,
   `condition` text NOT NULL,
-  `total_view` int(11) NOT NULL,
   `is_featured` int(1) NOT NULL,
   `is_active` int(1) NOT NULL,
   `ecat_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `product`
+--
+
+INSERT INTO `product` (`p_id`, `name`, `old_price`, `current_price`, `quantity`, `featured_photo`, `description`, `short_description`, `feature`, `other_photo`, `condition`, `is_featured`, `is_active`, `ecat_id`) VALUES
+(1, 'tst', '25', '50', 100, 'product-featured-1.jpg', 'test', 'test', 't', '', 't', 1, 1, 4),
+(2, 'tst', '25', '50', 100, 'product-featured-2.jpg', 'test', 'test', 't', '', 't', 1, 1, 4);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `product_color`
+--
+
+CREATE TABLE `product_color` (
+  `id` int(11) NOT NULL,
+  `color_id` int(11) NOT NULL,
+  `p_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `product_color`
+--
+
+INSERT INTO `product_color` (`id`, `color_id`, `p_id`) VALUES
+(1, 0, 2);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `product_photo`
+--
+
+CREATE TABLE `product_photo` (
+  `pp_id` int(11) NOT NULL,
+  `photo` varchar(255) NOT NULL,
+  `p_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `product_photo`
+--
+
+INSERT INTO `product_photo` (`pp_id`, `photo`, `p_id`) VALUES
+(1, '1.jpg', 1),
+(2, '2.jpg', 1),
+(3, '3.jpg', 1),
+(4, '4.jpg', 1),
+(5, '5.jpg', 1),
+(6, '6.jpg', 1),
+(7, '7.jpg', 1),
+(8, '8.jpg', 1),
+(9, '9.jpg', 1),
+(10, '10.jpg', 1),
+(11, '11.jpg', 1),
+(12, '12.jpg', 1),
+(13, '13.jpg', 1),
+(14, '14.jpg', 1),
+(15, '15.jpg', 1),
+(16, '16.jpg', 1),
+(17, '17.jpg', 1),
+(18, '18.jpg', 2);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `product_type`
+--
+
+CREATE TABLE `product_type` (
+  `id` int(11) NOT NULL,
+  `type_id` int(11) NOT NULL,
+  `p_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `product_type`
+--
+
+INSERT INTO `product_type` (`id`, `type_id`, `p_id`) VALUES
+(1, 2, 2);
 
 -- --------------------------------------------------------
 
@@ -185,6 +267,30 @@ ALTER TABLE `mid_category`
   ADD PRIMARY KEY (`mcat_id`);
 
 --
+-- Indexes for table `product`
+--
+ALTER TABLE `product`
+  ADD PRIMARY KEY (`p_id`);
+
+--
+-- Indexes for table `product_color`
+--
+ALTER TABLE `product_color`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `product_photo`
+--
+ALTER TABLE `product_photo`
+  ADD PRIMARY KEY (`pp_id`);
+
+--
+-- Indexes for table `product_type`
+--
+ALTER TABLE `product_type`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `top_category`
 --
 ALTER TABLE `top_category`
@@ -217,6 +323,30 @@ ALTER TABLE `end_category`
 --
 ALTER TABLE `mid_category`
   MODIFY `mcat_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
+-- AUTO_INCREMENT for table `product`
+--
+ALTER TABLE `product`
+  MODIFY `p_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT for table `product_color`
+--
+ALTER TABLE `product_color`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `product_photo`
+--
+ALTER TABLE `product_photo`
+  MODIFY `pp_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+
+--
+-- AUTO_INCREMENT for table `product_type`
+--
+ALTER TABLE `product_type`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `top_category`
