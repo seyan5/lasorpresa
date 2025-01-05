@@ -371,10 +371,6 @@ if(isset($_POST['form1'])) {
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     $(document).ready(function() {
-
-		$('#tcat_id').select2();
-        $('#mcat_id').select2();
-        $('#ecat_id').select2();
         // When the top-level category is changed
         $('#tcat_id').change(function() {
             var tcat_id = $(this).val();
