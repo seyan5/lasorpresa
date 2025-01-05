@@ -8,9 +8,7 @@ if (isset($_POST['tcat_id']) && !empty($_POST['tcat_id'])) {
     $tcat_id = $_POST['tcat_id'];
     
     try {
-        // Database connection
-        $pdo = new PDO('mysql:host=localhost;dbname=lasorpresa', 'username', 'password');
-        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+     
 
         // Prepare and execute the query
         $statement = $pdo->prepare("SELECT * FROM mid_category WHERE tcat_id = ? ORDER BY mcat_name ASC");
