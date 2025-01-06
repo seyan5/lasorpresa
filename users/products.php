@@ -35,7 +35,7 @@
 
 <!-- Product Modal -->
 <!-- Modal for Product Details -->
-<div id="productModal" class="modal" style="display:none;">
+<div id="productModal" class="modal" style="display:block;">
     <div class="modal-content">
         <span class="close" onclick="closeModal()">&times;</span>
         <img id="modalImage" src="" alt="Product Image">
