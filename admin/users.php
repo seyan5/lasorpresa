@@ -123,7 +123,7 @@ if ($result->num_rows > 0) {
                 </li>
 
                 <li>
-                    <a href="#">
+                    <a href="users.php">
                         <span class="icon">
                             <ion-icon name="people-outline"></ion-icon>
                         </span>
@@ -141,7 +141,7 @@ if ($result->num_rows > 0) {
                 </li>
 
                 <li>
-                    <a href="#">
+                    <a href="product/products.php">
                         <span class="icon">
                             <ion-icon name="cube-outline"></ion-icon>
                         </span>
@@ -159,7 +159,7 @@ if ($result->num_rows > 0) {
                 </li>
 
                 <li>
-                    <a href="#">
+                    <a href="settings.php">
                         <span class="icon">
                             <ion-icon name="settings-outline"></ion-icon>
                         </span>
@@ -168,7 +168,7 @@ if ($result->num_rows > 0) {
                 </li>
 
                 <li>
-                    <a href="../index.php">
+                    <a href="logout.php">
                         <span class="icon">
                             <ion-icon name="log-out-outline"></ion-icon>
                         </span>
