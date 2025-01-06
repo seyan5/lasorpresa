@@ -34,13 +34,13 @@
 </div>
 
 <!-- Product Modal -->
-<div id="productModal" class="modal" style="display: none;">
+<div id="productModal" class="modal">
     <div class="modal-content">
-        <span class="close" onclick="closeModal()">&times;</span>
-        <img id="modalImage" src="" alt="">
-        <h3 id="modalName"></h3>
-        <p id="modalDescription"></p>
-        <div id="modalPrice"></div>
+        <span class="close" onclick="closeModal()">×</span>
+        <img id="modalImage" src="" alt="Product Image">
+        <h2 id="modalName">Product Name</h2>
+        <p id="modalDescription">Product Description</p>
+        <p id="modalPrice">$0.00</p>
         <button onclick="addToCart()">Add to Cart</button>
     </div>
 </div>
@@ -105,27 +105,35 @@ function filterProducts(ecat_id) {
 }
 
 // Function to open modal
+// Function to open modal
 function openModal(productId) {
+    // Fetch product data from the selected product using AJAX
     const xhr = new XMLHttpRequest();
-    xhr.open('GET', 'fetch-product-details.php?p_id=' + productId, true);
+    xhr.open('GET', 'users/fetch-product-details.php?p_id=' + productId, true);
     xhr.onload = function() {
         if (xhr.status === 200) {
+            // Parse the JSON response
             const product = JSON.parse(xhr.responseText);
 
-            if (product) {
-                // Populate modal with product data
+            // Check if product data is returned
+            if (product && product.p_id) {
                 document.getElementById('modalImage').src = '../admin/uploads/' + product.featured_photo;
                 document.getElementById('modalName').innerText = product.name;
                 document.getElementById('modalDescription').innerText = product.description;
                 document.getElementById('modalPrice').innerText = "$" + product.current_price.toFixed(2);
 
-                // Show modal
+                // Show the modal
                 document.getElementById('productModal').style.display = 'block';
+            } else {
+                console.log('Product not found or error in the response');
             }
+        } else {
+            console.log('Error loading product details');
         }
     };
     xhr.send();
 }
+
 
 // Close modal
 function closeModal() {
