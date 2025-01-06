@@ -7,26 +7,44 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>La Sorpresa Admin</title>
-    <link rel="stylesheet" href="../../css/style.css">
-    
+    <!-- ======= Styles ====== -->
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="stylesheet" href="../css/animations.css">  
+    <link rel="stylesheet" href="../css/admin1.css">  
+    <link rel="stylesheet" href="../css/admin2.css">
+        
+    <title>Users</title>
+    <style>
+        .dashbord-tables{
+            animation: transitionIn-Y-over 0.5s;
+        }
+        .filter-container{
+            animation: transitionIn-Y-bottom  0.5s;
+        }
+        .sub-table{
+            animation: transitionIn-Y-bottom 0.5s;
+        }
+    </style>
 </head>
 
 <body>
+    <!-- =============== Navigation ================ -->
     <div class="container">
         <div class="navigation">
             <ul>
                 <li>
                     <a href="#">
                         <div class="logo-container">
-                            <img src="../../images/logo.png" alt="Logo" class="logo" />
+                            <img src="../images/logo.png" alt="Logo" class="logo" />
                         </div>
                         <span class="title"></span>
                     </a>
                 </li>
 
                 <li>
-                    <a href="../dashboard.php">
+                    <a href="dashboard.php">
                         <span class="icon">
                             <ion-icon name="home-outline"></ion-icon>
                         </span>
@@ -35,7 +53,7 @@
                 </li>
 
                 <li>
-                    <a href="../users.php">
+                    <a href="#">
                         <span class="icon">
                             <ion-icon name="people-outline"></ion-icon>
                         </span>
@@ -53,7 +71,7 @@
                 </li>
 
                 <li>
-                    <a href="product/product.php">
+                    <a href="#">
                         <span class="icon">
                             <ion-icon name="cube-outline"></ion-icon>
                         </span>
@@ -71,7 +89,7 @@
                 </li>
 
                 <li>
-                    <a href="../settings.php">
+                    <a href="#">
                         <span class="icon">
                             <ion-icon name="settings-outline"></ion-icon>
                         </span>
@@ -80,7 +98,7 @@
                 </li>
 
                 <li>
-                    <a href="../logout.php">
+                    <a href="../index.php">
                         <span class="icon">
                             <ion-icon name="log-out-outline"></ion-icon>
                         </span>
