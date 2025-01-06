@@ -1,7 +1,7 @@
 <?php
 // fetch_products.php
 
-require 'your_database_connection.php'; // Ensure you connect to your database
+require 'header.php'; // Ensure you connect to your database
 
 // Check if ecat_id is passed
 $ecat_id = isset($_GET['ecat_id']) ? (int)$_GET['ecat_id'] : 'all';

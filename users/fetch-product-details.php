@@ -1,7 +1,7 @@
 <?php
 // fetch_product_details.php
 
-require 'your_database_connection.php'; // Ensure you connect to your database
+require 'header.php'; // Ensure you connect to your database
 
 // Get the product ID
 $p_id = isset($_GET['p_id']) ? (int)$_GET['p_id'] : 0;
