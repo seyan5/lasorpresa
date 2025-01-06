@@ -1,7 +1,11 @@
 <?php
 // fetch_product_details.php
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 
 require 'header.php'; // Ensure you connect to your database
+
+header('Content-Type: application/json'); // Set header to indicate JSON response
 
 // Get the product ID
 $p_id = isset($_GET['p_id']) ? (int)$_GET['p_id'] : 0;
@@ -22,7 +26,9 @@ if ($p_id) {
         // Return product details as JSON
         echo json_encode($product);
     } else {
-        echo json_encode([]);
+        echo json_encode(['error' => 'Product not found']);
     }
+} else {
+    echo json_encode(['error' => 'Invalid product ID']);
 }
 ?>
