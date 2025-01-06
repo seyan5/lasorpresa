@@ -35,7 +35,7 @@
 
 <!-- Product Modal -->
 <!-- Modal for Product Details -->
-<div id="productModal" class="modal" style="display:block;">
+<div id="productModal" class="modal" style="display:none;">
     <div class="modal-content">
         <span class="close" onclick="closeModal()">&times;</span>
         <img id="modalImage" src="" alt="Product Image">
@@ -84,45 +84,6 @@
    </ul>
 </section>
 
-<style>
-   /* Modal background */
-.modal {
-    position: fixed;
-    z-index: 1; /* Sit on top */
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    overflow: auto; /* Enable scroll if needed */
-    background-color: rgba(0,0,0,0.4); /* Black with opacity */
-    display: none;
-}
-
-/* Modal content */
-.modal-content {
-    background-color: #fefefe;
-    margin: 15% auto;
-    padding: 20px;
-    border: 1px solid #888;
-    width: 80%;
-    max-width: 600px;
-}
-
-/* Close button */
-.close {
-    color: #aaa;
-    float: right;
-    font-size: 28px;
-    font-weight: bold;
-}
-
-.close:hover,
-.close:focus {
-    color: black;
-    text-decoration: none;
-    cursor: pointer;
-}
-</style>
 
 <!-- JavaScript to Handle AJAX Requests -->
 <script>
