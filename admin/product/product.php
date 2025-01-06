@@ -14,80 +14,58 @@
 
 <body>
     <div class="container">
-        <div class="navigation">
-            <ul>
-                <li>
-                    <a href="#">
-                        <div class="logo-container">
-                            <img src="../../images/logo.png" alt="Logo" class="logo" />
-                        </div>
-                        <span class="title"></span>
-                    </a>
-                </li>
-
-                <li>
-                    <a href="../dashboard.php">
-                        <span class="icon">
-                            <ion-icon name="home-outline"></ion-icon>
-                        </span>
-                        <span class="title">Dashboard</span>
-                    </a>
-                </li>
-
-                <li>
-                    <a href="../users.php">
-                        <span class="icon">
-                            <ion-icon name="people-outline"></ion-icon>
-                        </span>
-                        <span class="title">Users</span>
-                    </a>
-                </li>
-
-                <li>
-                    <a href="#">
-                        <span class="icon">
-                            <ion-icon name="chatbubble-outline"></ion-icon>
-                        </span>
-                        <span class="title">Messages</span>
-                    </a>
-                </li>
-
-                <li>
-                    <a href="product/product.php">
-                        <span class="icon">
-                            <ion-icon name="cube-outline"></ion-icon>
-                        </span>
-                        <span class="title">Manage Products</span>
-                    </a>
-                </li>
-
-                <li>
-                    <a href="#">
-                        <span class="icon">
-                            <ion-icon name="cart-outline"></ion-icon>
-                        </span>
-                        <span class="title">Manage Orders</span>
-                    </a>
-                </li>
-
-                <li>
-                    <a href="../settings.php">
-                        <span class="icon">
-                            <ion-icon name="settings-outline"></ion-icon>
-                        </span>
-                        <span class="title">Settings</span>
-                    </a>
-                </li>
-
-                <li>
-                    <a href="../logout.php">
-                        <span class="icon">
-                            <ion-icon name="log-out-outline"></ion-icon>
-                        </span>
-                        <span class="title">Sign Out</span>
-                    </a>
-                </li>
-            </ul>
+        <div class="menu">
+            <table class="menu-container" border="0">
+                <tr>
+                    <td style="padding:10px" colspan="2">
+                        <table border="0" class="profile-container">
+                            <tr>
+                                <td width="30%" style="padding-left:20px" >
+                                    <img src="../img/user.png" alt="" width="100%" style="border-radius:50%">
+                                </td>
+                                <td style="padding:0px;margin:0px;"><?php if ($row1): ?>
+                                    <p class="profile-title">Administrator</p>
+                                    <p class="profile-subtitle"><?php echo $row1['email']; ?></p>
+                                    <?php else: ?>
+                                    <p>Error: Unable to fetch user data.</p>
+                                    <?php endif; ?>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2">
+                                    <a href="../logout.php" ><input type="button" value="Log out" class="logout-btn btn-primary-soft btn"></a>
+                                </td>
+                            </tr>
+                    </table>
+                    </td>
+                </tr>
+                
+                <tr class="menu-row" >
+                    <td class=>
+                        <a href="index.php" class="non-style-link-menu"><div><p class="menu-text">Dashboard</p></a></div></a>
+                    </td>
+                </tr>
+                <tr class="menu-row">
+                    <td class=>
+                        <a href="orders.php" class="non-style-link-menu non-style-link-menu-active"><div><p class="menu-text">Usere</p></a></div>
+                    </td>
+                </tr>
+                <tr class="menu-row" >
+                    <td class=>
+                        <a href="product.php" class="non-style-link-menu"><div><p class="menu-text">Manage Products</p></div></a>
+                    </td>
+                </tr>
+                <tr class="menu-row">
+                    <td class=>
+                        <a href="chat.php" class="non-style-link-menu"><div><p class="menu-text">Chat</p></a></div>
+                    </td>
+                </tr>
+                <tr class="menu-row" >
+                    <td class=>
+                        <a href="store.php" class="non-style-link-menu"><div><p class="menu-text">Manage Products</p></a></div>
+                    </td>
+                </tr>
+            </table>
         </div>
 
 <section class="content-header">
