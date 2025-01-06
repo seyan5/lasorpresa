@@ -248,6 +248,51 @@ $products = $statement->fetchAll(PDO::FETCH_ASSOC);
 
 </body>
 
+<style>
+/* Add your CSS here */
+.products-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+.product {
+    border: 1px solid #ddd;
+    padding: 15px;
+    cursor: pointer;
+    text-align: center;
+    width: 200px;
+}
+.product img {
+    width: 100%;
+    height: auto;
+}
+.modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    padding: 20px;
+    max-width: 500px;
+    width: 100%;
+}
+.modal .modal-content {
+    text-align: center;
+}
+.modal .close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+}
+.modal img {
+    max-width: 100%;
+    height: auto;
+}
+</style>
+
 <script>
 // Open modal and populate details
 function openModal(productId) {
