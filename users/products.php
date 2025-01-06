@@ -149,7 +149,7 @@ function openModal(productId) {
     const product = <?php echo json_encode($products); ?>.find(p => p.p_id == productId);
 
     if (product) {
-        document.getElementById('modalImage').src = '../admin/uploads/' + product.featured_photo;
+        document.getElementById('modalImage').src = '../uploads/' + product.featured_photo;
         document.getElementById('modalName').innerText = product.name;
         document.getElementById('modalDescription').innerText = product.description || "No description available.";
         document.getElementById('modalPrice').innerText = "$" + parseFloat(product.current_price).toFixed(2);
