@@ -22,10 +22,11 @@
     $result = $statement->fetchAll(PDO::FETCH_ASSOC);
 
     foreach ($result as $row) {
-        echo '<li data-filter="' . htmlspecialchars($row['ecat_name']) . '"><a href="#">' . htmlspecialchars($row['ecat_name']) . '</a></li>';
+        echo '<li data-filter="' . htmlspecialchars($row['ecat_id']) . '"><a href="#">' . htmlspecialchars($row['ecat_name']) . '</a></li>';
     }
     ?>
 </ul>
+
 
       <div class="filter-condition">
          <select name="" id="select">
@@ -34,6 +35,19 @@
             <option value="HighToLow">High to Low</option>
          </select>
       </div>
+
+      <div class="products-container">
+    <div class="product" data-ecat="7" data-name="p-4">
+        <img src="../ivd/flower.png" alt="">
+        <h3>Flower</h3>
+        <div class="price">$0.00</div>
+    </div>
+    <div class="product" data-ecat="8" data-name="p-1">
+        <img src="../ivd/flower1.jpg" alt="">
+        <h3>Flower1</h3>
+        <div class="price">$1.00</div>
+    </div>
+</div>
 
       <div class="products-container">
 
@@ -198,5 +212,40 @@
 </section>
 
 </body>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Get all category filter buttons
+        const filterButtons = document.querySelectorAll('.indicator li');
+
+        // Add click event listener to each filter button
+        filterButtons.forEach(button => {
+            button.addEventListener('click', function () {
+                // Get the data-filter value (ecat_id)
+                const ecatId = this.getAttribute('data-filter');
+                
+                // Get all products
+                const products = document.querySelectorAll('.products-container .product');
+
+                // Show/Hide products based on the filter
+                products.forEach(product => {
+                    // Show all if "all" is selected
+                    if (ecatId === 'all') {
+                        product.style.display = 'block';
+                    } else if (product.getAttribute('data-ecat') === ecatId) {
+                        product.style.display = 'block';
+                    } else {
+                        product.style.display = 'none';
+                    }
+                });
+
+                // Update active class
+                filterButtons.forEach(btn => btn.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+    });
+</script>
+
 
 </html>
