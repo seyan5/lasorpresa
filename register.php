@@ -1,151 +1,284 @@
+<?php require_once('user/header.php'); ?>
+
 <?php
-session_start();
-include 'config.php'; // Include your database connection file
-
-date_default_timezone_set('Asia/Kolkata');
-$date = date('Y-m-d');
-$_SESSION["date"] = $date;
-
-$error = ''; // Initialize error variable
-$success = ''; // Initialize success variable
-
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    // Check if the form is for login or registration
-    if (isset($_POST['login'])) {
-        // Login functionality
-        $usernameoremail = $_POST['usernameoremail'];
-        $password = $_POST['password'];
-
-        // Fetch user from the database
-        $sql = "SELECT * FROM users WHERE email = '$usernameoremail' OR username = '$usernameoremail'";
-        $result = mysqli_query($conn, $sql);
-
-        if ($result && mysqli_num_rows($result) > 0) {
-            $user = mysqli_fetch_assoc($result);
-
-            // Verify the password
-            if (password_verify($password, $user['password'])) {
-                $_SESSION['user_id'] = $user['id'];
-                $_SESSION['user_type'] = $user['user_type'];
-                $_SESSION['firstname'] = $user['firstname'];
-                $_SESSION['lastname'] = $user['lastname'];
-
-                if ($user['user_type'] == 'admin') {
-                    header('Location: admin/dashboard.php');
-                } else {
-                    header('Location: users/index.php');
-                }
-                exit();
-            } else {
-                $error = "Invalid password.";
-            }
-        } else {
-            $error = "No user found with that email or username.";
-        }
-    } elseif (isset($_POST['register'])) {
-        // Registration functionality
-        $firstname = $_POST['firstname'];
-        $lastname = $_POST['lastname'];
-        $username = $_POST['username'];
-        $name = $firstname . " " . $lastname;
-        $email = $_POST['email'];
-        $contact = $_POST['contact'];
-        $password = $_POST['password'];
-        $confirmpassword = $_POST['confirmpassword'];
-        $user_type = 'user';
-
-        // Basic validation
-        if ($password !== $confirmpassword) {
-            $error = "Passwords do not match.";
-        } else {
-            // Hash the password
-            $passwordHash = password_hash($password, PASSWORD_BCRYPT);
-
-            // Prepare SQL statement
-            $stmt = $conn->prepare("INSERT INTO users (name, username, email, contact, password, user_type) VALUES (?, ?, ?, ?, ?, ?)");
-            if ($stmt === false) {
-                die('prepare() failed: ' . htmlspecialchars($conn->error));
-            }
-
-            // Bind parameters
-            $stmt->bind_param("ssssss", $name, $username, $email, $contact, $passwordHash, $user_type);
-
-            // Execute statement
-            if ($stmt->execute()) {
-                $success = "Registration successful!";
-            } else {
-                $error = "Error: " . htmlspecialchars($stmt->error);
-            }
-
-            // Close statement
-            $stmt->close();
-        }
-    }
+$statement = $pdo->prepare("SELECT * FROM tbl_settings WHERE id=1");
+$statement->execute();
+$result = $statement->fetchAll(PDO::FETCH_ASSOC);                            
+foreach ($result as $row) {
+    $banner_registration = $row['banner_registration'];
 }
-
-// Close connection
-$conn->close();
 ?>
 
+<?php
+if (isset($_POST['form1'])) {
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="css/animations.css">  
-    <link rel="stylesheet" href="css/main.css">  
-    <link rel="stylesheet" href="css/signup.css">
+    $valid = 1;
+
+    if(empty($_POST['cust_name'])) {
+        $valid = 0;
+        $error_message .= LANG_VALUE_123."<br>";
+    }
+
+    if(empty($_POST['cust_email'])) {
+        $valid = 0;
+        $error_message .= LANG_VALUE_131."<br>";
+    } else {
+        if (filter_var($_POST['cust_email'], FILTER_VALIDATE_EMAIL) === false) {
+            $valid = 0;
+            $error_message .= LANG_VALUE_134."<br>";
+        } else {
+            $statement = $pdo->prepare("SELECT * FROM tbl_customer WHERE cust_email=?");
+            $statement->execute(array($_POST['cust_email']));
+            $total = $statement->rowCount();                            
+            if($total) {
+                $valid = 0;
+                $error_message .= LANG_VALUE_147."<br>";
+            }
+        }
+    }
+
+    if(empty($_POST['cust_phone'])) {
+        $valid = 0;
+        $error_message .= LANG_VALUE_124."<br>";
+    }
+
+    if(empty($_POST['cust_address'])) {
+        $valid = 0;
+        $error_message .= LANG_VALUE_125."<br>";
+    }
+
+    if(empty($_POST['cust_country'])) {
+        $valid = 0;
+        $error_message .= LANG_VALUE_126."<br>";
+    }
+
+    if(empty($_POST['cust_city'])) {
+        $valid = 0;
+        $error_message .= LANG_VALUE_127."<br>";
+    }
+
+    if(empty($_POST['cust_state'])) {
+        $valid = 0;
+        $error_message .= LANG_VALUE_128."<br>";
+    }
+
+    if(empty($_POST['cust_zip'])) {
+        $valid = 0;
+        $error_message .= LANG_VALUE_129."<br>";
+    }
+
+    if( empty($_POST['cust_password']) || empty($_POST['cust_re_password']) ) {
+        $valid = 0;
+        $error_message .= LANG_VALUE_138."<br>";
+    }
+
+    if( !empty($_POST['cust_password']) && !empty($_POST['cust_re_password']) ) {
+        if($_POST['cust_password'] != $_POST['cust_re_password']) {
+            $valid = 0;
+            $error_message .= LANG_VALUE_139."<br>";
+        }
+    }
+
+    if($valid == 1) {
+
+        $token = md5(time());
+        $cust_datetime = date('Y-m-d h:i:s');
+        $cust_timestamp = time();
+
+        // saving into the database
+        $statement = $pdo->prepare("INSERT INTO tbl_customer (
+                                        cust_name,
+                                        cust_cname,
+                                        cust_email,
+                                        cust_phone,
+                                        cust_country,
+                                        cust_address,
+                                        cust_city,
+                                        cust_state,
+                                        cust_zip,
+                                        cust_b_name,
+                                        cust_b_cname,
+                                        cust_b_phone,
+                                        cust_b_country,
+                                        cust_b_address,
+                                        cust_b_city,
+                                        cust_b_state,
+                                        cust_b_zip,
+                                        cust_s_name,
+                                        cust_s_cname,
+                                        cust_s_phone,
+                                        cust_s_country,
+                                        cust_s_address,
+                                        cust_s_city,
+                                        cust_s_state,
+                                        cust_s_zip,
+                                        cust_password,
+                                        cust_token,
+                                        cust_datetime,
+                                        cust_timestamp,
+                                        cust_status
+                                    ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+        $statement->execute(array(
+                                        strip_tags($_POST['cust_name']),
+                                        strip_tags($_POST['cust_cname']),
+                                        strip_tags($_POST['cust_email']),
+                                        strip_tags($_POST['cust_phone']),
+                                        strip_tags($_POST['cust_country']),
+                                        strip_tags($_POST['cust_address']),
+                                        strip_tags($_POST['cust_city']),
+                                        strip_tags($_POST['cust_state']),
+                                        strip_tags($_POST['cust_zip']),
+                                        '',
+                                        '',
+                                        '',
+                                        '',
+                                        '',
+                                        '',
+                                        '',
+                                        '',
+                                        '',
+                                        '',
+                                        '',
+                                        '',
+                                        '',
+                                        '',
+                                        '',
+                                        '',
+                                        md5($_POST['cust_password']),
+                                        $token,
+                                        $cust_datetime,
+                                        $cust_timestamp,
+                                        0
+                                    ));
+
+        // Send email for confirmation of the account
+        $to = $_POST['cust_email'];
         
-    <title>Sign Up</title>
-</head>
-<body>
-    <div class="container">
-        <form action="" method="POST">
-            <div class="header">
-                <p class="header-text">Let's Get Started</p>
-                <p class="sub-text">Add Your Personal Details to Continue</p>
-            </div>
+        $subject = LANG_VALUE_150;
+        $verify_link = BASE_URL.'verify.php?email='.$to.'&token='.$token;
+        $message = '
+'.LANG_VALUE_151.'<br><br>
 
-            <div class="input-group">
-                <label for="name" class="form-label">Name:</label>
-                <input type="text" name="firstname" class="input-text" placeholder="First Name" required>
-                <input type="text" name="lastname" class="input-text" placeholder="Last Name" required>
-            </div>
+<a href="'.$verify_link.'">'.$verify_link.'</a>';
 
-            <div class="input-group">
-                <label for="email" class="form-label">Email:</label>
-                <input type="email" name="email" class="input-text" placeholder="Email" required>
-            </div>
+        $headers = "From: noreply@" . BASE_URL . "\r\n" .
+                   "Reply-To: noreply@" . BASE_URL . "\r\n" .
+                   "X-Mailer: PHP/" . phpversion() . "\r\n" . 
+                   "MIME-Version: 1.0\r\n" . 
+                   "Content-Type: text/html; charset=ISO-8859-1\r\n";
+        
+        // Sending Email
+        mail($to, $subject, $message, $headers);
 
-            <div class="input-group">
-                <label for="username" class="form-label">Username:</label>
-                <input type="text" name="username" class="input-text" placeholder="Username" required>
-            </div>
+        unset($_POST['cust_name']);
+        unset($_POST['cust_cname']);
+        unset($_POST['cust_email']);
+        unset($_POST['cust_phone']);
+        unset($_POST['cust_address']);
+        unset($_POST['cust_city']);
+        unset($_POST['cust_state']);
+        unset($_POST['cust_zip']);
 
-            <div class="input-group">
-                <label for="contact" class="form-label">Contact:</label>
-                <input type="text" name="contact" class="input-text" placeholder="Contact Number" required>
-            </div>
-            <div class="input-group">
-                <label for="password" class="form-label">Password:</label>
-                <input type="password" name="password" class="input-text" placeholder="Password" required>
-                <input type="password" name="confirmpassword" class="input-text" placeholder="Confirm Password" required>
-            </div>
+        $success_message = LANG_VALUE_152;
+    }
+}
+?>
 
-            <div class="button-group">
-                <input type="reset" value="Reset" class="login-btn btn-primary-soft btn">
-                <input type="submit" value="Next" class="login-btn btn-primary btn">
-            </div>
-
-            <div class="footer">
-                <p class="sub-text" style="font-weight: 280;">Already have an account? 
-                    <a href="login.php" class="hover-link1 non-style-link">Login</a>
-                </p>
-            </div>
-        </form>
+<div class="page-banner" style="background-color:#444;background-image: url(assets/uploads/<?php echo $banner_registration; ?>);">
+    <div class="inner">
+        <h1><?php echo LANG_VALUE_16; ?></h1>
     </div>
+</div>
 
-</body>
-</html>
+<div class="page">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="user-content">
+
+                    
+
+                    <form action="" method="post">
+                        <?php $csrf->echoInputField(); ?>
+                        <div class="row">
+                            <div class="col-md-2"></div>
+                            <div class="col-md-8">
+                                
+                                <?php
+                                if($error_message != '') {
+                                    echo "<div class='error' style='padding: 10px;background:#f1f1f1;margin-bottom:20px;'>".$error_message."</div>";
+                                }
+                                if($success_message != '') {
+                                    echo "<div class='success' style='padding: 10px;background:#f1f1f1;margin-bottom:20px;'>".$success_message."</div>";
+                                }
+                                ?>
+
+                                <div class="col-md-6 form-group">
+                                    <label for=""><?php echo LANG_VALUE_102; ?> *</label>
+                                    <input type="text" class="form-control" name="cust_name" value="<?php if(isset($_POST['cust_name'])){echo $_POST['cust_name'];} ?>">
+                                </div>
+                                <div class="col-md-6 form-group">
+                                    <label for=""><?php echo LANG_VALUE_103; ?></label>
+                                    <input type="text" class="form-control" name="cust_cname" value="<?php if(isset($_POST['cust_cname'])){echo $_POST['cust_cname'];} ?>">
+                                </div>
+                                <div class="col-md-6 form-group">
+                                    <label for=""><?php echo LANG_VALUE_94; ?> *</label>
+                                    <input type="email" class="form-control" name="cust_email" value="<?php if(isset($_POST['cust_email'])){echo $_POST['cust_email'];} ?>">
+                                </div>
+                                <div class="col-md-6 form-group">
+                                    <label for=""><?php echo LANG_VALUE_104; ?> *</label>
+                                    <input type="text" class="form-control" name="cust_phone" value="<?php if(isset($_POST['cust_phone'])){echo $_POST['cust_phone'];} ?>">
+                                </div>
+                                <div class="col-md-12 form-group">
+                                    <label for=""><?php echo LANG_VALUE_105; ?> *</label>
+                                    <textarea name="cust_address" class="form-control" cols="30" rows="10" style="height:70px;"><?php if(isset($_POST['cust_address'])){echo $_POST['cust_address'];} ?></textarea>
+                                </div>
+                                <div class="col-md-6 form-group">
+                                    <label for=""><?php echo LANG_VALUE_106; ?> *</label>
+                                    <select name="cust_country" class="form-control select2">
+                                        <option value="">Select country</option>
+                                    <?php
+                                    $statement = $pdo->prepare("SELECT * FROM tbl_country ORDER BY country_name ASC");
+                                    $statement->execute();
+                                    $result = $statement->fetchAll(PDO::FETCH_ASSOC);                            
+                                    foreach ($result as $row) {
+                                        ?>
+                                        <option value="<?php echo $row['country_id']; ?>"><?php echo $row['country_name']; ?></option>
+                                        <?php
+                                    }
+                                    ?>    
+                                    </select>                                    
+                                </div>
+                                
+                                <div class="col-md-6 form-group">
+                                    <label for=""><?php echo LANG_VALUE_107; ?> *</label>
+                                    <input type="text" class="form-control" name="cust_city" value="<?php if(isset($_POST['cust_city'])){echo $_POST['cust_city'];} ?>">
+                                </div>
+                                <div class="col-md-6 form-group">
+                                    <label for=""><?php echo LANG_VALUE_108; ?> *</label>
+                                    <input type="text" class="form-control" name="cust_state" value="<?php if(isset($_POST['cust_state'])){echo $_POST['cust_state'];} ?>">
+                                </div>
+                                <div class="col-md-6 form-group">
+                                    <label for=""><?php echo LANG_VALUE_109; ?> *</label>
+                                    <input type="text" class="form-control" name="cust_zip" value="<?php if(isset($_POST['cust_zip'])){echo $_POST['cust_zip'];} ?>">
+                                </div>
+                                <div class="col-md-6 form-group">
+                                    <label for=""><?php echo LANG_VALUE_96; ?> *</label>
+                                    <input type="password" class="form-control" name="cust_password">
+                                </div>
+                                <div class="col-md-6 form-group">
+                                    <label for=""><?php echo LANG_VALUE_98; ?> *</label>
+                                    <input type="password" class="form-control" name="cust_re_password">
+                                </div>
+                                <div class="col-md-6 form-group">
+                                    <label for=""></label>
+                                    <input type="submit" class="btn btn-danger" value="<?php echo LANG_VALUE_15; ?>" name="form1">
+                                </div>
+                            </div>
+                        </div>                        
+                    </form>
+                </div>                
+            </div>
+        </div>
+    </div>
+</div>
