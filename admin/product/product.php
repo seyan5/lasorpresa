@@ -8,12 +8,10 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>La Sorpresa Admin</title>
-    <link rel="stylesheet" href="../css/product.css">
-    
 </head>
 
 <body>
+    <!-- =============== Navigation ================ -->
     <div class="container">
         <div class="navigation">
             <ul>
@@ -27,7 +25,7 @@
                 </li>
 
                 <li>
-                    <a href="../dashboard.php">
+                    <a href="dashboard.php">
                         <span class="icon">
                             <ion-icon name="home-outline"></ion-icon>
                         </span>
@@ -36,7 +34,7 @@
                 </li>
 
                 <li>
-                    <a href="../users.php">
+                    <a href="#">
                         <span class="icon">
                             <ion-icon name="people-outline"></ion-icon>
                         </span>
@@ -54,7 +52,7 @@
                 </li>
 
                 <li>
-                    <a href="product/product.php">
+                    <a href="#">
                         <span class="icon">
                             <ion-icon name="cube-outline"></ion-icon>
                         </span>
@@ -72,7 +70,7 @@
                 </li>
 
                 <li>
-                    <a href="../settings.php">
+                    <a href="#">
                         <span class="icon">
                             <ion-icon name="settings-outline"></ion-icon>
                         </span>
@@ -81,7 +79,7 @@
                 </li>
 
                 <li>
-                    <a href="../logout.php">
+                    <a href="../index.php">
                         <span class="icon">
                             <ion-icon name="log-out-outline"></ion-icon>
                         </span>
@@ -100,7 +98,57 @@
 	</div>
 </section>
 
-<section class="content">
+<div class="main">
+            <div class="topbar">
+                <div class="toggle">
+                    <ion-icon name="menu-outline"></ion-icon>
+                </div>
+
+                <div class="search">
+                    <label>
+                        <input type="text" placeholder="Search here">
+                        <ion-icon name="search-outline"></ion-icon>
+                    </label>
+                </div>
+
+                <div class="user">
+                    <img src="assets/imgs/customer01.jpg" alt="">
+                </div>
+            </div>
+
+            <!-- ======================= Cards ================== -->
+            <tr>
+                <td colspan="4">
+                    <div class="abc scroll">
+                        <table width="93%" class="sub-table scrolldown" border="0">
+                            <thead>
+                                <tr>
+                                    <th class="table-headin">
+                                        Product Name
+                                    </th>
+
+                                    <th class="table-headin">
+                                        Old Price
+                                    </th>
+                                    <th class="table-headin">
+                                        (C) Price
+                                    </th>
+                                    <th class="table-headin">
+                                        Quantity
+                                    </th>
+                                    <th class="table-headin">
+                                        Featured?
+                                    </th>
+                                    <th class="table-headin">
+                                        Active?
+                                    </th>
+                                    <th class="table-headin">
+                                        Category
+                                    </th>
+
+                            </thead>
+
+<!-- <section class="content">
 	<div class="row">
 		<div class="col-md-12">
 			<div class="box box-info">
@@ -120,7 +168,7 @@
 								<th width="80">Action</th>
 							</tr>
 						</thead>
-						<tbody>
+						<tbody> -->
 							<?php
 							$i=0;
 							$statement = $pdo->prepare("SELECT

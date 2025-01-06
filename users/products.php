@@ -1,5 +1,4 @@
 <?php require_once('header.php'); ?>
-
 <!-- css -->
 <link rel="stylesheet" href="../css/product.css">
 <script src="../js/product.js" defer></script>
