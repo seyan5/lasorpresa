@@ -19,14 +19,14 @@ if ($p_id) {
     $product = $statement->fetch(PDO::FETCH_ASSOC);
 
     if ($product) {
-        // Set header for JSON response
-        header('Content-Type: application/json');
-        
         // Return product details as JSON
         echo json_encode($product);
     } else {
-        // Return an empty JSON if no product is found
-        echo json_encode([]);
+        // Return error message as JSON
+        echo json_encode(["error" => "Product not found"]);
     }
+} else {
+    // Return error if p_id is not passed
+    echo json_encode(["error" => "Invalid product ID"]);
 }
 ?>

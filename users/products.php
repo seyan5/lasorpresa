@@ -110,25 +110,20 @@ function openModal(productId) {
     const xhr = new XMLHttpRequest();
     xhr.open('GET', 'fetch-product-details.php?p_id=' + productId, true);
     xhr.onload = function() {
-        if (xhr.status === 200) {
-            // Parse the JSON response
-            const product = JSON.parse(xhr.responseText);
+    if (xhr.status === 200) {
+        const product = JSON.parse(xhr.responseText);
 
-            // Check if product data is returned
-            if (product && product.p_id) {
-                document.getElementById('modalImage').src = '../admin/uploads/' + product.featured_photo;
-                document.getElementById('modalName').innerText = product.name;
-                document.getElementById('modalDescription').innerText = product.description;
-                document.getElementById('modalPrice').innerText = "$" + product.current_price.toFixed(2);
+        document.getElementById('modalImage').src = '../admin/uploads/' + product.featured_photo;
+        document.getElementById('modalName').innerText = product.name;
+        document.getElementById('modalDescription').innerText = product.description;
+        document.getElementById('modalPrice').innerText = "$" + product.current_price.toFixed(2);
 
-                // Show the modal
-                document.getElementById('productModal').style.display = 'block';
-            } else {
-                console.log('Product not found or error in the response');
-            }
-        } else {
-            console.log('Error loading product details');
-        }
+        // Show the modal
+        document.getElementById('productModal').style.display = 'block';
+    } else {
+        console.error("Error loading product details");
+    }
+};
     };
     xhr.send();
 }
