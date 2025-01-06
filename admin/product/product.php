@@ -11,6 +11,21 @@
     <link rel="stylesheet" href="../../css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="stylesheet" href="../../css/animations.css">  
+    <link rel="stylesheet" href="../../css/admin1.css">  
+    <link rel="stylesheet" href="../../css/admin2.css">
+    <title>Users</title>
+    <style>
+        .dashbord-tables{
+            animation: transitionIn-Y-over 0.5s;
+        }
+        .filter-container{
+            animation: transitionIn-Y-bottom  0.5s;
+        }
+        .sub-table{
+            animation: transitionIn-Y-bottom 0.5s;
+        }
+    </style>
 </head>
 
 <body>
