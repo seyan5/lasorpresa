@@ -1,4 +1,4 @@
-<?php require_once('user/header.php'); ?>
+<?php require_once('users/header.php'); ?>
 
 <?php
 $statement = $pdo->prepare("SELECT * FROM tbl_settings WHERE id=1");
