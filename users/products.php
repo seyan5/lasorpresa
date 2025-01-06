@@ -27,6 +27,29 @@
     ?>
 </ul>
 
+<?php
+// Fetch products from the database
+$statement = $pdo->prepare("
+    SELECT 
+        p_id, name, featured_photo, current_price, description 
+    FROM product
+    WHERE is_active = 1
+    ORDER BY p_id DESC
+");
+$statement->execute();
+$products = $statement->fetchAll(PDO::FETCH_ASSOC);
+?>
+
+<div class="products-container">
+    <?php foreach ($products as $product): ?>
+        <div class="product" data-id="<?php echo $product['p_id']; ?>" onclick="openModal(<?php echo $product['p_id']; ?>)">
+            <img src="../uploads/<?php echo htmlspecialchars($product['featured_photo']); ?>" alt="<?php echo htmlspecialchars($product['name']); ?>">
+            <h3><?php echo htmlspecialchars($product['name']); ?></h3>
+            <div class="price">$<?php echo number_format($product['current_price'], 2); ?></div>
+        </div>
+    <?php endforeach; ?>
+</div>
+
 
       <div class="filter-condition">
          <select name="" id="select">
@@ -51,45 +74,29 @@
 
       <div class="products-container">
 
-      <div class="products-container">
-    <?php
-    // Specify the ecat_id to filter products
-    $filter_ecat_id = 8; // Replace with the desired ecat_id
+         <div class="product" data-name="p-4">
+            <img src="../ivd/flower.png" alt="">
+            <h3>Flower</h3>
+            <div class="price">$0.00</div>
+         </div>
 
-    $statement = $pdo->prepare("
-        SELECT
-            t1.p_id,
-            t1.name,
-            t1.old_price,
-            t1.current_price,
-            t1.featured_photo,
-            t1.ecat_id,
-            t2.ecat_name
-        FROM product t1
-        JOIN end_category t2
-        ON t1.ecat_id = t2.ecat_id
-        WHERE t1.ecat_id = :ecat_id
-        ORDER BY t1.p_id DESC
-    ");
-    $statement->execute([':ecat_id' => $filter_ecat_id]);
-    $result = $statement->fetchAll(PDO::FETCH_ASSOC);
+         <div class="product" data-name="p-1">
+            <img src="../ivd/flower1.jpg" alt="">
+            <h3>Flower1</h3>
+            <div class="price">$1.00</div>
+         </div>
 
-    foreach ($result as $row) {
-        ?>
-        <div class="product" data-ecat="<?php echo htmlspecialchars($row['ecat_id']); ?>" data-name="p-<?php echo htmlspecialchars($row['p_id']); ?>">
-            <img src="../uploads/<?php echo htmlspecialchars($row['featured_photo']); ?>" alt="<?php echo htmlspecialchars($row['name']); ?>">
-            <h3><?php echo htmlspecialchars($row['name']); ?></h3>
-            <div class="price">$<?php echo htmlspecialchars($row['current_price']); ?></div>
-        </div>
-        <?php
-    }
+         <div class="product" data-name="p-2">
+            <img src="../ivd/flower2.jpg" alt="">
+            <h3>Flower2</h3>
+            <div class="price">$2.00</div>
+         </div>
 
-    // Display a message if no products are found for the specified ecat_id
-    if (empty($result)) {
-        echo '<p>No products found for the selected category.</p>';
-    }
-    ?>
-</div>
+         <div class="product" data-name="p-3">
+            <img src="../ivd/flower3.jpg" alt="">
+            <h3>Flower3</h3>
+            <div class="price">$3.00</div>
+         </div>
 
 
 
@@ -227,40 +234,46 @@
    </ul>
 </section>
 
+<!-- Modal Structure -->
+<div id="productModal" class="modal" style="display:none;">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <img id="modalImage" src="" alt="">
+        <h3 id="modalName"></h3>
+        <p id="modalDescription"></p>
+        <div class="price" id="modalPrice"></div>
+        <button onclick="addToCart()">Add to Cart</button>
+    </div>
+</div>
+
 </body>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        // Get all category filter buttons
-        const filterButtons = document.querySelectorAll('.indicator li');
+// Open modal and populate details
+function openModal(productId) {
+    // Fetch the product data
+    const product = <?php echo json_encode($products); ?>.find(p => p.p_id == productId);
 
-        // Add click event listener to each filter button
-        filterButtons.forEach(button => {
-            button.addEventListener('click', function () {
-                // Get the data-filter value (ecat_id)
-                const ecatId = this.getAttribute('data-filter');
-                
-                // Get all products
-                const products = document.querySelectorAll('.products-container .product');
+    if (product) {
+        document.getElementById('modalImage').src = '../uploads/' + product.featured_photo;
+        document.getElementById('modalName').innerText = product.name;
+        document.getElementById('modalDescription').innerText = product.description || "No description available.";
+        document.getElementById('modalPrice').innerText = "$" + parseFloat(product.current_price).toFixed(2);
+        
+        // Show the modal
+        document.getElementById('productModal').style.display = 'block';
+    }
+}
 
-                // Show/Hide products based on the filter
-                products.forEach(product => {
-                    // Show all if "all" is selected
-                    if (ecatId === 'all') {
-                        product.style.display = 'block';
-                    } else if (product.getAttribute('data-ecat') === ecatId) {
-                        product.style.display = 'block';
-                    } else {
-                        product.style.display = 'none';
-                    }
-                });
+// Close modal
+function closeModal() {
+    document.getElementById('productModal').style.display = 'none';
+}
 
-                // Update active class
-                filterButtons.forEach(btn => btn.classList.remove('active'));
-                this.classList.add('active');
-            });
-        });
-    });
+// Add to cart function (to be implemented)
+function addToCart() {
+    alert("Added to cart!");
+}
 </script>
 
 
