@@ -141,6 +141,12 @@
                         <table width="93%" class="sub-table scrolldown" border="0">
                             <thead>
                                 <tr>
+                                <th class="table-headin">
+                                        #
+                                    </th>
+                                <th class="table-headin">
+                                        Photo
+                                    </th>
                                     <th class="table-headin">
                                         Product Name
                                     </th>
