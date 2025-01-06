@@ -19,7 +19,7 @@
                 <li>
                     <a href="#">
                         <div class="logo-container">
-                            <img src="../images/logo.png" alt="Logo" class="logo" />
+                            <img src="....//images/logo.png" alt="Logo" class="logo" />
                         </div>
                         <span class="title"></span>
                     </a>
