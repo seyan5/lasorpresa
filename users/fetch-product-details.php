@@ -22,7 +22,11 @@ if ($p_id) {
         // Return product details as JSON
         echo json_encode($product);
     } else {
-        echo json_encode([]);
+        // Return error message as JSON
+        echo json_encode(["error" => "Product not found"]);
     }
+} else {
+    // Return error if p_id is not passed
+    echo json_encode(["error" => "Invalid product ID"]);
 }
 ?>
