@@ -54,21 +54,6 @@
          </select>
       </div>
 
-      <div class="products-container">
-    <div class="product" data-ecat="7" data-name="p-4">
-        <img src="../ivd/flower.png" alt="">
-        <h3>Flower</h3>
-        <div class="price">$0.00</div>
-    </div>
-    <div class="product" data-ecat="8" data-name="p-1">
-        <img src="../ivd/flower1.jpg" alt="">
-        <h3>Flower1</h3>
-        <div class="price">$1.00</div>
-    </div>
-</div>
-
-
-
    <div class="products-preview">
 
       <div class="preview" data-target="p-1">
