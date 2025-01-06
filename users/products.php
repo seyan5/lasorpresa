@@ -51,29 +51,45 @@
 
       <div class="products-container">
 
-         <div class="product" data-name="p-4">
-            <img src="../ivd/flower.png" alt="">
-            <h3>Flower</h3>
-            <div class="price">$0.00</div>
-         </div>
+      <div class="products-container">
+    <?php
+    // Specify the ecat_id to filter products
+    $filter_ecat_id = 8; // Replace with the desired ecat_id
 
-         <div class="product" data-name="p-1">
-            <img src="../ivd/flower1.jpg" alt="">
-            <h3>Flower1</h3>
-            <div class="price">$1.00</div>
-         </div>
+    $statement = $pdo->prepare("
+        SELECT
+            t1.p_id,
+            t1.name,
+            t1.old_price,
+            t1.current_price,
+            t1.featured_photo,
+            t1.ecat_id,
+            t2.ecat_name
+        FROM product t1
+        JOIN end_category t2
+        ON t1.ecat_id = t2.ecat_id
+        WHERE t1.ecat_id = :ecat_id
+        ORDER BY t1.p_id DESC
+    ");
+    $statement->execute([':ecat_id' => $filter_ecat_id]);
+    $result = $statement->fetchAll(PDO::FETCH_ASSOC);
 
-         <div class="product" data-name="p-2">
-            <img src="../ivd/flower2.jpg" alt="">
-            <h3>Flower2</h3>
-            <div class="price">$2.00</div>
-         </div>
+    foreach ($result as $row) {
+        ?>
+        <div class="product" data-ecat="<?php echo htmlspecialchars($row['ecat_id']); ?>" data-name="p-<?php echo htmlspecialchars($row['p_id']); ?>">
+            <img src="../uploads/<?php echo htmlspecialchars($row['featured_photo']); ?>" alt="<?php echo htmlspecialchars($row['name']); ?>">
+            <h3><?php echo htmlspecialchars($row['name']); ?></h3>
+            <div class="price">$<?php echo htmlspecialchars($row['current_price']); ?></div>
+        </div>
+        <?php
+    }
 
-         <div class="product" data-name="p-3">
-            <img src="../ivd/flower3.jpg" alt="">
-            <h3>Flower3</h3>
-            <div class="price">$3.00</div>
-         </div>
+    // Display a message if no products are found for the specified ecat_id
+    if (empty($result)) {
+        echo '<p>No products found for the selected category.</p>';
+    }
+    ?>
+</div>
 
 
 
