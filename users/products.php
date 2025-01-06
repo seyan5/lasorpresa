@@ -125,115 +125,7 @@ $products = $statement->fetchAll(PDO::FETCH_ASSOC);
             <a href="#" class="cart">add to cart</a>
          </div>
       </div>
-
-      <div class="preview" data-target="p-2">
-         <i class="fas fa-times"></i>
-         <img src="images/2.png" alt="">
-         <h3>Flowers</h3>
-         <div class="stars">
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star-half-alt"></i>
-            <span>( 250 )</span>
-         </div>
-         <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequatur, dolorem.</p>
-         <div class="price">$2.00</div>
-         <div class="buttons">
-            <a href="#" class="buy">buy now</a>
-            <a href="#" class="cart">add to cart</a>
-         </div>
-      </div>
-
-      <div class="preview" data-target="p-3">
-         <i class="fas fa-times"></i>
-         <img src="images/3.png" alt="">
-         <h3>Flowers</h3>
-         <div class="stars">
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star-half-alt"></i>
-            <span>( 250 )</span>
-         </div>
-         <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequatur, dolorem.</p>
-         <div class="price">$2.00</div>
-         <div class="buttons">
-            <a href="#" class="buy">buy now</a>
-            <a href="#" class="cart">add to cart</a>
-         </div>
-      </div>
-
-      <div class="preview" data-target="p-4">
-         <i class="fas fa-times"></i>
-         <img src="images/4.png" alt="">
-         <h3>Flowers</h3>
-         <div class="stars">
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star-half-alt"></i>
-            <span>( 250 )</span>
-         </div>
-         <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequatur, dolorem.</p>
-         <div class="price">$2.00</div>
-         <div class="buttons">
-            <a href="#" class="buy">buy now</a>
-            <a href="#" class="cart">add to cart</a>
-         </div>
-      </div>
-
-      <div class="preview" data-target="p-5">
-         <i class="fas fa-times"></i>
-         <img src="images/5.png" alt="">
-         <h3>Flowers</h3>
-         <div class="stars">
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star-half-alt"></i>
-            <span>( 250 )</span>
-         </div>
-         <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequatur, dolorem.</p>
-         <div class="price">$2.00</div>
-         <div class="buttons">
-            <a href="#" class="buy">buy now</a>
-            <a href="#" class="cart">add to cart</a>
-         </div>
-      </div>
-
-      <div class="preview" data-target="p-6">
-         <i class="fas fa-times"></i>
-         <img src="images/6.png" alt="">
-         <h3>Flowers</h3>
-         <div class="stars">
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star-half-alt"></i>
-            <span>( 250 )</span>
-         </div>
-         <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequatur, dolorem.</p>
-         <div class="price">$2.00</div>
-         <div class="buttons">
-            <a href="#" class="buy">buy now</a>
-            <a href="#" class="cart">add to cart</a>
-         </div>
-      </div>
-
-
    </div>
-
-   <ul class="listPage">
-
-   </ul>
-</section>
-
 <!-- Modal Structure -->
 <div id="productModal" class="modal" style="display:none;">
     <div class="modal-content">
@@ -245,6 +137,10 @@ $products = $statement->fetchAll(PDO::FETCH_ASSOC);
         <button onclick="addToCart()">Add to Cart</button>
     </div>
 </div>
+   
+</section>
+
+
 
 <script>
 // Open modal and populate details
