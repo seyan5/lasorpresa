@@ -16,7 +16,7 @@
                             FROM mid_category t1
                             JOIN top_category t2
                             ON t1.tcat_id = t2.tcat_id
-                            WHERE t2.tcat_id = 3  /* Only get categories for the top category with ID 3 */
+                            WHERE t1.mcat_id = 3  /* Only get categories for the top category with ID 3 */
                             ORDER BY t1.mcat_id DESC");
          $statement->execute();
          $result = $statement->fetchAll(PDO::FETCH_ASSOC);
