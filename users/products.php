@@ -11,18 +11,18 @@
       <ul class="indicator">
     <li data-filter="all" class="active"><a href="#">All</a></li>
     <?php
-    // Fetch only the mid-level category with ID 3
+    // Fetch mid-level categories for the selected top category
     $statement = $pdo->prepare("SELECT * 
                                 FROM mid_category t1
                                 JOIN top_category t2
                                 ON t1.tcat_id = t2.tcat_id
-                                WHERE t2.tcat_id = 3 AND t1.mcat_id = 3
+                                WHERE t2.tcat_id = :topCategoryID
                                 ORDER BY t1.mcat_id DESC");
-    $statement->execute();
+    $statement->execute([':topCategoryID' => 3]); // Replace `3` with the selected t2 category ID
     $result = $statement->fetchAll(PDO::FETCH_ASSOC);
 
     foreach ($result as $row) {
-        echo '<li data-filter="' . htmlspecialchars($row['mcat_name']) . '"><a href="#">' . htmlspecialchars($row['mcat_name']) . '</a></li>';
+        echo '<li data-filter="' . htmlspecialchars($row['mcat_id']) . '"><a href="#">' . htmlspecialchars($row['mcat_name']) . '</a></li>';
     }
     ?>
 </ul>
@@ -36,6 +36,27 @@
       </div>
 
       <div class="products-container">
+
+      <div class="products-container">
+    <!-- Products for Flower (mcat_id = 3) -->
+    <div class="product" data-category="3">
+        <img src="../ivd/flower.png" alt="">
+        <h3>Flower</h3>
+        <div class="price">$0.00</div>
+    </div>
+    <div class="product" data-category="3">
+        <img src="../ivd/flower1.jpg" alt="">
+        <h3>Flower1</h3>
+        <div class="price">$1.00</div>
+    </div>
+
+    <!-- Products for Money (mcat_id = 4) -->
+    <div class="product" data-category="4">
+        <img src="../ivd/money.png" alt="">
+        <h3>Money</h3>
+        <div class="price">$2.00</div>
+    </div>
+</div>
 
          <div class="product" data-name="p-4">
             <img src="../ivd/flower.png" alt="">
@@ -798,6 +819,29 @@
 
    </ul>
 </section>
+
+<script>
+   $(document).ready(function () {
+    // When a mid-level category is clicked
+    $('.indicator li').on('click', function () {
+        var filterValue = $(this).data('filter');
+
+        // Show all products if 'all' is selected
+        if (filterValue === 'all') {
+            $('.product').show();
+        } else {
+            // Hide all products and show only matching ones
+            $('.product').hide();
+            $('.product[data-category="' + filterValue + '"]').show();
+        }
+
+        // Update active class
+        $('.indicator li').removeClass('active');
+        $(this).addClass('active');
+    });
+});
+
+</script>
 
 </body>
 
