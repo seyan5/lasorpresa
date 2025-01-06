@@ -43,7 +43,7 @@ $products = $statement->fetchAll(PDO::FETCH_ASSOC);
 <div class="products-container">
     <?php foreach ($products as $product): ?>
         <div class="product" data-id="<?php echo $product['p_id']; ?>" onclick="openModal(<?php echo $product['p_id']; ?>)">
-            <img src="../uploads/<?php echo htmlspecialchars($product['featured_photo']); ?>" alt="<?php echo htmlspecialchars($product['name']); ?>">
+            <img src="../admin/uploads/<?php echo htmlspecialchars($product['featured_photo']); ?>" alt="<?php echo htmlspecialchars($product['name']); ?>">
             <h3><?php echo htmlspecialchars($product['name']); ?></h3>
             <div class="price">$<?php echo number_format($product['current_price'], 2); ?></div>
         </div>
