@@ -9,24 +9,23 @@
       <h3 class="title"> Flower products </h3>
 
       <ul class="indicator">
-         <li data-filter="all" class="active"><a href="#">All</a></li>
-         <?php
-         // Fetch mid-level categories that belong to the top category with ID 3
-         $statement = $pdo->prepare("SELECT * 
-                            FROM mid_category t1
-                            JOIN top_category t2
-                            ON t1.tcat_id = t2.tcat_id
-                            WHERE t1.tcat_id = 3  /* Only get categories for the top category with ID 3 */
-                            ORDER BY t1.mcat_id DESC");
-         $statement->execute();
-         $result = $statement->fetchAll(PDO::FETCH_ASSOC);
+    <li data-filter="all" class="active"><a href="#">All</a></li>
+    <?php
+    // Fetch end-level categories that belong to mid-category with ID 3
+    $statement = $pdo->prepare("SELECT * 
+                                FROM end_category t1
+                                JOIN mid_category t2
+                                ON t1.mcat_id = t2.mcat_id
+                                WHERE t1.mcat_id = 3 /* Only get categories for the mid-category with ID 3 */
+                                ORDER BY t1.ecat_id ASC");
+    $statement->execute();
+    $result = $statement->fetchAll(PDO::FETCH_ASSOC);
 
-         foreach ($result as $row) {
-            echo '<li data-filter="' . htmlspecialchars($row['mcat_name']) . '"><a href="#">' . htmlspecialchars($row['mcat_name']) . '</a></li>';
-         }
-         ?>
-
-      </ul>
+    foreach ($result as $row) {
+        echo '<li data-filter="' . htmlspecialchars($row['ecat_name']) . '"><a href="#">' . htmlspecialchars($row['ecat_name']) . '</a></li>';
+    }
+    ?>
+</ul>
 
       <div class="filter-condition">
          <select name="" id="select">
