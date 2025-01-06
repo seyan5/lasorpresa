@@ -29,13 +29,14 @@
         <a href="#home">Home</a>
         <a href="#about">About</a>
         <a href="products.php">Product</a>
+        <a href="#occasion">Occasion</a>
         <a href="#review">Review</a>
         <a href="#contacts">Contacts</a>
     </nav>
      
     <div class="icons">
         <a href="#" class="fas fa-heart"></a>
-        <a href="cart.html" class="fas fa-shopping-cart"></a>
+        <a href="cart.php" class="fas fa-shopping-cart"></a>
 
         <a href="#" class="fas fa-user"></a>
     </div>
