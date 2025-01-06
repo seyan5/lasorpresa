@@ -8,7 +8,7 @@
 
       <h3 class="title"> Flower products </h3>
 
-      <!-- Categories List (Categories Filter) -->
+<!-- Categories List (Categories Filter) -->
 <ul class="indicator">
     <li data-filter="all" class="active"><a href="#" onclick="filterProducts('all')">All</a></li>
     <?php
@@ -33,17 +33,19 @@
     <!-- Products will be loaded here dynamically -->
 </div>
 
-<!-- Modal for product details -->
+<!-- Product Modal -->
+<!-- Modal for Product Details -->
 <div id="productModal" class="modal" style="display:none;">
     <div class="modal-content">
         <span class="close" onclick="closeModal()">&times;</span>
-        <img id="modalImage" src="" alt="" style="max-width: 100%; height: auto;">
-        <h3 id="modalName"></h3>
+        <img id="modalImage" src="" alt="Product Image">
+        <h2 id="modalName"></h2>
         <p id="modalDescription"></p>
-        <div class="price" id="modalPrice"></div>
+        <div id="modalPrice"></div>
         <button onclick="addToCart()">Add to Cart</button>
     </div>
 </div>
+
 
 
       <div class="filter-condition">
@@ -82,6 +84,7 @@
    </ul>
 </section>
 
+
 <!-- JavaScript to Handle AJAX Requests -->
 <script>
 // Function to filter products by ecat_id
@@ -112,13 +115,16 @@ function openModal(productId) {
         if (xhr.status === 200) {
             const product = JSON.parse(xhr.responseText);
 
+            // Update modal with product details
             document.getElementById('modalImage').src = '../admin/uploads/' + product.featured_photo;
             document.getElementById('modalName').innerText = product.name;
             document.getElementById('modalDescription').innerText = product.description;
-            document.getElementById('modalPrice').innerText = "$" + product.current_price.toFixed(2);
+            document.getElementById('modalPrice').innerText = "$" + product.current_price;
 
             // Show the modal
             document.getElementById('productModal').style.display = 'block';
+        } else {
+            console.error("Error loading product details, status:", xhr.status);
         }
     };
     xhr.send();
