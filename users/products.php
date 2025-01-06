@@ -105,11 +105,10 @@ function filterProducts(ecat_id) {
 }
 
 // Function to open modal
-// Function to open modal
 function openModal(productId) {
     // Fetch product data from the selected product using AJAX
     const xhr = new XMLHttpRequest();
-    xhr.open('GET', 'users/fetch-product-details.php?p_id=' + productId, true);
+    xhr.open('GET', 'fetch-product-details.php?p_id=' + productId, true);
     xhr.onload = function() {
         if (xhr.status === 200) {
             // Parse the JSON response
