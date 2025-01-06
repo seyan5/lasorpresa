@@ -111,20 +111,24 @@ function openModal(productId) {
     xhr.open('GET', 'fetch-product-details.php?p_id=' + productId, true);
     xhr.onload = function() {
     if (xhr.status === 200) {
-        const product = JSON.parse(xhr.responseText);
+        try {
+            const product = JSON.parse(xhr.responseText);
+            document.getElementById('modalImage').src = '../admin/uploads/' + product.featured_photo;
+            document.getElementById('modalName').innerText = product.name;
+            document.getElementById('modalDescription').innerText = product.description;
+            document.getElementById('modalPrice').innerText = "$" + product.current_price.toFixed(2);
 
-        document.getElementById('modalImage').src = '../admin/uploads/' + product.featured_photo;
-        document.getElementById('modalName').innerText = product.name;
-        document.getElementById('modalDescription').innerText = product.description;
-        document.getElementById('modalPrice').innerText = "$" + product.current_price.toFixed(2);
-
-        // Show the modal
-        document.getElementById('productModal').style.display = 'block';
+            // Show the modal
+            document.getElementById('productModal').style.display = 'block';
+        } catch (e) {
+            console.error("Error parsing JSON:", e);
+            console.log(xhr.responseText);  // Log the raw response to debug
+        }
     } else {
-        console.error("Error loading product details");
+        console.error("Error loading product details, status:", xhr.status);
     }
 };
-    };
+
     xhr.send();
 }
 
