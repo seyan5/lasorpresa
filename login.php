@@ -1,4 +1,6 @@
-<?php require_once('admin/inc/header.php'); ?>
+<?php
+require_once 'admin/inc/header.php';
+?>
 <!-- fetching row banner login -->
 <?php
 $statement = $pdo->prepare("SELECT * FROM tbl_settings WHERE id=1");
