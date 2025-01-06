@@ -37,7 +37,7 @@
                 <li>
                     <a href="#">
                         <div class="logo-container">
-                            <img src="../images/logo.png" alt="Logo" class="logo" />
+                            <img src="../../images/logo.png" alt="Logo" class="logo" />
                         </div>
                         <span class="title"></span>
                     </a>
@@ -117,7 +117,57 @@
 	</div>
 </section>
 
-<section class="content">
+<div class="main">
+            <div class="topbar">
+                <div class="toggle">
+                    <ion-icon name="menu-outline"></ion-icon>
+                </div>
+
+                <div class="search">
+                    <label>
+                        <input type="text" placeholder="Search here">
+                        <ion-icon name="search-outline"></ion-icon>
+                    </label>
+                </div>
+
+                <div class="user">
+                    <img src="assets/imgs/customer01.jpg" alt="">
+                </div>
+            </div>
+
+            <!-- ======================= Cards ================== -->
+            <tr>
+                <td colspan="4">
+                    <div class="abc scroll">
+                        <table width="93%" class="sub-table scrolldown" border="0">
+                            <thead>
+                                <tr>
+                                    <th class="table-headin">
+                                        Product Name
+                                    </th>
+
+                                    <th class="table-headin">
+                                        Old Price
+                                    </th>
+                                    <th class="table-headin">
+                                        (C) Price
+                                    </th>
+                                    <th class="table-headin">
+                                        Quantity
+                                    </th>
+                                    <th class="table-headin">
+                                        Featured?
+                                    </th>
+                                    <th class="table-headin">
+                                        Active?
+                                    </th>
+                                    <th class="table-headin">
+                                        Category
+                                    </th>
+
+                            </thead>
+
+<!-- <section class="content">
 	<div class="row">
 		<div class="col-md-12">
 			<div class="box box-info">
@@ -137,7 +187,7 @@
 								<th width="80">Action</th>
 							</tr>
 						</thead>
-						<tbody>
+						<tbody> -->
 							<?php
 							$i=0;
 							$statement = $pdo->prepare("SELECT
