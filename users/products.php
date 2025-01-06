@@ -8,7 +8,7 @@
 
       <h3 class="title"> Flower products </h3>
 
-      <!-- Categories List (Categories Filter) -->
+<!-- Categories List (Categories Filter) -->
 <ul class="indicator">
     <li data-filter="all" class="active"><a href="#" onclick="filterProducts('all')">All</a></li>
     <?php
@@ -33,17 +33,18 @@
     <!-- Products will be loaded here dynamically -->
 </div>
 
-<!-- Modal for product details -->
-<div id="productModal" class="modal" style="display:none;">
+<!-- Product Modal -->
+<div id="productModal" class="modal" style="display: none;">
     <div class="modal-content">
         <span class="close" onclick="closeModal()">&times;</span>
-        <img id="modalImage" src="" alt="" style="max-width: 100%; height: auto;">
+        <img id="modalImage" src="" alt="">
         <h3 id="modalName"></h3>
         <p id="modalDescription"></p>
-        <div class="price" id="modalPrice"></div>
+        <div id="modalPrice"></div>
         <button onclick="addToCart()">Add to Cart</button>
     </div>
 </div>
+
 
 
       <div class="filter-condition">
@@ -105,20 +106,22 @@ function filterProducts(ecat_id) {
 
 // Function to open modal
 function openModal(productId) {
-    // Fetch product data from the selected product using AJAX or embedded data
     const xhr = new XMLHttpRequest();
     xhr.open('GET', 'fetch-product-details.php?p_id=' + productId, true);
     xhr.onload = function() {
         if (xhr.status === 200) {
             const product = JSON.parse(xhr.responseText);
 
-            document.getElementById('modalImage').src = '../admin/uploads/' + product.featured_photo;
-            document.getElementById('modalName').innerText = product.name;
-            document.getElementById('modalDescription').innerText = product.description;
-            document.getElementById('modalPrice').innerText = "$" + product.current_price.toFixed(2);
+            if (product) {
+                // Populate modal with product data
+                document.getElementById('modalImage').src = '../admin/uploads/' + product.featured_photo;
+                document.getElementById('modalName').innerText = product.name;
+                document.getElementById('modalDescription').innerText = product.description;
+                document.getElementById('modalPrice').innerText = "$" + product.current_price.toFixed(2);
 
-            // Show the modal
-            document.getElementById('productModal').style.display = 'block';
+                // Show modal
+                document.getElementById('productModal').style.display = 'block';
+            }
         }
     };
     xhr.send();
