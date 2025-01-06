@@ -34,13 +34,14 @@
 </div>
 
 <!-- Product Modal -->
-<div id="productModal" class="modal">
+<!-- Modal for Product Details -->
+<div id="productModal" class="modal" style="display:none;">
     <div class="modal-content">
-        <span class="close" onclick="closeModal()">×</span>
+        <span class="close" onclick="closeModal()">&times;</span>
         <img id="modalImage" src="" alt="Product Image">
-        <h2 id="modalName">Product Name</h2>
-        <p id="modalDescription">Product Description</p>
-        <p id="modalPrice">$0.00</p>
+        <h2 id="modalName"></h2>
+        <p id="modalDescription"></p>
+        <div id="modalPrice"></div>
         <button onclick="addToCart()">Add to Cart</button>
     </div>
 </div>
@@ -83,6 +84,46 @@
    </ul>
 </section>
 
+<style>
+   /* Modal background */
+.modal {
+    position: fixed;
+    z-index: 1; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgba(0,0,0,0.4); /* Black with opacity */
+    display: none;
+}
+
+/* Modal content */
+.modal-content {
+    background-color: #fefefe;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    max-width: 600px;
+}
+
+/* Close button */
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+</style>
+
 <!-- JavaScript to Handle AJAX Requests -->
 <script>
 // Function to filter products by ecat_id
@@ -106,32 +147,27 @@ function filterProducts(ecat_id) {
 
 // Function to open modal
 function openModal(productId) {
-    // Fetch product data from the selected product using AJAX
+    // Fetch product data from the selected product using AJAX or embedded data
     const xhr = new XMLHttpRequest();
     xhr.open('GET', 'fetch-product-details.php?p_id=' + productId, true);
     xhr.onload = function() {
-    if (xhr.status === 200) {
-        try {
+        if (xhr.status === 200) {
             const product = JSON.parse(xhr.responseText);
+
+            // Update modal with product details
             document.getElementById('modalImage').src = '../admin/uploads/' + product.featured_photo;
             document.getElementById('modalName').innerText = product.name;
             document.getElementById('modalDescription').innerText = product.description;
-            document.getElementById('modalPrice').innerText = "$" + product.current_price.toFixed(2);
+            document.getElementById('modalPrice').innerText = "$" + product.current_price;
 
             // Show the modal
             document.getElementById('productModal').style.display = 'block';
-        } catch (e) {
-            console.error("Error parsing JSON:", e);
-            console.log(xhr.responseText);  // Log the raw response to debug
+        } else {
+            console.error("Error loading product details, status:", xhr.status);
         }
-    } else {
-        console.error("Error loading product details, status:", xhr.status);
-    }
-};
-
+    };
     xhr.send();
 }
-
 
 // Close modal
 function closeModal() {
