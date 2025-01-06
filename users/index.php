@@ -116,14 +116,14 @@
     <!-- prod sec -->
 <section class="products" id="products">
 
-    <h1 class="heading">Latest <span>products</span></h1>
+    <h1 class="heading">Latest <span>Flowers</span></h1>
     <div class="box-container">
         <div class="shop">
             <h1>Best Selling</h1>
             <h1>Flowers</h1>
             <h3>Cheap and</h3>
             <h3>Affordable Flowers</h3>
-            <a href="products.html" class="btn">See more -></a>
+            <a href="products.php" class="btn">See more -></a>
         </div>
         <div class="box">
             <span class="discount">-10%</span>
