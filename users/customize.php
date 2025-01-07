@@ -29,7 +29,7 @@ require 'header.php';
 
       <div class="container">
     <h2>Flower Customization</h2>
-    <form method="POST" action="process_customization.php" id="customization-form">
+    <form method="POST" action="custom-process.php" id="customization-form">
         <!-- Flower Types Section -->
         <div id="flower-types-container">
             <div class="form-group flower-type">
@@ -38,12 +38,12 @@ require 'header.php';
                     <select name="type[]" class="form-control select2" multiple="multiple" id="flower-type">
                         <?php
                         // Fetch flower types from the database
-                        $statement = $pdo->prepare("SELECT * FROM type ORDER BY type_id ASC");
+                        $statement = $pdo->prepare("SELECT * FROM flowers ORDER BY id ASC");
                         $statement->execute();
                         $types = $statement->fetchAll(PDO::FETCH_ASSOC);
                         if ($types) {
                             foreach ($types as $row) {
-                                echo "<option value='{$row['type_id']}'>{$row['type_name']}</option>";
+                                echo "<option value='{$row['id']}'>{$row['name']}</option>";
                             }
                         } else {
                             echo "<option>No flower types available</option>";
@@ -52,19 +52,9 @@ require 'header.php';
                     </select>
                 </div>
             </div>
-
-            <!-- Quantity with Add and Remove Buttons -->
-            <div class="form-group quantity">
-                <label for="quantity" class="col-sm-3 control-label">Quantity</label>
-                <div class="col-sm-4">
-                    <input type="number" name="quantity[]" class="form-control" value="1" min="1" id="flower-quantity">
-                    <button type="button" class="btn btn-success add-quantity">Add</button>
-                    <button type="button" class="btn btn-danger remove-quantity">Remove</button>
-                </div>
-            </div>
         </div>
 
-        <!-- Button to Add New Flower Type and Quantity Dropdown -->
+        <!-- Button to Add New Flower Type Dropdown -->
         <button type="button" class="btn btn-secondary" id="add-flower-btn">Add Flower</button>
 
         <!-- Size of Flower Selection -->
@@ -74,12 +64,12 @@ require 'header.php';
                 <select name="size[]" class="form-control select2" multiple="multiple" id="flower-size">
                     <?php
                     // Fetch flower sizes from the database (ensure this table exists or adjust as needed)
-                    $statement = $pdo->prepare("SELECT * FROM size ORDER BY size_id ASC");
+                    $statement = $pdo->prepare("SELECT * FROM type ORDER BY type_id ASC");
                     $statement->execute();
                     $sizes = $statement->fetchAll(PDO::FETCH_ASSOC);
                     if ($sizes) {
                         foreach ($sizes as $row) {
-                            echo "<option value='{$row['size_id']}'>{$row['size_name']}</option>";
+                            echo "<option value='{$row['type_id']}'>{$row['type_name']}</option>";
                         }
                     } else {
                         echo "<option>No sizes available</option>";
@@ -148,21 +138,21 @@ require 'header.php';
         // Initialize the select2 plugin
         $('.select2').select2();
 
-        // Add new flower type dropdown with quantity on button click
+        // Add new flower type dropdown on button click
         $('#add-flower-btn').on('click', function() {
             var flowerTypeHTML = `
                 <div class="form-group flower-type">
                     <label for="type" class="col-sm-3 control-label">Select Flower Type</label>
                     <div class="col-sm-4">
-                        <select name="type[]" class="form-control select2" multiple="multiple">
+                        <select name="flower[]" class="form-control select2" multiple="multiple">
                             <?php
                             // Fetch flower types from the database
-                            $statement = $pdo->prepare("SELECT * FROM type ORDER BY type_id ASC");
+                            $statement = $pdo->prepare("SELECT * FROM flowers ORDER BY id ASC");
                             $statement->execute();
                             $types = $statement->fetchAll(PDO::FETCH_ASSOC);
                             if ($types) {
                                 foreach ($types as $row) {
-                                    echo "<option value='{$row['type_id']}'>{$row['type_name']}</option>";
+                                    echo "<option value='{$row['id']}'>{$row['name']}</option>";
                                 }
                             } else {
                                 echo "<option>No flower types available</option>";
@@ -171,38 +161,13 @@ require 'header.php';
                         </select>
                     </div>
                 </div>
-
-                <div class="form-group quantity">
-                    <label for="quantity" class="col-sm-3 control-label">Quantity</label>
-                    <div class="col-sm-4">
-                        <input type="number" name="quantity[]" class="form-control" value="1" min="1">
-                        <button type="button" class="btn btn-success add-quantity">Add</button>
-                        <button type="button" class="btn btn-danger remove-quantity">Remove</button>
-                    </div>
-                </div>
             `;
 
-            // Append the new flower type and quantity dropdown to the container
+            // Append the new flower type dropdown to the container
             $('#flower-types-container').append(flowerTypeHTML);
 
             // Reinitialize select2 for the newly added select elements
             $('.select2').select2();
-        });
-
-        // Add quantity event
-        $(document).on('click', '.add-quantity', function() {
-            var quantityInput = $(this).closest('.quantity').find('input[type="number"]');
-            var currentQuantity = parseInt(quantityInput.val());
-            quantityInput.val(currentQuantity + 1);
-        });
-
-        // Remove quantity event
-        $(document).on('click', '.remove-quantity', function() {
-            var quantityInput = $(this).closest('.quantity').find('input[type="number"]');
-            var currentQuantity = parseInt(quantityInput.val());
-            if (currentQuantity > 1) {
-                quantityInput.val(currentQuantity - 1);
-            }
         });
     });
 </script>
