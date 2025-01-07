@@ -197,33 +197,7 @@
 							$i=0;
 							$statement = $pdo->prepare("SELECT
 														
-														t1.p_id,
-														t1.name,
-														t1.old_price,
-														t1.current_price,
-														t1.quantity,
-														t1.featured_photo,
-														t1.is_featured,
-														t1.is_active,
-														t1.ecat_id,
-
-														t2.ecat_id,
-														t2.ecat_name,
-
-														t3.mcat_id,
-														t3.mcat_name,
-
-														t4.tcat_id,
-														t4.tcat_name
-
-							                           	FROM product t1
-							                           	JOIN end_category t2
-							                           	ON t1.ecat_id = t2.ecat_id
-							                           	JOIN mid_category t3
-							                           	ON t2.mcat_id = t3.mcat_id
-							                           	JOIN top_category t4
-							                           	ON t3.tcat_id = t4.tcat_id
-							                           	ORDER BY t1.p_id DESC
+														* from product
 							                           	");
 							$statement->execute();
 							$result = $statement->fetchAll(PDO::FETCH_ASSOC);
