@@ -197,9 +197,9 @@
 							$i=0;
 							$statement = $pdo->prepare("SELECT 
     t1.*, -- Select all columns from the product table
-    t2.ecat_name AS end_category_name, -- End category name
-    t3.mcat_name AS mid_category_name, -- Mid category name
-    t4.tcat_name AS top_category_name  -- Top category name
+    t2.ecat_name AS ecat_name, -- End category name
+    t3.mcat_name AS mcat_name, -- Mid category name
+    t4.tcat_name AS tcat_name  -- Top category name
 FROM product t1
 LEFT JOIN end_category t2 ON t1.ecat_id = t2.ecat_id
 LEFT JOIN mid_category t3 ON t2.mcat_id = t3.mcat_id
