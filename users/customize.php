@@ -29,11 +29,11 @@
                 <select name="type[]" class="form-control select2" multiple="multiple">
                     <?php
                     // Fetch flower types from the database
-                    $statement = $pdo->prepare("SELECT * FROM type ORDER BY type_id ASC");
+                    $statement = $pdo->prepare("SELECT * FROM flowers ORDER BY id ASC");
                     $statement->execute();
                     $types = $statement->fetchAll(PDO::FETCH_ASSOC);
                     foreach ($types as $row) {
-                        echo "<option value='{$row['type_id']}'>{$row['type_name']}</option>";
+                        echo "<option value='{$row['id']}'>{$row['name']}</option>";
                     }
                     ?>
                 </select>
@@ -47,11 +47,11 @@
                 <select name="size[]" class="form-control select2" multiple="multiple">
                     <?php
                     // Assuming there's a 'size' table for size options (adjust if needed)
-                    $statement = $pdo->prepare("SELECT * FROM size ORDER BY size_id ASC");
+                    $statement = $pdo->prepare("SELECT * FROM type ORDER BY type_id ASC");
                     $statement->execute();
                     $sizes = $statement->fetchAll(PDO::FETCH_ASSOC);
                     foreach ($sizes as $row) {
-                        echo "<option value='{$row['size_id']}'>{$row['size_name']}</option>";
+                        echo "<option value='{$row['type_id']}'>{$row['type_name']}</option>";
                     }
                     ?>
                 </select>
