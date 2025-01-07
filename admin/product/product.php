@@ -33,7 +33,7 @@
     <div class="container">
         <div class="navigation">
             <ul>
-                <li>
+            <li>
                     <a href="#">
                         <div class="logo-container">
                             <img src="../../images/logo.png" alt="Logo" class="logo" />
@@ -41,7 +41,6 @@
                         <span class="title"></span>
                     </a>
                 </li>
-
                 <li>
                     <a href="../dashboard.php">
                         <span class="icon">
@@ -50,16 +49,14 @@
                         <span class="title">Dashboard</span>
                     </a>
                 </li>
-
                 <li>
-                    <a href="../users.php">
+                    <a href="users.php">
                         <span class="icon">
                             <ion-icon name="people-outline"></ion-icon>
                         </span>
                         <span class="title">Users</span>
                     </a>
                 </li>
-
                 <li>
                     <a href="#">
                         <span class="icon">
@@ -68,16 +65,14 @@
                         <span class="title">Messages</span>
                     </a>
                 </li>
-
                 <li>
-                    <a href="product.php">
+                    <a href="product/product-add.php">
                         <span class="icon">
                             <ion-icon name="cube-outline"></ion-icon>
                         </span>
                         <span class="title">Manage Products</span>
                     </a>
                 </li>
-
                 <li>
                     <a href="#">
                         <span class="icon">
@@ -86,18 +81,16 @@
                         <span class="title">Manage Orders</span>
                     </a>
                 </li>
-
                 <li>
-                    <a href="../settings.php">
+                    <a href="settings.php">
                         <span class="icon">
                             <ion-icon name="settings-outline"></ion-icon>
                         </span>
                         <span class="title">Settings</span>
                     </a>
                 </li>
-
                 <li>
-                    <a href="../logout.php">
+                    <a href="logout.php">
                         <span class="icon">
                             <ion-icon name="log-out-outline"></ion-icon>
                         </span>

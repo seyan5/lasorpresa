@@ -18,8 +18,8 @@
 }
 
 body {
-  background: var(--secondary-color);
-  color: var(--text-color);
+  background: var(--gray);
+  color: var(--black1);
   display: flex;
   flex-direction: row;
   height: 100vh;
@@ -33,17 +33,18 @@ body {
 
 /* =============== Navigation ================ */
 .navigation {
-  position: fixed; /* Ensures the navigation stays fixed on the screen */
-  left: 0; /* Aligns the navigation to the left */
-  top: 0; /* Ensures it starts at the top of the viewport */
-  width: 300px; /* Keeps the original width */
-  height: 100%; /* Stretches the navigation to the full height of the viewport */
-  background: var(--blue); /* Maintains the background color */
-  border-right: 10px solid var(--blue); /* Changes the border to the right for aesthetics */
-  transition: 0.5s; /* Adds smooth transitions for interactive changes */
-  overflow: hidden; /* Ensures content doesn't overflow */
-  display: flex; /* Flexbox layout */
-  z-index: 10; /* Keeps it above other elements */
+  position: fixed; /* Keeps the navigation fixed */
+  left: 0;
+  top: 0;
+  width: 300px;
+  height: 100%;
+  background: var(--blue);
+  border-right: 10px solid var(--blue);
+  transition: 0.5s;
+  display: flex;
+  flex-direction: column;
+  z-index: 10;
+  overflow: hidden;
 }
 
 .navigation.active {
@@ -57,13 +58,11 @@ body {
   width: 100%;
 }
 
-
 .logo-container {
   position: absolute;
   top: 20px;
   left: 50%;
   transform: translateX(-70%);
-  z-index: 10;
 }
 
 .logo {
@@ -74,8 +73,7 @@ body {
   position: relative;
   width: 100%;
   list-style: none;
-  border-top-left-radius: 30px;
-  border-bottom-left-radius: 30px;
+  border-radius: 30px;
 }
 
 .navigation ul li:hover,
@@ -91,27 +89,18 @@ body {
 }
 
 .navigation ul li a {
-  position: relative;
-  display: block;
-  width: 100%;
   display: flex;
   text-decoration: none;
   color: var(--white);
-}
-.navigation ul li:hover a,
-.navigation ul li.hovered a {
-  color: var(--blue);
+  padding: 10px;
 }
 
 .navigation ul li a .icon {
-  position: relative;
-  display: block;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   min-width: 60px;
   height: 60px;
-  line-height: 75px;
-  text-align: center;
-}
-.navigation ul li a .icon ion-icon {
   font-size: 1.75rem;
   transition: transform 0.3s ease;
 }
@@ -121,18 +110,17 @@ body {
 }
 
 .navigation ul li a .title {
-  position: relative;
   display: block;
   padding: 0 10px;
   height: 60px;
   line-height: 60px;
   text-align: start;
   white-space: nowrap;
-  font-size: 1rem; /* Increased for readability */
+  font-size: 1rem;
   letter-spacing: 0.05em;
 }
 
-/* --------- curve outside ---------- */
+/* Hover Effects */
 .navigation ul li:hover a::before,
 .navigation ul li.hovered a::before {
   content: "";
@@ -144,8 +132,8 @@ body {
   background-color: transparent;
   border-radius: 50%;
   box-shadow: 35px 35px 0 10px var(--white);
-  pointer-events: none;
 }
+
 .navigation ul li:hover a::after,
 .navigation ul li.hovered a::after {
   content: "";
@@ -157,45 +145,40 @@ body {
   background-color: transparent;
   border-radius: 50%;
   box-shadow: 35px -35px 0 10px var(--white);
-  pointer-events: none;
 }
 
 /* Content Header Styles */
 .content-header {
-  justify-content: space-between; /* Pushes left and right sections to the edges */
-  padding: 15px 20px; /* Adds spacing inside the header */
-  border-bottom: 2px solid #ddd; /* Adds a bottom border for separation */
-  z-index: 10; /* Keeps it above other elements */
-  margin-right: 50px; /* Moves the content header slightly to the right */
+  display: flex;
+  justify-content: space-between;
+  padding: 15px 20px;
+  border-bottom: 2px solid #ddd;
+  margin-right: 50px;
 }
 
-/* Left Section - Title */
 .content-header-left h1 {
-  font-size: 1.5rem; /* Sets a larger font size for the title */
-  color: #333; /* Dark text for better readability */
-  font-weight: 600; /* Makes the title bold */
-  margin: 0; /* Removes default margin */
-  letter-spacing: 0.5px; /* Adds slight spacing between letters */
+  font-size: 1.5rem;
+  color: #333;
+  font-weight: 600;
+  margin: 0;
+  letter-spacing: 0.5px;
 }
 
-/* Right Section - Button */
 .content-header-right .btn {
-  padding: 8px 15px; /* Adds padding to the button */
-  font-size: 0.875rem; /* Sets the font size to small */
-  font-weight: 500; /* Semi-bold for emphasis */
-  color: #fff; /* White text */
-  background-color: #5cb85c; /* Green background */
-  border: none; /* Removes default border */
-  border-radius: 5px; /* Slightly rounded corners */
-  transition: background-color 0.3s ease; /* Smooth hover effect */
-  text-decoration: none; /* Removes underline from links */
+  padding: 8px 15px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #fff;
+  background-color: #5cb85c;
+  border: none;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+  text-decoration: none;
 }
 
-/* Button Hover Effect */
 .content-header-right .btn:hover {
-  background-color: #4cae4c; /* Darker green on hover */
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* Adds a shadow effect */
-  text-decoration: none; /* Ensures no underline on hover */
+  background-color: #4cae4c;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 /* ===================== Main ===================== */
@@ -207,6 +190,7 @@ body {
   background: var(--white);
   transition: 0.5s;
 }
+
 .main.active {
   width: calc(100% - 80px);
   left: 80px;
@@ -223,7 +207,6 @@ body {
 }
 
 .toggle {
-  position: relative;
   width: 60px;
   height: 60px;
   display: flex;
@@ -278,245 +261,6 @@ body {
   width: 100%;
   height: 100%;
   object-fit: cover;
-}
-
-.abc {
-  overflow-x: auto; /* Ensures scrollability if the content overflows */
-  padding: 15px; /* Adds padding around the container */
-  margin-left: auto; /* Centers the container by default */
-  margin-right: auto; /* Moves the container slightly to the right */
-  width: 80%; /* Adjusts the width to make the container smaller */
-  max-width: 90rem; /* Ensures it doesn't stretch too much on large screens */
-  border-radius: 5px; /* Rounds the corners */
-}
-
-.scroll {
-  max-height: 400px; /* Limits the height of the scrollable area */
-  overflow-y: auto; /* Allows vertical scrolling */
-  border-radius: 5px; /* Rounds the corners */
-}
-
-.sub-table {
-  width: 100%; /* Ensures the table takes up the full width of the container */
-  border-collapse: collapse; /* Removes spacing between table cells */
-  text-align: left; /* Aligns text to the left */
-}
-
-.sub-table th {
-  font-weight: bold; /* Makes the text bold */
-  padding: 10px; /* Adds padding inside each header cell */
-  text-align: center; /* Centers the header text */
-}
-
-.sub-table td {
-  padding: 10px; /* Adds padding inside each cell */
-  text-align: center; /* Centers the text in cells */
-}
-
-.scrolldown {
-  overflow-y: auto; /* Enables vertical scrolling inside the table */
-}
-
-.table-headin {
-  text-align: center; /* Centers the table header text */
-  font-size: 14px; /* Adjusts the font size */
-}
-
-
-
-/* ======================= Cards ====================== */
-.cardBox {
-  position: relative;
-  width: 100%;
-  padding: 20px;
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  grid-gap: 30px;
-}
-
-.cardBox .card {
-  position: relative;
-  background: var(--white);
-  padding: 30px;
-  border-radius: 20px;
-  display: flex;
-  justify-content: space-between;
-  cursor: pointer;
-  box-shadow: 0 7px 25px rgba(0, 0, 0, 0.08);
-}
-
-.cardBox .card .numbers {
-  position: relative;
-  font-weight: 500;
-  font-size: 2.5rem;
-  color: var(--blue);
-}
-
-.cardBox .card .cardName {
-  color: var(--black2);
-  font-size: 1.1rem;
-  margin-top: 5px;
-}
-
-.cardBox .card .iconBx {
-  font-size: 3.5rem;
-  color: var(--black2);
-}
-
-.cardBox .card:hover {
-  background: var(--blue);
-}
-.cardBox .card:hover .numbers,
-.cardBox .card:hover .cardName,
-.cardBox .card:hover .iconBx {
-  color: var(--white);
-}
-
-/* ================== Order Details List ============== */
-.details {
-  position: relative;
-  width: 100%;
-  padding: 20px;
-  display: grid;
-  grid-template-columns: 2fr 1fr;
-  grid-gap: 30px;
-  /* margin-top: 10px; */
-}
-
-.details .recentOrders {
-  position: relative;
-  display: grid;
-  min-height: 500px;
-  background: var(--white);
-  padding: 20px;
-  box-shadow: 0 7px 25px rgba(0, 0, 0, 0.08);
-  border-radius: 20px;
-}
-
-.details .cardHeader {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-}
-.cardHeader h2 {
-  font-weight: 600;
-  color: var(--blue);
-}
-.cardHeader .btn {
-  position: relative;
-  padding: 5px 10px;
-  background: var(--blue);
-  text-decoration: none;
-  color: var(--white);
-  border-radius: 6px;
-}
-
-.details table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 10px;
-}
-.details table thead td {
-  font-weight: 600;
-}
-.details .recentOrders table tr {
-  color: var(--black1);
-  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-}
-.details .recentOrders table tr:last-child {
-  border-bottom: none;
-}
-.details .recentOrders table tbody tr:hover {
-  background: var(--blue);
-  color: var(--white);
-}
-.details .recentOrders table tr td {
-  padding: 10px;
-}
-.details .recentOrders table tr td:last-child {
-  text-align: end;
-}
-.details .recentOrders table tr td:nth-child(2) {
-  text-align: end;
-}
-.details .recentOrders table tr td:nth-child(3) {
-  text-align: center;
-}
-.status.delivered {
-  padding: 2px 4px;
-  background: #8de02c;
-  color: var(--white);
-  border-radius: 4px;
-  font-size: 14px;
-  font-weight: 500;
-}
-.status.pending {
-  padding: 2px 4px;
-  background: #e9b10a;
-  color: var(--white);
-  border-radius: 4px;
-  font-size: 14px;
-  font-weight: 500;
-}
-.status.return {
-  padding: 2px 4px;
-  background: #f00;
-  color: var(--white);
-  border-radius: 4px;
-  font-size: 14px;
-  font-weight: 500;
-}
-.status.inProgress {
-  padding: 2px 4px;
-  background: #1795ce;
-  color: var(--white);
-  border-radius: 4px;
-  font-size: 14px;
-  font-weight: 500;
-}
-
-.recentCustomers {
-  position: relative;
-  display: grid;
-  min-height: 500px;
-  padding: 20px;
-  background: var(--white);
-  box-shadow: 0 7px 25px rgba(0, 0, 0, 0.08);
-  border-radius: 20px;
-}
-.recentCustomers .imgBx {
-  position: relative;
-  width: 40px;
-  height: 40px;
-  border-radius: 50px;
-  overflow: hidden;
-}
-.recentCustomers .imgBx img {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-.recentCustomers table tr td {
-  padding: 12px 10px;
-}
-.recentCustomers table tr td h4 {
-  font-size: 16px;
-  font-weight: 500;
-  line-height: 1.2rem;
-}
-.recentCustomers table tr td h4 span {
-  font-size: 14px;
-  color: var(--black2);
-}
-.recentCustomers table tr:hover {
-  background: var(--blue);
-  color: var(--white);
-}
-.recentCustomers table tr:hover td h4 span {
-  color: var(--white);
 }
 
 /* ====================== Responsive Design ========================== */
@@ -582,44 +326,13 @@ body {
   }
 }
 
+/* ===================== Popup ===================== */
 .popup {
   margin: 70px auto;
   padding: 20px;
   background: #fff;
-  border-radius: 5px;
-  width: 50%;
-  position: relative;
-  transition: all 5s ease-in-out;
+  border-radius: 10px;
+  max-width: 500px;
+  box-shadow: 0 7px 25px rgba(0, 0, 0, 0.1);
+  z-index: 999;
 }
-
-.popup h2 {
-  margin-top: 0;
-  color: #333;
-}
-.popup .close {
-  position: absolute;
-  top: 20px;
-  right: 30px;
-  transition: all 200ms;
-  font-size: 30px;
-  font-weight: bold;
-  text-decoration: none;
-  color: #333;
-}
-.popup .close:hover {
-  color: var(--primarycolorhover);
-}
-.popup .content {
-  max-height: 30%;
-  overflow: auto;
-}
-
-@media screen and (max-width: 700px){
-  .box{
-    width: 70%;
-  }
-  .popup{
-    width: 70%;
-  }
-}
-
