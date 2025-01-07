@@ -58,25 +58,7 @@ require 'header.php';
     <?php endif; ?>
   </div>
 
-    <div class="payment">
-      <h3>Card Details</h3>
-      <p>Mode of Payment</p>
-      <div class="payment-options">
-        <img src="path/to/gcash-logo.jpg" alt="GCash">
-        <span>Cash On Pick Up</span>
-      </div>
-
-      <form>
-        <label>Email</label>
-        <input type="email" placeholder="E-mail" required>
-        
-        <label>Contact Number</label>
-        <input type="text" placeholder="Number" required>
-        
-        <label>Account Name</label>
-        <input type="text" placeholder="Account Name" required>
-      </form>
-      <hr>
+    
 
       <div class="summary">
         <p>Subtotal <span>₱<?php 
