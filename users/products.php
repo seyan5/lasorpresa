@@ -35,23 +35,18 @@
 
 <!-- Categories List (Categories Filter) -->
 <ul class="indicator">
-    <li data-filter="all" class="active"><a href="#" onclick="filterProducts('all')">All</a></li>
+    <li data-filter="all" class="active">
+        <a href="#" onclick="filterProducts('all')">All</a>
+    </li>
     <?php
-    // Fetch end-level categories
-    $statement = $pdo->prepare("SELECT * 
-                                FROM end_category t1
-                                JOIN mid_category t2
-                                ON t1.mcat_id = t2.mcat_id
-                                WHERE t1.mcat_id = 3 /* Only get categories for the mid-category with ID 3 */
-                                ORDER BY t1.ecat_id ASC");
-    $statement->execute();
-    $result = $statement->fetchAll(PDO::FETCH_ASSOC);
-
     foreach ($result as $row) {
-        echo '<li data-filter="' . htmlspecialchars($row['ecat_id']) . '"><a href="#" onclick="filterProducts(' . $row['ecat_id'] . ')">' . htmlspecialchars($row['ecat_name']) . '</a></li>';
+        echo '<li data-filter="' . htmlspecialchars($row['ecat_id']) . '">
+                <a href="#" onclick="filterProducts(' . htmlspecialchars($row['ecat_id']) . ')">' . htmlspecialchars($row['ecat_name']) . '</a>
+              </li>';
     }
     ?>
 </ul>
+
 
 <!-- Product Display Area -->
 <div class="products-container" id="productContainer">
@@ -120,8 +115,11 @@ function filterProducts(ecat_id) {
     // Show loading message
     container.innerHTML = "<p>Loading products...</p>";
 
+    // Determine the correct API endpoint or parameter for 'all'
+    const url = ecat_id === 'all' ? 'fetch-products.php' : `fetch-products.php?ecat_id=${ecat_id}`;
+
     const xhr = new XMLHttpRequest();
-    xhr.open('GET', 'fetch-products.php?ecat_id=' + ecat_id, true);
+    xhr.open('GET', url, true);
     xhr.onload = function() {
         if (xhr.status === 200) {
             container.innerHTML = xhr.responseText;
