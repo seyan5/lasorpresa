@@ -36,6 +36,8 @@ if ($p_id) {
 <body>
     <header>
         <a href="products.php" class="back">← Back to Products</a>
+        <a href="cart.php" class="back">← Cart</a>
+
     </header>
     <main>
         <div class="product-details">
@@ -49,7 +51,7 @@ if ($p_id) {
         data-price="<?php echo number_format($product['current_price'], 2); ?>">
     Add to Cart
 </button>
-<a href="cart.php"></a>
+
 
         </div>
     </main>
