@@ -174,11 +174,10 @@
 
 							<?php
 							$i=0;
-							$statement = $pdo->prepare("SELECT
-														*
-														
-
-							                           	FROM product 
+							$statement = $pdo->prepare("SELECT * FROM product;
+SELECT * FROM end_category;
+SELECT * FROM mid_category;
+SELECT * FROM top_category;
 							                           	");
 							$statement->execute();
 							$result = $statement->fetchAll(PDO::FETCH_ASSOC);
