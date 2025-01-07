@@ -109,7 +109,7 @@ require 'header.php';
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <script>
-   $(document).ready(function() {
+  $(document).ready(function() {
     // Initialize the select2 plugin
     $('.select2').select2();
 
@@ -129,7 +129,7 @@ require 'header.php';
                         }
                         ?>
                     </select>
-                    <div class="flower-quantity-container"></div> <!-- Container for quantity slider inside col-sm-4 -->
+                    <div class="flower-quantity-container"></div> <!-- Container for quantity buttons inside col-sm-4 -->
                 </div>
                 <div class="col-sm-4">
                     <button type="button" class="btn btn-danger remove-flower-btn">x</button>
@@ -145,67 +145,76 @@ require 'header.php';
         $(this).closest('.flower-type').remove();
     });
 
-    // Display quantity slider input field inside col-sm-4
+    // Display quantity input with add and minus buttons
     $(document).on('change', '.flower-type-select', function() {
         var flowerContainer = $(this).closest('.flower-type'); // Get the specific flower type container
-        flowerContainer.find('.flower-quantity-container').empty(); // Clear any existing quantity sliders
+        flowerContainer.find('.flower-quantity-container').empty(); // Clear any existing quantity input fields
 
         var selectedFlowerIds = $(this).val(); // Get selected flower IDs
 
-        // For each selected flower, create and append a quantity slider inside col-sm-4
+        // For each selected flower, create and append the quantity input with add/minus buttons inside col-sm-4
         selectedFlowerIds.forEach(function(flowerId) {
             var selectedFlower = $("option[value='" + flowerId + "']");
             var flowerName = selectedFlower.text();
             var maxQuantity = selectedFlower.data('quantity'); // Maximum available quantity for this flower
 
-            // Create the HTML for the quantity slider inside col-sm-4
-            var quantitySliderHTML = `
+            // Create the HTML for the quantity input and buttons inside col-sm-4
+            var quantityButtonsHTML = `
                 <div class="form-group flower-quantity">
-                    <label for="quantity">Quantity </label>
-                    <input type="range" name="quantity[]" class="form-control quantity-slider" min="1" max="${maxQuantity}" value="1" id="slider-${flowerId}">
-                    <output for="slider-${flowerId}" class="quantity-output">1</output>
+                    <label for="quantity">Quantity</label>
+                    <div class="input-group">
+                        <button type="button" class="btn btn-secondary btn-minus" data-flower-id="${flowerId}">-</button>
+                        <input type="number" name="quantity[]" class="form-control quantity-input" min="1" max="${maxQuantity}" value="1" id="quantity-${flowerId}">
+                        <button type="button" class="btn btn-secondary btn-plus" data-flower-id="${flowerId}">+</button>
+                    </div>
                 </div>
             `;
 
-            // Append the slider to the quantity container for this specific flower
-            flowerContainer.find('.flower-quantity-container').append(quantitySliderHTML);
-        });
-
-        // Update the slider value display as the user interacts with it
-        $(document).on('input', '.quantity-slider', function() {
-            var sliderValue = $(this).val();
-            $(this).next('.quantity-output').text(sliderValue);
+            // Append the buttons to the quantity container for this specific flower
+            flowerContainer.find('.flower-quantity-container').append(quantityButtonsHTML);
         });
     });
 
-    // Trigger the quantity slider for the first flower type on page load if a flower type is selected
+    // Update the quantity value when user clicks add or minus
+    $(document).on('click', '.btn-plus, .btn-minus', function() {
+        var button = $(this);
+        var flowerId = button.data('flower-id');
+        var quantityInput = $('#quantity-' + flowerId);
+        var currentQuantity = parseInt(quantityInput.val());
+        var maxQuantity = quantityInput.attr('max');
+
+        if (button.hasClass('btn-plus') && currentQuantity < maxQuantity) {
+            quantityInput.val(currentQuantity + 1);
+        } else if (button.hasClass('btn-minus') && currentQuantity > 1) {
+            quantityInput.val(currentQuantity - 1);
+        }
+    });
+
+    // Trigger the quantity input for the first flower type on page load if a flower type is selected
     $('#flower-type').each(function() {
         var flowerContainer = $(this).closest('.flower-type'); // Get the specific flower type container
         var selectedFlowerIds = $(this).val(); // Get selected flower IDs
 
-        // For each selected flower, create and append a quantity slider inside col-sm-4
+        // For each selected flower, create and append the quantity input with add/minus buttons inside col-sm-4
         selectedFlowerIds.forEach(function(flowerId) {
             var selectedFlower = $("option[value='" + flowerId + "']");
             var flowerName = selectedFlower.text();
             var maxQuantity = selectedFlower.data('quantity'); // Maximum available quantity for this flower
 
-            // Create the HTML for the quantity slider inside col-sm-4
-            var quantitySliderHTML = `
+            // Create the HTML for the quantity input and buttons inside col-sm-4
+            var quantityButtonsHTML = `
                 <div class="form-group flower-quantity">
                     <label for="quantity">Quantity</label>
-                    <input type="range" name="quantity[]" class="form-control quantity-slider" min="1" max="${maxQuantity}" value="1" id="slider-${flowerId}">
-                    <output for="slider-${flowerId}" class="quantity-output">1</output>
+                    <div class="input-group">
+                        <button type="button" class="btn btn-secondary btn-minus" data-flower-id="${flowerId}">-</button>
+                        <input type="number" name="quantity[]" class="form-control quantity-input" min="1" max="${maxQuantity}" value="1" id="quantity-${flowerId}">
+                        <button type="button" class="btn btn-secondary btn-plus" data-flower-id="${flowerId}">+</button>
+                    </div>
                 </div>
             `;
 
-            // Append the slider to the quantity container for this specific flower
-            flowerContainer.find('.flower-quantity-container').append(quantitySliderHTML);
-        });
-
-        // Update the slider value display as the user interacts with it
-        $(document).on('input', '.quantity-slider', function() {
-            var sliderValue = $(this).val();
-            $(this).next('.quantity-output').text(sliderValue);
+            // Append the buttons to the quantity container for this specific flower
+            flowerContainer.find('.flower-quantity-container').append(quantityButtonsHTML);
         });
     });
 
@@ -214,6 +223,3 @@ require 'header.php';
         $('#flower-type').trigger('change');
     }
 });
-
-</script>
-
