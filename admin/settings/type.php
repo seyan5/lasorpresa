@@ -80,7 +80,7 @@
 
 <section class="content-header">
 	<div class="content-header-left">
-		<h1>View Type</h1>
+		<h1>View Size</h1>
 	</div>
 	<div class="content-header-right">
 		<a href="type-add.php" class="btn btn-primary btn-sm">Add New</a>
@@ -101,7 +101,7 @@
 			<thead>
 			    <tr>
 			        <th>#</th>
-			        <th>Type Name</th>
+			        <th>Size Name</th>
 			        <th>Action</th>
 			    </tr>
 			</thead>
@@ -143,7 +143,7 @@
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
             <div class="modal-body">
-                Are you sure you want to delete this type?
+                Are you sure you want to delete this size?
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>

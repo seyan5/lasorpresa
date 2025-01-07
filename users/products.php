@@ -3,31 +3,71 @@
 <link rel="stylesheet" href="../css/product.css">
 <script src="../js/product.js" defer></script>
 
+<header>
+
+    <input type="checkbox" name="" id="toggler">
+    <label for="toggler" class="fas fa-bars"></label>
+
+    <!-- <a href="#" class="logo">Flower<span>.</span></a> -->
+    <img src="../images/logo.png" alt="" class="logos" href="">
+    <nav class="navbar">
+        <a href="#home">Home</a>
+        <a href="#about">About</a>
+        <a href="products.php">Product</a>
+        <a href="#occasion">Occasion</a>
+        <a href="#review">Review</a>
+        <a href="#contacts">Contacts</a>
+    </nav>
+     
+    <div class="icons">
+        <a href="#" class="fas fa-heart"></a>
+        <a href="cart.php" class="fas fa-shopping-cart"></a>
+
+        <a href="#" class="fas fa-user"></a>
+    </div>
+
+</header>
+
 <section>
    <div class="container">
 
       <h3 class="title"> Flower products </h3>
 
+      <?php
+// Fetch categories (example query, adjust as per your database structure)
+$statement = $pdo->prepare("
+    SELECT * 
+    FROM end_category t1
+    JOIN mid_category t2
+    ON t1.mcat_id = t2.mcat_id
+    WHERE t1.mcat_id = 3 /* Only get categories for the mid-category with ID 3 */
+    ORDER BY t1.ecat_id ASC
+");
+
+$statement->execute();
+$result = $statement->fetchAll(PDO::FETCH_ASSOC);
+
+?>
+
 <!-- Categories List (Categories Filter) -->
 <ul class="indicator">
-    <li data-filter="all" class="active"><a href="#" onclick="filterProducts('all')">All</a></li>
+    <li data-filter="all" class="active">
+        <a href="#" onclick="filterProducts('all')">All</a>
+    </li>
     <?php
-    // Fetch end-level categories
-    $statement = $pdo->prepare("SELECT * 
-                                FROM end_category t1
-                                JOIN mid_category t2
-                                ON t1.mcat_id = t2.mcat_id
-                                WHERE t1.mcat_id = 3 /* Only get categories for the mid-category with ID 3 */
-                                ORDER BY t1.ecat_id ASC");
-    $statement->execute();
-    $result = $statement->fetchAll(PDO::FETCH_ASSOC);
-
-    foreach ($result as $row) {
-        echo '<li data-filter="' . htmlspecialchars($row['ecat_id']) . '"><a href="#" onclick="filterProducts(' . $row['ecat_id'] . ')">' . htmlspecialchars($row['ecat_name']) . '</a></li>';
+    // Ensure $result is defined and not empty
+    if (!empty($result) && is_array($result)) {
+        foreach ($result as $row) {
+            echo '<li data-filter="' . htmlspecialchars($row['ecat_id']) . '">
+                    <a href="#" onclick="filterProducts(' . htmlspecialchars($row['ecat_id']) . ')">' . htmlspecialchars($row['ecat_name']) . '</a>
+                  </li>';
+        }
+    } else {
+        // Fallback message when no categories are found
+        echo '<li>No categories available.</li>';
     }
     ?>
 </ul>
-
 <!-- Product Display Area -->
 <div class="products-container" id="productContainer">
     <!-- Products will be loaded here dynamically -->
@@ -45,6 +85,7 @@
         <button onclick="addToCart()">Add to Cart</button>
     </div>
 </div>
+
 
 
 
@@ -94,8 +135,11 @@ function filterProducts(ecat_id) {
     // Show loading message
     container.innerHTML = "<p>Loading products...</p>";
 
+    // Determine the correct API endpoint or parameter for 'all'
+    const url = ecat_id === 'all' ? 'fetch-products.php' : `fetch-products.php?ecat_id=${ecat_id}`;
+
     const xhr = new XMLHttpRequest();
-    xhr.open('GET', 'fetch-products.php?ecat_id=' + ecat_id, true);
+    xhr.open('GET', url, true);
     xhr.onload = function() {
         if (xhr.status === 200) {
             container.innerHTML = xhr.responseText;
