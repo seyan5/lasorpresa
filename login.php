@@ -1,7 +1,10 @@
 <?php
 ob_start();
 session_start();
-include("admin/inc/config.php"); // Include your database connection
+include("admin/inc/config.php");
+include("admin/inc/functions.php");
+include("admin/inc/CSRF_Protect.php");
+
 
 if (isset($_POST['login'])) {
     $cust_email = $_POST['cust_email'];
