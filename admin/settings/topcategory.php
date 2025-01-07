@@ -144,6 +144,7 @@
 </section>
 
 
+
 <div class="modal fade" id="confirm-delete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -152,14 +153,16 @@
                 <h4 class="modal-title" id="myModalLabel">Delete Confirmation</h4>
             </div>
             <div class="modal-body">
-                <p>Are you sure you want to delete this item?</p>
-                <p style="color:red;">Be careful! All related data will be deleted.</p>
+                <p>Are you sure want to delete this item?</p>
+                <p style="color:red;">Be careful! This product will be deleted from the order table, payment table, size table, color table and rating table also.</p>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                <a href="#" class="btn btn-danger btn-confirm-delete">Delete</a>
+                <a class="btn btn-danger btn-ok">Delete</a>
             </div>
         </div>
     </div>
 </div>
+
+
 
