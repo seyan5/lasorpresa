@@ -205,7 +205,7 @@ require 'header.php';
                     <output for="slider-${flowerId}" class="quantity-output">1</output>
                 </div>
                 <div class="total-price-container">
-                    <span class="flower-price">Price: $<span class="price">0</span></span>
+                    <span class="flower-price">Price: $<span class="price">${flowerPrice}</span></span>
                 </div>
             `;
 
