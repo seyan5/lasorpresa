@@ -7,7 +7,7 @@ include("admin/inc/CSRF_Protect.php");
 
 // Include PHPMailer
 require 'mail/PHPMailer/src/Exception.php';
-require 'mailPHPMailer/src/PHPMailer.php';
+require 'mail/PHPMailer/src/PHPMailer.php';
 require 'mail/PHPMailer/src/SMTP.php';
 
 use PHPMailer\PHPMailer\PHPMailer;
