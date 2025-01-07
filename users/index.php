@@ -1,4 +1,10 @@
-<?php require_once('header.php'); ?>
+<?php // Check if user is logged in and is an admin
+// Check if the user is logged in or not
+if(!isset($_SESSION['user'])) {
+	header('location: ../login.php');
+	exit;
+}
+?>
 
 
 <!DOCTYPE html>
