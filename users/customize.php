@@ -154,7 +154,7 @@ $(document).ready(function() {
             var flowerPrice = selectedFlower.data('price'); // Get the price from the data-price attribute
 
             // Create the HTML for the quantity slider
-           // Create the HTML for the quantity slider
+            // Create the HTML for the quantity slider
 var quantitySliderHTML = `
     <div class="form-group flower-quantity">
         <label for="quantity">Quantity</label>
@@ -166,25 +166,25 @@ var quantitySliderHTML = `
     </div>
 `;
 
-// Append this HTML to the container
-flowerContainer.find('.flower-quantity-container').append(quantitySliderHTML);
+            // Append the slider and price display to the quantity container
+            flowerContainer.find('.flower-quantity-container').append(quantitySliderHTML);
+        });
 
-// Update the slider value display and price when the user interacts with the slider
-$(document).on('input', `.quantity-slider#slider-${flowerId}`, function() {
+        // Update the slider value display and price when the user interacts with the slider
+        $(document).on('input', '.quantity-slider', function() {
     var quantity = $(this).val(); // Get the quantity from the slider
-    var price = $(this).data('price'); // Get the price from the data-price attribute
+    var price = $(this).data('price'); // Get the price from the data attribute
     var totalPrice = quantity * price; // Calculate the total price for this flower
 
     // Update the quantity display
     $(this).next('.quantity-output').text(quantity);
 
     // Update the price display in the flower-price span
-    $(this).closest('.flower-quantity').find('.price').text(totalPrice.toFixed(2)); // Change the price dynamically
+    $(this).closest('.flower-quantity').find('.price').text(totalPrice.toFixed(2));
 
-    // Recalculate the total price on input (you can call your function here)
+    // Recalculate the total price on input
     calculateTotalPrice();
 });
-
     });
 
     // Function to calculate the total price for all flowers
