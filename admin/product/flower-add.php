@@ -28,7 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 
 
-<form action="flower-add.php.php" method="POST" enctype="multipart/form-data">
+<form action="flower-add.php" method="POST" enctype="multipart/form-data">
     <label for="name">Flower Name:</label>
     <input type="text" name="name" id="name" required>
 
