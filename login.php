@@ -9,39 +9,78 @@ $_SESSION["date"] = $date;
 $error = ''; // Initialize error variable
 $success = ''; // Initialize success variable
 
-if(isset($_POST['form1'])) {
-        
-    if(empty($_POST['cust_email']) || empty($_POST['cust_password'])) {
-        $error_message = LANG_VALUE_132.'<br>';
-    } else {
-        
-        $cust_email = strip_tags($_POST['cust_email']);
-        $cust_password = strip_tags($_POST['cust_password']);
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    if (isset($_POST['login'])) {
+        // Login functionality
+        $usernameoremail = $_POST['usernameoremail'];
+        $password = $_POST['password'];
 
-        $statement = $pdo->prepare("SELECT * FROM tbl_customer WHERE cust_email=?");
-        $statement->execute(array($cust_email));
-        $total = $statement->rowCount();
-        $result = $statement->fetchAll(PDO::FETCH_ASSOC);
-        foreach($result as $row) {
-            $cust_status = $row['cust_status'];
-            $row_password = $row['cust_password'];
-        }
+        $stmt = $conn->prepare("SELECT * FROM users WHERE email = ? OR username = ?");
+        $stmt->bind_param("ss", $usernameoremail, $usernameoremail);
+        $stmt->execute();
+        $result = $stmt->get_result();
 
-        if($total==0) {
-            $error_message .= LANG_VALUE_133.'<br>';
-        } else {
-            //using MD5 form
-            if( $row_password != md5($cust_password) ) {
-                $error_message .= LANG_VALUE_139.'<br>';
-            } else {
-                if($cust_status == 0) {
-                    $error_message .= LANG_VALUE_148.'<br>';
+        if ($result && $result->num_rows > 0) {
+            $user = $result->fetch_assoc();
+            if (password_verify($password, $user['password'])) {
+                $_SESSION['user_id'] = $user['id'];
+                $_SESSION['user'] = $user['username'];
+                $_SESSION['user_type'] = $user['user_type'];
+
+                if ($user['user_type'] == 'admin') {
+                    header('Location: admin/dashboard.php');
                 } else {
-                    $_SESSION['customer'] = $row;
-                    header("location: ".BASE_URL."dashboard.php");
+                    header('Location: users/index.php');
+                }
+                exit();
+            } else {
+                $error = "Invalid password.";
+            }
+        } else {
+            $error = "No user found with that email or username.";
+        }
+    } elseif (isset($_POST['register'])) {
+        // Registration functionality
+        $firstname = $_POST['firstname'];
+        $lastname = $_POST['lastname'];
+        $username = $_POST['username'];
+        $name = $firstname . " " . $lastname;
+        $email = $_POST['email'];
+        $contact = $_POST['contact'];
+        $password = $_POST['password'];
+        $confirmpassword = $_POST['confirmpassword'];
+        $user_type = 'user';
+
+        // Validation and registration logic
+        if ($password !== $confirmpassword) {
+            $error = "Passwords do not match.";
+        } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            $error = "Invalid email format.";
+        } elseif (empty($firstname) || empty($lastname) || empty($username)) {
+            $error = "Please fill in all required fields.";
+        } else {
+            $passwordHash = password_hash($password, PASSWORD_BCRYPT);
+            $stmt = $conn->prepare("SELECT * FROM users WHERE email = ? OR username = ?");
+            $stmt->bind_param("ss", $email, $username);
+            $stmt->execute();
+            $result = $stmt->get_result();
+
+            if ($result && $result->num_rows > 0) {
+                $error = "Username or email already exists.";
+            } else {
+                $stmt = $conn->prepare("INSERT INTO users (name, username, email, contact, password, user_type) VALUES (?, ?, ?, ?, ?, ?)");
+                if ($stmt) {
+                    $stmt->bind_param("ssssss", $name, $username, $email, $contact, $passwordHash, $user_type);
+                    if ($stmt->execute()) {
+                        $success = "Registration successful!";
+                    } else {
+                        $error = "Error in registration: " . $stmt->error;
+                    }
+                    $stmt->close();
+                } else {
+                    $error = "Database error: " . $conn->error;
                 }
             }
-            
         }
     }
 }
