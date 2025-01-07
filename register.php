@@ -134,7 +134,7 @@ $conn->close();
                 <input type="password" name="confirmpassword" class="input-text" placeholder="Confirm Password" required>
             </div>
 
-            <div class="button-group">+
+            <div class="button-group">
                 <input type="reset" value="Reset" class="login-btn btn-primary-soft btn">
                 <input type="submit" value="Next" class="login-btn btn-primary btn">
             </div>
