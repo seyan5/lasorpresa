@@ -5,7 +5,6 @@ include("admin/inc/config.php");
 include("admin/inc/functions.php");
 include("admin/inc/CSRF_Protect.php");
 
-// Include PHPMailer
 require 'mail/PHPMailer/src/Exception.php';
 require 'mail/PHPMailer/src/PHPMailer.php';
 require 'mail/PHPMailer/src/SMTP.php';
@@ -23,11 +22,20 @@ if (isset($_POST['register'])) {
     $cust_zip = $_POST['cust_zip'];
     $cust_status = 'inactive';  // Set the customer status as inactive until verified
 
-    // Generate a unique verification token
-    $token = bin2hex(random_bytes(16));
-
     try {
-        // Insert customer details into database
+        // Check if the email already exists
+        $stmt_check = $pdo->prepare("SELECT COUNT(*) FROM customer WHERE cust_email = :cust_email");
+        $stmt_check->execute([':cust_email' => $cust_email]);
+        $email_exists = $stmt_check->fetchColumn();
+
+        if ($email_exists > 0) {
+            throw new Exception("Email address already registered. Please use a different email.");
+        }
+
+        // Generate a unique verification token
+        $token = bin2hex(random_bytes(16));
+
+        // Insert customer details into the database
         $stmt = $pdo->prepare("INSERT INTO customer (cust_name, cust_email, cust_phone, cust_password, cust_address, cust_city, cust_zip, cust_status, cust_datetime) 
                                VALUES (:cust_name, :cust_email, :cust_phone, :cust_password, :cust_address, :cust_city, :cust_zip, :cust_status, NOW())");
 
@@ -45,7 +53,7 @@ if (isset($_POST['register'])) {
         // Get the customer ID
         $cust_id = $pdo->lastInsertId();
 
-        // Insert token into email_verifications table
+        // Insert token into the email_verifications table
         $stmt_token = $pdo->prepare("INSERT INTO email_verifications (cust_id, token, created_at) VALUES (:cust_id, :token, NOW())");
         $stmt_token->execute([
             ':cust_id' => $cust_id,
@@ -76,3 +84,6 @@ if (isset($_POST['register'])) {
     }
 }
 ?>
+
+
+
