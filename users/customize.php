@@ -30,6 +30,7 @@ require 'header.php';
         <form method="POST" action="custom-process.php" id="customization-form">
             <!-- Flower Types Section -->
             <div id="flower-types-container">
+            <button type="button" class="btn btn-success add-flower-btn">Add Flower</button>
                 <div class="form-group flower-type">
                     <label for="type" class="col-sm-3 control-label">Select Flower Type</label>
                     <div class="col-sm-4">
