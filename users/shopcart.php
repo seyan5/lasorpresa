@@ -101,20 +101,16 @@ require 'header.php';
   </script>
 
 <script>
- // JavaScript function to confirm deletion
-function confirmDelete(itemIndex) {
+  // JavaScript function to confirm deletion
+  function confirmDelete(itemIndex) {
     // Ask the user for confirmation
     const confirmation = confirm("Are you sure you want to remove this item from your cart?");
     
     if (confirmation) {
-        // If confirmed, submit the corresponding form
-        document.getElementById('delete-form-' + itemIndex).submit();
-        
-        // Reload the page after deletion
-        location.reload(); // This will reload the current page
+      // If confirmed, submit the corresponding form
+      document.getElementById('delete-form-' + itemIndex).submit();
     }
-}
-
+  }
 </script>
 </body>
 </html>
