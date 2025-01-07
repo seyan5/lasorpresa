@@ -35,7 +35,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         echo json_encode([
             'success' => true,
-            'message' => 'Product added to cart!',
+            'message' => 'Product added to cart successfully!',
             'cart' => $_SESSION['cart']
         ]);
     } else {
@@ -50,3 +50,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'message' => 'Invalid request method!'
     ]);
 }
+
+// Return response in JSON format
+header('Content-Type: application/json');
+echo json_encode($response);
+exit;
