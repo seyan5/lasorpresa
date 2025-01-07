@@ -5,6 +5,10 @@ include("admin/inc/config.php");
 include("admin/inc/functions.php");
 include("admin/inc/CSRF_Protect.php");
 
+require 'PHPMailer/src/Exception.php';
+require 'PHPMailer/src/PHPMailer.php';
+require 'PHPMailer/src/SMTP.php';
+
 if (isset($_POST['register'])) {
     $cust_name = $_POST['cust_name'];
     $cust_email = $_POST['cust_email'];
@@ -44,14 +48,32 @@ if (isset($_POST['register'])) {
         // Send verification email
         $verification_link = "http://yourdomain.com/verify-email.php?token=$token";
 
-        $subject = "Please verify your email address";
-        $message = "Hi $cust_name,\n\nPlease click the link below to verify your email address:\n\n$verification_link\n\nThank you!";
-        $headers = "From: no-reply@yourdomain.com";
+        $mail = new PHPMailer\PHPMailer\PHPMailer();
+        try {
+            // Server settings
+            $mail->isSMTP();
+            $mail->Host       = 'smtp.gmail.com';  // Set the SMTP server
+            $mail->SMTPAuth   = true;
+            $mail->Username   = 'lasorpresa76@gmail.com';  // Your email address
+            $mail->Password   = 'lasorpresa123!';  // Your email password or app password
+            $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+            $mail->Port       = 587;
 
-        if (mail($cust_email, $subject, $message, $headers)) {
+            // Recipients
+            $mail->setFrom('Lasorpresa@gmail.com', 'Lasorpresa');
+            $mail->addAddress($cust_email, $cust_name);
+
+            // Content
+            $mail->isHTML(true);
+            $mail->Subject = 'Email Verification';
+            $mail->Body    = "Hi $cust_name,<br><br>Please click the link below to verify your email address:<br><br>
+                              <a href='$verification_link'>$verification_link</a><br><br>Thank you!";
+            $mail->AltBody = "Hi $cust_name,\n\nPlease click the link below to verify your email address:\n\n$verification_link\n\nThank you!";
+
+            $mail->send();
             echo "Registration successful! Please check your email to verify your account.";
-        } else {
-            echo "Error sending verification email. Please try again.";
+        } catch (Exception $e) {
+            echo "Error sending verification email: {$mail->ErrorInfo}";
         }
     } else {
         echo "Error registering customer. Please try again.";
