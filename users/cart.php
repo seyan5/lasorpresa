@@ -27,7 +27,14 @@ require 'header.php';
                 <tbody>
                     <?php foreach ($_SESSION['cart'] as $id => $item): ?>
                         <tr>
-                            <td><img src="../admin/uploads/<?php echo htmlspecialchars($item['featured_photo']); ?>" alt="<?php echo htmlspecialchars($item['name']); ?>" width="50"></td>
+                            <!-- Check if image is available and use a placeholder if not -->
+                            <td>
+                                <?php if (isset($item['image']) && $item['image']): ?>
+                                    <img src="../admin/uploads/<?php echo htmlspecialchars($item['image']); ?>" alt="<?php echo htmlspecialchars($item['name']); ?>" width="50">
+                                <?php else: ?>
+                                    <img src="path/to/default-image.jpg" alt="No image available" width="50">
+                                <?php endif; ?>
+                            </td>
                             <td><?php echo htmlspecialchars($item['name']); ?></td>
                             <td>$<?php echo number_format($item['price'], 2); ?></td>
                             <td><?php echo $item['quantity']; ?></td>
