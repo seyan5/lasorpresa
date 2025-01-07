@@ -107,70 +107,74 @@ require 'header.php';
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <script>
-    $(document).ready(function() {
-        // Initialize the select2 plugin
-        $('.select2').select2();
+   $(document).ready(function() {
+    // Initialize the select2 plugin
+    $('.select2').select2();
 
-        // Add new flower type dropdown dynamically
-        $(document).on('click', '.add-flower-btn', function() {
-            var flowerTypeHTML = `
-                <div class="form-group flower-type">
-                    <label for="type" class="col-sm-3 control-label">Select Flower Type</label>
-                    <div class="col-sm-4">
-                        <select name="type[]" class="form-control select2 flower-type-select" multiple="multiple">
-                            <?php
-                            $statement = $pdo->prepare("SELECT * FROM flowers ORDER BY id ASC");
-                            $statement->execute();
-                            $types = $statement->fetchAll(PDO::FETCH_ASSOC);
-                            foreach ($types as $row) {
-                                echo "<option value='{$row['id']}' data-quantity='{$row['quantity']}'>{$row['name']}</option>";
-                            }
-                            ?>
-                        </select>
-                    </div>
-                    <div class="col-sm-4">
-                        <button type="button" class="btn btn-success add-flower-btn">Add Flower</button>
-                        <button type="button" class="btn btn-danger remove-flower-btn">Remove Flower</button>
-                    </div>
+    // Add new flower type dropdown dynamically
+    $(document).on('click', '.add-flower-btn', function() {
+        var flowerTypeHTML = `
+            <div class="form-group flower-type">
+                <label for="type" class="col-sm-3 control-label">Select Flower Type</label>
+                <div class="col-sm-4">
+                    <select name="type[]" class="form-control select2 flower-type-select" multiple="multiple">
+                        <?php
+                        $statement = $pdo->prepare("SELECT * FROM flowers ORDER BY id ASC");
+                        $statement->execute();
+                        $types = $statement->fetchAll(PDO::FETCH_ASSOC);
+                        foreach ($types as $row) {
+                            echo "<option value='{$row['id']}' data-quantity='{$row['quantity']}'>{$row['name']}</option>";
+                        }
+                        ?>
+                    </select>
+                </div>
+                <div class="col-sm-4">
+                    <button type="button" class="btn btn-success add-flower-btn">Add Flower</button>
+                    <button type="button" class="btn btn-danger remove-flower-btn">Remove Flower</button>
+                </div>
+            </div>
+            <div class="flower-quantity-container"></div> <!-- Container for quantity slider -->
+        `;
+        $('#flower-types-container').append(flowerTypeHTML);
+        $('.select2').select2(); // Reinitialize select2 for newly added elements
+    });
+
+    // Remove flower type section
+    $(document).on('click', '.remove-flower-btn', function() {
+        $(this).closest('.flower-type').remove();
+    });
+
+    // Display quantity slider input field based on selected flower
+    $(document).on('change', '.flower-type-select', function() {
+        var selectedFlowerIds = $(this).val();
+        var flowerContainer = $(this).closest('.flower-type'); // Get the specific flower type container
+
+        // Clear any existing quantity sliders when flower type changes
+        flowerContainer.find('.flower-quantity-container').empty();
+
+        // Create a quantity slider for each selected flower
+        selectedFlowerIds.forEach(function(flowerId) {
+            var selectedFlower = $("option[value='" + flowerId + "']");
+            var flowerName = selectedFlower.text();
+            var maxQuantity = selectedFlower.data('quantity'); // Maximum available quantity
+
+            // Append the quantity slider input field for the selected flower
+            var quantitySliderHTML = `
+                <div class="form-group flower-quantity">
+                    <label for="quantity">Quantity for ${flowerName}</label>
+                    <input type="range" name="quantity[]" class="form-control quantity-slider" min="1" max="${maxQuantity}" value="1" id="slider-${flowerId}">
+                    <output for="slider-${flowerId}" class="quantity-output">1</output>
                 </div>
             `;
-            $('#flower-types-container').append(flowerTypeHTML);
-            $('.select2').select2(); // Reinitialize select2 for newly added elements
+            flowerContainer.find('.flower-quantity-container').append(quantitySliderHTML);
         });
 
-        // Remove flower type section
-        $(document).on('click', '.remove-flower-btn', function() {
-            $(this).closest('.flower-type').remove();
-        });
-
-        // Display quantity slider input field based on selected flower
-        $(document).on('change', '.flower-type-select', function() {
-            var selectedFlowerIds = $(this).val();
-            var quantityFields = '';
-
-            // Create a quantity slider for each selected flower
-            selectedFlowerIds.forEach(function(flowerId) {
-                var selectedFlower = $("option[value='" + flowerId + "']");
-                var flowerName = selectedFlower.text();
-                var maxQuantity = selectedFlower.data('quantity'); // Maximum available quantity
-
-                quantityFields += `
-                    <div class="form-group flower-quantity">
-                        <label for="quantity">Quantity for ${flowerName}</label>
-                        <input type="range" name="quantity[]" class="form-control quantity-slider" min="1" max="${maxQuantity}" value="1" id="slider-${flowerId}">
-                        <output for="slider-${flowerId}" class="quantity-output">1</output>
-                    </div>
-                `;
-            });
-
-            // Append the quantity slider inputs to the container
-            $('#quantity-section-container').html(quantityFields);
-
-            // Update the slider value display
-            $(document).on('input', '.quantity-slider', function() {
-                var sliderValue = $(this).val();
-                $(this).next('.quantity-output').text(sliderValue);
-            });
+        // Update the slider value display
+        $(document).on('input', '.quantity-slider', function() {
+            var sliderValue = $(this).val();
+            $(this).next('.quantity-output').text(sliderValue);
         });
     });
+});
+
 </script>
