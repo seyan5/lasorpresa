@@ -109,7 +109,6 @@ if ($p_id) {
         document.getElementById('addToCartButton').addEventListener('click', function () {
             const productId = this.getAttribute('data-id');
             const productName = this.getAttribute('data-name');
-            const addon = document.getElementById('addons').value;
             const productPrice = this.getAttribute('data-price');
 
             // Send AJAX request to add product to cart
