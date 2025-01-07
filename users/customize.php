@@ -128,7 +128,7 @@ require 'header.php';
                     </select>
                 </div>
                 <div class="col-sm-4">
-                    <button type="button" class="btn btn-danger remove-flower-btn">Remove Flower</button>
+                    <button type="button" class="btn btn-danger remove-flower-btn">x</button>
                 </div>
             </div>
             <div class="flower-quantity-container"></div> <!-- Container for quantity slider -->
