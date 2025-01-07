@@ -161,13 +161,7 @@ require 'header.php';
             $('.select2').select2();
         });
 
-        // Handle the add flower button for each flower section
-        $(document).on('click', '.add-flower-btn', function() {
-            var flowerTypeSelect = $(this).closest('.flower-type').find('select');
-            var selectedFlower = flowerTypeSelect.val();
-            // Add the selected flower type to an array or perform other actions
-            console.log('Flower Added:', selectedFlower);
-        });
+
 
         // Handle the remove flower button for each flower section
         $(document).on('click', '.remove-flower-btn', function() {
