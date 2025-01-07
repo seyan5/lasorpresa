@@ -141,35 +141,23 @@ require 'header.php';
             $(this).closest('.flower-type').remove();
         });
 
-        // Display quantity dropdown based on selected flower
+        // Display quantity input field based on selected flower
         $(document).on('change', '.select2', function() {
             var flowerId = $(this).val();
-            var quantityOptions = '';
+            var quantityFields = '';
 
-            // Loop through each selected flower to create a quantity dropdown
+            // Loop through each selected flower to create a quantity input field
             flowerId.forEach(function(flowerId) {
                 var selectedFlower = $("option[value='" + flowerId + "']");
                 var quantity = selectedFlower.data('quantity');
-                quantityOptions += `<div class="form-group">
+                quantityFields += `<div class="form-group">
                     <label for="quantity">Quantity for ${selectedFlower.text()}</label>
-                    <select name="quantity[]" class="form-control select2" id="flower-quantity">
-                        ${generateQuantityOptions(quantity)}
-                    </select>
+                    <input type="number" name="quantity[]" class="form-control" id="flower-quantity" min="1" max="${quantity}" value="1">
                 </div>`;
             });
 
-            // Append the quantity options below the flower section
-            $('#quantity-section-container').html(quantityOptions);
-            $('.select2').select2(); // Reinitialize select2 for newly added elements
+            // Append the quantity input fields below the flower section
+            $('#quantity-section-container').html(quantityFields);
         });
-
-        // Function to generate quantity options based on the max available quantity
-        function generateQuantityOptions(maxQuantity) {
-            var options = '';
-            for (var i = 1; i <= maxQuantity; i++) {
-                options += `<option value="${i}">${i}</option>`;
-            }
-            return options;
-        }
     });
 </script>
