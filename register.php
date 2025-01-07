@@ -1,151 +1,96 @@
 <?php
-session_start();
-include 'config.php'; // Include your database connection file
+require 'users/header.php'; // Include your database connection here
 
-date_default_timezone_set('Asia/Kolkata');
-$date = date('Y-m-d');
-$_SESSION["date"] = $date;
+if (isset($_POST['register'])) {
+    $cust_name = $_POST['cust_name'];
+    $cust_email = $_POST['cust_email'];
+    $cust_phone = $_POST['cust_phone'];
+    $cust_password = password_hash($_POST['cust_password'], PASSWORD_BCRYPT);  // Hash password
+    $cust_address = $_POST['cust_address'];
+    $cust_city = $_POST['cust_city'];
+    $cust_zip = $_POST['cust_zip'];
+    $cust_status = 'inactive';  // Set the customer status as inactive until verified
 
-$error = ''; // Initialize error variable
-$success = ''; // Initialize success variable
+    // Generate a unique verification token
+    $token = bin2hex(random_bytes(16));
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    // Check if the form is for login or registration
-    if (isset($_POST['login'])) {
-        // Login functionality
-        $usernameoremail = $_POST['usernameoremail'];
-        $password = $_POST['password'];
+    // Prepare the query to insert the customer into the database
+    $stmt = $pdo->prepare("INSERT INTO customer (cust_name, cust_email, cust_phone, cust_password, cust_address, cust_city, cust_zip, cust_status, cust_datetime) 
+                           VALUES (:cust_name, :cust_email, :cust_phone, :cust_password, :cust_address, :cust_city, :cust_zip, :cust_status, NOW())");
 
-        // Fetch user from the database
-        $sql = "SELECT * FROM users WHERE email = '$usernameoremail' OR username = '$usernameoremail'";
-        $result = mysqli_query($conn, $sql);
+    $stmt->bindParam(':cust_name', $cust_name);
+    $stmt->bindParam(':cust_email', $cust_email);
+    $stmt->bindParam(':cust_phone', $cust_phone);
+    $stmt->bindParam(':cust_password', $cust_password);
+    $stmt->bindParam(':cust_address', $cust_address);
+    $stmt->bindParam(':cust_city', $cust_city);
+    $stmt->bindParam(':cust_zip', $cust_zip);
+    $stmt->bindParam(':cust_status', $cust_status);
 
-        if ($result && mysqli_num_rows($result) > 0) {
-            $user = mysqli_fetch_assoc($result);
+    if ($stmt->execute()) {
+        // Get the customer ID of the newly created customer
+        $cust_id = $pdo->lastInsertId();
 
-            // Verify the password
-            if (password_verify($password, $user['password'])) {
-                $_SESSION['user_id'] = $user['id'];
-                $_SESSION['user_type'] = $user['user_type'];
-                $_SESSION['firstname'] = $user['firstname'];
-                $_SESSION['lastname'] = $user['lastname'];
+        // Insert the token into a verification table
+        $stmt_token = $pdo->prepare("INSERT INTO email_verifications (cust_id, token, created_at) VALUES (:cust_id, :token, NOW())");
+        $stmt_token->bindParam(':cust_id', $cust_id);
+        $stmt_token->bindParam(':token', $token);
+        $stmt_token->execute();
 
-                if ($user['user_type'] == 'admin') {
-                    header('Location: admin/dashboard.php');
-                } else {
-                    header('Location: users/index.php');
-                }
-                exit();
-            } else {
-                $error = "Invalid password.";
-            }
+        // Send verification email
+        $verification_link = "http://yourdomain.com/verify-email.php?token=$token";
+
+        $subject = "Please verify your email address";
+        $message = "Hi $cust_name,\n\nPlease click the link below to verify your email address:\n\n$verification_link\n\nThank you!";
+        $headers = "From: no-reply@yourdomain.com";
+
+        if (mail($cust_email, $subject, $message, $headers)) {
+            echo "Registration successful! Please check your email to verify your account.";
         } else {
-            $error = "No user found with that email or username.";
+            echo "Error sending verification email. Please try again.";
         }
-    } elseif (isset($_POST['register'])) {
-        // Registration functionality
-        $firstname = $_POST['firstname'];
-        $lastname = $_POST['lastname'];
-        $username = $_POST['username'];
-        $name = $firstname . " " . $lastname;
-        $email = $_POST['email'];
-        $contact = $_POST['contact'];
-        $password = $_POST['password'];
-        $confirmpassword = $_POST['confirmpassword'];
-        $user_type = 'user';
-
-        // Basic validation
-        if ($password !== $confirmpassword) {
-            $error = "Passwords do not match.";
-        } else {
-            // Hash the password
-            $passwordHash = password_hash($password, PASSWORD_BCRYPT);
-
-            // Prepare SQL statement
-            $stmt = $conn->prepare("INSERT INTO users (name, username, email, contact, password, user_type) VALUES (?, ?, ?, ?, ?, ?)");
-            if ($stmt === false) {
-                die('prepare() failed: ' . htmlspecialchars($conn->error));
-            }
-
-            // Bind parameters
-            $stmt->bind_param("ssssss", $name, $username, $email, $contact, $passwordHash, $user_type);
-
-            // Execute statement
-            if ($stmt->execute()) {
-                $success = "Registration successful!";
-            } else {
-                $error = "Error: " . htmlspecialchars($stmt->error);
-            }
-
-            // Close statement
-            $stmt->close();
-        }
+    } else {
+        echo "Error registering customer. Please try again.";
     }
 }
-
-// Close connection
-$conn->close();
 ?>
+
 
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="css/animations.css">  
-    <link rel="stylesheet" href="css/main.css">  
-    <link rel="stylesheet" href="css/signup.css">
-        
-    <title>Sign Up</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Customer Registration</title>
 </head>
 <body>
-    <div class="container">
-        <form action="" method="POST">
-            <div class="header">
-                <p class="header-text">Let's Get Started</p>
-                <p class="sub-text">Add Your Personal Details to Continue</p>
-            </div>
 
-            <div class="input-group">
-                <label for="name" class="form-label">Name:</label>
-                <input type="text" name="firstname" class="input-text" placeholder="First Name" required>
-                <input type="text" name="lastname" class="input-text" placeholder="Last Name" required>
-            </div>
+<h2>Create Your Account</h2>
+<form action="register.php" method="POST">
+  <label for="cust_name">Full Name:</label>
+  <input type="text" id="cust_name" name="cust_name" required><br>
 
-            <div class="input-group">
-                <label for="email" class="form-label">Email:</label>
-                <input type="email" name="email" class="input-text" placeholder="Email" required>
-            </div>
+  <label for="cust_email">Email:</label>
+  <input type="email" id="cust_email" name="cust_email" required><br>
 
-            <div class="input-group">
-                <label for="username" class="form-label">Username:</label>
-                <input type="text" name="username" class="input-text" placeholder="Username" required>
-            </div>
+  <label for="cust_phone">Phone Number:</label>
+  <input type="tel" id="cust_phone" name="cust_phone" required><br>
 
-            <div class="input-group">
-                <label for="contact" class="form-label">Contact:</label>
-                <input type="text" name="contact" class="input-text" placeholder="Contact Number" required>
-            </div>
-            <div class="input-group">
-                <label for="password" class="form-label">Password:</label>
-                <input type="password" name="password" class="input-text" placeholder="Password" required>
-                <input type="password" name="confirmpassword" class="input-text" placeholder="Confirm Password" required>
-            </div>
+  <label for="cust_password">Password:</label>
+  <input type="password" id="cust_password" name="cust_password" required><br>
 
-            <div class="button-group">
-                <input type="reset" value="Reset" class="login-btn btn-primary-soft btn">
-                <input type="submit" value="Next" class="login-btn btn-primary btn">
-            </div>
+  <label for="cust_address">Address:</label>
+  <input type="text" id="cust_address" name="cust_address" required><br>
 
-            <div class="footer">
-                <p class="sub-text" style="font-weight: 280;">Already have an account? 
-                    <a href="login.php" class="hover-link1 non-style-link">Login</a>
-                </p>
-            </div>
-        </form>
-    </div>
+  <label for="cust_city">City:</label>
+  <input type="text" id="cust_city" name="cust_city" required><br>
+
+  <label for="cust_zip">Zip Code:</label>
+  <input type="text" id="cust_zip" name="cust_zip" required><br>
+
+  <button type="submit" name="register">Register</button>
+</form>
 
 </body>
 </html>
