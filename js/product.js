@@ -168,3 +168,18 @@ previewBox.forEach(close => {
     new SortProduct().run();
 
 })();
+
+$(document).ready(function () {
+    $('.indicator li').click(function () {
+        var filter = $(this).attr('data-filter');
+        $('.indicator li').removeClass('active');
+        $(this).addClass('active');
+
+        if (filter === 'all') {
+            $('.item').show(); // Show all items
+        } else {
+            $('.item').hide(); // Hide all items
+            $('.item[data-category="' + filter + '"]').show(); // Show filtered items
+        }
+    });
+});

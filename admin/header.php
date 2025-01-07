@@ -12,12 +12,9 @@ $success_message1 = '';
 
 // Check if the user is logged in or not
 if(!isset($_SESSION['user'])) {
-	header('location: ../login.php');
-	exit;
+    header('location: ../login.php');
+    exit;
 }
-
-
-
 ?>
 
 <!DOCTYPE html>
@@ -29,38 +26,35 @@ if(!isset($_SESSION['user'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>La Sorpresa Admin</title>
     <link rel="stylesheet" href="../css/style.css">
-	<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
+    <!-- Include Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Include Select2 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" rel="stylesheet" />
+
+    <!-- Include jQuery (Ensure jQuery is loaded before Bootstrap JS) -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- Include Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <!-- Include Select2 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js"></script>
 
 </head>
 
 <script>
     $(document).ready(function () {
         // Trigger when the modal is about to be shown
-        $('#confirm-delete').on('show.bs.modal', function(e) {
-	      $(this).find('.btn-ok').attr('href', $(e.relatedTarget).data('href'));
-	    });
-		
-		$('#confirm-approve').on('show.bs.modal', function(e) {
-	      $(this).find('.btn-ok').attr('href', $(e.relatedTarget).data('href'));
-	    });
+        $('#confirm-delete').on('show.bs.modal', function (e) {
+            // Get the data-href attribute from the clicked link
+            var href = $(e.relatedTarget).data('href');
+            // Update the href attribute of the confirmation button
+            $(this).find('.btn-confirm-delete').attr('href', href);
+        });
     });
-
-    function confirmDelete()
-	    {
-	        return confirm("Are you sure want to delete this data?");
-	    }
-	    function confirmActive()
-	    {
-	        return confirm("Are you sure want to Active?");
-	    }
-	    function confirmInactive()
-	    {
-	        return confirm("Are you sure want to Inactive?");
-	    }
-
 </script>
 
 
@@ -116,37 +110,4 @@ $(document).ready(function() {
         }
     });
 });
-</script>
-
-<script type="text/javascript">
-
-        $(document).ready(function () {
-
-            $("#btnAddNew").click(function () {
-
-		        var rowNumber = $("#ProductTable tbody tr").length;
-
-		        var trNew = "";              
-
-		        var addLink = "<div class=\"upload-btn" + rowNumber + "\"><input type=\"file\" name=\"photo[]\"  style=\"margin-bottom:5px;\"></div>";
-		           
-		        var deleteRow = "<a href=\"javascript:void()\" class=\"Delete btn btn-danger btn-xs\">X</a>";
-
-		        trNew = trNew + "<tr> ";
-
-		        trNew += "<td>" + addLink + "</td>";
-		        trNew += "<td style=\"width:28px;\">" + deleteRow + "</td>";
-
-		        trNew = trNew + " </tr>";
-
-		        $("#ProductTable tbody").append(trNew);
-
-		    });
-
-		    $('#ProductTable').delegate('a.Delete', 'click', function () {
-		        $(this).parent().parent().fadeOut('slow').remove();
-		        return false;
-		    });
-
-        });
 </script>

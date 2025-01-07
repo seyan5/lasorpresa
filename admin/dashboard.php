@@ -73,7 +73,7 @@ if ($result->num_rows > 0) {
                     </a>
                 </li>
                 <li>
-                    <a href="product/product.php">
+                    <a href="product/product-add.php">
                         <span class="icon">
                             <ion-icon name="cube-outline"></ion-icon>
                         </span>

@@ -1,105 +1,56 @@
-<?php require_once('header.php'); ?>
-<link rel="stylesheet" href="../css/cart.css">
+<?php
+require 'header.php';
+?>
 
-  <div class="containers">
-    <div class="product-container">
-        <div class="product-title">Classic Three<br/>Rose Bouquet</div>
-        <div class="product-image-container">
-            <img class="product-image" src="../ivd/flower.png" alt="Classic Three Rose Bouquet">
-        </div>
-        <div class="order-summary">
-          <div class="addons">
-            <div class="addons-title">Addons:</div>
-            <div class="addons-item">
-                <div class="addons-label">Chocolate</div>
-                <div class="addons-value">₱500.00</div>
-          </div>
-        </div>
-      </div>
-        <div class="order-summary">
-            <div class="order-summary-title">Order Summary</div>
-            <div class="order-summary-item">
-                <div class="order-summary-label">No. of Items</div>
-                <div class="order-summary-value">4</div>
-            </div>
-            <div class="order-summary-item">
-                <div class="order-summary-label">Cart Total</div>
-                <div class="order-summary-value">₱2500.00</div>
-            </div>
-            <div class="order-summary-item">
-                <div class="order-summary-label">Details:</div>
-                <div class="order-summary-value">₱500.00</div>
-            </div>
-        </div>
-  
-        <button class="proceed-button">Checkout</button>
-    </div>
-
-    <div class="product-container">
-      <div class="product-title">Classic Three<br/>Rose Bouquet</div>
-      <div class="product-image-container">
-          <img class="product-image" src="../ivd/flower.png" alt="Classic Three Rose Bouquet">
-      </div>
-      <div class="order-summary">
-        <div class="addons">
-          <div class="addons-title">Addons:</div>
-          <div class="addons-item">
-              <div class="addons-label">Chocolate</div>
-              <div class="addons-value">₱500.00</div>
-        </div>
-      </div>
-    </div>
-      <div class="order-summary">
-          <div class="order-summary-title">Order Summary</div>
-          <div class="order-summary-item">
-              <div class="order-summary-label">No. of Items</div>
-              <div class="order-summary-value">4</div>
-          </div>
-          <div class="order-summary-item">
-              <div class="order-summary-label">Cart Total</div>
-              <div class="order-summary-value">₱2500.00</div>
-          </div>
-          <div class="order-summary-item">
-              <div class="order-summary-label">Details:</div>
-              <div class="order-summary-value">₱500.00</div>
-          </div>
-      </div>
-
-      <button class="proceed-button">Checkout</button>
-  </div>
-
-  <div class="product-container">
-    <div class="product-title">Classic Three<br/>Rose Bouquet</div>
-    <div class="product-image-container">
-        <img class="product-image" src="../ivd/flower.png" alt="Classic Three Rose Bouquet">
-    </div>
-    <div class="order-summary">
-      <div class="addons">
-        <div class="addons-title">Addons:</div>
-        <div class="addons-item">
-            <div class="addons-label">Chocolate</div>
-            <div class="addons-value">₱500.00</div>
-      </div>
-    </div>
-  </div>
-    <div class="order-summary">
-        <div class="order-summary-title">Order Summary</div>
-        <div class="order-summary-item">
-            <div class="order-summary-label">No. of Items</div>
-            <div class="order-summary-value">4</div>
-        </div>
-        <div class="order-summary-item">
-            <div class="order-summary-label">Cart Total</div>
-            <div class="order-summary-value">₱2500.00</div>
-        </div>
-        <div class="order-summary-item">
-            <div class="order-summary-label">Details:</div>
-            <div class="order-summary-value">₱500.00</div>
-        </div>
-    </div>
-
-    <button class="proceed-button">Checkout</button>
-  </div>
-</div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Cart</title>
+    <link rel="stylesheet" href="../css/cart.css">
+</head>
+<body>
+    <main>
+        <h1>Your Shopping Cart</h1>
+        <?php if (isset($_SESSION['cart']) && count($_SESSION['cart']) > 0): ?>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Product</th>
+                        <th>Price</th>
+                        <th>Quantity</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($_SESSION['cart'] as $id => $item): ?>
+                        <tr>
+                            <td><?php echo htmlspecialchars($item['name']); ?></td>
+                            <td>$<?php echo number_format($item['price'], 2); ?></td>
+                            <td><?php echo $item['quantity']; ?></td>
+                            <td>$<?php echo number_format($item['price'] * $item['quantity'], 2); ?></td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+            <p>
+                <strong>Total:</strong>
+                $<?php 
+                echo number_format(array_sum(array_map(function($item) {
+                    return $item['price'] * $item['quantity'];
+                }, $_SESSION['cart'])), 2); 
+                ?>
+            </p>
+            <button onclick="checkout()">Checkout</button>
+        <?php else: ?>
+            <p>Your cart is empty.</p>
+        <?php endif; ?>
+    </main>
+    <script>
+        function checkout() {
+            alert('Proceeding to checkout...');
+        }
+    </script>
 </body>
 </html>

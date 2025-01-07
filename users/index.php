@@ -1,5 +1,3 @@
-<?php require_once('header.php'); ?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -29,13 +27,14 @@
         <a href="#home">Home</a>
         <a href="#about">About</a>
         <a href="products.php">Product</a>
+        <a href="#occasion">Occasion</a>
         <a href="#review">Review</a>
         <a href="#contacts">Contacts</a>
     </nav>
      
     <div class="icons">
         <a href="#" class="fas fa-heart"></a>
-        <a href="cart.html" class="fas fa-shopping-cart"></a>
+        <a href="cart.php" class="fas fa-shopping-cart"></a>
 
         <a href="#" class="fas fa-user"></a>
     </div>
@@ -115,14 +114,14 @@
     <!-- prod sec -->
 <section class="products" id="products">
 
-    <h1 class="heading">Latest <span>products</span></h1>
+    <h1 class="heading">Latest <span>Flowers</span></h1>
     <div class="box-container">
         <div class="shop">
             <h1>Best Selling</h1>
             <h1>Flowers</h1>
             <h3>Cheap and</h3>
             <h3>Affordable Flowers</h3>
-            <a href="products.html" class="btn">See more -></a>
+            <a href="products.php" class="btn">See more -></a>
         </div>
         <div class="box">
             <span class="discount">-10%</span>

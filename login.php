@@ -203,6 +203,7 @@ $conn->close();
         const container = document.getElementById('container');
         const signInButton = document.getElementById('signIn');
         const signUpButton = document.getElementById('overlayBtn');
+        
         signInButton.addEventListener('click', () => {
             console.log("Sign In button clicked");
             container.classList.remove('right-panel-active');

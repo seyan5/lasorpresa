@@ -68,7 +68,7 @@
                 </li>
 
                 <li>
-                    <a href="../index.php">
+                    <a href="../logout.php">
                         <span class="icon">
                             <ion-icon name="log-out-outline"></ion-icon>
                         </span>
@@ -148,15 +148,16 @@
                 <h4 class="modal-title" id="myModalLabel">Delete Confirmation</h4>
             </div>
             <div class="modal-body">
-                <p>Are you sure want to delete this item?</p>
-                <p style="color:red;">Be careful! All products and end level categories under this mid level category will be deleted from all the tables like order table, payment table, size table, color table, rating table etc.</p>
+                <p>Are you sure you want to delete this item?</p>
+                <p style="color:red;">Be careful! All products and end-level categories under this mid-level category will be deleted from all the tables like order table, payment table, size table, color table, rating table, etc.</p>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                <a class="btn btn-danger btn-ok">Delete</a>
+                <a href="#" class="btn btn-danger btn-confirm-delete">Delete</a>
             </div>
         </div>
     </div>
 </div>
+
 
 

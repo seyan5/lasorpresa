@@ -7,19 +7,36 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>La Sorpresa Admin</title>
-    <link rel="stylesheet" href="../css/style.css">
-    
+    <!-- ======= Styles ====== -->
+    <link rel="stylesheet" href="css/product.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="stylesheet" href="../../css/animations.css">  
+    <link rel="stylesheet" href="../../css/admin1.css">  
+    <link rel="stylesheet" href="../../css/admin2.css">
+    <title>Users</title>
+    <style>
+        .dashbord-tables{
+            animation: transitionIn-Y-over 0.5s;
+        }
+        .filter-container{
+            animation: transitionIn-Y-bottom  0.5s;
+        }
+        .sub-table{
+            animation: transitionIn-Y-bottom 0.5s;
+        }
+    </style>
 </head>
 
 <body>
+    <!-- =============== Navigation ================ -->
     <div class="container">
         <div class="navigation">
             <ul>
                 <li>
                     <a href="#">
                         <div class="logo-container">
-                            <img src="../images/logo.png" alt="Logo" class="logo" />
+                            <img src="../../images/logo.png" alt="Logo" class="logo" />
                         </div>
                         <span class="title"></span>
                     </a>
@@ -53,7 +70,7 @@
                 </li>
 
                 <li>
-                    <a href="product/product.php">
+                    <a href="product.php">
                         <span class="icon">
                             <ion-icon name="cube-outline"></ion-icon>
                         </span>
@@ -99,7 +116,63 @@
 	</div>
 </section>
 
-<section class="content">
+<div class="main">
+            <div class="topbar">
+                <div class="toggle">
+                    <ion-icon name="menu-outline"></ion-icon>
+                </div>
+
+                <div class="search">
+                    <label>
+                        <input type="text" placeholder="Search here">
+                        <ion-icon name="search-outline"></ion-icon>
+                    </label>
+                </div>
+
+                <div class="user">
+                    <img src="assets/imgs/customer01.jpg" alt="">
+                </div>
+            </div>
+
+            <!-- ======================= Cards ================== -->
+            <tr>
+                <td colspan="4">
+                    <div class="abc scroll">
+                        <table width="93%" class="sub-table scrolldown" border="0">
+                            <thead>
+                                <tr>
+                                <th class="table-headin">
+                                        #
+                                    </th>
+                                <th class="table-headin">
+                                        Photo
+                                    </th>
+                                    <th class="table-headin">
+                                        Product Name
+                                    </th>
+
+                                    <th class="table-headin">
+                                        Old Price
+                                    </th>
+                                    <th class="table-headin">
+                                        (C) Price
+                                    </th>
+                                    <th class="table-headin">
+                                        Quantity
+                                    </th>
+                                    <th class="table-headin">
+                                        Featured?
+                                    </th>
+                                    <th class="table-headin">
+                                        Active?
+                                    </th>
+                                    <th class="table-headin">
+                                        Category
+                                    </th>
+
+                            </thead>
+
+<!-- <section class="content">
 	<div class="row">
 		<div class="col-md-12">
 			<div class="box box-info">
@@ -119,7 +192,7 @@
 								<th width="80">Action</th>
 							</tr>
 						</thead>
-						<tbody>
+						<tbody> -->
 							<?php
 							$i=0;
 							$statement = $pdo->prepare("SELECT
