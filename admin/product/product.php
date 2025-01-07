@@ -176,24 +176,7 @@
 							$i=0;
 							$statement = $pdo->prepare("SELECT
 														
-														t1.p_id,
-														t1.name,
-														t1.old_price,
-														t1.current_price,
-														t1.quantity,
-														t1.featured_photo,
-														t1.is_featured,
-														t1.is_active,
-														t1.ecat_id,
-
-														t2.ecat_id,
-														t2.ecat_name,
-
-														t3.mcat_id,
-														t3.mcat_name,
-
-														t4.tcat_id,
-														t4.tcat_name
+														*
 
 							                           	FROM product t1
 							                           	JOIN end_category t2
