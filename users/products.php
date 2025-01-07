@@ -34,15 +34,22 @@
       <h3 class="title"> Flower products </h3>
 
 <!-- Categories List (Categories Filter) -->
+<!-- Categories List (Categories Filter) -->
 <ul class="indicator">
     <li data-filter="all" class="active">
         <a href="#" onclick="filterProducts('all')">All</a>
     </li>
     <?php
-    foreach ($result as $row) {
-        echo '<li data-filter="' . htmlspecialchars($row['ecat_id']) . '">
-                <a href="#" onclick="filterProducts(' . htmlspecialchars($row['ecat_id']) . ')">' . htmlspecialchars($row['ecat_name']) . '</a>
-              </li>';
+    // Ensure $result is defined and not empty
+    if (!empty($result) && is_array($result)) {
+        foreach ($result as $row) {
+            echo '<li data-filter="' . htmlspecialchars($row['ecat_id']) . '">
+                    <a href="#" onclick="filterProducts(' . htmlspecialchars($row['ecat_id']) . ')">' . htmlspecialchars($row['ecat_name']) . '</a>
+                  </li>';
+        }
+    } else {
+        // Fallback message when no categories are found
+        echo '<li>No categories available.</li>';
     }
     ?>
 </ul>
