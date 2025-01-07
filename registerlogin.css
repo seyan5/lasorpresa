@@ -1,0 +1,184 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #e6dcec;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 10px; /* Add padding for smaller screens */
+    padding: 10px; /* Add padding for smaller screens */
+    overflow: hidden;
+}
+
+.logo-container {
+    margin-bottom: 20px;
+    margin-top: -200px;
+}
+
+.logo {
+    width: 150px;
+}
+
+.flower-container {
+    position: absolute;
+    bottom: -50%; /* Adjust to move the flower slightly up */
+    right: -20%; /* Move the flower closer to the center */
+    opacity: 1;
+    transform: translateY(-30%);
+    z-index: -1;
+}
+
+.flower {
+    width: 48rem; /* Adjust the size of the flower */
+    height: auto; /* Maintain aspect ratio */
+    transform: rotate(300deg); /* Rotate the flower */
+}
+
+h2 {
+    margin-bottom: 20px;
+    color: #e18aaa;
+    text-align: center; /* Center align heading */
+}
+
+form {
+    background-color: #ffffff;
+    padding: 20px 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 500px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 15px;
+    row-gap: 15px;
+}
+
+form p {
+    grid-column: span 2;
+    text-align: center;
+    margin-top: 5px; /* Adjust spacing to move closer to Zip Code field */
+    font-size: 15px; /* Slightly smaller font size */
+    color: #555; /* Subtle color for text */
+}
+
+form p a {
+    color: #e18aaa;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+form p a:hover {
+    text-decoration: underline;
+}
+
+
+.full-width {
+    grid-column: span 2;
+}
+
+.infield {
+    display: flex;
+    flex-direction: column;
+}
+
+.infield label {
+    font-size: 15px;
+    font-weight: 500;
+    margin-bottom: 5px;
+    color: #555;
+}
+
+.infield input {
+    padding: 8px 10px;
+    font-size: 12px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background: #f9f9f9;
+}
+
+button {
+    grid-column: span 2;
+    padding: 10px;
+    font-size: 14px;
+    font-weight: bold;
+    color: #fff;
+    background: linear-gradient(to right, #e18aaa, #e4a0b7);
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: background 0.3s;
+}
+
+button:hover {
+    background: #e18aaa;
+}
+
+/* Responsive Design for Tablets and Smaller Devices */
+@media (max-width: 768px) {
+    form {
+        grid-template-columns: 1fr; /* Switch to single column layout */
+        padding: 15px;
+    }
+
+    button {
+        grid-column: span 1; /* Adjust button to span entire width */
+    }
+
+    .logo-container {
+        margin-top: -100px; /* Adjust logo position for smaller devices */
+    }
+
+    .flower-container {
+        display: none; /* Hide flower image on smaller devices */
+    }
+
+    .logo {
+        width: 120px; /* Resize logo for tablets */
+    }
+}
+
+/* Responsive Design for Mobile Devices */
+@media (max-width: 480px) {
+    body {
+        padding: 0 10px;
+    }
+
+    form {
+        padding: 15px; /* Reduce padding for smaller screens */
+        width: 90%; /* Adjust form width to fit screen */
+        grid-template-columns: 1fr; /* Single column layout */
+    }
+
+    h2 {
+        font-size: 18px; /* Adjust heading size for smaller screens */
+        margin-bottom: 10px;
+    }
+
+    .infield label {
+        font-size: 10px; /* Make labels smaller */
+    }
+
+    .infield input {
+        font-size: 10px; /* Adjust input size */
+        padding: 6px 8px;
+    }
+
+    button {
+        padding: 8px; /* Reduce button padding */
+        font-size: 12px; /* Adjust button font size */
+    }
+
+    .logo {
+        width: 100px; /* Adjust logo size for smaller devices */
+    }
+}
