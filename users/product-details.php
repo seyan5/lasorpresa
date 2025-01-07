@@ -100,6 +100,7 @@ if ($p_id) {
     <script>
         function addToCart(productName) {
             alert("Product added to successfully!");
+            header("location: shopcart.php");
         }
     </script>
     <script>
