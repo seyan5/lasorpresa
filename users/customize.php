@@ -175,5 +175,37 @@ require 'header.php';
             $(this).next('.quantity-output').text(sliderValue);
         });
     });
+
+    // Trigger the quantity slider for the first flower type on page load if a flower type is selected
+    $('#flower-type').each(function() {
+        var flowerContainer = $(this).closest('.flower-type'); // Get the specific flower type container
+        var selectedFlowerIds = $(this).val(); // Get selected flower IDs
+
+        // For each selected flower, create and append a quantity slider inside col-sm-4
+        selectedFlowerIds.forEach(function(flowerId) {
+            var selectedFlower = $("option[value='" + flowerId + "']");
+            var flowerName = selectedFlower.text();
+            var maxQuantity = selectedFlower.data('quantity'); // Maximum available quantity for this flower
+
+            // Create the HTML for the quantity slider inside col-sm-4
+            var quantitySliderHTML = `
+                <div class="form-group flower-quantity">
+                    <label for="quantity">Quantity for ${flowerName}</label>
+                    <input type="range" name="quantity[]" class="form-control quantity-slider" min="1" max="${maxQuantity}" value="1" id="slider-${flowerId}">
+                    <output for="slider-${flowerId}" class="quantity-output">1</output>
+                </div>
+            `;
+
+            // Append the slider to the quantity container for this specific flower
+            flowerContainer.find('.flower-quantity-container').append(quantitySliderHTML);
+        });
+
+        // Update the slider value display as the user interacts with it
+        $(document).on('input', '.quantity-slider', function() {
+            var sliderValue = $(this).val();
+            $(this).next('.quantity-output').text(sliderValue);
+        });
+    });
 });
 </script>
+
