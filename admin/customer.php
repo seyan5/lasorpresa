@@ -58,7 +58,7 @@ try {
             </td>
             <td>
                 <!-- Button to delete customer -->
-                <form action="delete_customer.php" method="POST" onsubmit="return confirm('Are you sure you want to delete this customer?');">
+                <form action="customer-delete.php" method="POST" onsubmit="return confirm('Are you sure you want to delete this customer?');">
                     <input type="hidden" name="cust_id" value="<?php echo $customer['cust_id']; ?>">
                     <button type="submit" name="delete_customer">Delete</button>
                 </form>
