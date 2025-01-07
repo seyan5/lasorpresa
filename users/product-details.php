@@ -1,3 +1,4 @@
+
 <?php
 require 'header.php'; // Include database connection
 
@@ -36,7 +37,7 @@ if ($p_id) {
 <body>
     <header>
         <a href="products.php" class="back">← Back to Products</a>
-        <a href="cart.php" class="back">← Cart</a>
+        <a href="cart.php" class="back"> Cart</a>
 
     </header>
     <main>
@@ -147,3 +148,4 @@ header .back {
 
 </style>
 </html>
+
