@@ -60,10 +60,10 @@ require 'header.php';
 
     <div class="payment">
       <h3>Summary</h3>
-      <p>Mode of Payment</p>
+      <p></p>
       <div class="payment-options">
-        <img src="path/to/gcash-logo.jpg" alt="GCash">
-        <span>Cash On Pick Up</span>
+        <img src="" alt="">
+        <span></span>
       </div>
 
       
