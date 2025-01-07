@@ -31,21 +31,7 @@ require 'header.php';
             <!-- Flower Types Section -->
             <div id="flower-types-container">
             <button type="button" class="btn btn-success add-flower-btn">Add Flower</button>
-                <div class="form-group flower-type">
-                    <label for="type" class="col-sm-3 control-label">Select Flower Type</label>
-                    <div class="col-sm-4">
-                        <select name="type[]" class="form-control select2 flower-type-select" multiple="multiple" id="flower-type">
-                            <?php
-                            // Fetch flower types from the database
-                            $statement = $pdo->prepare("SELECT * FROM flowers ORDER BY id ASC");
-                            $statement->execute();
-                            $types = $statement->fetchAll(PDO::FETCH_ASSOC);
-                            foreach ($types as $row) {
-                                echo "<option value='{$row['id']}' data-quantity='{$row['quantity']}'>{$row['name']}</option>";
-                            }
-                            ?>
-                        </select>
-                    </div>
+                
                     <div class="col-sm-4">
                         
                     </div>
