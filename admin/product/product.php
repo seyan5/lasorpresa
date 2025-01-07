@@ -138,122 +138,73 @@
             <tr>
                 <td colspan="4">
                     <div class="abc scroll">
-                        <table width="93%" class="sub-table scrolldown" border="0">
-                            <thead>
-                                <tr>
-                                <th class="table-headin">
-                                        #
-                                    </th>
-                                <th class="table-headin">
-                                        Photo
-                                    </th>
-                                    <th class="table-headin">
-                                        Product Name
-                                    </th>
+                    <?php
+// Define Pagination Variables
+$limit = 10; // Number of products per page
+$page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+$offset = ($page - 1) * $limit;
 
-                                    <th class="table-headin">
-                                        Old Price
-                                    </th>
-                                    <th class="table-headin">
-                                        (C) Price
-                                    </th>
-                                    <th class="table-headin">
-                                        Quantity
-                                    </th>
-                                    <th class="table-headin">
-                                        Featured?
-                                    </th>
-                                    <th class="table-headin">
-                                        Active?
-                                    </th>
-                                    <th class="table-headin">
-                                        Category
-                                    </th>
+// Fetch Products with Pagination
+$statement = $pdo->prepare("SELECT 
+    t1.p_id, t1.name, t1.old_price, t1.current_price, t1.quantity, t1.featured_photo, t1.is_featured, t1.is_active,
+    t2.ecat_name, t3.mcat_name, t4.tcat_name
+    FROM product t1
+    JOIN end_category t2 ON t1.ecat_id = t2.ecat_id
+    JOIN mid_category t3 ON t2.mcat_id = t3.mcat_id
+    JOIN top_category t4 ON t3.tcat_id = t4.tcat_id
+    ORDER BY t1.p_id DESC
+    LIMIT :limit OFFSET :offset");
+$statement->bindValue(':limit', $limit, PDO::PARAM_INT);
+$statement->bindValue(':offset', $offset, PDO::PARAM_INT);
+$statement->execute();
+$products = $statement->fetchAll(PDO::FETCH_ASSOC);
 
-                            </thead>
+// Fetch Total Product Count
+$totalStmt = $pdo->query("SELECT COUNT(*) FROM product");
+$totalProducts = $totalStmt->fetchColumn();
+?>
 
-<!-- <section class="content">
-	<div class="row">
-		<div class="col-md-12">
-			<div class="box box-info">
-				<div class="box-body table-responsive">
-					<table id="example1" class="table table-bordered table-hover table-striped">
-					<thead class="thead-dark">
-							<tr>
-								<th width="10">#</th>
-								<th>Photo</th>
-								<th width="160">Product Name</th>
-								<th width="60">Old Price</th>
-								<th width="60">(C) Price</th>
-								<th width="60">Quantity</th>
-								<th>Featured?</th>
-								<th>Active?</th>
-								<th>Category</th>
-								<th width="80">Action</th>
-							</tr>
-						</thead>
-						<tbody> -->
-							<?php
-							$i=0;
-							$statement = $pdo->prepare("SELECT
-														
-														t1.p_id,
-														t1.name,
-														t1.old_price,
-														t1.current_price,
-														t1.quantity,
-														t1.featured_photo,
-														t1.is_featured,
-														t1.is_active,
-														t1.ecat_id,
+<p>Total Products: <?php echo $totalProducts; ?></p>
+<table>
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Photo</th>
+            <th>Product Name</th>
+            <th>Old Price</th>
+            <th>(C) Price</th>
+            <th>Quantity</th>
+            <th>Featured?</th>
+            <th>Active?</th>
+            <th>Category</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php $i = $offset + 1; foreach ($products as $row): ?>
+            <tr>
+                <td><?php echo $i++; ?></td>
+                <td><img src="../uploads/<?php echo htmlspecialchars($row['featured_photo']); ?>" alt="<?php echo htmlspecialchars($row['name']); ?>" style="width:80px;"></td>
+                <td><?php echo htmlspecialchars($row['name']); ?></td>
+                <td>$<?php echo htmlspecialchars($row['old_price']); ?></td>
+                <td>$<?php echo htmlspecialchars($row['current_price']); ?></td>
+                <td><?php echo htmlspecialchars($row['quantity']); ?></td>
+                <td><?php echo $row['is_featured'] ? '<span class="badge badge-success">Yes</span>' : '<span class="badge badge-danger">No</span>'; ?></td>
+                <td><?php echo $row['is_active'] ? '<span class="badge badge-success">Yes</span>' : '<span class="badge badge-danger">No</span>'; ?></td>
+                <td><?php echo htmlspecialchars($row['tcat_name'] . ' > ' . $row['mcat_name'] . ' > ' . $row['ecat_name']); ?></td>
+                <td>
+                    <a href="product-edit.php?id=<?php echo $row['p_id']; ?>" class="btn btn-primary btn-xs">Edit</a>
+                    <a href="#" class="btn btn-danger btn-xs" data-href="product-delete.php?id=<?php echo $row['p_id']; ?>" data-toggle="modal" data-target="#confirm-delete">Delete</a>
+                </td>
+            </tr>
+        <?php endforeach; ?>
+    </tbody>
+</table>
 
-														t2.ecat_id,
-														t2.ecat_name,
-
-														t3.mcat_id,
-														t3.mcat_name,
-
-														t4.tcat_id,
-														t4.tcat_name
-
-							                           	FROM product t1
-							                           	JOIN end_category t2
-							                           	ON t1.ecat_id = t2.ecat_id
-							                           	JOIN mid_category t3
-							                           	ON t2.mcat_id = t3.mcat_id
-							                           	JOIN top_category t4
-							                           	ON t3.tcat_id = t4.tcat_id
-							                           	ORDER BY t1.p_id DESC
-							                           	");
-							$statement->execute();
-							$result = $statement->fetchAll(PDO::FETCH_ASSOC);
-							foreach ($result as $row) {
-								$i++;
-								?>
-								<tr>
-									<td><?php echo $i; ?></td>
-									<td style="width:82px;"><img src="../uploads/<?php echo $row['featured_photo']; ?>" alt="<?php echo $row['name']; ?>" style="width:80px;"></td>
-									<td><?php echo $row['name']; ?></td>
-									<td>$<?php echo $row['old_price']; ?></td>
-									<td>$<?php echo $row['current_price']; ?></td>
-									<td><?php echo $row['quantity']; ?></td>
-									<td>
-										<?php if($row['is_featured'] == 1) {echo '<span class="badge badge-success" style="background-color:green;">Yes</span>';} else {echo '<span class="badge badge-success" style="background-color:red;">No</span>';} ?>
-									</td>
-									<td>
-										<?php if($row['is_active'] == 1) {echo '<span class="badge badge-success" style="background-color:green;">Yes</span>';} else {echo '<span class="badge badge-danger" style="background-color:red;">No</span>';} ?>
-									</td>
-									<td><?php echo $row['tcat_name']; ?><br><?php echo $row['mcat_name']; ?><br><?php echo $row['ecat_name']; ?></td>
-									<td>										
-										<a href="product-edit.php?id=<?php echo $row['p_id']; ?>" class="btn btn-primary btn-xs">Edit</a>
-										<a href="#" class="btn btn-danger btn-xs" data-href="product-delete.php?id=<?php echo $row['p_id']; ?>" data-toggle="modal" data-target="#confirm-delete">Delete</a>  
-									</td>
-								</tr>
-								<?php
-							}
-							?>							
-						</tbody>
-					</table>
+<!-- Pagination Links -->
+<?php for ($p = 1; $p <= ceil($totalProducts / $limit); $p++): ?>
+    <a href="?page=<?php echo $p; ?>" class="btn btn-light"><?php echo $p; ?></a>
+<?php endfor; ?>
 				</div>
 			</div>
 		</div>
