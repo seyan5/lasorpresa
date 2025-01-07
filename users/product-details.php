@@ -82,7 +82,11 @@ if ($p_id) {
                             <span>$<?php echo number_format($product['current_price'], 2); ?></span>
                         </div>
 
-                        <button>Add to Cart</button>
+                        <button id="addToCartButton" data-id="<?php echo $product['p_id']; ?>"
+    data-name="<?php echo htmlspecialchars($product['name']); ?>"
+    data-price="<?php echo htmlspecialchars($product['current_price']); ?>">
+    Add to Cart
+</button>
                     </div>
                 </main>
 
