@@ -1,7 +1,6 @@
 <?php
 require 'header.php';
 
-
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Get the selected flower type, size, color, and quantity
     $selected_types = isset($_POST['type']) ? $_POST['type'] : [];
@@ -12,13 +11,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Example: Show the selected options (You can process further)
     echo "<h3>Your Customized Bouquet:</h3>";
     
-    // Flower Types and Quantities
-    echo "<p>Flower Type(s) and Quantity:</p>";
+    // Flower Types, Quantities, and Prices
+    echo "<p>Flower Type(s), Quantity, and Price:</p>";
     foreach ($selected_types as $index => $flower_id) {
-        // Get the flower name from the database using the function
-        $flower_name = getFlowerNameById($flower_id); 
+        // Get the flower name and price from the database using the function
+        list($flower_name, $flower_price) = getFlowerDetailsById($flower_id); 
         $quantity = isset($selected_quantities[$index]) ? $selected_quantities[$index] : 1; // Default to 1 if no quantity is selected
-        echo "<p>{$flower_name}: {$quantity} flower(s)</p>";
+        $total_price = $flower_price * $quantity; // Calculate the total price for the current flower
+
+        echo "<p>{$flower_name}: {$quantity} flower(s) at \${$flower_price} each, Total: \${$total_price}</p>";
     }
 
     // Sizes
@@ -30,18 +31,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Optionally, you can store this information in the database or show a summary page
 }
 
-function getFlowerNameById($id) {
+function getFlowerDetailsById($id) {
     global $pdo; // Assuming you have a PDO connection already established
 
-    // Prepare a query to fetch the flower name by its ID
-    $statement = $pdo->prepare("SELECT name FROM flowers WHERE id = :id LIMIT 1");
+    // Prepare a query to fetch the flower name and price by its ID
+    $statement = $pdo->prepare("SELECT name, price FROM flowers WHERE id = :id LIMIT 1");
     $statement->bindParam(':id', $id, PDO::PARAM_INT); // Bind the flower ID to the query
     $statement->execute();
 
-    // Fetch the flower name
+    // Fetch the flower details
     $flower = $statement->fetch(PDO::FETCH_ASSOC);
     
-    // Return the flower name or a default value if not found
-    return $flower ? $flower['name'] : 'Unknown Flower';
+    // Return the flower name and price or default values if not found
+    return $flower ? [$flower['name'], $flower['price']] : ['Unknown Flower', 0];
 }
 ?>
