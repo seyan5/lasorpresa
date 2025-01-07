@@ -125,11 +125,11 @@ require 'header.php';
                         $statement->execute();
                         $types = $statement->fetchAll(PDO::FETCH_ASSOC);
                         foreach ($types as $row) {
-                            echo "<option value='{$row['id']}' data-quantity='{$row['quantity']}'>{$row['name']}</option>";
+                            echo "<option value='{$row['id']}' data-quantity='{$row['quantity']}' data-price='{$row['price']}'>{$row['name']}</option>";
                         }
                         ?>
                     </select>
-                    <div class="flower-quantity-container"></div> <!-- Container for quantity slider inside col-sm-4 -->
+                    <div class="flower-quantity-container"></div>
                 </div>
                 <div class="col-sm-4">
                     <button type="button" class="btn btn-danger remove-flower-btn">x</button>
@@ -143,77 +143,97 @@ require 'header.php';
     // Remove flower type section
     $(document).on('click', '.remove-flower-btn', function() {
         $(this).closest('.flower-type').remove();
+        calculateTotalPrice(); // Recalculate the total price
     });
 
     // Display quantity slider input field inside col-sm-4
     $(document).on('change', '.flower-type-select', function() {
-        var flowerContainer = $(this).closest('.flower-type'); // Get the specific flower type container
+        var flowerContainer = $(this).closest('.flower-type');
         flowerContainer.find('.flower-quantity-container').empty(); // Clear any existing quantity sliders
 
         var selectedFlowerIds = $(this).val(); // Get selected flower IDs
-
-        // For each selected flower, create and append a quantity slider inside col-sm-4
         selectedFlowerIds.forEach(function(flowerId) {
             var selectedFlower = $("option[value='" + flowerId + "']");
             var flowerName = selectedFlower.text();
-            var maxQuantity = selectedFlower.data('quantity'); // Maximum available quantity for this flower
+            var maxQuantity = selectedFlower.data('quantity');
+            var flowerPrice = selectedFlower.data('price'); // Get the price from the data-price attribute
 
-            // Create the HTML for the quantity slider inside col-sm-4
+            // Create the HTML for the quantity slider
             var quantitySliderHTML = `
                 <div class="form-group flower-quantity">
-                    <label for="quantity">Quantity </label>
-                    <input type="range" name="quantity[]" class="form-control quantity-slider" min="1" max="${maxQuantity}" value="1" id="slider-${flowerId}">
+                    <label for="quantity">Quantity</label>
+                    <input type="range" name="quantity[]" class="form-control quantity-slider" min="1" max="${maxQuantity}" value="1" data-price="${flowerPrice}" id="slider-${flowerId}">
                     <output for="slider-${flowerId}" class="quantity-output">1</output>
+                </div>
+                <div class="total-price-container">
+                    <span class="flower-price">Price: $<span class="price">0</span></span>
                 </div>
             `;
 
-            // Append the slider to the quantity container for this specific flower
+            // Append the slider and price display to the quantity container
             flowerContainer.find('.flower-quantity-container').append(quantitySliderHTML);
         });
 
-        // Update the slider value display as the user interacts with it
+        // Update the slider value display and price when the user interacts with the slider
         $(document).on('input', '.quantity-slider', function() {
-            var sliderValue = $(this).val();
-            $(this).next('.quantity-output').text(sliderValue);
+            var quantity = $(this).val();
+            var price = $(this).data('price');
+            var totalPrice = quantity * price;
+
+            // Update the quantity display
+            $(this).next('.quantity-output').text(quantity);
+
+            // Update the price display
+            $(this).closest('.flower-quantity').find('.price').text(totalPrice.toFixed(2));
+
+            // Recalculate the total price on input
+            calculateTotalPrice();
         });
     });
 
     // Trigger the quantity slider for the first flower type on page load if a flower type is selected
     $('#flower-type').each(function() {
-        var flowerContainer = $(this).closest('.flower-type'); // Get the specific flower type container
-        var selectedFlowerIds = $(this).val(); // Get selected flower IDs
-
-        // For each selected flower, create and append a quantity slider inside col-sm-4
+        var flowerContainer = $(this).closest('.flower-type');
+        var selectedFlowerIds = $(this).val();
         selectedFlowerIds.forEach(function(flowerId) {
             var selectedFlower = $("option[value='" + flowerId + "']");
-            var flowerName = selectedFlower.text();
-            var maxQuantity = selectedFlower.data('quantity'); // Maximum available quantity for this flower
+            var flowerPrice = selectedFlower.data('price');
 
-            // Create the HTML for the quantity slider inside col-sm-4
             var quantitySliderHTML = `
                 <div class="form-group flower-quantity">
                     <label for="quantity">Quantity</label>
-                    <input type="range" name="quantity[]" class="form-control quantity-slider" min="1" max="${maxQuantity}" value="1" id="slider-${flowerId}">
+                    <input type="range" name="quantity[]" class="form-control quantity-slider" min="1" max="${selectedFlower.data('quantity')}" value="1" data-price="${flowerPrice}" id="slider-${flowerId}">
                     <output for="slider-${flowerId}" class="quantity-output">1</output>
+                </div>
+                <div class="total-price-container">
+                    <span class="flower-price">Price: $<span class="price">0</span></span>
                 </div>
             `;
 
-            // Append the slider to the quantity container for this specific flower
             flowerContainer.find('.flower-quantity-container').append(quantitySliderHTML);
         });
 
-        // Update the slider value display as the user interacts with it
-        $(document).on('input', '.quantity-slider', function() {
-            var sliderValue = $(this).val();
-            $(this).next('.quantity-output').text(sliderValue);
-        });
+        $(this).trigger('change');
     });
+
+    // Function to calculate the total price for all flowers
+    function calculateTotalPrice() {
+        var total = 0;
+        $('.quantity-slider').each(function() {
+            var quantity = $(this).val();
+            var price = $(this).data('price');
+            total += quantity * price;
+        });
+        // Display the total price
+        $('#total-price').text('Total Price: $' + total.toFixed(2));
+    }
 
     // Trigger change event for the first flower type on page load if any options are selected
     if ($('#flower-type').val() !== null) {
         $('#flower-type').trigger('change');
     }
 });
+
 
 </script>
 
