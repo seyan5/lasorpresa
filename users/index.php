@@ -30,6 +30,8 @@
         <a href="#occasion">Occasion</a>
         <a href="#review">Review</a>
         <a href="#contacts">Contacts</a>
+        <a href="customize.php">Customize</a>
+
     </nav>
      
     <div class="icons">
