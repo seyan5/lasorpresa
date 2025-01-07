@@ -48,7 +48,7 @@ try {
             <td><?php echo htmlspecialchars($customer['cust_city']); ?></td>
             <td>
                 <!-- Button to change status -->
-                <form action="change_status.php" method="POST">
+                <form action="change-status.php" method="POST">
                     <input type="hidden" name="cust_id" value="<?php echo $customer['cust_id']; ?>">
                     <select name="status" onchange="this.form.submit()">
                         <option value="active" <?php echo ($customer['cust_status'] == 'active') ? 'selected' : ''; ?>>Active</option>
