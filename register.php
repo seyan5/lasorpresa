@@ -1,151 +1,126 @@
 <?php
+ob_start();
 session_start();
-include 'config.php'; // Include your database connection file
+include("admin/inc/config.php");
+include("admin/inc/functions.php");
+include("admin/inc/CSRF_Protect.php");
 
-date_default_timezone_set('Asia/Kolkata');
-$date = date('Y-m-d');
-$_SESSION["date"] = $date;
+require 'mail/PHPMailer/src/Exception.php';
+require 'mail/PHPMailer/src/PHPMailer.php';
+require 'mail/PHPMailer/src/SMTP.php';
 
-$error = ''; // Initialize error variable
-$success = ''; // Initialize success variable
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    // Check if the form is for login or registration
-    if (isset($_POST['login'])) {
-        // Login functionality
-        $usernameoremail = $_POST['usernameoremail'];
-        $password = $_POST['password'];
+if (isset($_POST['register'])) {
+    $cust_name = $_POST['cust_name'];
+    $cust_email = $_POST['cust_email'];
+    $cust_phone = $_POST['cust_phone'];
+    $cust_password = password_hash($_POST['cust_password'], PASSWORD_BCRYPT);  // Hash password
+    $cust_address = $_POST['cust_address'];
+    $cust_city = $_POST['cust_city'];
+    $cust_zip = $_POST['cust_zip'];
+    $cust_status = 'inactive';  // Set the customer status as inactive until verified
 
-        // Fetch user from the database
-        $sql = "SELECT * FROM users WHERE email = '$usernameoremail' OR username = '$usernameoremail'";
-        $result = mysqli_query($conn, $sql);
+    try {
+        // Check if the email already exists
+        $stmt_check = $pdo->prepare("SELECT COUNT(*) FROM customer WHERE cust_email = :cust_email");
+        $stmt_check->execute([':cust_email' => $cust_email]);
+        $email_exists = $stmt_check->fetchColumn();
 
-        if ($result && mysqli_num_rows($result) > 0) {
-            $user = mysqli_fetch_assoc($result);
-
-            // Verify the password
-            if (password_verify($password, $user['password'])) {
-                $_SESSION['user_id'] = $user['id'];
-                $_SESSION['user_type'] = $user['user_type'];
-                $_SESSION['firstname'] = $user['firstname'];
-                $_SESSION['lastname'] = $user['lastname'];
-
-                if ($user['user_type'] == 'admin') {
-                    header('Location: admin/dashboard.php');
-                } else {
-                    header('Location: users/index.php');
-                }
-                exit();
-            } else {
-                $error = "Invalid password.";
-            }
-        } else {
-            $error = "No user found with that email or username.";
+        if ($email_exists > 0) {
+            throw new Exception("Email address already registered. Please use a different email.");
         }
-    } elseif (isset($_POST['register'])) {
-        // Registration functionality
-        $firstname = $_POST['firstname'];
-        $lastname = $_POST['lastname'];
-        $username = $_POST['username'];
-        $name = $firstname . " " . $lastname;
-        $email = $_POST['email'];
-        $contact = $_POST['contact'];
-        $password = $_POST['password'];
-        $confirmpassword = $_POST['confirmpassword'];
-        $user_type = 'user';
 
-        // Basic validation
-        if ($password !== $confirmpassword) {
-            $error = "Passwords do not match.";
-        } else {
-            // Hash the password
-            $passwordHash = password_hash($password, PASSWORD_BCRYPT);
+        // Generate a unique verification token
+        $token = bin2hex(random_bytes(16));
 
-            // Prepare SQL statement
-            $stmt = $conn->prepare("INSERT INTO users (name, username, email, contact, password, user_type) VALUES (?, ?, ?, ?, ?, ?)");
-            if ($stmt === false) {
-                die('prepare() failed: ' . htmlspecialchars($conn->error));
-            }
+        // Insert customer details into the database
+        $stmt = $pdo->prepare("INSERT INTO customer (cust_name, cust_email, cust_phone, cust_password, cust_address, cust_city, cust_zip, cust_status, cust_datetime) 
+                               VALUES (:cust_name, :cust_email, :cust_phone, :cust_password, :cust_address, :cust_city, :cust_zip, :cust_status, NOW())");
 
-            // Bind parameters
-            $stmt->bind_param("ssssss", $name, $username, $email, $contact, $passwordHash, $user_type);
+        $stmt->execute([
+            ':cust_name' => $cust_name,
+            ':cust_email' => $cust_email,
+            ':cust_phone' => $cust_phone,
+            ':cust_password' => $cust_password,
+            ':cust_address' => $cust_address,
+            ':cust_city' => $cust_city,
+            ':cust_zip' => $cust_zip,
+            ':cust_status' => $cust_status
+        ]);
 
-            // Execute statement
-            if ($stmt->execute()) {
-                $success = "Registration successful!";
-            } else {
-                $error = "Error: " . htmlspecialchars($stmt->error);
-            }
+        // Get the customer ID
+        $cust_id = $pdo->lastInsertId();
 
-            // Close statement
-            $stmt->close();
-        }
+        // Insert token into the email_verifications table
+        $stmt_token = $pdo->prepare("INSERT INTO email_verifications (cust_id, token, created_at) VALUES (:cust_id, :token, NOW())");
+        $stmt_token->execute([
+            ':cust_id' => $cust_id,
+            ':token' => $token
+        ]);
+
+        // Send verification email
+        $mail = new PHPMailer(true);
+        $mail->isSMTP();
+        $mail->Host       = 'smtp.gmail.com';
+        $mail->SMTPAuth   = true;
+        $mail->Username   = 'jpdeogracias@gmail.com'; // Your email
+        $mail->Password   = 'scut aysl nlei jyng'; // Your email password
+        $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+        $mail->Port       = 587;
+
+        $mail->setFrom('lasorpresa@gmail.com', 'Lasorpresa'); // From address
+        $mail->addAddress($cust_email, $cust_name);          // Recipient
+
+        $mail->isHTML(true);
+        $mail->Subject = 'Verify Your Email Address';
+        $mail->Body    = "Hi $cust_name,<br><br>Please click the link below to verify your email address:<br><br><a href='http://localhost/lasorpresa/verify-email.php?token=$token'>Verify Email</a><br><br>Thank you!";
+
+        $mail->send();
+        echo "Registration successful! Please check your email to verify your account.";
+    } catch (Exception $e) {
+        echo "Error: " . $e->getMessage();
     }
 }
-
-// Close connection
-$conn->close();
 ?>
+
 
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="css/animations.css">  
-    <link rel="stylesheet" href="css/main.css">  
-    <link rel="stylesheet" href="css/signup.css">
-        
-    <title>Sign Up</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Customer Registration</title>
 </head>
 <body>
-    <div class="container">
-        <form action="" method="POST">
-            <div class="header">
-                <p class="header-text">Let's Get Started</p>
-                <p class="sub-text">Add Your Personal Details to Continue</p>
-            </div>
 
-            <div class="input-group">
-                <label for="name" class="form-label">Name:</label>
-                <input type="text" name="firstname" class="input-text" placeholder="First Name" required>
-                <input type="text" name="lastname" class="input-text" placeholder="Last Name" required>
-            </div>
+<h2>Create Your Account</h2>
+<form action="register.php" method="POST">
+  <label for="cust_name">Full Name:</label>
+  <input type="text" id="cust_name" name="cust_name" required><br>
 
-            <div class="input-group">
-                <label for="email" class="form-label">Email:</label>
-                <input type="email" name="email" class="input-text" placeholder="Email" required>
-            </div>
+  <label for="cust_email">Email:</label>
+  <input type="email" id="cust_email" name="cust_email" required><br>
 
-            <div class="input-group">
-                <label for="username" class="form-label">Username:</label>
-                <input type="text" name="username" class="input-text" placeholder="Username" required>
-            </div>
+  <label for="cust_phone">Phone Number:</label>
+  <input type="tel" id="cust_phone" name="cust_phone" required><br>
 
-            <div class="input-group">
-                <label for="contact" class="form-label">Contact:</label>
-                <input type="text" name="contact" class="input-text" placeholder="Contact Number" required>
-            </div>
-            <div class="input-group">
-                <label for="password" class="form-label">Password:</label>
-                <input type="password" name="password" class="input-text" placeholder="Password" required>
-                <input type="password" name="confirmpassword" class="input-text" placeholder="Confirm Password" required>
-            </div>
+  <label for="cust_password">Password:</label>
+  <input type="password" id="cust_password" name="cust_password" required><br>
 
-            <div class="button-group">
-                <input type="reset" value="Reset" class="login-btn btn-primary-soft btn">
-                <input type="submit" value="Next" class="login-btn btn-primary btn">
-            </div>
+  <label for="cust_address">Address:</label>
+  <input type="text" id="cust_address" name="cust_address" required><br>
 
-            <div class="footer">
-                <p class="sub-text" style="font-weight: 280;">Already have an account? 
-                    <a href="login.php" class="hover-link1 non-style-link">Login</a>
-                </p>
-            </div>
-        </form>
-    </div>
+  <label for="cust_city">City:</label>
+  <input type="text" id="cust_city" name="cust_city" required><br>
+
+  <label for="cust_zip">Zip Code:</label>
+  <input type="text" id="cust_zip" name="cust_zip" required><br>
+
+  <button type="submit" name="register">Register</button>
+</form>
 
 </body>
 </html>
