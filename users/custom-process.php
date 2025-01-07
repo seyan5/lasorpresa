@@ -1,4 +1,7 @@
 <?php
+require 'header.php';
+
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Get the selected flower type, size, color, and quantity
     $selected_types = isset($_POST['type']) ? $_POST['type'] : [];
@@ -12,8 +15,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Flower Types and Quantities
     echo "<p>Flower Type(s) and Quantity:</p>";
     foreach ($selected_types as $index => $flower_id) {
-        // Get the flower name from the ID (or any other relevant details from the database)
-        $flower_name = getFlowerNameById($flower_id); // Assuming a function to fetch flower name
+        // Get the flower name from the database using the function
+        $flower_name = getFlowerNameById($flower_id); 
         $quantity = isset($selected_quantities[$index]) ? $selected_quantities[$index] : 1; // Default to 1 if no quantity is selected
         echo "<p>{$flower_name}: {$quantity} flower(s)</p>";
     }
@@ -27,16 +30,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Optionally, you can store this information in the database or show a summary page
 }
 
-// Function to get the flower name by ID (This is just an example, replace it with actual database logic)
 function getFlowerNameById($id) {
-    // Example: Return the flower name based on the ID
-    $flowers = [
-        1 => 'Rose',
-        2 => 'Tulip',
-        3 => 'Lily',
-        // Add more flower names here
-    ];
+    global $pdo; // Assuming you have a PDO connection already established
+
+    // Prepare a query to fetch the flower name by its ID
+    $statement = $pdo->prepare("SELECT name FROM flowers WHERE id = :id LIMIT 1");
+    $statement->bindParam(':id', $id, PDO::PARAM_INT); // Bind the flower ID to the query
+    $statement->execute();
+
+    // Fetch the flower name
+    $flower = $statement->fetch(PDO::FETCH_ASSOC);
     
-    return isset($flowers[$id]) ? $flowers[$id] : 'Unknown Flower';
+    // Return the flower name or a default value if not found
+    return $flower ? $flower['name'] : 'Unknown Flower';
 }
 ?>
