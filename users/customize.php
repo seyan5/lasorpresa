@@ -38,12 +38,12 @@ require 'header.php';
                     <select name="type[]" class="form-control select2" multiple="multiple" id="flower-type">
                         <?php
                         // Fetch flower types from the database
-                        $statement = $pdo->prepare("SELECT * FROM type ORDER BY type_id ASC");
+                        $statement = $pdo->prepare("SELECT * FROM flower ORDER BY id ASC");
                         $statement->execute();
                         $types = $statement->fetchAll(PDO::FETCH_ASSOC);
                         if ($types) {
                             foreach ($types as $row) {
-                                echo "<option value='{$row['type_id']}'>{$row['type_name']}</option>";
+                                echo "<option value='{$row['id']}'>{$row['name']}</option>";
                             }
                         } else {
                             echo "<option>No flower types available</option>";
@@ -64,12 +64,12 @@ require 'header.php';
                 <select name="size[]" class="form-control select2" multiple="multiple" id="flower-size">
                     <?php
                     // Fetch flower sizes from the database (ensure this table exists or adjust as needed)
-                    $statement = $pdo->prepare("SELECT * FROM size ORDER BY size_id ASC");
+                    $statement = $pdo->prepare("SELECT * FROM type ORDER BY type_id ASC");
                     $statement->execute();
                     $sizes = $statement->fetchAll(PDO::FETCH_ASSOC);
                     if ($sizes) {
                         foreach ($sizes as $row) {
-                            echo "<option value='{$row['size_id']}'>{$row['size_name']}</option>";
+                            echo "<option value='{$row['type_id']}'>{$row['type_name']}</option>";
                         }
                     } else {
                         echo "<option>No sizes available</option>";
@@ -144,7 +144,7 @@ require 'header.php';
                 <div class="form-group flower-type">
                     <label for="type" class="col-sm-3 control-label">Select Flower Type</label>
                     <div class="col-sm-4">
-                        <select name="type[]" class="form-control select2" multiple="multiple">
+                        <select name="flower[]" class="form-control select2" multiple="multiple">
                             <?php
                             // Fetch flower types from the database
                             $statement = $pdo->prepare("SELECT * FROM flower ORDER BY id ASC");
