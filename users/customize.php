@@ -32,7 +32,7 @@ require 'header.php';
                 <div class="form-group flower-type">
                     <label for="type" class="col-sm-3 control-label">Select Flower Type</label>
                     <div class="col-sm-4">
-                        <select name="type[]" class="form-control select2" multiple="multiple" id="flower-type">
+                        <select name="type[]" class="form-control select2 flower-type-select" multiple="multiple" id="flower-type">
                             <?php
                             // Fetch flower types from the database
                             $statement = $pdo->prepare("SELECT * FROM flowers ORDER BY id ASC");
@@ -115,7 +115,7 @@ require 'header.php';
                 <div class="form-group flower-type">
                     <label for="type" class="col-sm-3 control-label">Select Flower Type</label>
                     <div class="col-sm-4">
-                        <select name="type[]" class="form-control select2" multiple="multiple" id="flower-type">
+                        <select name="type[]" class="form-control select2 flower-type-select" multiple="multiple">
                             <?php
                             $statement = $pdo->prepare("SELECT * FROM flowers ORDER BY id ASC");
                             $statement->execute();
@@ -142,7 +142,7 @@ require 'header.php';
         });
 
         // Display quantity input field based on selected flower
-        $(document).on('change', '.select2', function() {
+        $(document).on('change', '.flower-type-select', function() {
             var flowerId = $(this).val();
             var quantityFields = '';
 
@@ -150,7 +150,7 @@ require 'header.php';
             flowerId.forEach(function(flowerId) {
                 var selectedFlower = $("option[value='" + flowerId + "']");
                 var quantity = selectedFlower.data('quantity');
-                quantityFields += `<div class="form-group">
+                quantityFields += `<div class="form-group flower-quantity">
                     <label for="quantity">Quantity for ${selectedFlower.text()}</label>
                     <input type="number" name="quantity[]" class="form-control" id="flower-quantity" min="1" max="${quantity}" value="1">
                 </div>`;
