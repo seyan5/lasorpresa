@@ -3,7 +3,7 @@
 
 
 // Fetch all customers from the database
-$stmt = $pdo->query("SELECT cust_id, cust_name, cust_email, cust_address, cust_city, cust_status FROM customer");
+$stmt = $pdo->query("SELECT * FROM customer");
 $customers = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
