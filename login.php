@@ -1,15 +1,14 @@
-<?php require_once('admin/inc/header.php'); ?>
-<!-- fetching row banner login -->
 <?php
-$statement = $pdo->prepare("SELECT * FROM tbl_settings WHERE id=1");
-$statement->execute();
-$result = $statement->fetchAll(PDO::FETCH_ASSOC);                            
-foreach ($result as $row) {
-    $banner_login = $row['banner_login'];
-}
-?>
-<!-- login form -->
-<?php
+session_start();
+include 'config.php'; // Include your database connection file
+
+date_default_timezone_set('Asia/Kolkata');
+$date = date('Y-m-d');
+$_SESSION["date"] = $date;
+
+$error = ''; // Initialize error variable
+$success = ''; // Initialize success variable
+
 if(isset($_POST['form1'])) {
         
     if(empty($_POST['cust_email']) || empty($_POST['cust_password'])) {
@@ -46,52 +45,136 @@ if(isset($_POST['form1'])) {
         }
     }
 }
+
+
+// Close connection
+$conn->close();
 ?>
 
-<div class="page-banner" style="background-color:#444;background-image: url(assets/uploads/<?php echo $banner_login; ?>);">
-    <div class="inner">
-        <h1><?php echo LANG_VALUE_10; ?></h1>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign in Sign up form</title>
+    <!-- font awesome icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"
+        integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g =="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- css stylesheet -->
+    <link rel="stylesheet" href="css/index.css">
+</head>
+
+<body>
+    <div class="logo-container">
+        <img src="images/logo.png" alt="Logo" class="logo" />
     </div>
-</div>
 
-<div class="page">
-    <div class="container">
-        <div class="row">
-            <div class="col-md-12">
-                <div class="user-content">
+    <!-- Flower Image -->
+    <div class="flower-container">
+        <img src="images/flower2.png" alt="Flower" class="flower" />
+    </div>
 
+    <div class="container" id="container">
+        <div class="form-container sign-up-container">
+        <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="POST">
+                <h1>Create Account</h1>
+                <span>or use your email for registration</span>
+                <div class="infield">
+                    <label for="name" class="form-label"></label>
+                    <input type="text" name="firstname" placeholder="First Name" required>
+                    <label></label>
+                </div>
+                <div class="infield">
+                    <label for="name" class="form-label"></label>
+                    <input type="text" name="lastname" placeholder="Last Name" required>
+                    <label></label>
+                </div>
+                <div class="infield">
+                    <label for="useremail" class="form-label"></label>
+                    <input type="text" name="username" placeholder="Username" required>
+                    <label></label>
+                </div>
+                <div class="infield">
+                    <label for="email" class="form-label"></label>
+                    <input type="email" placeholder="Email" name="email" required />
+                    <label></label>
+                </div>
+                <div class="infield">
+                    <label for="contact" class="form-label"></label>
+                    <input type="text" name="contact" class="input-text" placeholder="Contact Number" required>
+                    <label></label>
+                </div>
+                <div class="infield">
+                    <input type="password" name="password" placeholder="Password" required>
+                    <label></label>
+                </div>
+                <div class="infield">
+                    <input type="password" name="confirmpassword" class="input-text" placeholder="Confirm Password" required>
+                    <label></label>
+                </div>
+                <button type="submit" name="register">Sign Up</button>
+                <?php if ($success) echo "<p class='success'>$success</p>"; ?>
+                <?php if ($error) echo "<p class='error'>$error</p>"; ?>
+            </form>
+        </div>
+        <div class="form-container sign-in-container">
+            <form action="#" method="POST" class="form-body">
+                <h1>Sign in</h1>
+                <div class="tulip-container">
+                    <img src="images/flower1.png" alt="Flower" class="tulip" />
+                </div>
+                <div class="infield">
+                    <label for="useremail" class="form-label"></label>
+                    <input type="text" placeholder="Email or Username" name="usernameoremail" required>
+                    <label></label>
+                </div>
+                <div class="infield">
+                    <label for="password" class="form-label"></label>
+                    <input type="password" placeholder="Password" name="password" required>
+                    <label></label>
+                </div>
+                <a href="#" class="forgot">Forgot your password?</a>
+                <button type="submit" name="login">Sign In</button>
+                <?php if ($error) echo "<p class='error'>$error</p>"; ?>
+            </form>
+        </div>
+        <div class="overlay-container" id="overlayCon">
+            <div class="overlay">
+                <div class="overlay-panel overlay-left">
+                    <h1>Welcome Back!</h1>
+                    <p>To keep connected with us please login with your personal info.</p>
+                    <button id="signIn">Sign In</button>
                     
-                    <form action="" method="post">
-                        <?php $csrf->echoInputField(); ?>                  
-                        <div class="row">
-                            <div class="col-md-4"></div>
-                            <div class="col-md-4">
-                                <?php
-                                if($error_message != '') {
-                                    echo "<div class='error' style='padding: 10px;background:#f1f1f1;margin-bottom:20px;'>".$error_message."</div>";
-                                }
-                                if($success_message != '') {
-                                    echo "<div class='success' style='padding: 10px;background:#f1f1f1;margin-bottom:20px;'>".$success_message."</div>";
-                                }
-                                ?>
-                                <div class="form-group">
-                                    <label for=""><?php echo LANG_VALUE_94; ?> *</label>
-                                    <input type="email" class="form-control" name="cust_email">
-                                </div>
-                                <div class="form-group">
-                                    <label for=""><?php echo LANG_VALUE_96; ?> *</label>
-                                    <input type="password" class="form-control" name="cust_password">
-                                </div>
-                                <div class="form-group">
-                                    <label for=""></label>
-                                    <input type="submit" class="btn btn-success" value="<?php echo LANG_VALUE_4; ?>" name="form1">
-                                </div>
-                                <a href="forget-password.php" style="color:#e4144d;"><?php echo LANG_VALUE_97; ?>?</a>
-                            </div>
-                        </div>                        
-                    </form>
-                </div>                
+                </div>
+                <div class="overlay-panel overlay-right">
+                    <h1>Hello, Friend!</h1>
+                    <p>Enter your personal details and start your journey with us.</p>
+                    <button id="signUp">Sign Up</button>
+                </div>
             </div>
+            <button id="overlayBtn"></button>
         </div>
     </div>
-</div>
+
+    <!-- js code -->
+    <script>
+        const container = document.getElementById('container');
+        const signInButton = document.getElementById('signIn');
+        const signUpButton = document.getElementById('overlayBtn');
+        
+        signInButton.addEventListener('click', () => {
+            console.log("Sign In button clicked");
+            container.classList.remove('right-panel-active');
+        });
+        signUpButton.addEventListener('click', () => {
+            console.log("Sign Up button clicked");
+            container.classList.add('right-panel-active');
+        });
+    </script>
+
+</body>
+
+</html>
