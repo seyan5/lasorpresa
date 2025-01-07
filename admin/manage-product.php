@@ -77,5 +77,14 @@
             </ul>
         </div>
 
-        <a href="product/product.php">Premade</a>
-        <a href="">Flowers</a>
+
+        <section class="content-header">
+	<div class="content-header-left">
+		<h1>View Products</h1>
+	</div>
+	<div class="content-header-right">
+		<a href="product/product.php" class="btn btn-primary btn-sm">Premade</a>
+		<a href="" class="btn btn-primary btn-sm">Flower</a>
+
+	</div>
+</section>
