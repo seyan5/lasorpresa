@@ -10,9 +10,9 @@ if (isset($_POST['login'])) {
     $password = $_POST['password'];
 
     try {
-        // Query the database to get the customer by email
-        $stmt = $pdo->prepare("SELECT id, name, email, password FROM users WHERE email = email");
-        $stmt->execute(['email' => $email]);
+        // Corrected query to bind the :email parameter
+        $stmt = $pdo->prepare("SELECT id, name, email, password FROM users WHERE email = :email");
+        $stmt->execute([':email' => $email]);
 
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
