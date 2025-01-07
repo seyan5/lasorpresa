@@ -97,6 +97,14 @@ if ($result->num_rows > 0) {
                     </a>
                 </li>
                 <li>
+                    <a href="customer.php">
+                        <span class="icon">
+                            <ion-icon name="settings-outline"></ion-icon>
+                        </span>
+                        <span class="title">Registered Customer</span>
+                    </a>
+                </li>
+                <li>
                     <a href="logout.php">
                         <span class="icon">
                             <ion-icon name="log-out-outline"></ion-icon>

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 07, 2025 at 12:35 PM
+-- Generation Time: Jan 07, 2025 at 04:58 PM
 -- Server version: 10.4.24-MariaDB
 -- PHP Version: 8.1.4
 
@@ -57,6 +57,69 @@ INSERT INTO `container` (`container_id`, `container_name`) VALUES
 (1, 'Basket'),
 (2, 'Paper Wrap'),
 (3, 'Plastic Wrap');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `customer`
+--
+
+CREATE TABLE `customer` (
+  `cust_id` int(11) NOT NULL,
+  `cust_name` varchar(255) NOT NULL,
+  `cust_email` varchar(255) NOT NULL,
+  `cust_phone` varchar(15) NOT NULL,
+  `cust_address` text NOT NULL,
+  `cust_city` varchar(255) NOT NULL,
+  `cust_zip` varchar(10) NOT NULL,
+  `cust_s_name` varchar(255) DEFAULT NULL,
+  `cust_s_phone` varchar(15) DEFAULT NULL,
+  `cust_s_address` text DEFAULT NULL,
+  `cust_s_city` varchar(255) DEFAULT NULL,
+  `cust_s_zip` varchar(10) DEFAULT NULL,
+  `cust_password` varchar(255) NOT NULL,
+  `cust_datetime` datetime DEFAULT current_timestamp(),
+  `cust_timestamp` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `cust_status` enum('active','inactive','suspended') DEFAULT 'active'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `customer`
+--
+
+INSERT INTO `customer` (`cust_id`, `cust_name`, `cust_email`, `cust_phone`, `cust_address`, `cust_city`, `cust_zip`, `cust_s_name`, `cust_s_phone`, `cust_s_address`, `cust_s_city`, `cust_s_zip`, `cust_password`, `cust_datetime`, `cust_timestamp`, `cust_status`) VALUES
+(1, 'Johnwayne', 'user@gmail.com', '09214991751', 'Blk 31 Lt 2 Lhinnete Homea', 'Cavite', '4109', NULL, NULL, NULL, NULL, NULL, '$2y$10$5AgJmhblhlQKzGHRKawNNubwSW8Ud3G6Kix4TBDDHR8hmsaNKfPmi', '2025-01-07 22:02:47', '2025-01-07 14:55:05', 'active'),
+(3, 'test', 'test@gmail.com', '8217343', 'asdasd', 'asdsad', '313', NULL, NULL, NULL, NULL, NULL, '$2y$10$ghKn.DYNTYpgkxzEFQtFkuxJfygGtMTnN2Mt7Oo7g54.iOOAuEGey', '2025-01-07 22:34:55', '2025-01-07 15:40:33', 'active'),
+(5, 'test', 'qweqwe@gmail.com', '431431', 'asddsa', 'sdadsa', '1233', NULL, NULL, NULL, NULL, NULL, '$2y$10$LlJJaEWfq3GbuKZmaTXn0.86IneDNpn74YKw89bCLZNgOXINEyNwO', '2025-01-07 22:43:28', '2025-01-07 14:43:28', 'inactive'),
+(6, 'test', 'jw@mail.com', '431431', 'asddsa', 'sdadsa', '1233', NULL, NULL, NULL, NULL, NULL, '$2y$10$NO37F4xP6sQz30nLobL8NeZ08jfI6HvdxxtvjIPA2G55oyfY389DK', '2025-01-07 22:43:53', '2025-01-07 14:43:53', 'inactive'),
+(8, 'test', 'lasorpresa76@mail.com', '431431', 'asddsa', 'sdadsa', '1233', NULL, NULL, NULL, NULL, NULL, '$2y$10$Tdnqmz4o870Sp2xBBK6Vhe1oogE5lNEneUDpw1ksqtMuQeFIE6XRC', '2025-01-07 22:50:56', '2025-01-07 14:50:56', 'inactive'),
+(10, 'Johnwayne', 'jpdeogracias@gmail.com', '09214991751', 'Blk 31 Lt 2 Lhinnete Homea', 'Cavite', '4443', NULL, NULL, NULL, NULL, NULL, '$2y$10$yBumdn1uqk97O6uFTYkeG.n7wVPruq9k1lv9UPGKguAs40fHohfTC', '2025-01-07 23:00:23', '2025-01-07 15:00:33', 'active'),
+(12, 'jay', 'jaycantemprate31@gmail.com', '31', 'ggfddf', 'hgftr', '1233', NULL, NULL, NULL, NULL, NULL, '$2y$10$VW2.gZt0DtqBcaGqIrIJW.KHw.ySiAiBaBIO1qux6PNd1HiBW9TEm', '2025-01-07 23:02:28', '2025-01-07 15:02:28', 'inactive');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `email_verifications`
+--
+
+CREATE TABLE `email_verifications` (
+  `verification_id` int(11) NOT NULL,
+  `cust_id` int(11) DEFAULT NULL,
+  `token` varchar(255) NOT NULL,
+  `created_at` datetime DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `email_verifications`
+--
+
+INSERT INTO `email_verifications` (`verification_id`, `cust_id`, `token`, `created_at`) VALUES
+(1, 1, 'c1e6a28e43cc0d271fb04b7f6dcdc9f9', '2025-01-07 22:02:47'),
+(2, 3, 'ef7eaf958a51bf6416413f86e5320000', '2025-01-07 22:34:55'),
+(3, 5, 'fbdce8c6d1999dceae22ddb843ee03f9', '2025-01-07 22:43:28'),
+(4, 6, 'f9099c6525708f6c83449e125e785f28', '2025-01-07 22:43:53'),
+(6, 8, 'd907fdb988475d90a8827d5d46a2081b', '2025-01-07 22:50:56'),
+(10, 12, '25dae009f3e04b14f1eb214af40128f6', '2025-01-07 23:02:28');
 
 -- --------------------------------------------------------
 
@@ -156,7 +219,8 @@ CREATE TABLE `product` (
 
 INSERT INTO `product` (`p_id`, `name`, `old_price`, `current_price`, `quantity`, `featured_photo`, `description`, `short_description`, `feature`, `other_photo`, `condition`, `is_featured`, `is_active`, `ecat_id`) VALUES
 (18, 'Red Rose', '10000', '10000', 5, 'product-featured-18.jpg', 'Red Rose', '', '', '', '', 0, 1, 14),
-(19, 'Choc', '1000', '1000', 5, 'product-featured-19.jpg', 'choc', '', '', '', '', 0, 1, 17);
+(19, 'Choc', '1000', '1000', 5, 'product-featured-19.jpg', 'choc', '', '', '', '', 0, 1, 17),
+(20, 'Sunflower', '25', '50', 5, 'product-featured-20.jpg', 'araw bulaklak', '', '', '', '', 0, 1, 16);
 
 -- --------------------------------------------------------
 
@@ -609,6 +673,20 @@ ALTER TABLE `container`
   ADD PRIMARY KEY (`container_id`);
 
 --
+-- Indexes for table `customer`
+--
+ALTER TABLE `customer`
+  ADD PRIMARY KEY (`cust_id`),
+  ADD UNIQUE KEY `cust_email` (`cust_email`);
+
+--
+-- Indexes for table `email_verifications`
+--
+ALTER TABLE `email_verifications`
+  ADD PRIMARY KEY (`verification_id`),
+  ADD KEY `cust_id` (`cust_id`);
+
+--
 -- Indexes for table `end_category`
 --
 ALTER TABLE `end_category`
@@ -709,6 +787,18 @@ ALTER TABLE `container`
   MODIFY `container_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
+-- AUTO_INCREMENT for table `customer`
+--
+ALTER TABLE `customer`
+  MODIFY `cust_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+
+--
+-- AUTO_INCREMENT for table `email_verifications`
+--
+ALTER TABLE `email_verifications`
+  MODIFY `verification_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+
+--
 -- AUTO_INCREMENT for table `end_category`
 --
 ALTER TABLE `end_category`
@@ -730,7 +820,7 @@ ALTER TABLE `mid_category`
 -- AUTO_INCREMENT for table `product`
 --
 ALTER TABLE `product`
-  MODIFY `p_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+  MODIFY `p_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- AUTO_INCREMENT for table `product_color`
@@ -791,4 +881,14 @@ ALTER TABLE `type`
 --
 ALTER TABLE `users`
   MODIFY `id` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `email_verifications`
+--
+ALTER TABLE `email_verifications`
+  ADD CONSTRAINT `email_verifications_ibfk_1` FOREIGN KEY (`cust_id`) REFERENCES `customer` (`cust_id`);
 COMMIT;
