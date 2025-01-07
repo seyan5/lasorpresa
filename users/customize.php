@@ -206,6 +206,12 @@ require 'header.php';
             $(this).next('.quantity-output').text(sliderValue);
         });
     });
+
+    // Trigger change event for the first flower type on page load if any options are selected
+    if ($('#flower-type').val() !== null) {
+        $('#flower-type').trigger('change');
+    }
 });
+
 </script>
 
