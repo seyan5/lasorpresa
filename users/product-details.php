@@ -72,7 +72,7 @@ if ($p_id) {
                     <select id="addons">
                         <option value="">Choose...</option>
                         <option value="chocolate">Chocolate</option>
-                        <option value="stufftoy">Stuff Toys/option>
+                        <option value="stufftoy">Stuff Toys</option>
                         <option value="balloon">Balloon</option>
                     </select>
                 </div>
