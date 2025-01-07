@@ -5,9 +5,9 @@ include("admin/inc/config.php");
 include("admin/inc/functions.php");
 include("admin/inc/CSRF_Protect.php");
 
-require 'PHPMailer-master/src/Exception.php';
-require 'PHPMailer-master/src/PHPMailer.php';
-require 'PHPMailer-master/src/SMTP.php';
+require 'mail/PHPMailer-master/src/Exception.php';
+require 'mail/PHPMailer-master/src/PHPMailer.php';
+require 'mail/PHPMailer-master/src/SMTP.php';
 
 if (isset($_POST['register'])) {
     $cust_name = $_POST['cust_name'];
