@@ -27,6 +27,7 @@ require 'header.php';
                     <?php foreach ($_SESSION['cart'] as $id => $item): ?>
                         <tr>
                             <td><?php echo htmlspecialchars($item['name']); ?></td>
+                            
                             <td>$<?php echo number_format($item['price'], 2); ?></td>
                             <td><?php echo $item['quantity']; ?></td>
                             <td>$<?php echo number_format($item['price'] * $item['quantity'], 2); ?></td>
@@ -54,3 +55,5 @@ require 'header.php';
     </script>
 </body>
 </html>
+
+
