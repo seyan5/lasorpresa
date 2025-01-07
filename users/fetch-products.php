@@ -57,4 +57,32 @@ try {
     // Error handling for database connection or query issues
     echo "<p>Error loading products: " . htmlspecialchars($e->getMessage()) . "</p>";
 }
+
+
+// Query to get add-ons related to mcat_id = 19 and their respective ecat_id values
+$addonCategories = [
+    'chocolate' => 17,  // ecat_id for chocolate
+    'stufftoy' => 18,   // ecat_id for stuff toys
+    'balloon' => 19     // ecat_id for balloons
+];
+
+// Array to hold options
+$addonOptions = [];
+
+foreach ($addonCategories as $addon => $ecat_id) {
+    // Fetch the add-on name and related information
+    $statement = $pdo->prepare("
+        SELECT ecat_name 
+        FROM end_category 
+        WHERE mcat_id = 19 AND ecat_id = :ecat_id
+    ");
+    $statement->bindParam(':ecat_id', $ecat_id, PDO::PARAM_INT);
+    $statement->execute();
+    $addonData = $statement->fetch(PDO::FETCH_ASSOC);
+    
+    // Add to options if exists
+    if ($addonData) {
+        $addonOptions[$addon] = $addonData['ecat_name'];
+    }
+}
 ?>

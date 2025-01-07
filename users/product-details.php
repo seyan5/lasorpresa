@@ -70,14 +70,17 @@ if ($p_id) {
                 </div>
 
                 <div class="addons">
-                    <label for="addons">Add-ons</label>
-                    <select id="addons">
-                        <option value="">Choose...</option>
-                        <option value="chocolate">Chocolate</option>
-                        <option value="stufftoy">Stuff Toys</option>
-                        <option value="balloon">Balloon</option>
-                    </select>
-                </div>
+    <label for="addons">Add-ons</label>
+    <select id="addons">
+        <option value="">Choose...</option>
+        <?php
+        // Loop through available options and display them
+        foreach ($addonOptions as $addonName => $addonLabel) {
+            echo '<option value="' . htmlspecialchars($addonName) . '">' . htmlspecialchars($addonLabel) . '</option>';
+        }
+        ?>
+    </select>
+</div>
 
                 <div class="total">
                     <span>Subtotal:</span>
@@ -106,6 +109,7 @@ if ($p_id) {
         document.getElementById('addToCartButton').addEventListener('click', function () {
             const productId = this.getAttribute('data-id');
             const productName = this.getAttribute('data-name');
+            const addon = document.getElementById('addons').value;
             const productPrice = this.getAttribute('data-price');
 
             // Send AJAX request to add product to cart
