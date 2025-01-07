@@ -2,11 +2,7 @@
 session_start();
 include("admin/inc/config.php");
 
-// Ensure the admin is logged in (add authentication as needed)
-if (!isset($_SESSION['admin_id'])) {
-    header("Location: login.php"); // Redirect to login if not logged in
-    exit;
-}
+
 
 // Fetch all customers from the database
 $stmt = $pdo->query("SELECT cust_id, cust_name, cust_email, cust_address, cust_city, cust_status FROM customer");
