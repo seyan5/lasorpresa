@@ -1,5 +1,9 @@
 <?php
-require 'users/header.php'; // Include your database connection here
+ob_start();
+session_start();
+include("admin/inc/config.php");
+include("admin/inc/functions.php");
+include("admin/inc/CSRF_Protect.php");
 
 if (isset($_POST['register'])) {
     $cust_name = $_POST['cust_name'];
