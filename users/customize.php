@@ -58,7 +58,7 @@ require 'header.php';
 
             <!-- Button to Add New Flower Type Dropdown -->
             <button type="button" class="btn btn-secondary" id="add-flower-btn">Add Flower</button>
-            <button type="button" class="btn btn-danger remove-flower-btn">Remove Flower</button>
+            <button type="button" class="btn btn-danger" id="remove-flower-btn">Remove Flower</button>
 
             <!-- Size of Flower Selection -->
             <div class="form-group">
