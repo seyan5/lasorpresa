@@ -1,5 +1,5 @@
 <?php
-require 'header.php'; // Include your database connection here
+require 'users/header.php'; // Include your database connection here
 
 if (isset($_GET['token'])) {
     $token = $_GET['token'];
