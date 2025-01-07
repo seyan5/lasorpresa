@@ -49,6 +49,54 @@ section{
     margin-top: 100px;
 }
 
+/* Style for the dropdown container */
+.dropdown {
+    position: relative;
+    display: inline-block;
+  }
+  
+  /* Style for the dropdown button (Occasion) */
+  .dropdown-btn {
+    color: white;
+    padding: 14px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: block;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+  }
+  
+  
+  /* Style for the dropdown content (menu) */
+  .dropdown-content {
+    display: none;  /* Hide the dropdown by default */
+    position: absolute;
+    background-color: #f9f9f9;  /* Light background */
+    min-width: 160px;  /* Minimum width of the menu */
+    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);  /* Shadow around the dropdown */
+    z-index: 1;  /* Make sure the dropdown appears above other content */
+  }
+  
+  /* Style for the links inside the dropdown */
+  .dropdown-content a {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+  }
+  
+  /* Hover effect for links */
+  .dropdown-content a:hover {
+    background-color: #ddd;  /* Light gray background on hover */
+  }
+  
+  /* Show the dropdown menu when hovering over the button */
+  .dropdown:hover .dropdown-content {
+    display: block;
+  }
+  
+
 .shop h1{
     margin: 1rem;
     font-size: 2.5rem;
