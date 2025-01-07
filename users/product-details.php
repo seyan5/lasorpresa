@@ -71,8 +71,8 @@ if ($p_id) {
                             <label for="addons">Add-ons</label>
                             <select id="addons">
                                 <option value="">Choose...</option>
-                                <option value="chocolate">Chocolates</option>
-                                <option value="stufftoy">Stuff Toys</option>
+                                <option value="chocolate">Chocolate</option>
+                                <option value="stufftoy">Stuff Toys/option>
                                 <option value="balloon">Balloon</option>
                             </select>
                         </div>
@@ -82,7 +82,7 @@ if ($p_id) {
                             <span>$<?php echo number_format($product['current_price'], 2); ?></span>
                         </div>
 
-                        <button>Add to Cart</button>
+                        <button onclick = "addToCart()">Add to Cart</button>
                     </div>
                 </main>
 
