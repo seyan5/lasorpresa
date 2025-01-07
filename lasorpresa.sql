@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 07, 2025 at 08:47 AM
+-- Generation Time: Jan 07, 2025 at 12:35 PM
 -- Server version: 10.4.24-MariaDB
 -- PHP Version: 8.1.4
 
@@ -36,9 +36,27 @@ INSERT INTO `color` (`color_id`, `color_name`) VALUES
 (3, 'Yellow'),
 (4, 'Pink'),
 (5, 'Violet'),
-(6, 'White'),
-(7, 'Black'),
-(8, 'Gold');
+(6, 'White');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `container`
+--
+
+CREATE TABLE `container` (
+  `container_id` int(11) NOT NULL,
+  `container_name` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `container`
+--
+
+INSERT INTO `container` (`container_id`, `container_name`) VALUES
+(1, 'Basket'),
+(2, 'Paper Wrap'),
+(3, 'Plastic Wrap');
 
 -- --------------------------------------------------------
 
@@ -57,10 +75,12 @@ CREATE TABLE `end_category` (
 --
 
 INSERT INTO `end_category` (`ecat_id`, `ecat_name`, `mcat_id`) VALUES
-(7, 'Rose', 3),
-(8, 'Tulip', 3),
-(9, 'Sunflower', 3),
-(10, '5000', 8);
+(14, 'Rose', 3),
+(15, 'Tulip', 3),
+(16, 'Sunflower', 3),
+(17, 'Chocolate', 19),
+(18, 'Balloon', 19),
+(19, 'Stuff Toy', 19);
 
 -- --------------------------------------------------------
 
@@ -81,7 +101,9 @@ CREATE TABLE `flowers` (
 --
 
 INSERT INTO `flowers` (`id`, `name`, `quantity`, `price`, `image`) VALUES
-(2, 'Rosas', 100, '123.00', '../uploads/flowerRose Flower.jpeg');
+(2, 'Rosas', 100, '123.00', '../uploads/flowerRose Flower.jpeg'),
+(3, 'Tulip', 100, '25.00', '../uploads/flowertulip flower.png'),
+(4, 'Lilac', 10, '25.00', '../uploads/flowerlilac.jpeg');
 
 -- --------------------------------------------------------
 
@@ -101,14 +123,9 @@ CREATE TABLE `mid_category` (
 
 INSERT INTO `mid_category` (`mcat_id`, `mcat_name`, `tcat_id`) VALUES
 (3, 'Flower', 3),
-(8, 'Money', 3),
-(10, 'Birthday', 1),
-(11, 'Debut', 1),
-(12, 'Valentines', 1),
-(15, 'Funeral', 1),
-(16, 'Chocolate', 2),
-(17, 'Balloons', 2),
-(18, 'Stuff Toy', 2);
+(19, 'Addons', 2),
+(20, 'Occasion', 1),
+(22, 'Money', 3);
 
 -- --------------------------------------------------------
 
@@ -138,17 +155,8 @@ CREATE TABLE `product` (
 --
 
 INSERT INTO `product` (`p_id`, `name`, `old_price`, `current_price`, `quantity`, `featured_photo`, `description`, `short_description`, `feature`, `other_photo`, `condition`, `is_featured`, `is_active`, `ecat_id`) VALUES
-(1, 'tst', '25', '50', 100, 'product-featured-1.jpg', 'test', 'test', 't', '', 't', 1, 1, 4),
-(2, 'tst', '25', '50', 100, 'product-featured-2.jpg', 'test', 'test', 't', '', 't', 1, 1, 4),
-(3, 'Rose', '25', '50', 100, 'product-featured-3.jpg', 't', 't', 't', '', 't', 1, 1, 0),
-(4, 'test', '25', '50', 100, 'product-featured-4.jpg', 'tewst', 'test', 'test', '', 'test', 1, 1, 0),
-(5, 'test', '25', '50', 100, 'product-featured-5.jpg', 'asd', 'asd', 'asd', '', 'asd', 1, 1, 0),
-(7, 'test', '123', '123', 5151, 'product-featured-7.jpg', 'asd', 'asd', 'asd', '', 'asd', 1, 1, 7),
-(8, 'Red Rose', '50', '25', 10, 'product-featured-8.jpg', 'test', 'test', 'test', '', 'test', 1, 1, 7),
-(9, 'Sunflower', '50', '50', 100, 'product-featured-9.jpg', 'test', 'test', 'test', '', 'test', 1, 1, 9),
-(10, 'Rose', '20', '15', 100, 'product-featured-10.jpeg', '', '', '', '', '', 0, 0, 0),
-(11, 'Tulip', '50', '25', 5, 'product-featured-11.jpeg', '', '', '', '', '', 0, 1, 8),
-(12, 'test', '25', '50', 1, 'product-featured-12.jpg', '', '', '', '', '', 0, 0, 0);
+(18, 'Red Rose', '10000', '10000', 5, 'product-featured-18.jpg', 'Red Rose', '', '', '', '', 0, 1, 14),
+(19, 'Choc', '1000', '1000', 5, 'product-featured-19.jpg', 'choc', '', '', '', '', 0, 1, 17);
 
 -- --------------------------------------------------------
 
@@ -167,10 +175,6 @@ CREATE TABLE `product_color` (
 --
 
 INSERT INTO `product_color` (`id`, `color_id`, `p_id`) VALUES
-(1, 0, 2),
-(2, 0, 3),
-(3, 0, 4),
-(4, 0, 5),
 (7, 0, 6),
 (8, 0, 6),
 (9, 0, 6),
@@ -179,11 +183,7 @@ INSERT INTO `product_color` (`id`, `color_id`, `p_id`) VALUES
 (12, 0, 6),
 (13, 0, 6),
 (14, 0, 6),
-(15, 0, 7),
-(16, 0, 8),
-(17, 0, 9),
-(18, 1, 10),
-(20, 4, 11);
+(22, 1, 15);
 
 -- --------------------------------------------------------
 
@@ -196,35 +196,6 @@ CREATE TABLE `product_photo` (
   `photo` varchar(255) NOT NULL,
   `p_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Dumping data for table `product_photo`
---
-
-INSERT INTO `product_photo` (`pp_id`, `photo`, `p_id`) VALUES
-(1, '1.jpg', 1),
-(2, '2.jpg', 1),
-(3, '3.jpg', 1),
-(4, '4.jpg', 1),
-(5, '5.jpg', 1),
-(6, '6.jpg', 1),
-(7, '7.jpg', 1),
-(8, '8.jpg', 1),
-(9, '9.jpg', 1),
-(10, '10.jpg', 1),
-(11, '11.jpg', 1),
-(12, '12.jpg', 1),
-(13, '13.jpg', 1),
-(14, '14.jpg', 1),
-(15, '15.jpg', 1),
-(16, '16.jpg', 1),
-(17, '17.jpg', 1),
-(18, '18.jpg', 2),
-(19, '19.jpg', 3),
-(20, '20.jpg', 4),
-(22, '22.jpg', 7),
-(23, '23.jpg', 8),
-(24, '24.jpg', 9);
 
 -- --------------------------------------------------------
 
@@ -252,7 +223,10 @@ INSERT INTO `product_type` (`id`, `type_id`, `p_id`) VALUES
 (7, 5, 8),
 (8, 5, 9),
 (9, 9, 10),
-(10, 9, 11);
+(10, 9, 11),
+(11, 11, 13),
+(12, 9, 15),
+(13, 9, 19);
 
 -- --------------------------------------------------------
 
@@ -569,10 +543,9 @@ CREATE TABLE `top_category` (
 --
 
 INSERT INTO `top_category` (`tcat_id`, `tcat_name`, `show_on_menu`) VALUES
-(1, 'Ocassions', 1),
+(1, 'Occasions', 1),
 (2, 'Addons', 1),
-(3, 'Bouquet', 0),
-(7, 'Flowers', 0);
+(3, 'Bouquet', 0);
 
 -- --------------------------------------------------------
 
@@ -628,6 +601,12 @@ INSERT INTO `users` (`id`, `name`, `email`, `username`, `contact`, `password`, `
 --
 ALTER TABLE `color`
   ADD PRIMARY KEY (`color_id`);
+
+--
+-- Indexes for table `container`
+--
+ALTER TABLE `container`
+  ADD PRIMARY KEY (`container_id`);
 
 --
 -- Indexes for table `end_category`
@@ -724,34 +703,40 @@ ALTER TABLE `color`
   MODIFY `color_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
+-- AUTO_INCREMENT for table `container`
+--
+ALTER TABLE `container`
+  MODIFY `container_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
 -- AUTO_INCREMENT for table `end_category`
 --
 ALTER TABLE `end_category`
-  MODIFY `ecat_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `ecat_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
 
 --
 -- AUTO_INCREMENT for table `flowers`
 --
 ALTER TABLE `flowers`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `mid_category`
 --
 ALTER TABLE `mid_category`
-  MODIFY `mcat_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+  MODIFY `mcat_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
 
 --
 -- AUTO_INCREMENT for table `product`
 --
 ALTER TABLE `product`
-  MODIFY `p_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `p_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 
 --
 -- AUTO_INCREMENT for table `product_color`
 --
 ALTER TABLE `product_color`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
 
 --
 -- AUTO_INCREMENT for table `product_photo`
@@ -763,7 +748,7 @@ ALTER TABLE `product_photo`
 -- AUTO_INCREMENT for table `product_type`
 --
 ALTER TABLE `product_type`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT for table `rating`
@@ -793,7 +778,7 @@ ALTER TABLE `tbl_settings`
 -- AUTO_INCREMENT for table `top_category`
 --
 ALTER TABLE `top_category`
-  MODIFY `tcat_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `tcat_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `type`
