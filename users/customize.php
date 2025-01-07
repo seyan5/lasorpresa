@@ -26,34 +26,36 @@ require 'header.php';
       </section>
 
       <div class="container">
-        <h2>Flower Customization</h2>
-        <form method="POST" action="custom-process.php" id="customization-form">
-            <!-- Flower Types Section -->
-            <div id="flower-types-container">
+    <h2>Flower Customization</h2>
+    <form method="POST" action="custom-process.php" id="customization-form">
+        <!-- Flower Types Section -->
+        <div id="flower-types-container">
             <button type="button" class="btn btn-success add-flower-btn">Add Flower</button>
-                <div class="form-group flower-type">
-                    <label for="type" class="col-sm-3 control-label">Select Flower Type</label>
-                    <div class="col-sm-4">
-                        <select name="type[]" class="form-control select2 flower-type-select" multiple="multiple" id="flower-type">
-                            <?php
-                            // Fetch flower types from the database
-                            $statement = $pdo->prepare("SELECT * FROM flowers ORDER BY id ASC");
-                            $statement->execute();
-                            $types = $statement->fetchAll(PDO::FETCH_ASSOC);
-                            foreach ($types as $row) {
-                                echo "<option value='{$row['id']}' data-quantity='{$row['quantity']}'>{$row['name']}</option>";
-                            }
-                            ?>
-                        </select>
-                    </div>
-                    <div class="col-sm-4">
-                        
-                    </div>
+            <div class="form-group flower-type">
+                <label for="type" class="col-sm-3 control-label">Select Flower Type</label>
+                <div class="col-sm-4">
+                    <select name="type[]" class="form-control select2 flower-type-select" multiple="multiple" id="flower-type">
+                        <?php
+                        // Fetch flower types from the database
+                        $statement = $pdo->prepare("SELECT * FROM flowers ORDER BY id ASC");
+                        $statement->execute();
+                        $types = $statement->fetchAll(PDO::FETCH_ASSOC);
+                        foreach ($types as $row) {
+                            echo "<option value='{$row['id']}' data-quantity='{$row['quantity']}'>{$row['name']}</option>";
+                        }
+                        ?>
+                    </select>
+                    <!-- Flower Quantity Slider -->
+                    <div class="flower-quantity-container"></div> <!-- Container for quantity slider inside col-sm-4 -->
+                </div>
+                <div class="col-sm-4">
                 </div>
             </div>
+        </div>
 
-            <!-- Dynamic Flower Quantity Selection -->
-            <div id="quantity-section-container"></div>
+        <!-- Dynamic Flower Quantity Selection (for added flowers) -->
+        <div id="quantity-section-container"></div>
+
 
             <!-- Size of Flower Selection -->
             <div class="form-group">
