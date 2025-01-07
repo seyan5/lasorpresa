@@ -245,7 +245,7 @@ if(isset($_POST['form1'])) {
 							</div>
 						</div>
 						<div class="form-group">
-							<label for="" class="col-sm-3 control-label">Select type</label>
+							<label for="" class="col-sm-3 control-label">Select Size</label>
 							<div class="col-sm-4">
 								<select name="type[]" class="form-control select2" multiple="multiple">
 									<?php
