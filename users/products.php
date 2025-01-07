@@ -47,10 +47,6 @@ $statement = $pdo->prepare("
 $statement->execute();
 $result = $statement->fetchAll(PDO::FETCH_ASSOC);
 
-// Debug: Print $result to check if it contains data
-echo '<pre>';
-print_r($result); // This will help you see the structure of the fetched data
-echo '</pre>';
 ?>
 
 <!-- Categories List (Categories Filter) -->
