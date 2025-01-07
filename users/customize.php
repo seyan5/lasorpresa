@@ -108,7 +108,7 @@ require 'header.php';
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <script>
    $(document).ready(function() {
-    // Initialize the select2 plugin
+    // Initialize the select2 plugin for all select elements
     $('.select2').select2();
 
     // Add new flower type dropdown dynamically
@@ -177,6 +177,7 @@ require 'header.php';
         });
     });
 });
+
 
 
 </script>
