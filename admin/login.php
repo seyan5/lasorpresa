@@ -1,9 +1,9 @@
 <?php
 ob_start();
 session_start();
-include("admin/inc/config.php");
-include("admin/inc/functions.php");
-include("admin/inc/CSRF_Protect.php");
+include("inc/config.php");
+include("inc/functions.php");
+include("inc/CSRF_Protect.php");
 
 
 if (isset($_POST['login'])) {
