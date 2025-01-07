@@ -73,6 +73,15 @@ $result = $statement->fetchAll(PDO::FETCH_ASSOC);
     <!-- Products will be loaded here dynamically -->
 </div>
 
+<div class="filter-condition">
+    <select name="" id="select">
+        <option value="Default">Default</option>
+        <option value="LowToHigh">Low to High</option>
+        <option value="HighToLow">High to Low</option>
+    </select>
+</div>
+
+
 <!-- Product Modal -->
 <!-- Modal for Product Details -->
 <div id="productModal" class="modal" style="display:none;">
@@ -85,17 +94,6 @@ $result = $statement->fetchAll(PDO::FETCH_ASSOC);
         <button onclick="addToCart()">Add to Cart</button>
     </div>
 </div>
-
-
-
-
-      <div class="filter-condition">
-         <select name="" id="select">
-            <option value="Default">Default</option>
-            <option value="LowToHigh">Low to High</option>
-            <option value="HighToLow">High to Low</option>
-         </select>
-      </div>
 
    <div class="products-preview">
 
