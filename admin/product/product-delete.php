@@ -22,7 +22,7 @@ if(!isset($_REQUEST['id'])) {
 	$statement->execute(array($_REQUEST['id']));
 	$result = $statement->fetchAll(PDO::FETCH_ASSOC);							
 	foreach ($result as $row) {
-		$p_featured_photo = $row['featured_photo'];
+		$featured_photo = $row['featured_photo'];
 		unlink('../uploads/'.$featured_photo);
 	}
 
