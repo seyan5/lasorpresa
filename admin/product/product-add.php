@@ -1,6 +1,11 @@
 <?php require_once('../header.php'); ?>
 
 <?php
+
+$error_message = ''; // Initialize the error_message variable
+$success_message = ''; // Initialize the success_message variable
+
+
 if(isset($_POST['form1'])) {
 	$valid = 1;
 
