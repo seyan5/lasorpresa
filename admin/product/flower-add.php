@@ -10,7 +10,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Image upload logic (optional)
     if (isset($_FILES['image']) && $_FILES['image']['error'] === 0) {
-        $image = 'uploads/flower' . $_FILES['image']['name'];
+        $image = '../uploads/flower' . $_FILES['image']['name'];
         move_uploaded_file($_FILES['image']['tmp_name'], $image);
     } else {
         $image = ''; // Default or empty if no image
