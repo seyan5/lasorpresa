@@ -39,7 +39,7 @@ require 'header.php';
                             $statement->execute();
                             $types = $statement->fetchAll(PDO::FETCH_ASSOC);
                             foreach ($types as $row) {
-                                echo "<option value='{$row['id']}'>{$row['name']}</option>";
+                                echo "<option value='{$row['id']}' data-quantity='{$row['quantity']}'>{$row['name']}</option>";
                             }
                             ?>
                         </select>
@@ -50,6 +50,9 @@ require 'header.php';
                     </div>
                 </div>
             </div>
+
+            <!-- Dynamic Flower Quantity Selection -->
+            <div id="quantity-section-container"></div>
 
             <!-- Size of Flower Selection -->
             <div class="form-group">
@@ -112,13 +115,13 @@ require 'header.php';
                 <div class="form-group flower-type">
                     <label for="type" class="col-sm-3 control-label">Select Flower Type</label>
                     <div class="col-sm-4">
-                        <select name="type[]" class="form-control select2" multiple="multiple">
+                        <select name="type[]" class="form-control select2" multiple="multiple" id="flower-type">
                             <?php
                             $statement = $pdo->prepare("SELECT * FROM flowers ORDER BY id ASC");
                             $statement->execute();
                             $types = $statement->fetchAll(PDO::FETCH_ASSOC);
                             foreach ($types as $row) {
-                                echo "<option value='{$row['id']}'>{$row['name']}</option>";
+                                echo "<option value='{$row['id']}' data-quantity='{$row['quantity']}'>{$row['name']}</option>";
                             }
                             ?>
                         </select>
@@ -137,5 +140,36 @@ require 'header.php';
         $(document).on('click', '.remove-flower-btn', function() {
             $(this).closest('.flower-type').remove();
         });
+
+        // Display quantity dropdown based on selected flower
+        $(document).on('change', '.select2', function() {
+            var flowerId = $(this).val();
+            var quantityOptions = '';
+
+            // Loop through each selected flower to create a quantity dropdown
+            flowerId.forEach(function(flowerId) {
+                var selectedFlower = $("option[value='" + flowerId + "']");
+                var quantity = selectedFlower.data('quantity');
+                quantityOptions += `<div class="form-group">
+                    <label for="quantity">Quantity for ${selectedFlower.text()}</label>
+                    <select name="quantity[]" class="form-control select2" id="flower-quantity">
+                        ${generateQuantityOptions(quantity)}
+                    </select>
+                </div>`;
+            });
+
+            // Append the quantity options below the flower section
+            $('#quantity-section-container').html(quantityOptions);
+            $('.select2').select2(); // Reinitialize select2 for newly added elements
+        });
+
+        // Function to generate quantity options based on the max available quantity
+        function generateQuantityOptions(maxQuantity) {
+            var options = '';
+            for (var i = 1; i <= maxQuantity; i++) {
+                options += `<option value="${i}">${i}</option>`;
+            }
+            return options;
+        }
     });
 </script>
