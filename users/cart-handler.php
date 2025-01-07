@@ -1,12 +1,17 @@
 <?php
 require 'header.php';
 
-
+// Retrieve product details from the request
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Retrieve product details from the request
     $product_id = isset($_POST['product_id']) ? (int)$_POST['product_id'] : 0;
     $product_name = isset($_POST['product_name']) ? $_POST['product_name'] : '';
     $product_price = isset($_POST['product_price']) ? (float)$_POST['product_price'] : 0.0;
+
+    // Fetch the product image from the database
+    $statement = $pdo->prepare("SELECT featured_photo FROM product WHERE p_id = :p_id");
+    $statement->bindParam(':p_id', $product_id, PDO::PARAM_INT);
+    $statement->execute();
+    $product = $statement->fetch(PDO::FETCH_ASSOC);
 
     if ($product_id > 0 && $product_name && $product_price > 0) {
         // Initialize cart if not already initialized
@@ -19,11 +24,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Increment quantity if the product already exists
             $_SESSION['cart'][$product_id]['quantity'] += 1;
         } else {
-            // Add new product to the cart
+            // Add new product to the cart with the image path
             $_SESSION['cart'][$product_id] = [
                 'name' => $product_name,
                 'price' => $product_price,
-                'quantity' => 1
+                'quantity' => 1,
+                'image' => $product['featured_photo'] // Save image path in session
             ];
         }
 
@@ -44,4 +50,3 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'message' => 'Invalid request method!'
     ]);
 }
-?>
