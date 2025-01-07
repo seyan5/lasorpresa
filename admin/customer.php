@@ -1,6 +1,4 @@
-<?php
-session_start();
-include("admin/inc/config.php");
+<?php require("header.php") 
 
 
 
