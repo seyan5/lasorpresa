@@ -3,6 +3,31 @@
 <link rel="stylesheet" href="../css/product.css">
 <script src="../js/product.js" defer></script>
 
+<header>
+
+    <input type="checkbox" name="" id="toggler">
+    <label for="toggler" class="fas fa-bars"></label>
+
+    <!-- <a href="#" class="logo">Flower<span>.</span></a> -->
+    <img src="../images/logo.png" alt="" class="logos" href="">
+    <nav class="navbar">
+        <a href="#home">Home</a>
+        <a href="#about">About</a>
+        <a href="products.php">Product</a>
+        <a href="#occasion">Occasion</a>
+        <a href="#review">Review</a>
+        <a href="#contacts">Contacts</a>
+    </nav>
+     
+    <div class="icons">
+        <a href="#" class="fas fa-heart"></a>
+        <a href="cart.php" class="fas fa-shopping-cart"></a>
+
+        <a href="#" class="fas fa-user"></a>
+    </div>
+
+</header>
+
 <section>
    <div class="container">
 
