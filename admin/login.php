@@ -1,6 +1,11 @@
+
 <?php
+ob_start();
 session_start();
-include 'config.php'; // Include your database connection file
+include("inc/config.php");
+include("inc/functions.php");
+include("inc/CSRF_Protect.php");
+
 
 date_default_timezone_set('Asia/Kolkata');
 $date = date('Y-m-d');
@@ -86,8 +91,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 }
 
 
-// Close connection
-$conn->close();
+
 ?>
 
 <!DOCTYPE html>
