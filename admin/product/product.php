@@ -208,6 +208,10 @@
 							$result = $statement->fetchAll(PDO::FETCH_ASSOC);
 							foreach ($result as $row) {
 								$i++;
+                                echo "<pre>";
+print_r($result);
+echo "</pre>";
+
 								?>
 								<tr>
 									<td><?php echo $i; ?></td>
