@@ -9,6 +9,7 @@ require 'header.php';
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Flower Customization</title>
   <link rel="stylesheet" href="../css/customize.css">
+  <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 </head>
 <body>
   <div class="container">
@@ -27,11 +28,6 @@ require 'header.php';
       <div class="container">
         <h2>Flower Customization</h2>
         <form method="POST" action="custom-process.php" id="customization-form">
-        <div class="col-sm-4">
-                        <button type="button" class="btn btn-success add-flower-btn">Add Flower</button>
-                        <button type="button" class="btn btn-danger remove-flower-btn">Remove Flower</button>
-                    </div>
-                </div>
             <!-- Flower Types Section -->
             <div id="flower-types-container">
                 <div class="form-group flower-type">
@@ -49,7 +45,11 @@ require 'header.php';
                             ?>
                         </select>
                     </div>
-                    
+                    <div class="col-sm-4">
+                        <button type="button" class="btn btn-success add-flower-btn">Add Flower</button>
+                        <button type="button" class="btn btn-danger remove-flower-btn">Remove Flower</button>
+                    </div>
+                </div>
             </div>
 
             <!-- Dynamic Flower Quantity Selection -->
@@ -105,6 +105,7 @@ require 'header.php';
 <!-- Include jQuery and select2 Scripts -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <script>
     $(document).ready(function() {
         // Initialize the select2 plugin
@@ -142,12 +143,12 @@ require 'header.php';
             $(this).closest('.flower-type').remove();
         });
 
-        // Display quantity input field based on selected flower
+        // Display quantity slider input field based on selected flower
         $(document).on('change', '.flower-type-select', function() {
             var selectedFlowerIds = $(this).val();
             var quantityFields = '';
 
-            // Create a quantity input field for each selected flower
+            // Create a quantity slider for each selected flower
             selectedFlowerIds.forEach(function(flowerId) {
                 var selectedFlower = $("option[value='" + flowerId + "']");
                 var flowerName = selectedFlower.text();
@@ -156,13 +157,20 @@ require 'header.php';
                 quantityFields += `
                     <div class="form-group flower-quantity">
                         <label for="quantity">Quantity for ${flowerName}</label>
-                        <input type="number" name="quantity[]" class="form-control" min="1" max="${maxQuantity}" value="1">
+                        <input type="range" name="quantity[]" class="form-control quantity-slider" min="1" max="${maxQuantity}" value="1" id="slider-${flowerId}">
+                        <output for="slider-${flowerId}" class="quantity-output">1</output>
                     </div>
                 `;
             });
 
-            // Append the quantity input fields to the container
+            // Append the quantity slider inputs to the container
             $('#quantity-section-container').html(quantityFields);
+
+            // Update the slider value display
+            $(document).on('input', '.quantity-slider', function() {
+                var sliderValue = $(this).val();
+                $(this).next('.quantity-output').text(sliderValue);
+            });
         });
     });
 </script>
