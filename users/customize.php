@@ -38,44 +38,30 @@ require 'header.php';
                             $statement = $pdo->prepare("SELECT * FROM flowers ORDER BY id ASC");
                             $statement->execute();
                             $types = $statement->fetchAll(PDO::FETCH_ASSOC);
-                            if ($types) {
-                                foreach ($types as $row) {
-                                    echo "<option value='{$row['id']}'>{$row['name']}</option>";
-                                }
-                            } else {
-                                echo "<option>No flower types available</option>";
+                            foreach ($types as $row) {
+                                echo "<option value='{$row['id']}'>{$row['name']}</option>";
                             }
                             ?>
                         </select>
                     </div>
-                    <!-- Add and Remove buttons -->
-                    
-                </div>
-            </div>
-
-            <!-- Button to Add New Flower Type Dropdown -->
-            <div class="col-sm-4">
-                        <button type="button" class="btn btn-secondary" id="add-flower-btn">Add Flower</button>
+                    <div class="col-sm-4">
+                        <button type="button" class="btn btn-success add-flower-btn">Add Flower</button>
                         <button type="button" class="btn btn-danger remove-flower-btn">Remove Flower</button>
                     </div>
-            
+                </div>
+            </div>
 
             <!-- Size of Flower Selection -->
             <div class="form-group">
                 <label for="size" class="col-sm-3 control-label">Select Size</label>
                 <div class="col-sm-4">
-                    <select name="size[]" class="form-control select2" multiple="multiple" id="flower-size">
+                    <select name="size[]" class="form-control select2" multiple="multiple">
                         <?php
-                        // Fetch flower sizes from the database (ensure this table exists or adjust as needed)
                         $statement = $pdo->prepare("SELECT * FROM type ORDER BY type_id ASC");
                         $statement->execute();
                         $sizes = $statement->fetchAll(PDO::FETCH_ASSOC);
-                        if ($sizes) {
-                            foreach ($sizes as $row) {
-                                echo "<option value='{$row['type_id']}'>{$row['type_name']}</option>";
-                            }
-                        } else {
-                            echo "<option>No sizes available</option>";
+                        foreach ($sizes as $row) {
+                            echo "<option value='{$row['type_id']}'>{$row['type_name']}</option>";
                         }
                         ?>
                     </select>
@@ -86,18 +72,13 @@ require 'header.php';
             <div class="form-group">
                 <label for="color" class="col-sm-3 control-label">Select Color</label>
                 <div class="col-sm-4">
-                    <select name="color[]" class="form-control select2" multiple="multiple" id="flower-color">
+                    <select name="color[]" class="form-control select2" multiple="multiple">
                         <?php
-                        // Fetch flower colors from the database
                         $statement = $pdo->prepare("SELECT * FROM color ORDER BY color_id ASC");
                         $statement->execute();
                         $colors = $statement->fetchAll(PDO::FETCH_ASSOC);
-                        if ($colors) {
-                            foreach ($colors as $row) {
-                                echo "<option value='{$row['color_id']}'>{$row['color_name']}</option>";
-                            }
-                        } else {
-                            echo "<option>No colors available</option>";
+                        foreach ($colors as $row) {
+                            echo "<option value='{$row['color_id']}'>{$row['color_name']}</option>";
                         }
                         ?>
                     </select>
@@ -125,7 +106,7 @@ require 'header.php';
         // Initialize the select2 plugin
         $('.select2').select2();
 
-        // Add new flower type dropdown with Add and Remove buttons on click
+        // Add new flower type dropdown
         $('#add-flower-btn').on('click', function() {
             var flowerTypeHTML = `
                 <div class="form-group flower-type">
@@ -133,38 +114,26 @@ require 'header.php';
                     <div class="col-sm-4">
                         <select name="type[]" class="form-control select2" multiple="multiple">
                             <?php
-                            // Fetch flower types from the database
                             $statement = $pdo->prepare("SELECT * FROM flowers ORDER BY id ASC");
                             $statement->execute();
                             $types = $statement->fetchAll(PDO::FETCH_ASSOC);
-                            if ($types) {
-                                foreach ($types as $row) {
-                                    echo "<option value='{$row['id']}'>{$row['name']}</option>";
-                                }
-                            } else {
-                                echo "<option>No flower types available</option>";
+                            foreach ($types as $row) {
+                                echo "<option value='{$row['id']}'>{$row['name']}</option>";
                             }
                             ?>
                         </select>
                     </div>
-                    <!-- Add and Remove buttons for each flower -->
                     <div class="col-sm-4">
                         <button type="button" class="btn btn-success add-flower-btn">Add Flower</button>
                         <button type="button" class="btn btn-danger remove-flower-btn">Remove Flower</button>
                     </div>
                 </div>
             `;
-
-            // Append the new flower type dropdown to the container
             $('#flower-types-container').append(flowerTypeHTML);
-
-            // Reinitialize select2 for the newly added select elements
-            $('.select2').select2();
+            $('.select2').select2(); // Reinitialize select2
         });
 
-
-
-        // Handle the remove flower button for each flower section
+        // Remove flower type section
         $(document).on('click', '.remove-flower-btn', function() {
             $(this).closest('.flower-type').remove();
         });
