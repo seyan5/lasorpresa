@@ -96,6 +96,7 @@ require 'header.php';
       </section>
     </main>
   </div>
+  
 </body>
 </html>
 
@@ -170,19 +171,19 @@ $(document).ready(function() {
 
         // Update the slider value display and price when the user interacts with the slider
         $(document).on('input', '.quantity-slider', function() {
-            var quantity = $(this).val();
-            var price = $(this).data('price');
-            var totalPrice = quantity * price;
+    var quantity = $(this).val(); // Get the quantity from the slider
+    var price = $(this).data('price'); // Get the price from the data attribute
+    var totalPrice = quantity * price; // Calculate the total price for this flower
 
-            // Update the quantity display
-            $(this).next('.quantity-output').text(quantity);
+    // Update the quantity display
+    $(this).next('.quantity-output').text(quantity);
 
-            // Update the price display
-            $(this).closest('.flower-quantity').find('.price').text(totalPrice.toFixed(2));
+    // Update the price display in the flower-price span
+    $(this).closest('.flower-quantity').find('.price').text(totalPrice.toFixed(2));
 
-            // Recalculate the total price on input
-            calculateTotalPrice();
-        });
+    // Recalculate the total price on input
+    calculateTotalPrice();
+});
     });
 
     // Function to calculate the total price for all flowers
