@@ -28,7 +28,7 @@ if (isset($_POST['login'])) {
                     $_SESSION['cust_email'] = $user['cust_email'];
 
                     // Redirect to the dashboard or user home page
-                    header("Location: dashboard.php"); // Change to the appropriate page
+                    header("Location: users/index.php"); // Change to the appropriate page
                     exit;
                 } else {
                     echo "Your account is not verified yet. Please check your email to verify your account.";
