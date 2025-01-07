@@ -9,7 +9,7 @@
 <body>
   <div class="container">
     <header class="header">
-      <a href="#" class="back-link">
+      <a href="index.php" class="back-link">
         <span class="back-arrow">←</span> La Sorpresa Home Page
       </a>
     </header>
@@ -19,55 +19,72 @@
         <h2>Customization</h2>
         <img src="../ivd/flower.png" alt="Flower Bouquet" class="bouquet-image">
       </section>
-      <section class="form-section">
-        <h2>Customize your own bouquet</h2>
-        <form class="customization-form">
-          <div class="select-group">
-            <div>
-              <label for="typeOfFlower">Type of Flower</label>
-              <select id="typeOfFlower">
-                <option>Rose</option>
-                <option>Tulip</option>
-                <option>Lily</option>
-              </select>
+      <div class="container">
+    <h2>Flower Customization</h2>
+    <form method="POST" action="custom-process.php">
+        <!-- Type of Flower Selection -->
+        <div class="form-group">
+            <label for="type" class="col-sm-3 control-label">Select Flower Type</label>
+            <div class="col-sm-4">
+                <select name="type[]" class="form-control select2" multiple="multiple">
+                    <?php
+                    // Fetch flower types from the database
+                    $statement = $pdo->prepare("SELECT * FROM type ORDER BY type_id ASC");
+                    $statement->execute();
+                    $types = $statement->fetchAll(PDO::FETCH_ASSOC);
+                    foreach ($types as $row) {
+                        echo "<option value='{$row['type_id']}'>{$row['type_name']}</option>";
+                    }
+                    ?>
+                </select>
             </div>
-            <div>
-              <label for="numberOfFlowers">Number of Flowers</label>
-              <input type="number" id="numberOfFlowers" value="3">
+        </div>
+
+        <!-- Size of Flower Selection -->
+        <div class="form-group">
+            <label for="size" class="col-sm-3 control-label">Select Size</label>
+            <div class="col-sm-4">
+                <select name="size[]" class="form-control select2" multiple="multiple">
+                    <?php
+                    // Assuming there's a 'size' table for size options (adjust if needed)
+                    $statement = $pdo->prepare("SELECT * FROM size ORDER BY size_id ASC");
+                    $statement->execute();
+                    $sizes = $statement->fetchAll(PDO::FETCH_ASSOC);
+                    foreach ($sizes as $row) {
+                        echo "<option value='{$row['size_id']}'>{$row['size_name']}</option>";
+                    }
+                    ?>
+                </select>
             </div>
-          </div>
-      
-          <!-- New container for size, add another flower, and number of added flowers -->
-          <div class="row-container">
-            <div class="size-group">
-              <label for="size">Size</label>
-              <div class="radio-buttons">
-                <label><input type="radio" name="size" value="medium"> Medium</label>
-                <label><input type="radio" name="size" value="large" checked> Large</label>
-                <label><input type="radio" name="size" value="grande"> Grande</label>
-              </div>
+        </div>
+
+        <!-- Color Selection -->
+        <div class="form-group">
+            <label for="color" class="col-sm-3 control-label">Select Color</label>
+            <div class="col-sm-4">
+                <select name="color[]" class="form-control select2" multiple="multiple">
+                    <?php
+                    // Fetch flower colors from the database
+                    $statement = $pdo->prepare("SELECT * FROM color ORDER BY color_id ASC");
+                    $statement->execute();
+                    $colors = $statement->fetchAll(PDO::FETCH_ASSOC);
+                    foreach ($colors as $row) {
+                        echo "<option value='{$row['color_id']}'>{$row['color_name']}</option>";
+                    }
+                    ?>
+                </select>
             </div>
-      
-            <div class="flower-group">
-              <label for="addAnotherFlower">Add Another Flower</label>
-              <select id="addAnotherFlower">
-                <option value="">Select a Flower</option>
-                <option>Sunflower</option>
-                <option>Orchid</option>
-                <option>Carnation</option>
-              </select>
-              
-              <label for="additionalFlowerCount">Number of Added Flowers</label>
-              <input type="number" id="additionalFlowerCount" value="2">
+        </div>
+
+        <!-- Submit Button -->
+        <div class="form-group">
+            <div class="col-sm-4">
+                <button type="submit" class="btn btn-primary">Customize Your Bouquet</button>
             </div>
-          </div>
-      
-          <label for="wrapperColor">Wrapper Color</label>
-          <select id="wrapperColor">
-            <option>Red</option>
-            <option>Blue</option>
-            <option>Pink</option>
-          </select>
+        </div>
+    </form>
+</div>
+
       
           <label for="customizedCard">Customized Card</label>
           <textarea id="customizedCard" placeholder="Happy Monthsary"></textarea>
