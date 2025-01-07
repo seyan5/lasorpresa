@@ -1,30 +1,37 @@
 <?php
-require 'users/header.php'; // Include your database connection here
+include("admin/inc/config.php");
+include("admin/inc/functions.php");
+include("admin/inc/CSRF_Protect.php");
+
 
 if (isset($_GET['token'])) {
     $token = $_GET['token'];
 
-    // Find the token in the email_verifications table
-    $stmt = $pdo->prepare("SELECT * FROM email_verifications WHERE token = :token");
-    $stmt->bindParam(':token', $token);
-    $stmt->execute();
-    $verification = $stmt->fetch(PDO::FETCH_ASSOC);
+    try {
+        // Verify the token
+        $stmt = $pdo->prepare("SELECT cust_id FROM email_verifications WHERE token = :token");
+        $stmt->execute([':token' => $token]);
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    if ($verification) {
-        // Token is valid, update the customer status to active
-        $cust_id = $verification['cust_id'];
-        $update_stmt = $pdo->prepare("UPDATE customer SET cust_status = 'active' WHERE cust_id = :cust_id");
-        $update_stmt->bindParam(':cust_id', $cust_id);
-        $update_stmt->execute();
+        if ($result) {
+            $cust_id = $result['cust_id'];
 
-        // Delete the verification token (optional)
-        $delete_stmt = $pdo->prepare("DELETE FROM email_verifications WHERE token = :token");
-        $delete_stmt->bindParam(':token', $token);
-        $delete_stmt->execute();
+            // Update the customer's status to active
+            $stmt = $pdo->prepare("UPDATE customer SET cust_status = 'active' WHERE cust_id = :cust_id");
+            $stmt->execute([':cust_id' => $cust_id]);
 
-        echo "Your email has been verified. You can now log in.";
-    } else {
-        echo "Invalid or expired verification token.";
+            // Remove the token from the database
+            $stmt = $pdo->prepare("DELETE FROM email_verifications WHERE cust_id = :cust_id");
+            $stmt->execute([':cust_id' => $cust_id]);
+
+            echo "Email verified successfully!";
+        } else {
+            echo "Invalid or expired token.";
+        }
+    } catch (Exception $e) {
+        echo "Error: " . $e->getMessage();
     }
+} else {
+    echo "No token provided.";
 }
 ?>
