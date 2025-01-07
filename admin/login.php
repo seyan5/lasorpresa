@@ -11,8 +11,8 @@ if (isset($_POST['login'])) {
 
     try {
         // Query the database to get the customer by email
-        $stmt = $pdo->prepare("SELECT id, name, email, password FROM users WHERE email = :email");
-        $stmt->execute([':email' => $email]);
+        $stmt = $pdo->prepare("SELECT id, name, email, password FROM users WHERE email = email");
+        $stmt->execute(['email' => $email]);
 
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
