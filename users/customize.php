@@ -26,76 +26,72 @@ require 'header.php';
       </section>
 
       <div class="container">
-    <h2>Flower Customization</h2>
-    <form method="POST" action="custom-process.php" id="customization-form">
-        <!-- Flower Types Section -->
-        <div id="flower-types-container">
+        <h2>Flower Customization</h2>
+        <form method="POST" action="custom-process.php" id="customization-form">
+          <!-- Flower Types Section -->
+          <div id="flower-types-container">
             <button type="button" class="btn btn-success add-flower-btn">Add Flower</button>
             <div class="form-group flower-type">
-                <label for="type" class="col-sm-3 control-label">Select Flower Type</label>
-                <div class="col-sm-4">
+              <label for="type" class="col-sm-3 control-label">Select Flower Type</label>
+              <div class="col-sm-4">
                 <select name="type[]" class="form-control select2 flower-type-select" multiple="multiple">
-    <?php
-    $statement = $pdo->prepare("SELECT * FROM flowers ORDER BY id ASC");
-    $statement->execute();
-    $types = $statement->fetchAll(PDO::FETCH_ASSOC);
-    foreach ($types as $row) {
-        echo "<option value='{$row['id']}' data-quantity='{$row['quantity']}' data-price='{$row['price']}'>{$row['name']}</option>";
-    }
-    ?>
-</select>
-                    <!-- Flower Quantity Slider -->
-                    <div class="flower-quantity-container"></div> <!-- Container for quantity slider inside col-sm-4 -->
-                </div>
-                <div class="col-sm-4">
-                </div>
+                  <?php
+                  $statement = $pdo->prepare("SELECT * FROM flowers ORDER BY id ASC");
+                  $statement->execute();
+                  $types = $statement->fetchAll(PDO::FETCH_ASSOC);
+                  foreach ($types as $row) {
+                      echo "<option value='{$row['id']}' data-quantity='{$row['quantity']}' data-price='{$row['price']}'>{$row['name']}</option>";
+                  }
+                  ?>
+                </select>
+                <!-- Flower Quantity Slider -->
+                <div class="flower-quantity-container"></div> <!-- Container for quantity slider -->
+              </div>
+              <div class="col-sm-4">
+              </div>
             </div>
-        </div>
+          </div>
 
-        <!-- Dynamic Flower Quantity Selection (for added flowers) -->
-        <div id="quantity-section-container"></div>
-
-
-            <!-- Size of Flower Selection -->
-            <div class="form-group">
-                <label for="size" class="col-sm-3 control-label">Select Size</label>
-                <div class="col-sm-4">
-                    <select name="size[]" class="form-control select2" multiple="multiple">
-                        <?php
-                        $statement = $pdo->prepare("SELECT * FROM type ORDER BY type_id ASC");
-                        $statement->execute();
-                        $sizes = $statement->fetchAll(PDO::FETCH_ASSOC);
-                        foreach ($sizes as $row) {
-                            echo "<option value='{$row['type_id']}'>{$row['type_name']}</option>";
-                        }
-                        ?>
-                    </select>
-                </div>
+          <!-- Size of Flower Selection -->
+          <div class="form-group">
+            <label for="size" class="col-sm-3 control-label">Select Size</label>
+            <div class="col-sm-4">
+              <select name="size[]" class="form-control select2" multiple="multiple">
+                <?php
+                $statement = $pdo->prepare("SELECT * FROM type ORDER BY type_id ASC");
+                $statement->execute();
+                $sizes = $statement->fetchAll(PDO::FETCH_ASSOC);
+                foreach ($sizes as $row) {
+                    echo "<option value='{$row['type_id']}'>{$row['type_name']}</option>";
+                }
+                ?>
+              </select>
             </div>
+          </div>
 
-            <!-- Color Selection -->
-            <div class="form-group">
-                <label for="color" class="col-sm-3 control-label">Select Color</label>
-                <div class="col-sm-4">
-                    <select name="color[]" class="form-control select2" multiple="multiple">
-                        <?php
-                        $statement = $pdo->prepare("SELECT * FROM color ORDER BY color_id ASC");
-                        $statement->execute();
-                        $colors = $statement->fetchAll(PDO::FETCH_ASSOC);
-                        foreach ($colors as $row) {
-                            echo "<option value='{$row['color_id']}'>{$row['color_name']}</option>";
-                        }
-                        ?>
-                    </select>
-                </div>
+          <!-- Color Selection -->
+          <div class="form-group">
+            <label for="color" class="col-sm-3 control-label">Select Color</label>
+            <div class="col-sm-4">
+              <select name="color[]" class="form-control select2" multiple="multiple">
+                <?php
+                $statement = $pdo->prepare("SELECT * FROM color ORDER BY color_id ASC");
+                $statement->execute();
+                $colors = $statement->fetchAll(PDO::FETCH_ASSOC);
+                foreach ($colors as $row) {
+                    echo "<option value='{$row['color_id']}'>{$row['color_name']}</option>";
+                }
+                ?>
+              </select>
             </div>
+          </div>
 
-            <!-- Submit Button -->
-            <div class="form-group">
-                <div class="col-sm-4">
-                    <button type="submit" class="btn btn-primary">Customize Your Bouquet</button>
-                </div>
+          <!-- Submit Button -->
+          <div class="form-group">
+            <div class="col-sm-4">
+              <button type="submit" class="btn btn-primary">Customize Your Bouquet</button>
             </div>
+          </div>
         </form>
       </section>
     </main>
@@ -108,7 +104,7 @@ require 'header.php';
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <script>
-   $(document).ready(function() {
+$(document).ready(function() {
     // Initialize the select2 plugin
     $('.select2').select2();
 
@@ -153,7 +149,6 @@ require 'header.php';
         var selectedFlowerIds = $(this).val(); // Get selected flower IDs
         selectedFlowerIds.forEach(function(flowerId) {
             var selectedFlower = $("option[value='" + flowerId + "']");
-            var flowerName = selectedFlower.text();
             var maxQuantity = selectedFlower.data('quantity');
             var flowerPrice = selectedFlower.data('price'); // Get the price from the data-price attribute
 
@@ -190,31 +185,6 @@ require 'header.php';
         });
     });
 
-    // Trigger the quantity slider for the first flower type on page load if a flower type is selected
-    $('#flower-type').each(function() {
-        var flowerContainer = $(this).closest('.flower-type');
-        var selectedFlowerIds = $(this).val();
-        selectedFlowerIds.forEach(function(flowerId) {
-            var selectedFlower = $("option[value='" + flowerId + "']");
-            var flowerPrice = selectedFlower.data('price');
-
-            var quantitySliderHTML = `
-                <div class="form-group flower-quantity">
-                    <label for="quantity">Quantity</label>
-                    <input type="range" name="quantity[]" class="form-control quantity-slider" min="1" max="${selectedFlower.data('quantity')}" value="1" data-price="${flowerPrice}" id="slider-${flowerId}">
-                    <output for="slider-${flowerId}" class="quantity-output">1</output>
-                </div>
-                <div class="total-price-container">
-                    <span class="flower-price">Price: $<span class="price">0</span></span>
-                </div>
-            `;
-
-            flowerContainer.find('.flower-quantity-container').append(quantitySliderHTML);
-        });
-
-        $(this).trigger('change');
-    });
-
     // Function to calculate the total price for all flowers
     function calculateTotalPrice() {
         var total = 0;
@@ -232,7 +202,4 @@ require 'header.php';
         $('#flower-type').trigger('change');
     }
 });
-
-
 </script>
-
