@@ -90,13 +90,29 @@
         </div>
 
 
-        <section class="content-header">
-	<div class="content-header-left">
-		<h1>View Products</h1>
-	</div>
-	<div class="content-header-right">
-		<a href="product/product.php" class="btn btn-primary btn-sm">Premade</a>
-		<a href="" class="btn btn-primary btn-sm">Flower</a>
-
-	</div>
-</section>
+        <section class="content">
+            <div class="row">
+                <div class="">
+                    <div class="">
+                        <div class="">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Settings</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><a href="product/product.php">Premade Flowers</a></td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href="">Flowers</a></td>
+                                    </tr>
+                
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
