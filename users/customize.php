@@ -107,7 +107,7 @@ require 'header.php';
         $('.select2').select2();
 
         // Add new flower type dropdown dynamically using event delegation
-        $(document).on('click', 'add-flower-btn', function() {
+        $(document).on('click', '.add-flower-btn', function() {
             var flowerTypeHTML = `
                 <div class="form-group flower-type">
                     <label for="type" class="col-sm-3 control-label">Select Flower Type</label>
