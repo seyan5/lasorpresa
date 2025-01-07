@@ -10,7 +10,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Image upload logic (optional)
     if (isset($_FILES['image']) && $_FILES['image']['error'] === 0) {
-        $image = 'uploads/' . $_FILES['image']['name'];
+        $image = 'uploads/flower' . $_FILES['image']['name'];
         move_uploaded_file($_FILES['image']['tmp_name'], $image);
     } else {
         $image = ''; // Default or empty if no image
@@ -21,14 +21,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $stmt->execute([$name, $quantity, $price, $image]);
 
     // Redirect or display a success message
-    header('Location: index.php');
+    header('Location: flower.php');
     exit();
 }
 ?>
 
 
 
-<form action="create_flower.php" method="POST" enctype="multipart/form-data">
+<form action="flower-add.php.php" method="POST" enctype="multipart/form-data">
     <label for="name">Flower Name:</label>
     <input type="text" name="name" id="name" required>
 

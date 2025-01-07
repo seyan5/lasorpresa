@@ -6,7 +6,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Get form data
     $id = $_POST['id'];
     $name = $_POST['name'];
-    $description = $_POST['description'];
+    $quantity = $_POST['quantity'];
     $price = $_POST['price'];
 
     // Image upload logic (optional)
