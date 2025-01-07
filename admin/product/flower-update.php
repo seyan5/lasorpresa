@@ -22,8 +22,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     // Update the database
-    $stmt = $pdo->prepare("UPDATE flowers SET name = ?,  price = ?, image = ? WHERE id = ?");
-    $stmt->execute([$name, $price, $image, $id]);
+    $stmt = $pdo->prepare("UPDATE flowers SET name = ?, quantity = ?, price = ?, image = ? WHERE id = ?");
+    $stmt->execute([$name, $quantity, $price, $image, $id]);
 
     // Redirect or display a success message
     header('Location: flower.php');

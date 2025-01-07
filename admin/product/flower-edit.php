@@ -15,6 +15,9 @@ $flower = $stmt->fetch(PDO::FETCH_ASSOC);
     <label for="name">Flower Name:</label>
     <input type="text" name="name" id="name" value="<?php echo htmlspecialchars($flower['name']); ?>" required>
 
+    <label for="quantity">Quantity:</label>
+    <input type="number" name="quantity" id="quantity" value="<?php echo $flower['quantity']; ?>" step="0.01" required>
+
     <label for="price">Price:</label>
     <input type="number" name="price" id="price" value="<?php echo $flower['price']; ?>" step="0.01" required>
 

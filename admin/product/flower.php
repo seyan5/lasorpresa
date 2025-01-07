@@ -1,6 +1,6 @@
 <?php
 // Database connection
-require_once('../header.php');
+require_once('../header.php.php');
 
 $stmt = $pdo->prepare("SELECT * FROM flowers");
 $stmt->execute();
@@ -14,6 +14,7 @@ $flowers = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <li>
             <img src="<?php echo htmlspecialchars($flower['image']); ?>" alt="<?php echo htmlspecialchars($flower['name']); ?>" width="50">
             <strong><?php echo htmlspecialchars($flower['name']); ?></strong><br>
+            Quantity: <?php echo htmlspecialchars($flower['quantity']); ?><br>
             $<?php echo number_format($flower['price'], 2); ?><br>
             <a href="flower-edit.php?id=<?php echo $flower['id']; ?>">Edit</a>
             <a href="flower-delete.php?id=<?php echo $flower['id']; ?>">Delete</a>
