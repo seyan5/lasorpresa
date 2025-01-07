@@ -101,7 +101,7 @@
                                 </thead>
                                 <tbody>
                                     <tr>
-                                        <td><a href="settings/type.php">Type</a></td>
+                                        <td><a href="settings/type.php">Size</a></td>
                                     </tr>
                                     <tr>
                                         <td><a href="settings/color.php">Color</a></td>
