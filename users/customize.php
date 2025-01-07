@@ -106,8 +106,8 @@ require 'header.php';
         // Initialize the select2 plugin
         $('.select2').select2();
 
-        // Add new flower type dropdown
-        $('#add-flower-btn').on('click', function() {
+        // Add new flower type dropdown dynamically using event delegation
+        $(document).on('click', '#add-flower-btn', function() {
             var flowerTypeHTML = `
                 <div class="form-group flower-type">
                     <label for="type" class="col-sm-3 control-label">Select Flower Type</label>
@@ -130,7 +130,7 @@ require 'header.php';
                 </div>
             `;
             $('#flower-types-container').append(flowerTypeHTML);
-            $('.select2').select2(); // Reinitialize select2
+            $('.select2').select2(); // Reinitialize select2 for newly added elements
         });
 
         // Remove flower type section
