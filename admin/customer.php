@@ -1,10 +1,18 @@
-<?php require("header.php") 
+<?php
+
+include("header.php"); // Make sure config.php is properly included
 
 
 
 // Fetch all customers from the database
-$stmt = $pdo->query("SELECT * FROM customer");
-$customers = $stmt->fetchAll(PDO::FETCH_ASSOC);
+try {
+    $stmt = $pdo->query("SELECT cust_id, cust_name, cust_email, cust_address, cust_city, cust_status FROM customer");
+    $customers = $stmt->fetchAll(PDO::FETCH_ASSOC);
+} catch (PDOException $e) {
+    // Handle error if the query fails
+    echo "Error fetching customers: " . $e->getMessage();
+    exit;
+}
 ?>
 
 <!DOCTYPE html>
