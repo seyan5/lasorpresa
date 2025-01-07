@@ -27,6 +27,11 @@ require 'header.php';
       <div class="container">
         <h2>Flower Customization</h2>
         <form method="POST" action="custom-process.php" id="customization-form">
+        <div class="col-sm-4">
+                        <button type="button" class="btn btn-success add-flower-btn">Add Flower</button>
+                        <button type="button" class="btn btn-danger remove-flower-btn">Remove Flower</button>
+                    </div>
+                </div>
             <!-- Flower Types Section -->
             <div id="flower-types-container">
                 <div class="form-group flower-type">
@@ -44,11 +49,7 @@ require 'header.php';
                             ?>
                         </select>
                     </div>
-                    <div class="col-sm-4">
-                        <button type="button" class="btn btn-success add-flower-btn">Add Flower</button>
-                        <button type="button" class="btn btn-danger remove-flower-btn">Remove Flower</button>
-                    </div>
-                </div>
+                    
             </div>
 
             <!-- Dynamic Flower Quantity Selection -->
