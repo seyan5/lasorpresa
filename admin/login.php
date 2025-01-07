@@ -5,14 +5,13 @@ include("inc/config.php");
 include("inc/functions.php");
 include("inc/CSRF_Protect.php");
 
-
 if (isset($_POST['login'])) {
     $email = $_POST['email'];
     $password = $_POST['password'];
 
     try {
         // Query the database to get the customer by email
-        $stmt = $pdo->prepare("SELECT id, name, email, password, status FROM users WHERE email = :email");
+        $stmt = $pdo->prepare("SELECT id, name, email, password FROM users WHERE email = :email");
         $stmt->execute([':email' => $email]);
 
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -20,19 +19,14 @@ if (isset($_POST['login'])) {
         if ($user) {
             // Check if the password matches
             if (password_verify($password, $user['password'])) {
-                // Check if the user is active
-                if ($user['status'] === 'active') {
-                    // Start the session and store user data
-                    $_SESSION['id'] = $user['id'];
-                    $_SESSION['name'] = $user['name'];
-                    $_SESSION['email'] = $user['email'];
+                // Start the session and store user data
+                $_SESSION['id'] = $user['id'];
+                $_SESSION['name'] = $user['name'];
+                $_SESSION['email'] = $user['email'];
 
-                    // Redirect to the dashboard or user home page
-                    header("Location: dashboard.php"); // Change to the appropriate page
-                    exit;
-                } else {
-                    echo "Your account is not verified yet. Please check your email to verify your account.";
-                }
+                // Redirect to the dashboard or user home page
+                header("Location: dashboard.php"); // Change to the appropriate page
+                exit;
             } else {
                 echo "Incorrect password. Please try again.";
             }
