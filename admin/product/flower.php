@@ -1,6 +1,6 @@
 <?php
 // Database connection
-require_once('../header.php.php');
+require_once('../header.php');
 
 $stmt = $pdo->prepare("SELECT * FROM flowers");
 $stmt->execute();
