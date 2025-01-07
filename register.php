@@ -65,12 +65,12 @@ if (isset($_POST['register'])) {
         $mail->isSMTP();
         $mail->Host       = 'smtp.gmail.com';
         $mail->SMTPAuth   = true;
-        $mail->Username   = 'your_email@gmail.com'; // Your email
-        $mail->Password   = 'your_email_password'; // Your email password
+        $mail->Username   = 'lasorpresa76@gmail.com'; // Your email
+        $mail->Password   = 'lasorpresa123!'; // Your email password
         $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
         $mail->Port       = 587;
 
-        $mail->setFrom('your_email@gmail.com', 'Your Name'); // From address
+        $mail->setFrom('lasorpresa@gmail.com', 'Lasorpresa'); // From address
         $mail->addAddress($cust_email, $cust_name);          // Recipient
 
         $mail->isHTML(true);
