@@ -54,42 +54,7 @@ if ($p_id) {
             <p><?php echo htmlspecialchars($product['description']); ?></p>
             <section>
         </div>
-                <main>
-
-                    <!-- Right Sidebar -->
-                    <div class="sidebar">
-                        <h2>Cart</h2>
-                        <div class="cart-item">
-                            <img src="../admin/uploads/<?php echo htmlspecialchars($product['featured_photo']); ?>"
-                                alt="Cart Item">
-                            <h4><?php echo htmlspecialchars($product['name']); ?></h4>
-                            <div class="price">$<?php echo number_format($product['current_price'], 2); ?></div>
-                        </div>
-
-                        <div class="addons">
-                            <label for="addons">Add-ons</label>
-                            <select id="addons">
-                                <option value="">Choose...</option>
-                                <option value="chocolate">Chocolate</option>
-                                <option value="stufftoy">Stuff Toys</option>
-                                <option value="balloon">Balloon</option>
-                            </select>
-                        </div>
-
-                        <div class="total">
-                            <span>Subtotal:</span>
-                            <span>$<?php echo number_format($product['current_price'], 2); ?></span>
-                        </div>
-
-
-                        <button id="addToCartButton" data-id="<?php echo $product['p_id']; ?>"
-    data-name="<?php echo htmlspecialchars($product['name']); ?>"
-    data-price="<?php echo htmlspecialchars($product['current_price']); ?>">
-    Add to Cart
-</button>
-
-                    </div>
-                </main>
+                
 
             </section>
         <main>
@@ -134,7 +99,7 @@ if ($p_id) {
     </main>
     <script>
         function addToCart(productName) {
-            alert("Product added to successfully!");
+            alert("Product added to cart successfully!");
         }
     </script>
     <script>
@@ -155,6 +120,7 @@ if ($p_id) {
                 .then(data => {
                     if (data.success) {
                         alert(data.message);
+                        window.location.href = 'shopcart.php';  
                         console.log('Cart:', data.cart); // Debugging: Log cart content
                     } else {
                         alert(data.message);
