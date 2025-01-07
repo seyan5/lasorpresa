@@ -161,7 +161,7 @@ require 'header.php';
             // Create the HTML for the quantity slider inside col-sm-4
             var quantitySliderHTML = `
                 <div class="form-group flower-quantity">
-                    <label for="quantity"></label>
+                    <label for="quantity">Quantity </label>
                     <input type="range" name="quantity[]" class="form-control quantity-slider" min="1" max="${maxQuantity}" value="1" id="slider-${flowerId}">
                     <output for="slider-${flowerId}" class="quantity-output">1</output>
                 </div>
