@@ -109,7 +109,7 @@ require 'header.php';
         // Initialize the select2 plugin
         $('.select2').select2();
 
-        // Add new flower type dropdown dynamically using event delegation
+        // Add new flower type dropdown dynamically
         $(document).on('click', '.add-flower-btn', function() {
             var flowerTypeHTML = `
                 <div class="form-group flower-type">
@@ -143,20 +143,24 @@ require 'header.php';
 
         // Display quantity input field based on selected flower
         $(document).on('change', '.flower-type-select', function() {
-            var flowerId = $(this).val();
+            var selectedFlowerIds = $(this).val();
             var quantityFields = '';
 
-            // Loop through each selected flower to create a quantity input field
-            flowerId.forEach(function(flowerId) {
+            // Create a quantity input field for each selected flower
+            selectedFlowerIds.forEach(function(flowerId) {
                 var selectedFlower = $("option[value='" + flowerId + "']");
-                var quantity = selectedFlower.data('quantity');
-                quantityFields += `<div class="form-group flower-quantity">
-                    <label for="quantity">Quantity for ${selectedFlower.text()}</label>
-                    <input type="number" name="quantity[]" class="form-control" id="flower-quantity" min="1" max="${quantity}" value="1">
-                </div>`;
+                var flowerName = selectedFlower.text();
+                var maxQuantity = selectedFlower.data('quantity'); // Maximum available quantity
+
+                quantityFields += `
+                    <div class="form-group flower-quantity">
+                        <label for="quantity">Quantity for ${flowerName}</label>
+                        <input type="number" name="quantity[]" class="form-control" min="1" max="${maxQuantity}" value="1">
+                    </div>
+                `;
             });
 
-            // Append the quantity input fields below the flower section
+            // Append the quantity input fields to the container
             $('#quantity-section-container').html(quantityFields);
         });
     });
