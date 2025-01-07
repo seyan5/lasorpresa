@@ -1,15 +1,5 @@
-<?php require("header.php") ?>
+<?php require("../header.php") ?>
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>La Sorpresa Admin</title>
-    <link rel="stylesheet" href="../css/style.css">
-    
-</head>
 <body>
     <div class="container">
         <div class="navigation">
@@ -51,7 +41,7 @@
                 </li>
 
                 <li>
-                    <a href="product/product.php">
+                    <a href="../product/product.php">
                         <span class="icon">
                             <ion-icon name="cube-outline"></ion-icon>
                         </span>
@@ -69,7 +59,7 @@
                 </li>
 
                 <li>
-                    <a href="#">
+                    <a href="../settings.php">
                         <span class="icon">
                             <ion-icon name="settings-outline"></ion-icon>
                         </span>
@@ -78,7 +68,7 @@
                 </li>
 
                 <li>
-                    <a href="../index.php">
+                    <a href="../logout.php">
                         <span class="icon">
                             <ion-icon name="log-out-outline"></ion-icon>
                         </span>
@@ -88,42 +78,77 @@
             </ul>
         </div>
 
-        <section class="content">
-            <div class="row">
-                <div class="">
-                    <div class="">
-                        <div class="">
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>Settings</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td><a href="settings/type.php">Size</a></td>
-                                    </tr>
-                                    <tr>
-                                        <td><a href="settings/color.php">Color</a></td>
-                                    </tr>
-                                    <tr>
-                                        <td><a href="settings/container.php">Container</a></td>
-                                    </tr>
-                                    <tr>
-                                        <td><a href="settings/topcategory.php">Top Level Category</a></td>
-                                    </tr>
-                                    <tr>
-                                        <td><a href="settings/midcategory.php">Mid Level Category</a></td>
-                                    </tr>
-                                    <tr>
-                                        <td><a href="settings/endcategory.php">End Level Category</a></td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
+<section class="content-header">
+	<div class="content-header-left">
+		<h1>View Size</h1>
+	</div>
+	<div class="content-header-right">
+		<a href="type-add.php" class="btn btn-primary btn-sm">Add New</a>
+	</div>
+</section>
+
+
+<section class="content">
+
+  <div class="row">
+    <div class="col-md-12">
+
+
+      <div class="box box-info">
+        
+        <div class="box-body table-responsive">
+          <table id="example1" class="table table-bordered table-hover table-striped">
+			<thead>
+			    <tr>
+			        <th>#</th>
+			        <th>Size Name</th>
+			        <th>Action</th>
+			    </tr>
+			</thead>
+            <tbody>
+            	<?php
+            	$i=0;
+            	$statement = $pdo->prepare("SELECT * FROM container ORDER BY container_id ASC");
+            	$statement->execute();
+            	$result = $statement->fetchAll(PDO::FETCH_ASSOC);							
+            	foreach ($result as $row) {
+            		$i++;
+            		?>
+					<tr>
+	                    <td><?php echo $i; ?></td>
+	                    <td><?php echo $row['container_name']; ?></td>
+	                    <td>
+	                        <a href="container-edit.php?id=<?php echo $row['container_id']; ?>" class="btn btn-primary btn-xs">Edit</a>
+	                        <a href="#" class="btn btn-danger btn-xs" data-href="container-delete.php?id=<?php echo $row['container_id']; ?>" data-toggle="modal" data-target="#confirm-delete">Delete</a>
+
+                             </td>
+	                </tr>
+            		<?php
+            	}
+            	?>
+            </tbody>
+          </table>
+        </div>
+      </div>
+  
+
+</section>
+
+
+<div class="modal fade" id="confirm-delete" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Confirm Delete</h5>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
-        </section>
+            <div class="modal-body">
+                Are you sure you want to delete this size?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <a href="#" class="btn btn-danger btn-confirm-delete">Delete</a>
+            </div>
+        </div>
     </div>
-</body>
+</div>
