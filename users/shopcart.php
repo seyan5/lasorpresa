@@ -18,81 +18,60 @@ require 'header.php';
   </div>
 
   <div class="container">
-    <div class="cart">
-      <hr>
-      <h3>Shopping cart</h3>
-      
-      <?php if (isset($_SESSION['cart']) && count($_SESSION['cart']) > 0): ?>
-        <p>You have <?php echo count($_SESSION['cart']); ?> items in your cart</p>
+  <div class="cart">
+    <hr>
+    <h3>Shopping cart</h3>
+    
+    <?php if (isset($_SESSION['cart']) && count($_SESSION['cart']) > 0): ?>
+      <p>You have <?php echo count($_SESSION['cart']); ?> items in your cart</p>
 
-        <?php foreach ($_SESSION['cart'] as $item): ?>
-          <div class="cart-item">
-            <?php if (isset($item['image']) && $item['image']): ?>
-              <img src="../admin/uploads/<?php echo htmlspecialchars($item['image']); ?>" alt="<?php echo htmlspecialchars($item['name']); ?>" width="50">
-            <?php else: ?>
-              <img src="path/to/default-image.jpg" alt="No image available" width="50">
-            <?php endif; ?>
+      <?php foreach ($_SESSION['cart'] as $index => $item): ?>
+        <div class="cart-item">
+          <?php if (isset($item['image']) && $item['image']): ?>
+            <img src="../admin/uploads/<?php echo htmlspecialchars($item['image']); ?>" alt="<?php echo htmlspecialchars($item['name']); ?>" width="50">
+          <?php else: ?>
+            <img src="path/to/default-image.jpg" alt="No image available" width="50">
+          <?php endif; ?>
 
-            <div>
-              <p><?php echo htmlspecialchars($item['name']); ?></p>
-              <p><?php echo htmlspecialchars($item['quantity']); ?> pcs. Tulips</p>
-            </div>
-
-            <div class="quantity">
-              <?php echo $item['quantity']; ?>
-            </div>
-
-            <div class="price">
-              ₱<?php echo number_format($item['price'], 2); ?>
-            </div>
-
-            <button class="delete">🗑️</button>
+          <div>
+            <p><?php echo htmlspecialchars($item['name']); ?></p>
+            <p><?php echo htmlspecialchars($item['quantity']); ?> pcs. Tulips</p>
           </div>
-        <?php endforeach; ?>
-      <?php else: ?>
-        <p>Your cart is empty.</p>
-      <?php endif; ?>
-    </div>
 
-    <div class="payment">
-      <h3>Card Details</h3>
-      <p>Mode of Payment</p>
-      <div class="payment-options">
-        <img src="path/to/gcash-logo.jpg" alt="GCash">
-        <span>Cash On Pick Up</span>
-      </div>
+          <div class="quantity">
+            <?php echo $item['quantity']; ?>
+          </div>
 
-      <form>
-        <label>Email</label>
-        <input type="email" placeholder="E-mail" required>
-        
-        <label>Contact Number</label>
-        <input type="text" placeholder="Number" required>
-        
-        <label>Account Name</label>
-        <input type="text" placeholder="Account Name" required>
-      </form>
-      <hr>
+          <div class="price">
+            ₱<?php echo number_format($item['price'], 2); ?>
+          </div>
 
-      <div class="summary">
-        <p>Subtotal <span>₱<?php 
-          $subtotal = array_sum(array_map(function($item) {
-            return $item['price'] * $item['quantity'];
-          }, $_SESSION['cart']));
-          echo number_format($subtotal, 2);
-        ?></span></p>
-        <p>Shipping <span>₱0</span></p>
-        <p>Total <span>₱<?php echo number_format($subtotal, 2); ?></span></p>
-      </div>
-
-      <button class="checkout" onclick="checkout()">Checkout &gt;</button>
-    </div>
+          <!-- Delete Button with Confirmation -->
+          <form method="POST" action="cart-delete.php" id="delete-form-<?php echo $index; ?>">
+            <input type="hidden" name="item_index" value="<?php echo $index; ?>">
+            <button type="button" class="delete" onclick="confirmDelete(<?php echo $index; ?>)">🗑️</button>
+          </form>
+        </div>
+      <?php endforeach; ?>
+    <?php else: ?>
+      <p>Your cart is empty.</p>
+    <?php endif; ?>
   </div>
+</div>
 
-  <script>
-    function checkout() {
-      alert('Proceeding to checkout...');
+<script>
+  // JavaScript function to confirm deletion
+  function confirmDelete(itemIndex) {
+    // Ask the user for confirmation
+    const confirmation = confirm("Are you sure you want to remove this item from your cart?");
+    
+    if (confirmation) {
+      // If confirmed, submit the corresponding form
+      document.getElementById('delete-form-' + itemIndex).submit();
     }
-  </script>
+  }
+</script>
+
 </body>
 </html>
+
