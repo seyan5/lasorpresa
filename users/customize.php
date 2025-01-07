@@ -49,15 +49,16 @@ require 'header.php';
                         </select>
                     </div>
                     <!-- Add and Remove buttons -->
-                    <div class="col-sm-4">
-                        <button type="button" class="btn btn-success add-flower-btn">Add Flower</button>
-                        <button type="button" class="btn btn-danger remove-flower-btn">Remove Flower</button>
-                    </div>
+                    
                 </div>
             </div>
 
             <!-- Button to Add New Flower Type Dropdown -->
-            <button type="button" class="btn btn-secondary" id="add-flower-btn">Add Flower</button>
+            <div class="col-sm-4">
+                        <button type="button" class="btn btn-secondary" id="add-flower-btn">Add Flower</button>
+                        <button type="button" class="btn btn-danger remove-flower-btn">Remove Flower</button>
+                    </div>
+            
 
             <!-- Size of Flower Selection -->
             <div class="form-group">
