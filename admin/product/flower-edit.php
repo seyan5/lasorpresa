@@ -25,5 +25,12 @@ $flower = $stmt->fetch(PDO::FETCH_ASSOC);
     <input type="file" name="image" id="image">
     <img src="<?php echo $flower['image']; ?>" width="100">
 
-    <button type="submit">Update Flower</button>
+    <button type="submit" onclick="return confirmUpdate()">Update Flower</button>
+
 </form>
+
+<script>
+function confirmUpdate() {
+    return confirm("Are you sure you want to update this flower?");
+}
+</script>
