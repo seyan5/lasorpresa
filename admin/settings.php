@@ -107,7 +107,7 @@
                                         <td><a href="settings/color.php">Color</a></td>
                                     </tr>
                                     <tr>
-                                        <td><a href="settings/container.php">End Level Category</a></td>
+                                        <td><a href="settings/container.php">Container</a></td>
                                     </tr>
                                     <tr>
                                         <td><a href="settings/topcategory.php">Top Level Category</a></td>
