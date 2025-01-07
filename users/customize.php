@@ -146,19 +146,18 @@ require 'header.php';
 
     // Display quantity slider input field based on selected flower
     $(document).on('change', '.flower-type-select', function() {
-        var selectedFlowerIds = $(this).val();
         var flowerContainer = $(this).closest('.flower-type'); // Get the specific flower type container
+        flowerContainer.find('.flower-quantity-container').empty(); // Clear any existing quantity sliders
 
-        // Clear any existing quantity sliders when flower type changes
-        flowerContainer.find('.flower-quantity-container').empty();
+        var selectedFlowerIds = $(this).val(); // Get selected flower IDs
 
-        // Create a quantity slider for each selected flower
+        // For each selected flower, create and append a quantity slider
         selectedFlowerIds.forEach(function(flowerId) {
             var selectedFlower = $("option[value='" + flowerId + "']");
             var flowerName = selectedFlower.text();
-            var maxQuantity = selectedFlower.data('quantity'); // Maximum available quantity
+            var maxQuantity = selectedFlower.data('quantity'); // Maximum available quantity for this flower
 
-            // Append the quantity slider input field for the selected flower
+            // Create the HTML for the quantity slider
             var quantitySliderHTML = `
                 <div class="form-group flower-quantity">
                     <label for="quantity">Quantity for ${flowerName}</label>
@@ -166,15 +165,18 @@ require 'header.php';
                     <output for="slider-${flowerId}" class="quantity-output">1</output>
                 </div>
             `;
+
+            // Append the slider to the quantity container for this specific flower
             flowerContainer.find('.flower-quantity-container').append(quantitySliderHTML);
         });
 
-        // Update the slider value display
+        // Update the slider value display as the user interacts with it
         $(document).on('input', '.quantity-slider', function() {
             var sliderValue = $(this).val();
             $(this).next('.quantity-output').text(sliderValue);
         });
     });
 });
+
 
 </script>
