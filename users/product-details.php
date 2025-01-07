@@ -99,7 +99,7 @@ if ($p_id) {
     </main>
     <script>
         function addToCart(productName) {
-            alert("Product added to successfully!");
+            alert("Product added to cart successfully!");
         }
     </script>
     <script>
@@ -120,6 +120,7 @@ if ($p_id) {
                 .then(data => {
                     if (data.success) {
                         alert(data.message);
+                        window.location.href = 'shopcart.php';  
                         console.log('Cart:', data.cart); // Debugging: Log cart content
                     } else {
                         alert(data.message);
