@@ -70,14 +70,12 @@ if ($p_id) {
                 </div>
 
                 <div class="addons">
-                    <label for="addons">Add-ons</label>
-                    <select id="addons">
-                        <option value="">Choose...</option>
-                        <option value="chocolate">Chocolate</option>
-                        <option value="stufftoy">Stuff Toys</option>
-                        <option value="balloon">Balloon</option>
-                    </select>
-                </div>
+    <label for="addons">Add-ons</label>
+    <div id="addon-list">
+        <!-- Add-ons will be dynamically displayed here -->
+    </div>
+</div>
+
 
                 <div class="total">
                     <span>Subtotal:</span>
@@ -103,33 +101,66 @@ if ($p_id) {
         }
     </script>
     <script>
-        document.getElementById('addToCartButton').addEventListener('click', function () {
-            const productId = this.getAttribute('data-id');
-            const productName = this.getAttribute('data-name');
-            const productPrice = this.getAttribute('data-price');
+       document.getElementById('addToCartButton').addEventListener('click', function () {
+    const productId = this.getAttribute('data-id');
+    const productName = this.getAttribute('data-name');
+    const productPrice = this.getAttribute('data-price');
 
-            // Send AJAX request to add product to cart
-            fetch('cart-handler.php', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                },
-                body: `product_id=${productId}&product_name=${encodeURIComponent(productName)}&product_price=${productPrice}`
-            })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        alert(data.message);
-                        window.location.href = 'shopcart.php';  
-                        console.log('Cart:', data.cart); // Debugging: Log cart content
-                    } else {
-                        alert(data.message);
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                });
+    // Collect selected add-ons
+    const selectedAddons = [];
+    const checkboxes = document.querySelectorAll('.addons input[type="checkbox"]:checked');
+    checkboxes.forEach(checkbox => {
+        selectedAddons.push(checkbox.value);
+    });
+
+    // Prepare the data to be sent to the server
+    const data = new URLSearchParams();
+    data.append('product_id', productId);
+    data.append('product_name', encodeURIComponent(productName));
+    data.append('product_price', productPrice);
+    data.append('addons', JSON.stringify(selectedAddons)); // Send selected add-ons as a JSON string
+
+    // Send AJAX request to add product to cart
+    fetch('cart-handler.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: data.toString() // Send the form data
+    })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert(data.message);
+                window.location.href = 'shopcart.php';  
+                console.log('Cart:', data.cart); // Debugging: Log cart content
+            } else {
+                alert(data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
         });
+});
+
+        
+    </script>
+
+    <script>
+        function updateAddons() {
+    const addonList = document.getElementById('addon-list');
+    const selectedAddons = [];
+
+    // Collect selected add-ons
+    const checkboxes = addonList.querySelectorAll('input[type="checkbox"]:checked');
+    checkboxes.forEach(checkbox => {
+        selectedAddons.push(checkbox.value);
+    });
+
+    // Handle the selected add-ons as needed (e.g., sending to the server)
+    console.log('Selected Add-ons:', selectedAddons);
+}
+
     </script>
 
 </body>

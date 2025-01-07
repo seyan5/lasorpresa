@@ -58,6 +58,29 @@ try {
     echo "<p>Error loading products: " . htmlspecialchars($e->getMessage()) . "</p>";
 }
 
+// Fetch add-ons for mcat_id = 19 (Chocolate, Stuff Toys, Balloon)
+$statement = $pdo->prepare("
+    SELECT ecat_id, ecat_name
+    FROM end_category
+    WHERE mcat_id = 19
+    ORDER BY ecat_name ASC
+");
 
+$statement->execute();
+$addons = $statement->fetchAll(PDO::FETCH_ASSOC);
+
+// Output the add-ons or a message if no add-ons are found
+if ($addons) {
+    foreach ($addons as $addon) {
+        echo '
+        <div class="addon" data-id="' . htmlspecialchars($addon['ecat_id']) . '">
+            <label for="addon-' . htmlspecialchars($addon['ecat_id']) . '">' . htmlspecialchars($addon['ecat_name']) . '</label>
+            <input type="checkbox" id="addon-' . htmlspecialchars($addon['ecat_id']) . '" value="' . htmlspecialchars($addon['ecat_id']) . '">
+        </div>';
+    }
+} else {
+    // Fallback if no add-ons found for the mcat_id = 19
+    echo "<p>No add-ons found for this category.</p>"; 
+}
 
 ?>
