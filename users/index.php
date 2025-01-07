@@ -27,7 +27,16 @@
         <a href="#home">Home</a>
         <a href="#about">About</a>
         <a href="products.php">Product</a>
-        <a href="#occasion">Occasion</a>
+        <div class="dropdown">
+        <a href="#occasion" class="dropdown-btn">Occasion</a>
+        <div class="dropdown-content">
+            <a href="#birthday">Birthday</a>
+            <a href="#wedding">Wedding</a>
+            <a href="#anniversary">Anniversary</a>
+            <a href="#holiday">Holiday</a>
+        </div>
+        </div>
+
         <a href="#review">Review</a>
         <a href="#contacts">Contacts</a>
         <a href="customize.php">Customize</a>
