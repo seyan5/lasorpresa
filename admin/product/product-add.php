@@ -9,10 +9,6 @@ if(isset($_POST['form1'])) {
         $error_message .= "You must have to select a top level category<br>";
     }
 
-    if(empty($_POST['mcat_id'])) {
-        $valid = 0;
-        $error_message .= "You must have to select a mid level category<br>";
-    }
 
     if(empty($_POST['name'])) {
         $valid = 0;
