@@ -38,7 +38,7 @@ require 'header.php';
                     <select name="type[]" class="form-control select2" multiple="multiple" id="flower-type">
                         <?php
                         // Fetch flower types from the database
-                        $statement = $pdo->prepare("SELECT * FROM flower ORDER BY id ASC");
+                        $statement = $pdo->prepare("SELECT * FROM flowers ORDER BY id ASC");
                         $statement->execute();
                         $types = $statement->fetchAll(PDO::FETCH_ASSOC);
                         if ($types) {
