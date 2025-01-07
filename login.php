@@ -50,18 +50,34 @@ if (isset($_POST['login'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="registerlogin.css">
     <title>Customer Login</title>
 </head>
 <body>
 
+    <div class="logo-container">
+        <img src="images/logo.png" alt="Logo" class="logo" />
+    </div>
+
+    <!-- Flower Image -->
+    <div class="flower-container">
+        <img src="images/flower2.png" alt="Flower" class="flower" />
+    </div>
+
 <h2>Login</h2>
 <form action="login.php" method="POST">
-    <label for="cust_email">Email:</label>
-    <input type="email" id="cust_email" name="cust_email" required><br>
-
-    <label for="cust_password">Password:</label>
-    <input type="password" id="cust_password" name="cust_password" required><br>
-
+    <div class="infield">
+        <label for="cust_email">Email:</label>
+        <input placeholder="Email" type="email" id="cust_email" name="cust_email" required><br>
+    </div>
+    <div class="infield">
+        <label for="cust_password">Password:</label>
+        <input placeholder="Password" type="password" id="cust_password" name="cust_password" required><br>
+    </div>
+    <p style="text-align: center; margin-top: 10px; font-size: 14px;">
+        Don't Have an Account? 
+        <a href="register.php" style="color: #e18aaa; font-weight: bold; text-decoration: none;">Register</a>
+    </p>
     <button type="submit" name="login">Login</button>
 </form>
 

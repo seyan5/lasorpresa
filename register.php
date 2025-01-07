@@ -92,34 +92,54 @@ if (isset($_POST['register'])) {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="registerlogin.css">
   <title>Customer Registration</title>
 </head>
 <body>
+    <div class="logo-container">
+        <img src="images/logo.png" alt="Logo" class="logo" />
+    </div>
+
+    <!-- Flower Image -->
+    <div class="flower-container">
+        <img src="images/flower2.png" alt="Flower" class="flower" />
+    </div>
 
 <h2>Create Your Account</h2>
 <form action="register.php" method="POST">
-  <label for="cust_name">Full Name:</label>
-  <input type="text" id="cust_name" name="cust_name" required><br>
-
-  <label for="cust_email">Email:</label>
-  <input type="email" id="cust_email" name="cust_email" required><br>
-
-  <label for="cust_phone">Phone Number:</label>
-  <input type="tel" id="cust_phone" name="cust_phone" required><br>
-
-  <label for="cust_password">Password:</label>
-  <input type="password" id="cust_password" name="cust_password" required><br>
-
-  <label for="cust_address">Address:</label>
-  <input type="text" id="cust_address" name="cust_address" required><br>
-
-  <label for="cust_city">City:</label>
-  <input type="text" id="cust_city" name="cust_city" required><br>
-
-  <label for="cust_zip">Zip Code:</label>
-  <input type="text" id="cust_zip" name="cust_zip" required><br>
-
-  <button type="submit" name="register">Register</button>
+    <div class="infield">
+        <label for="cust_name">Full Name:</label>
+        <input placeholder="Fullname" type="text" id="cust_name" name="cust_name" required><br>
+    </div>
+    <div class="infield">
+        <label for="cust_email">Email:</label>
+        <input placeholder="Email" type="email" id="cust_email" name="cust_email" required><br>
+    </div>
+    <div class="infield">
+        <label for="cust_phone">Phone Number:</label>
+        <input placeholder="Phone Number" type="tel" id="cust_phone" name="cust_phone" required><br>
+    </div>
+    <div class="infield">
+        <label for="cust_password">Password:</label>
+        <input placeholder="Password" type="password" id="cust_password" name="cust_password" required><br>
+    </div>
+    <div class="infield">
+        <label for="cust_address">Address:</label>
+        <input placeholder="Address" type="text" id="cust_address" name="cust_address" required><br>
+    </div>
+    <div class="infield">
+        <label for="cust_city">City:</label>
+        <input placeholder="City" type="text" id="cust_city" name="cust_city" required><br>
+    </div>
+    <div class="infield">
+        <label for="cust_zip">Zip Code:</label>
+        <input placeholder="Zip Code" type="text" id="cust_zip" name="cust_zip" required><br>
+    </div>
+    <p style="text-align: center; margin-top: 10px; font-size: 14px;">
+        Already have an account? 
+        <a href="login.php" style="color: #e18aaa; font-weight: bold; text-decoration: none;">Sign In</a>
+    </p>
+    <button type="submit" name="register">Register</button>
 </form>
 
 </body>
