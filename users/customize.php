@@ -127,12 +127,12 @@ require 'header.php';
                         }
                         ?>
                     </select>
+                    <div class="flower-quantity-container"></div> <!-- Container for quantity slider inside col-sm-4 -->
                 </div>
                 <div class="col-sm-4">
                     <button type="button" class="btn btn-danger remove-flower-btn">x</button>
                 </div>
             </div>
-            <div class="flower-quantity-container"></div> <!-- Container for quantity slider -->
         `;
         $('#flower-types-container').append(flowerTypeHTML);
         $('.select2').select2(); // Reinitialize select2 for newly added elements
@@ -166,7 +166,7 @@ require 'header.php';
             `;
 
             // Append the slider to the quantity container for this specific flower
-            flowerContainer.find('.col-sm-4').append(quantitySliderHTML);
+            flowerContainer.find('.flower-quantity-container').append(quantitySliderHTML);
         });
 
         // Update the slider value display as the user interacts with it
