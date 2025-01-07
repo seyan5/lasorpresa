@@ -80,10 +80,10 @@
 
 <section class="content-header">
 	<div class="content-header-left">
-		<h1>View Size</h1>
+		<h1>View container</h1>
 	</div>
 	<div class="content-header-right">
-		<a href="type-add.php" class="btn btn-primary btn-sm">Add New</a>
+		<a href="container-add.php" class="btn btn-primary btn-sm">Add New</a>
 	</div>
 </section>
 
@@ -101,7 +101,7 @@
 			<thead>
 			    <tr>
 			        <th>#</th>
-			        <th>Size Name</th>
+			        <th>container Name</th>
 			        <th>Action</th>
 			    </tr>
 			</thead>
@@ -135,19 +135,20 @@
 </section>
 
 
-<div class="modal fade" id="confirm-delete" tabindex="-1" role="dialog">
-    <div class="modal-dialog" role="document">
+<div class="modal fade" id="confirm-delete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Confirm Delete</h5>
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">Delete Confirmation</h4>
             </div>
             <div class="modal-body">
-                Are you sure you want to delete this size?
+                <p>Are you sure want to delete this item?</p>
+                <p style="color:red;">Be careful! This product will be deleted from the order table, payment table, size table, color table and rating table also.</p>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                <a href="#" class="btn btn-danger btn-confirm-delete">Delete</a>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <a class="btn btn-danger btn-ok">Delete</a>
             </div>
         </div>
     </div>

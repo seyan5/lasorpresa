@@ -172,63 +172,33 @@
 
                             </thead>
 
-<!-- <section class="content">
-	<div class="row">
-		<div class="col-md-12">
-			<div class="box box-info">
-				<div class="box-body table-responsive">
-					<table id="example1" class="table table-bordered table-hover table-striped">
-					<thead class="thead-dark">
-							<tr>
-								<th width="10">#</th>
-								<th>Photo</th>
-								<th width="160">Product Name</th>
-								<th width="60">Old Price</th>
-								<th width="60">(C) Price</th>
-								<th width="60">Quantity</th>
-								<th>Featured?</th>
-								<th>Active?</th>
-								<th>Category</th>
-								<th width="80">Action</th>
-							</tr>
-						</thead>
-						<tbody> -->
 							<?php
 							$i=0;
 							$statement = $pdo->prepare("SELECT
-														
-														t1.p_id,
-														t1.name,
-														t1.old_price,
-														t1.current_price,
-														t1.quantity,
-														t1.featured_photo,
-														t1.is_featured,
-														t1.is_active,
-														t1.ecat_id,
-
-														t2.ecat_id,
-														t2.ecat_name,
-
-														t3.mcat_id,
-														t3.mcat_name,
-
-														t4.tcat_id,
-														t4.tcat_name
-
-							                           	FROM product t1
-							                           	JOIN end_category t2
-							                           	ON t1.ecat_id = t2.ecat_id
-							                           	JOIN mid_category t3
-							                           	ON t2.mcat_id = t3.mcat_id
-							                           	JOIN top_category t4
-							                           	ON t3.tcat_id = t4.tcat_id
-							                           	ORDER BY t1.p_id DESC
+    t1.p_id,
+    t1.name,
+    t1.old_price,
+    t1.current_price,
+    t1.quantity,
+    t1.featured_photo,
+    t1.is_featured,
+    t1.is_active,
+    t1.ecat_id,
+    IFNULL(t2.ecat_name, 'No Category') AS ecat_name,
+    IFNULL(t3.mcat_name, 'No Category') AS mcat_name,
+    IFNULL(t4.tcat_name, 'No Category') AS tcat_name
+FROM product t1
+LEFT JOIN end_category t2 ON t1.ecat_id = t2.ecat_id
+LEFT JOIN mid_category t3 ON t2.mcat_id = t3.mcat_id
+LEFT JOIN top_category t4 ON t3.tcat_id = t4.tcat_id
+ORDER BY t1.p_id DESC
 							                           	");
 							$statement->execute();
 							$result = $statement->fetchAll(PDO::FETCH_ASSOC);
 							foreach ($result as $row) {
 								$i++;
+                            
+
 								?>
 								<tr>
 									<td><?php echo $i; ?></td>

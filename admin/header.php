@@ -35,6 +35,8 @@ if(!isset($_SESSION['user'])) {
 
     <!-- Include jQuery (Ensure jQuery is loaded before Bootstrap JS) -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
 
     <!-- Include Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"></script>
@@ -52,7 +54,7 @@ if(!isset($_SESSION['user'])) {
             // Get the data-href attribute from the clicked link
             var href = $(e.relatedTarget).data('href');
             // Update the href attribute of the confirmation button
-            $(this).find('.btn-confirm-delete').attr('href', href);
+            $(this).find('.btn-ok').attr('href', href);
         });
     });
 </script>
