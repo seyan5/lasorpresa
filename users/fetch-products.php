@@ -57,4 +57,6 @@ try {
     // Error handling for database connection or query issues
     echo "<p>Error loading products: " . htmlspecialchars($e->getMessage()) . "</p>";
 }
+
+
 ?>
