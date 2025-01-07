@@ -47,7 +47,7 @@ require 'header.php';
                         </select>
                     </div>
                     <div class="col-sm-4">
-                        <button type="button" class="btn btn-success add-flower-btn">Add Flower</button>
+                        
                     </div>
                 </div>
             </div>
@@ -143,20 +143,20 @@ require 'header.php';
         $(this).closest('.flower-type').remove();
     });
 
-    // Display quantity slider input field based on selected flower
+    // Display quantity slider input field inside col-sm-4
     $(document).on('change', '.flower-type-select', function() {
         var flowerContainer = $(this).closest('.flower-type'); // Get the specific flower type container
         flowerContainer.find('.flower-quantity-container').empty(); // Clear any existing quantity sliders
 
         var selectedFlowerIds = $(this).val(); // Get selected flower IDs
 
-        // For each selected flower, create and append a quantity slider
+        // For each selected flower, create and append a quantity slider inside col-sm-4
         selectedFlowerIds.forEach(function(flowerId) {
             var selectedFlower = $("option[value='" + flowerId + "']");
             var flowerName = selectedFlower.text();
             var maxQuantity = selectedFlower.data('quantity'); // Maximum available quantity for this flower
 
-            // Create the HTML for the quantity slider
+            // Create the HTML for the quantity slider inside col-sm-4
             var quantitySliderHTML = `
                 <div class="form-group flower-quantity">
                     <label for="quantity">Quantity for ${flowerName}</label>
@@ -166,7 +166,7 @@ require 'header.php';
             `;
 
             // Append the slider to the quantity container for this specific flower
-            flowerContainer.find('.flower-quantity-container').append(quantitySliderHTML);
+            flowerContainer.find('.col-sm-4').append(quantitySliderHTML);
         });
 
         // Update the slider value display as the user interacts with it
