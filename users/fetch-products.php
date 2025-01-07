@@ -1,32 +1,43 @@
 <?php
-require 'header.php';
+require 'header.php'; // Include database connection
 
 // Check if ecat_id is passed
 $ecat_id = isset($_GET['ecat_id']) ? (int)$_GET['ecat_id'] : 'all';
 
 try {
+    // Prepare SQL query based on whether 'all' or a specific category is selected
     if ($ecat_id === 'all') {
-        // Fetch all products if 'all' is selected
+        // Fetch all products for ecat_id that is linked to mcat_id = 3
         $statement = $pdo->prepare("
             SELECT p_id, name, featured_photo, current_price 
             FROM product
-            WHERE is_active = 1
+            WHERE is_active = 1 AND ecat_id IN (
+                SELECT ecat_id 
+                FROM end_category 
+                WHERE mcat_id = 3
+            )
             ORDER BY p_id DESC
         ");
     } else {
-        // Fetch products for the selected category
+        // Fetch products for the selected category within mcat_id = 3
         $statement = $pdo->prepare("
             SELECT p_id, name, featured_photo, current_price 
             FROM product
-            WHERE is_active = 1 AND ecat_id = :ecat_id
+            WHERE is_active = 1 AND ecat_id = :ecat_id AND ecat_id IN (
+                SELECT ecat_id 
+                FROM end_category 
+                WHERE mcat_id = 3
+            )
             ORDER BY p_id DESC
         ");
         $statement->bindParam(':ecat_id', $ecat_id, PDO::PARAM_INT);
     }
 
+    // Execute the query and fetch products
     $statement->execute();
     $products = $statement->fetchAll(PDO::FETCH_ASSOC);
 
+    // Output the products or a message if no products are found
     if ($products) {
         foreach ($products as $product) {
             echo '
@@ -39,9 +50,11 @@ try {
             </div>';
         }
     } else {
-        echo "<p>No products found.</p>";
+        // Fallback if no products found for the selected category
+        echo "<p>No products found in this category.</p>";
     }
 } catch (Exception $e) {
-    echo "<p>Error loading products: " . $e->getMessage() . "</p>";
+    // Error handling for database connection or query issues
+    echo "<p>Error loading products: " . htmlspecialchars($e->getMessage()) . "</p>";
 }
 ?>
