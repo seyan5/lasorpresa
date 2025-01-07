@@ -30,7 +30,7 @@ require 'header.php';
                             <!-- Check if image is available and use a placeholder if not -->
                             <td>
                                 <?php if (isset($item['image']) && $item['image']): ?>
-                                    <img src="../admin/uploads/<?php echo htmlspecialchars($item['image']); ?>" alt="<?php echo htmlspecialchars($item['name']); ?>" width="50">
+                                    <img src="../admin/uploads/<?php echo htmlspecialchars($item['featured_photo']); ?>" alt="<?php echo htmlspecialchars($item['name']); ?>" width="50">
                                 <?php else: ?>
                                     <img src="path/to/default-image.jpg" alt="No image available" width="50">
                                 <?php endif; ?>
