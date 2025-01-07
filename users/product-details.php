@@ -48,45 +48,50 @@ if ($p_id) {
 
     </header>
     <main>
-        <div class = "">
+        <div class="">
             <img src="../admin/uploads/<?php echo htmlspecialchars($product['featured_photo']); ?>"
                 alt="<?php echo htmlspecialchars($product['name']); ?>">
             <h1><?php echo htmlspecialchars($product['name']); ?></h1>
             <p><?php echo htmlspecialchars($product['description']); ?></p>
             <section>
         </div>
-                <main>
+        <main>
 
-                    <!-- Right Sidebar -->
-                    <div class="sidebar">
-                        <h2>Cart</h2>
-                        <div class="cart-item">
-                            <img src="../admin/uploads/<?php echo htmlspecialchars($product['featured_photo']); ?>"
-                                alt="Cart Item">
-                            <h4><?php echo htmlspecialchars($product['name']); ?></h4>
-                            <div class="price">$<?php echo number_format($product['current_price'], 2); ?></div>
-                        </div>
+            <!-- Right Sidebar -->
+            <div class="sidebar">
+                <h2>Cart</h2>
+                <div class="cart-item">
+                    <img src="../admin/uploads/<?php echo htmlspecialchars($product['featured_photo']); ?>"
+                        alt="Cart Item">
+                    <h4><?php echo htmlspecialchars($product['name']); ?></h4>
+                    <div class="price">$<?php echo number_format($product['current_price'], 2); ?></div>
+                </div>
 
-                        <div class="addons">
-                            <label for="addons">Add-ons</label>
-                            <select id="addons">
-                                <option value="">Choose...</option>
-                                <option value="chocolate">Chocolates</option>
-                                <option value="stufftoy">Stuff Toys</option>
-                                <option value="balloon">Balloons</option>
-                            </select>
-                        </div>
+                <div class="addons">
+                    <label for="addons">Add-ons</label>
+                    <select id="addons">
+                        <option value="">Choose...</option>
+                        <option value="chocolate">Chocolates</option>
+                        <option value="stufftoy">Stuff Toys</option>
+                        <option value="balloon">Balloons</option>
+                    </select>
+                </div>
 
-                        <div class="total">
-                            <span>Subtotal:</span>
-                            <span>$<?php echo number_format($product['current_price'], 2); ?></span>
-                        </div>
+                <div class="total">
+                    <span>Subtotal:</span>
+                    <span>$<?php echo number_format($product['current_price'], 2); ?></span>
+                </div>
 
-                        <button>Add to Cart</button>
-                    </div>
-                </main>
+                <button id="addToCartButton" data-id="<?php echo $product['p_id']; ?>"
+                    data-name="<?php echo htmlspecialchars($product['name']); ?>"
+                    data-price="<?php echo number_format($product['current_price'], 2); ?>">
+                    Add to Cart
+                </button>
 
-            </section>
+            </div>
+        </main>
+
+        </section>
     </main>
     <script>
         function addToCart(productId) {
