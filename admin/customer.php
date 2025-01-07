@@ -48,7 +48,7 @@ try {
             <td><?php echo htmlspecialchars($customer['cust_city']); ?></td>
             <td>
                 <!-- Button to change status -->
-                <form action="change_status.php" method="POST">
+                <form action="change-status.php" method="POST">
                     <input type="hidden" name="cust_id" value="<?php echo $customer['cust_id']; ?>">
                     <select name="status" onchange="this.form.submit()">
                         <option value="active" <?php echo ($customer['cust_status'] == 'active') ? 'selected' : ''; ?>>Active</option>
@@ -58,7 +58,7 @@ try {
             </td>
             <td>
                 <!-- Button to delete customer -->
-                <form action="delete_customer.php" method="POST" onsubmit="return confirm('Are you sure you want to delete this customer?');">
+                <form action="customer-delete.php" method="POST" onsubmit="return confirm('Are you sure you want to delete this customer?');">
                     <input type="hidden" name="cust_id" value="<?php echo $customer['cust_id']; ?>">
                     <button type="submit" name="delete_customer">Delete</button>
                 </form>
