@@ -43,7 +43,13 @@ if ($p_id) {
             <h1><?php echo htmlspecialchars($product['name']); ?></h1>
             <p><?php echo htmlspecialchars($product['description']); ?></p>
             <div class="price">$<?php echo number_format($product['current_price'], 2); ?></div>
-            <button onclick="addToCart(<?php echo $product['p_id']; ?>)">Add to Cart</button>
+            <button id="addToCartButton" 
+        data-id="<?php echo $product['p_id']; ?>" 
+        data-name="<?php echo htmlspecialchars($product['name']); ?>" 
+        data-price="<?php echo number_format($product['current_price'], 2); ?>">
+    Add to Cart
+</button>
+
         </div>
     </main>
     <script>
@@ -51,6 +57,35 @@ if ($p_id) {
             alert("Product " + productId + " added to cart!");
         }
     </script>
+    <script>
+    document.getElementById('addToCartButton').addEventListener('click', function() {
+        const productId = this.getAttribute('data-id');
+        const productName = this.getAttribute('data-name');
+        const productPrice = this.getAttribute('data-price');
+
+        // Send AJAX request to add product to cart
+        fetch('cart-handler.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: `product_id=${productId}&product_name=${encodeURIComponent(productName)}&product_price=${productPrice}`
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert(data.message);
+                console.log('Cart:', data.cart); // Debugging: Log cart content
+            } else {
+                alert(data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    });
+</script>
+
 </body>
 
 <style>
