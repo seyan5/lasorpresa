@@ -46,6 +46,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'quantity' => 1,
             'image' => !empty($product['featured_photo']) ? $product['featured_photo'] : 'default-image.jpg' // Set default image if no product image
         ];
+        echo '<pre>';
+print_r($_SESSION['cart']);
+echo '</pre>';
+
     }
 
     // Return updated cart
