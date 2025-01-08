@@ -14,10 +14,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $pdo->beginTransaction();
 
         // Create a new order
-        $stmt = $pdo->prepare("INSERT INTO orders (customer_id, total_price, order_date) VALUES (:customer_id, :total_price, NOW())");
+        $stmt = $pdo->prepare("INSERT INTO orders (customer_id, price, order_date) VALUES (:customer_id, :price, NOW())");
         $stmt->execute([
             ':customer_id' => $_SESSION['customer']['cust_id'],
-            ':total_price' => array_sum(array_map(function($item) {
+            ':price' => array_sum(array_map(function($item) {
                 return $item['price'] * $item['quantity'];
             }, $_SESSION['cart']))
         ]);
@@ -41,8 +41,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Update product quantity in the database
             $stmt = $pdo->prepare("
                 UPDATE product
-                SET p_qty = p_qty - :quantity
-                WHERE p_id = :product_id AND p_qty >= :quantity
+                SET quantity = quantity - :quantity
+                WHERE p_id = :product_id AND quantity >= :quantity
             ");
             $stmt->execute([
                 ':quantity' => $item['quantity'],
