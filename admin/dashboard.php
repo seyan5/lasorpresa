@@ -2,10 +2,6 @@
 <?php
 session_start();
 include 'header.php';
-if (!isset($_SESSION['id']) || $_SESSION['user_type'] != 'admin') {
-    header('Location: login.php');
-    exit();
-}
 
 $user_id = $_SESSION['id'];
 $stmt = $conn->prepare("SELECT * FROM users WHERE id = ?");
