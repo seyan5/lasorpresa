@@ -223,6 +223,18 @@ if ($result->num_rows > 0) {
                                         Email
                                     </th>
                                     <th class="table-headin">
+                                        Contact
+                                    </th>
+                                    <th class="table-headin">
+                                        Address
+                                    </th>
+                                    <th class="table-headin">
+                                        City
+                                    </th>
+                                    <th class="table-headin">
+                                        Status
+                                    </th>
+                                    <th class="table-headin">
                                         Events
                                     </th>
 
@@ -256,12 +268,28 @@ if ($result->num_rows > 0) {
                                         $cust_id = $row["cust_id"];
                                         $cust_name = $row["cust_name"];
                                         $cust_email = $row["cust_email"];
+                                        $cust_phone = $row["cust_phone"];
+                                        $cust_address = $row["cust_address"];
+                                        $cust_city = $row["cust_city"];
+                                        $cust_status = $row["cust_status"];
                                         echo '<tr>
                                         <td> &nbsp;' .
                                             substr($cust_name, 0, 30)
                                             . '</td>
                                         <td>
                                         ' . substr($cust_email, 0, 20) . '
+                                        </td>
+                                        <td>
+                                        ' . substr($cust_phone, 0, 20) . '
+                                        </td>
+                                        <td>
+                                        ' . substr($cust_address, 0, 20) . '
+                                        </td>
+                                        <td>
+                                        ' . substr($cust_city, 0, 20) . '
+                                        </td>
+                                        <td>
+                                        ' . substr($cust_status, 0, 20) . '
                                         </td>
                                         <td>
                                         <div style="display:flex;justify-content: center;">
