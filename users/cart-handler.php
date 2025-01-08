@@ -1,5 +1,5 @@
 <?php
-require 'header.php';
+require 'header.php';  // Ensure session_start() is called here
 
 // Retrieve product details from the request
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -7,7 +7,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $product_name = isset($_POST['product_name']) ? htmlspecialchars($_POST['product_name']) : ''; // Sanitize product name
     $product_price = isset($_POST['product_price']) ? (float)$_POST['product_price'] : 0.0;
 
-    if ($product_id <= 0 || empty($product_name) || $product_price <= 0) {
+    // Validate inputs
+    if ($product_id <= 0 || empty($product_name) || $product_price <= 0.0) {
         echo json_encode([
             'success' => false,
             'message' => 'Invalid product details!'
@@ -37,22 +38,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Check if the product already exists in the cart
     if (isset($_SESSION['cart'][$product_id])) {
         // Increment quantity if the product already exists
-        $_SESSION['cart'][$product_id]['quantity'] += 1;
+        $_SESSION['cart'][$product_id]['quantity']++;
     } else {
         // Add new product to the cart with the image path
         $_SESSION['cart'][$product_id] = [
             'name' => $product_name,
             'price' => $product_price,
             'quantity' => 1,
-            'image' => !empty($product['featured_photo']) ? $product['featured_photo'] : 'default-image.jpg' // Set default image if no product image
+            'image' => !empty($product['featured_photo']) ? $product['featured_photo'] : 'images/default-image.jpg' // Set default image if no product image
         ];
     }
 
-    // Return updated cart
+    // Calculate total quantity and price for the cart
+    $total_quantity = array_sum(array_column($_SESSION['cart'], 'quantity'));
+    $total_price = array_sum(array_map(function($item) {
+        return $item['price'] * $item['quantity'];
+    }, $_SESSION['cart']));
+
+    // Return updated cart with total quantity and price
     echo json_encode([
         'success' => true,
         'message' => 'Product added to cart successfully!',
-        'cart' => $_SESSION['cart']
+        'cart' => $_SESSION['cart'],
+        'total_quantity' => $total_quantity,
+        'total_price' => $total_price
     ]);
 } else {
     echo json_encode([
