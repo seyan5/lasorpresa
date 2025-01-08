@@ -27,20 +27,51 @@ $total = array_sum(array_map(function ($item) {
             modal.style.display = show ? 'block' : 'none';
         }
 
-        function handleCheckout() {
+        function validateForm() {
+            const fullName = document.getElementById('full_name').value.trim();
+            const address = document.getElementById('address').value.trim();
+            const city = document.getElementById('city').value.trim();
+            const postalCode = document.getElementById('postal_code').value.trim();
+            const phone = document.getElementById('phone').value.trim();
             const paymentMethod = document.querySelector('input[name="payment_method"]:checked');
 
-            if (!paymentMethod) {
-                alert('Please select a payment method.');
+            // Check if all fields are filled and a payment method is selected
+            const isFormValid = fullName && address && city && postalCode && phone && paymentMethod;
+
+            // Enable or disable the checkout button
+            const checkoutButton = document.querySelector('.checkout');
+            checkoutButton.disabled = !isFormValid;
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const formFields = document.querySelectorAll('#checkout-form input, #checkout-form textarea, #checkout-form input[name="payment_method"]');
+            formFields.forEach(field => {
+                field.addEventListener('input', validateForm);
+            });
+        });
+
+        function handleCheckout() {
+            const fullName = document.getElementById('full_name').value.trim();
+            const address = document.getElementById('address').value.trim();
+            const city = document.getElementById('city').value.trim();
+            const postalCode = document.getElementById('postal_code').value.trim();
+            const phone = document.getElementById('phone').value.trim();
+            const paymentMethod = document.querySelector('input[name="payment_method"]:checked');
+
+            // Check if all required fields are filled
+            if (!fullName || !address || !city || !postalCode || !phone || !paymentMethod) {
+                alert('Please fill out all the required fields and select a payment method before proceeding.');
                 return;
             }
 
+            // Check selected payment method and proceed accordingly
             if (paymentMethod.value === 'gcash') {
                 toggleGCashModal(true);
             } else if (paymentMethod.value === 'cod') {
                 window.location.href = 'order_submitted.php';
             }
         }
+
 
         function handleGCash() {
             const referenceNo = document.getElementById('reference_no').value;
@@ -189,8 +220,6 @@ $total = array_sum(array_map(function ($item) {
                         Cash on Delivery (COD)
                     </label>
                 </div>
-
-                <button type="button" onclick="handleCheckout()">Checkout</button>
             </form>
 
             <hr>
@@ -210,28 +239,29 @@ $total = array_sum(array_map(function ($item) {
                     ?>
                 </p>
             </div>
+            <button class="checkout" type="button" onclick="handleCheckout()" disabled>Checkout</button>
         </div>
     </div>
 
     <!-- GCash Modal -->
     <div id="gcash-modal" class="modal">
         <div class="modal-content">
-            <span class="close" onclick="toggleGCashModal(false)"">&times</span>
+            <span class="close" onclick="toggleGCashModal(false)">&times</span>
             <h3>Scan to Pay</h3>
-            <img src=" ../images/gcash-qr.png" alt="GCash QR Code">
-                <h3>GCash Payment Details</h3>
-                <label for="reference_no">Reference Number: </label>
-                <input type="text" id="reference_no" name="reference_no">
+            <img src="../images/gcashqr.jpg" alt="GCash QR Code">
+            <h3>GCash Payment Details</h3>
+            <label for="reference_no">Reference Number: </label>
+            <input type="text" id="reference_no" name="reference_no">
 
-                <label for="amount_paid">Amount Paid: </label>
-                <input type="number" id="amount_paid" name="amount_paid">
+            <label for="amount_paid">Amount Paid: </label>
+            <input type="number" id="amount_paid" name="amount_paid">
 
-                <label for="date_paid">Date: </label>
-                <input type="date" id="date_paid" name="date_paid">
+            <label for="date_paid">Date: </label>
+            <input type="date" id="date_paid" name="date_paid">
 
-                <label for="time_paid">Time: </label>
-                <input type="time" id="time_paid" name="time_paid">
-                <button class="checkout" onclick="handleGCash()">Checkout &gt;</button>
+            <label for="time_paid">Time: </label>
+            <input type="time" id="time_paid" name="time_paid">
+            <button class="checkout" type="button" onclick="handleGCash()">Done</button>
         </div>
     </div>
 </body>
