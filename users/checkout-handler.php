@@ -41,8 +41,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Update product quantity in the database
             $stmt = $pdo->prepare("
                 UPDATE product
-                SET p_qty = p_qty - :quantity
-                WHERE p_id = :product_id AND p_qty >= :quantity
+                SET quantity = quantity - :quantity
+                WHERE p_id = :product_id AND quantity >= :quantity
             ");
             $stmt->execute([
                 ':quantity' => $item['quantity'],
