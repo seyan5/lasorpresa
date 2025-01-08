@@ -42,6 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
         // Add new product to the cart with the image path
         $_SESSION['cart'][$product_id] = [
+            'p_id' => $product_id,
             'name' => $product_name,
             'price' => $product_price,
             'quantity' => 1,
