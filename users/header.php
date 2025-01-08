@@ -11,11 +11,7 @@ $success_message = '';
 $error_message1 = '';
 $success_message1 = '';
 
-if (!isset($_SESSION['cust_id'])) {
-    // If the user is not logged in, redirect to login page
-    header("Location: ../login.php");
-    exit;
-}
+
 
 
 ?>
