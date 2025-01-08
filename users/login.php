@@ -5,7 +5,6 @@ include("../admin/inc/config.php");
 include("../admin/inc/functions.php");
 include("../admin/inc/CSRF_Protect.php");
 
-
 if (isset($_POST['login'])) {
     $cust_email = $_POST['cust_email'];
     $cust_password = $_POST['cust_password'];
@@ -22,13 +21,15 @@ if (isset($_POST['login'])) {
             if (password_verify($cust_password, $user['cust_password'])) {
                 // Check if the user is active
                 if ($user['cust_status'] === 'active') {
-                    // Start the session and store user data
-                    $_SESSION['cust_id'] = $user['cust_id'];
-                    $_SESSION['cust_name'] = $user['cust_name'];
-                    $_SESSION['cust_email'] = $user['cust_email'];
+                    // Store user data in the session under 'customer'
+                    $_SESSION['customer'] = [
+                        'cust_id' => $user['cust_id'],
+                        'cust_name' => $user['cust_name'],
+                        'cust_email' => $user['cust_email']
+                    ];
 
-                    // Redirect to the dashboard or user home page
-                    header("Location: index.php"); // Change to the appropriate page
+                    // Redirect to the home page or dashboard
+                    header("Location: index.php");
                     exit;
                 } else {
                     echo "Your account is not verified yet. Please check your email to verify your account.";
@@ -44,6 +45,7 @@ if (isset($_POST['login'])) {
     }
 }
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
