@@ -1,13 +1,11 @@
 <?php
 session_start();
 
-
+// Redirect to login if the user is not logged in
 if (!isset($_SESSION['customer']['cust_id'])) {
   header("Location: login.php");
   exit;
 }
-print_r($_SESSION);
-
 ?>
 
 <!DOCTYPE html>
@@ -28,32 +26,35 @@ print_r($_SESSION);
   <div class="container">
     <div class="cart">
       <hr>
-      <h3>Shopping cart</h3>
+      <h3>Shopping Cart</h3>
       
       <?php if (isset($_SESSION['cart']) && count($_SESSION['cart']) > 0): ?>
-        <p>You have <?php echo count($_SESSION['cart']); ?> items in your cart</p>
+        <p>You have <?php echo count($_SESSION['cart']); ?> items in your cart.</p>
 
         <?php foreach ($_SESSION['cart'] as $index => $item): ?>
           <div class="cart-item">
-            <?php if (!empty($item['image'])): ?>
-              <img src="../admin/uploads/<?php echo htmlspecialchars($item['image']); ?>" alt="<?php echo htmlspecialchars($item['name']); ?>" width="50">
-            <?php else: ?>
-              <img src="path/to/default-image.jpg" alt="No image available" width="50">
-            <?php endif; ?>
+            <!-- Product Image -->
+            <img src="../admin/uploads/<?php echo !empty($item['image']) ? htmlspecialchars($item['image']) : 'default-image.jpg'; ?>" 
+                 alt="<?php echo htmlspecialchars($item['name']); ?>" width="50">
 
             <div>
+              <!-- Product Name -->
               <p><?php echo htmlspecialchars($item['name']); ?></p>
-              <p><?php echo htmlspecialchars($item['quantity']); ?> pcs. Tulips</p>
+              <!-- Product Quantity -->
+              <p><?php echo htmlspecialchars($item['quantity']); ?> pcs.</p>
             </div>
 
+            <!-- Quantity -->
             <div class="quantity">
-              <?php echo $item['quantity']; ?>
+              <?php echo htmlspecialchars($item['quantity']); ?>
             </div>
 
+            <!-- Product Price -->
             <div class="price">
               ₱<?php echo number_format($item['price'], 2); ?>
             </div>
 
+            <!-- Delete Item Form -->
             <form method="POST" action="cart-delete.php" id="delete-form-<?php echo $index; ?>">
               <input type="hidden" name="item_index" value="<?php echo $index; ?>">
               <button type="button" class="delete" onclick="confirmDelete(<?php echo $index; ?>)">🗑️</button>
@@ -70,9 +71,11 @@ print_r($_SESSION);
       <hr>
       <div class="summary">
         <p>Subtotal <span>₱<?php 
-          $subtotal = array_sum(array_map(function($item) {
-            return $item['price'] * $item['quantity'];
-          }, $_SESSION['cart'] ?? []));
+          $subtotal = isset($_SESSION['cart']) 
+                      ? array_sum(array_map(function($item) {
+                          return $item['price'] * $item['quantity'];
+                        }, $_SESSION['cart'])) 
+                      : 0;
           echo number_format($subtotal, 2);
         ?></span></p>
         <p>Shipping <span>₱0</span></p>
@@ -84,25 +87,23 @@ print_r($_SESSION);
   </div>
 
   <script>
-  const isLoggedIn = <?php echo isset($_SESSION['customer']['cust_id']) ? 'true' : 'false'; ?>;
+    // Check if the user is logged in
+    const isLoggedIn = <?php echo isset($_SESSION['customer']['cust_id']) ? 'true' : 'false'; ?>;
 
-  function checkout() {
-    if (!isLoggedIn) {
-      const loginConfirm = confirm("You need to log in to proceed to checkout. Do you want to log in now?");
-      if (loginConfirm) {
-        window.location.href = "login.php";
+    // Handle checkout action
+    function checkout() {
+      if (!isLoggedIn) {
+        if (confirm("You need to log in to proceed to checkout. Do you want to log in now?")) {
+          window.location.href = "login.php";
+        }
+      } else {
+        window.location.href = "checkout.php";
       }
-    } else {
-      window.location.href = "checkout.php";
     }
-  }
-</script>
 
-
-  <script>
+    // Confirm deletion of cart item
     function confirmDelete(itemIndex) {
-      const confirmation = confirm("Are you sure you want to remove this item from your cart?");
-      if (confirmation) {
+      if (confirm("Are you sure you want to remove this item from your cart?")) {
         document.getElementById('delete-form-' + itemIndex).submit();
       }
     }
