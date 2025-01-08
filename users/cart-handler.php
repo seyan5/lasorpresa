@@ -32,13 +32,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Initialize cart if not already initialized
     if (!isset($_SESSION['cart'])) {
-        $_SESSION['cart'] = [
-            'p_id' => $product_id,
-    'name' => $product_name,
-    'price' => $product_price,
-    'quantity' => $product_quantity,
-    'image' => $product_image
-        ];
+        $_SESSION['cart'] = [];
     }
 
     // Check if the product already exists in the cart
