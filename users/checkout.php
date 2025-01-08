@@ -31,18 +31,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['place_order'])) {
         $order_id = $pdo->lastInsertId(); 
 
         // Now insert the items from the cart into the order_items table
-        if (isset($_SESSION['cart']) && count($_SESSION['cart']) > 0) {
-            foreach ($_SESSION['cart'] as $item) {
-                // Check that all necessary item data is available
-                if (isset($item['id'], $item['name'], $item['price'], $item['quantity'], $item['image'])) {
-                    $product_id = $item['id'];
-                    $product_name = $item['name'];
-                    $price = $item['price'];
-                    $quantity = $item['quantity'];
-                    $total_price = $price * $quantity;
-                    $product_image = $item['image']; // Image URL for the product
-
-                    // Prepare SQL to insert into order_items table
+        // Prepare SQL to insert into order_items table
 $stmt = $pdo->prepare("INSERT INTO order_items (order_id, p_id, product_name, price, quantity, total_price, product_image) 
 VALUES (?, ?, ?, ?, ?, ?, ?)");
 
@@ -62,6 +51,7 @@ echo "Item inserted into order_items.";
 $errorInfo = $stmt->errorInfo();
 echo "Error inserting into order_items: " . $errorInfo[2];
 }
+                }
             }
         } else {
             echo "Your cart is empty. No items to place in the order.";
