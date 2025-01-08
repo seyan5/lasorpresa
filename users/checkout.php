@@ -1,12 +1,11 @@
 <?php
 require 'header.php';
 
-
 // Redirect to login if the user is not logged in
 if (!isset($_SESSION['customer']['cust_id'])) {
     header("Location: login.php");
     exit;
-  }
+}
 
 // Initialize total amount
 $subtotal = 0;
@@ -69,35 +68,41 @@ $subtotal = 0;
         <p>Total: <span>₱<?php echo number_format($subtotal, 2); ?></span></p>
 
         <div class="col-md-6">
-                            <h3 class="special">Shipping Address"</h3>
-                            <table class="table table-responsive table-bordered table-hover table-striped bill-address">
-                                <tr>
-                                    <td>Full Name</td>
-                                    <td><?php echo $_SESSION['customer']['cust_s_name']; ?></p></td>
-                                </tr>
-                                <tr>
-                                    <td>Phone Number</td>
-                                    <td><?php echo $_SESSION['customer']['cust_s_phone']; ?></td>
-                                </tr>
-                                <tr>
-                                    <td>Address</td>
-                                    <td>
-                                        <?php echo nl2br($_SESSION['customer']['cust_s_address']); ?>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>City</td>
-                                    <td><?php echo $_SESSION['customer']['cust_s_city']; ?></td>
-                                </tr>
-                                <tr>
-                                    <td>Zip Code</td>
-                                    <td><?php echo $_SESSION['customer']['cust_s_zip']; ?></td>
-                                </tr> 
-                            </table>
-                        </div>
-                    </div>                    
-                </div>
-    </div>
+            <h3 class="special">Shipping Address</h3>
+            <table class="table table-responsive table-bordered table-hover table-striped bill-address">
+                <tr>
+                    <td>Full Name</td>
+                    <td>
+                        <?php echo isset($_SESSION['customer']['cust_s_name']) ? $_SESSION['customer']['cust_s_name'] : 'No name available'; ?>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Phone Number</td>
+                    <td>
+                        <?php echo isset($_SESSION['customer']['cust_s_phone']) ? $_SESSION['customer']['cust_s_phone'] : 'No phone number available'; ?>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Address</td>
+                    <td>
+                        <?php echo isset($_SESSION['customer']['cust_s_address']) ? nl2br($_SESSION['customer']['cust_s_address']) : 'No address available'; ?>
+                    </td>
+                </tr>
+                <tr>
+                    <td>City</td>
+                    <td>
+                        <?php echo isset($_SESSION['customer']['cust_s_city']) ? $_SESSION['customer']['cust_s_city'] : 'No city available'; ?>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Zip Code</td>
+                    <td>
+                        <?php echo isset($_SESSION['customer']['cust_s_zip']) ? $_SESSION['customer']['cust_s_zip'] : 'No zip code available'; ?>
+                    </td>
+                </tr> 
+            </table>
+        </div>
+    </div>                    
 </div>
 
 <style>
