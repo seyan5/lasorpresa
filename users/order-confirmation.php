@@ -1,5 +1,4 @@
 <?php
-session_start();
 require 'header.php'; // Ensure this file includes the database connection
 
 if (!isset($_GET['order_id'])) {
