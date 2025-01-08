@@ -70,6 +70,7 @@ if (isset($_POST['form1'])) {
         $_SESSION['customer']['cust_city'] = $_POST['cust_city'];
         $_SESSION['customer']['cust_zip'] = $_POST['cust_zip'];
     }
+}
 ?>
 
 
