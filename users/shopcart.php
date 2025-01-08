@@ -1,9 +1,6 @@
 <?php
 session_start();
-echo '<pre>';
-print_r($_SESSION);
-echo '</pre>';
-exit;
+
 
 if (!isset($_SESSION['customer']['cust_id'])) {
   header("Location: login.php");
