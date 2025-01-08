@@ -2,12 +2,12 @@
 <?php
 session_start();
 include 'header.php';
-if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] != 'admin') {
+if (!isset($_SESSION['id']) || $_SESSION['user_type'] != 'admin') {
     header('Location: login.php');
     exit();
 }
 
-$user_id = $_SESSION['user_id'];
+$user_id = $_SESSION['id'];
 $stmt = $conn->prepare("SELECT * FROM users WHERE id = ?");
 if ($stmt === false) {
     die('prepare() failed: ' . htmlspecialchars($conn->error));
