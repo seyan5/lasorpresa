@@ -23,14 +23,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $order_id = uniqid('ORD');
 
     // Save order details to the database (example only; adjust to your DB structure)
-    // Assuming a database connection $conn
+    // Assuming a database pdoection $pdo
   
-    $stmt = $conn->prepare("INSERT INTO orders (order_id, cust_id, total_price) VALUES (?, ?, ?)");
+    $stmt = $pdo->prepare("INSERT INTO orders (order_id, cust_id, total_price) VALUES (?, ?, ?)");
     $stmt->bind_param("sid", $order_id, $_SESSION['customer']['cust_id'], $total);
     $stmt->execute();
 
     foreach ($_SESSION['cart'] as $item) {
-        $stmt = $conn->prepare("INSERT INTO order_items (order_id, p_id, quantity, price) VALUES (?, ?, ?, ?)");
+        $stmt = $pdo->prepare("INSERT INTO order_items (order_id, p_id, quantity, price) VALUES (?, ?, ?, ?)");
         $stmt->bind_param("siid", $order_id, $item['id'], $item['quantity'], $item['price']);
         $stmt->execute();
     }
