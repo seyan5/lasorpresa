@@ -1,6 +1,11 @@
 <?php
 session_start();
 
+include("../admin/inc/config.php");
+include("../admin/inc/functions.php");
+include("../admin/inc/CSRF_Protect.php");
+
+
 if (!isset($_SESSION['customer']['cust_id'])) {
     header("Location: login.php");
     exit();
