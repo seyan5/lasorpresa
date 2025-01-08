@@ -93,7 +93,7 @@ const isCartEmpty = <?php echo isset($_SESSION['cart']) && count($_SESSION['cart
 function checkout() {
   if (isCartEmpty) {
     if (confirm("Your cart is empty. Would you like to browse products?")) {
-      window.location.href = "product.php";
+      window.location.href = "products.php";
     }
   } else {
     if (!isLoggedIn) {
