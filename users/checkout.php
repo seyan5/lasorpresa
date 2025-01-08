@@ -1,117 +1,113 @@
+<?php
+require 'header.php';
+?>
+
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Checkout</title>
-
-    <!-- Font Awesome and Google Fonts -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-
-    <!-- CSS -->
-    <link rel="stylesheet" href="../css/checkout.css">
+    <link rel="stylesheet" href="../css/shopcart.css">
+    <title>Shopping Cart</title>
 </head>
+
 <body>
-    <!-- Header -->
-    <header>
-        <input type="checkbox" id="toggler">
-        <label for="toggler" class="fas fa-bars"></label>
+    <div class="header">
+        <a href="index.php" class="back-link">
+            <span class="back-arrow">&lt;</span> La Sorpresa Home Page
+        </a>
+    </div>
 
-        <a href="#" class="logo">Flower<span>.</span></a>
-        <nav class="navbar">
-            <a href="#home">Home</a>
-            <a href="#about">About</a>
-            <a href="#product">Product</a>
-            <a href="#occasion">Occasion</a>
-            <a href="#review">Review</a>
-            <a href="#contacts">Contacts</a>
-        </nav>
+    <div class="container">
+        <div class="cart">
+            <hr>
+            <h3>Order Summary</h3>
 
-        <div class="icons">
-            <a href="#" class="fas fa-heart"></a>
-            <a href="cart.html" class="fas fa-shopping-cart"></a>
-            <a href="#" class="fas fa-user"></a>
+            <?php if (isset($_SESSION['cart']) && count($_SESSION['cart']) > 0): ?>
+                <p>You have <?php echo count($_SESSION['cart']); ?> items in your cart</p>
+
+                <?php foreach ($_SESSION['cart'] as $index => $item): ?>
+                    <div class="cart-item">
+                        <?php if (isset($item['image']) && $item['image']): ?>
+                            <img src="../admin/uploads/<?php echo htmlspecialchars($item['image']); ?>"
+                                alt="<?php echo htmlspecialchars($item['name']); ?>" width="50">
+                        <?php else: ?>
+                            <img src="path/to/default-image.jpg" alt="No image available" width="50">
+                        <?php endif; ?>
+
+                        <div>
+                            <p><?php echo htmlspecialchars($item['name']); ?></p>
+                            <p><?php echo htmlspecialchars($item['quantity']); ?> pcs.</p>
+                        </div>
+
+                        <div class="quantity">
+                            <?php echo $item['quantity']; ?>
+                        </div>
+
+                        <div class="price">
+                            ₱<?php echo number_format($item['price'], 2); ?>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+            <?php else: ?>
+                <p>Your cart is empty.</p>
+            <?php endif; ?>
         </div>
-    </header>
+        <div class="payment">
+            <h3>Summary</h3>
+            <p></p>
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" required>
 
-    <!-- Main Section -->
-    <section>
-        <div class="container">
-            <div class="checkoutLayout">
-                <!-- Shopping Cart -->
-                <div>
-                    <h2>My Shopping Cart</h2>
-                    <div class="cart">
-                        <div class="cart-item">
-                            <div class="row">
-                                <div class="col-md-7 center-item">
-                                    <img src="../ivd/flower.png" alt="iPhone 11">
-                                    <h5>iPhone 11 128GB Black ($1219)</h5>
-                                </div>
-                                <div class="col-md-5 center-item">
-                                    <div class="input-group number-spinner">
-                                        <button class="btn btn-default" id="phone-minus"><i class="fas fa-minus"></i></button>
-                                        <input id="phone-number" type="number" min="0" class="form-control text-center" value="1">
-                                        <button class="btn btn-default" id="phone-plus"><i class="fas fa-plus"></i></button>
-                                    </div>
-                                    <h5>$<span id="phone-total">1219</span></h5>
-                                        <img src="images/remove.png" alt="Remove" class="remove-item">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- Checkout Form -->
-                <div class="right">
-                    <h1>Checkout</h1>
-                    <form class="form">
-                        <div class="group">
-                            <label for="name">Full Name</label>
-                            <input type="text" id="name" placeholder="Enter your name">
-                        </div>
-                        <div class="group">
-                            <label for="phone">Phone Number</label>
-                            <input type="text" id="phone" placeholder="Enter your phone number">
-                        </div>
-                        <div class="group">
-                            <label for="address">Address</label>
-                            <input type="text" id="address" placeholder="Enter your address">
-                        </div>
-                        <div class="group">
-                            <label for="country">Country</label>
-                            <select id="country">
-                                <option value="">Choose...</option>
-                                <option value="kingdom">Kingdom</option>
-                            </select>
-                        </div>
-                        <div class="group">
-                            <label for="city">City</label>
-                            <select id="city">
-                                <option value="">Choose...</option>
-                                <option value="london">London</option>
-                            </select>
-                        </div>
-                    </form>
-                    <div class="return">
-                        <div class="row">
-                            <div>Total Quantity</div>
-                            <div class="totalQuantity">$<span id="total-price">1278</div>
-                        </div>
-                        <div class="row">
-                            <div>Subtotal: </div>
-                            <div class="totalPrice">$<span id="sub-total">1278</div>
-                        </div>
-                    </div>
-                    <button class="buttonCheckout">CHECKOUT</button>
-                </div>
+            <label for="address">Address:</label>
+            <textarea id="address" name="address" required></textarea>
+
+            <label for="phone">Phone Number:</label>
+            <input type="tel" id="phone" name="phone" required>
+            <label for="address">Mode of Payment:</label>
+            <div>
+                <input type="radio" id="gcash" name="payment_method" value="gcash" required>
+                <label for="gcash">
+                    <img src="../images/Gcash.png" alt="" width="50">
+                    GCash
+                </label>
             </div>
+            <div>
+                <input type="radio" id="cod" name="payment_method" value="cod" required>
+                <label for="cod">
+                    <img src="../images/cod.png" alt="" width="50">
+                    Cash on Delivery (COD)
+                </label>
+            </div>
+
+            <hr>
+
+            <div class="summary">
+                <p>Subtotal <span>₱<?php
+                $subtotal = array_sum(array_map(function ($item) {
+                    return $item['price'] * $item['quantity'];
+                }, $_SESSION['cart']));
+                echo number_format($subtotal, 2);
+                ?></span></p>
+                <p>Shipping <span>₱0</span></p>
+                <p>
+                <strong>Total:</strong>
+                ₱<?php 
+                echo number_format(array_sum(array_map(function($item) {
+                    return $item['price'] * $item['quantity'];
+                }, $_SESSION['cart'])), 2); 
+                ?>
+            </p>
+            </div>
+
+            <button class="checkout" onclick="checkout()">Checkout &gt;</button>
         </div>
-    </section>
+    </div>
+    </div>
 
     <!-- JavaScript -->
     <script src="js/checkout.js"></script>
 </body>
+
 </html>
