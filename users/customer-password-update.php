@@ -24,7 +24,7 @@ if (isset($_POST['form1'])) {
 
     if( empty($_POST['cust_password']) || empty($_POST['cust_re_password']) ) {
         $valid = 0;
-        $error_message .= :"Password can not be Empty"."<br>";
+        $error_message .= "Password can not be Empty"."<br>";
     }
 
     if( !empty($_POST['cust_password']) && !empty($_POST['cust_re_password']) ) {
