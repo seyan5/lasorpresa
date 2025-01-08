@@ -12,9 +12,6 @@ $subtotal = 0;
 
 // Handle order placement
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['place_order'])) {
-    // Database connection (you may already have this)
-    include 'header.php';
-
     // Insert the order into the orders table
     $customer_id = $_SESSION['customer']['cust_id'];
     $order_total = $subtotal; // Set the total price for the order
