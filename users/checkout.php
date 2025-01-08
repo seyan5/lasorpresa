@@ -28,38 +28,38 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['place_order'])) {
         $order_id = $pdo->lastInsertId(); // Get the inserted order's ID
 
         // Insert each item into the order_items table
-        if (isset($_SESSION['cart']) && count($_SESSION['cart']) > 0) {
-            foreach ($_SESSION['cart'] as $item) {
-                // Check if all required keys exist in the item
-                if (isset($item['id'], $item['name'], $item['price'], $item['quantity'])) {
-                    $product_id = $item['id'];
-                    $product_name = $item['name'];
-                    $price = $item['price'];
-                    $quantity = $item['quantity'];
-                    $total_price = $price * $quantity;
+if (isset($_SESSION['cart']) && count($_SESSION['cart']) > 0) {
+    foreach ($_SESSION['cart'] as $item) {
+        // Check if all required keys exist in the item
+        if (isset($item['id'], $item['name'], $item['price'], $item['quantity'])) {
+            $product_id = $item['id'];
+            $product_name = $item['name'];
+            $price = $item['price'];
+            $quantity = $item['quantity'];
+            $total_price = $price * $quantity;
 
-                    // Prepare the SQL statement to insert the order items
-                    $stmt = $pdo->prepare("INSERT INTO order_items (order_id, p_id, product_name, price, quantity, total_price) VALUES (?, ?, ?, ?, ?, ?)");
-                    $stmt->bindParam(1, $order_id, PDO::PARAM_INT);
-                    $stmt->bindParam(2, $product_id, PDO::PARAM_INT); // Product ID should come from cart
-                    $stmt->bindParam(3, $product_name, PDO::PARAM_STR);
-                    $stmt->bindParam(4, $price, PDO::PARAM_STR);
-                    $stmt->bindParam(5, $quantity, PDO::PARAM_INT);
-                    $stmt->bindParam(6, $total_price, PDO::PARAM_STR);
+            // Prepare the SQL statement to insert the order items
+            $stmt = $pdo->prepare("INSERT INTO order_items (order_id, p_id, product_name, price, quantity, total_price) VALUES (?, ?, ?, ?, ?, ?)");
+            $stmt->bindParam(1, $order_id, PDO::PARAM_INT);
+            $stmt->bindParam(2, $product_id, PDO::PARAM_INT); // Product ID from cart
+            $stmt->bindParam(3, $product_name, PDO::PARAM_STR);
+            $stmt->bindParam(4, $price, PDO::PARAM_STR);
+            $stmt->bindParam(5, $quantity, PDO::PARAM_INT);
+            $stmt->bindParam(6, $total_price, PDO::PARAM_STR);
 
-                    // Check if insert was successful
-                    if (!$stmt->execute()) {
-                        // Error executing the query, capture the error
-                        $errorInfo = $stmt->errorInfo();
-                        echo "Error inserting order item: " . $errorInfo[2];
-                    }
-                } else {
-                    echo "Missing item data for order item.";
-                }
+            // Check if insert was successful
+            if (!$stmt->execute()) {
+                // Error executing the query, capture the error
+                $errorInfo = $stmt->errorInfo();
+                echo "Error inserting order item: " . $errorInfo[2];
             }
         } else {
-            echo "Cart is empty. No items to place in the order.";
+            echo "Missing item data for order item.";
         }
+    }
+} else {
+    echo "Cart is empty. No items to place in the order.";
+}
 
         // Clear the cart
         unset($_SESSION['cart']);
