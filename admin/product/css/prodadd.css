@@ -1,29 +1,31 @@
-/* General Styling */
+/* General styling for the entire container */
 .container {
     margin: 20px auto;
-    width: 90%;
-    max-width: 100rem;
+    width: 80%; /* Adjust width to make container more compact */
+    max-width: 71rem; /* Optional: Set a max-width to prevent it from becoming too wide */
     font-family: Arial, sans-serif;
 }
 
+/* Content Header */
 .content-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 20px;
+    margin-bottom: 15px; /* Reduced space */
 }
 
 .content-header-left h1 {
-    font-size: 24px;
+    font-size: 22px; /* Slightly smaller font size */
     font-weight: bold;
 }
 
 .content-header-right a {
     background-color: #007bff;
     color: white;
-    padding: 8px 16px;
+    padding: 6px 12px; /* Smaller button */
     border-radius: 4px;
     text-decoration: none;
+    font-size: 14px; /* Adjust font size */
 }
 
 .content-header-right a:hover {
@@ -33,56 +35,56 @@
 /* Section Content */
 .content {
     background-color: #f8f9fa;
-    padding: 20px;
+    padding: 15px; /* Reduced padding */
     border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1); /* More subtle shadow */
+    margin-bottom: 20px;
 }
 
-.row {
-    margin-bottom: 10px;
-}
-
-/* Form styling */
+/* Form Styling */
 .form-horizontal {
     display: flex;
     flex-direction: column;
+    gap: 15px; /* Add space between form elements */
 }
 
 .box {
     background-color: #fff;
     border-radius: 8px;
     border: 1px solid #ddd;
-    padding: 15px;
-    margin-bottom: 20px;
+    padding: 12px; /* Reduced padding */
+    margin-bottom: 15px;
 }
 
 .box-body {
-    padding: 15px;
+    padding: 12px; /* Reduced padding */
 }
 
 .form-group {
-    margin-bottom: 15px;
+    margin-bottom: 12px; /* Smaller gap between form elements */
 }
 
 label.control-label {
     font-weight: bold;
-    margin-bottom: 5px;
+    margin-bottom: 4px; /* Reduced space */
+    font-size: 14px; /* Smaller font size */
 }
 
-.col-sm-3, .col-sm-4, .col-sm-8 {
+.col-sm-4, .col-sm-8 {
     padding-left: 0;
     padding-right: 0;
 }
 
 .col-sm-3 {
-    padding-left: 15px;
-    padding-right: 15px;
+    padding-left: 10px; /* Adjust padding */
+    padding-right: 10px; /* Adjust padding */
 }
 
-/* Input & Select Styling */
+/* Form controls */
 .form-control {
     width: 100%;
-    padding: 8px;
+    padding: 6px; /* Smaller padding */
+    font-size: 14px; /* Slightly smaller font size */
     border-radius: 4px;
     border: 1px solid #ccc;
 }
@@ -98,11 +100,10 @@ label.control-label {
 
 /* Button Styling */
 .btn {
-    padding: 8px 16px;
+    padding: 6px 14px; /* Smaller padding */
     border-radius: 4px;
     font-size: 14px;
     border: none;
-    cursor: pointer;
 }
 
 .btn-primary { background-color: #007bff; color: white; }
@@ -117,22 +118,12 @@ label.control-label {
 .btn-danger { background-color: #dc3545; color: white; }
 .btn-danger:hover { background-color: #c82333; }
 
-#btnAddNew {
-    background-color: #ffc107;
-    color: white;
-    border: none;
-    cursor: pointer;
-}
-
-#btnAddNew:hover {
-    background-color: #e0a800;
-}
-
-/* Callout box */
+/* Callout box for success and error messages */
 .callout {
-    padding: 15px;
+    padding: 12px;
     margin-bottom: 20px;
     border-radius: 4px;
+    font-size: 14px; /* Slightly smaller font size */
 }
 
 .callout-danger { background-color: #f8d7da; border-color: #f5c6cb; color: #721c24; }
@@ -147,7 +138,7 @@ label.control-label {
     font-size: 14px;
 }
 
-/* Table Styling */
+/* Product Table */
 #ProductTable {
     width: 100%;
     margin-top: 10px;
@@ -165,12 +156,39 @@ label.control-label {
     color: darkred;
 }
 
-/* Editor Text Area */
-textarea.form-control {
-    height: 150px;
+/* Button Add New */
+#btnAddNew {
+    background-color: #ffc107;
+    color: white;
+    border: none;
+    cursor: pointer;
 }
 
-/* Additional Styling */
+#btnAddNew:hover {
+    background-color: #e0a800;
+}
+
+/* Editor Text Area */
+textarea.form-control {
+    height: 120px; /* Smaller text area */
+    font-size: 14px; /* Smaller font size */
+}
+
+/* Additional Styling for the last form group */
 .addprod .col-sm-6 {
     text-align: right;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .container {
+        width: 95%; /* Allow more space on smaller screens */
+    }
+    .content-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .content-header-left h1 {
+        font-size: 20px; /* Smaller font size */
+    }
 }

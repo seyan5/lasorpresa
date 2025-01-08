@@ -58,12 +58,12 @@ if (isset($_POST['login'])) {
 <body>
 
     <div class="logo-container">
-        <img src="images/logo.png" alt="Logo" class="logo" />
+        <img src="../images/logo.png" alt="Logo" class="logo" />
     </div>
 
     <!-- Flower Image -->
     <div class="flower-container">
-        <img src="images/flower2.png" alt="Flower" class="flower" />
+        <img src="../images/flower2.png" alt="Flower" class="flower" />
     </div>
 
 <h2>Login</h2>
