@@ -1,11 +1,7 @@
 <?php
 require '../header.php'; // Assuming you have a header file that manages session, security, etc.
 
-if ($_SESSION['user_type'] !== 'admin') {
-    // Redirect to the home page if the user is not an admin
-    header("Location: ../index.php");
-    exit();
-}
+
 
 // Fetch orders from the database
 $statement = $pdo->prepare("SELECT * FROM orders ORDER BY created_at DESC");
