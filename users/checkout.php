@@ -1,5 +1,4 @@
 <?php
-session_start();
 require 'header.php'; // Include any common setup, such as database connection
 
 // Redirect to cart if the cart is empty
