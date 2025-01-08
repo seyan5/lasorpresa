@@ -43,23 +43,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['place_order'])) {
                     $product_image = $item['image']; // Image URL for the product
 
                     // Prepare SQL to insert into order_items table
-                    $stmt = $pdo->prepare("INSERT INTO order_items (order_id, p_id, product_name, price, quantity, total_price, product_image) 
-                                           VALUES (?, ?, ?, ?, ?, ?, ?)");
-                    $stmt->bindParam(1, $order_id, PDO::PARAM_INT);
-                    $stmt->bindParam(2, $product_id, PDO::PARAM_INT);
-                    $stmt->bindParam(3, $product_name, PDO::PARAM_STR);
-                    $stmt->bindParam(4, $price, PDO::PARAM_STR);
-                    $stmt->bindParam(5, $quantity, PDO::PARAM_INT);
-                    $stmt->bindParam(6, $total_price, PDO::PARAM_STR);
-                    $stmt->bindParam(7, $product_image, PDO::PARAM_STR); // Product image URL
+$stmt = $pdo->prepare("INSERT INTO order_items (order_id, p_id, product_name, price, quantity, total_price, product_image) 
+VALUES (?, ?, ?, ?, ?, ?, ?)");
 
-                    // Execute the query to insert into order_items table
-                    if (!$stmt->execute()) {
-                        // Log or display error if insertion fails
-                        $errorInfo = $stmt->errorInfo();
-                        echo "Error inserting order item: " . $errorInfo[2];
-                    }
-                }
+// Bind parameters
+$stmt->bindParam(1, $order_id, PDO::PARAM_INT);
+$stmt->bindParam(2, $product_id, PDO::PARAM_INT);
+$stmt->bindParam(3, $product_name, PDO::PARAM_STR);
+$stmt->bindParam(4, $price, PDO::PARAM_STR);
+$stmt->bindParam(5, $quantity, PDO::PARAM_INT);
+$stmt->bindParam(6, $total_price, PDO::PARAM_STR);
+$stmt->bindParam(7, $product_image, PDO::PARAM_STR);
+
+// Execute and check for errors
+if ($stmt->execute()) {
+echo "Item inserted into order_items.";
+} else {
+$errorInfo = $stmt->errorInfo();
+echo "Error inserting into order_items: " . $errorInfo[2];
+}
             }
         } else {
             echo "Your cart is empty. No items to place in the order.";
