@@ -1,5 +1,5 @@
 <?php
-require 'header.php';
+require 'header.php'; // Ensure session_start() is called here
 
 // Redirect to login if the user is not logged in
 if (!isset($_SESSION['customer']['cust_id'])) {
@@ -46,22 +46,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['place_order'])) {
                     $stmt = $pdo->prepare("INSERT INTO order_items (order_id, p_id, product_name, price, quantity, total_price, product_image) 
                        VALUES (?, ?, ?, ?, ?, ?, ?)");
 
-// Bind parameters
-$stmt->bindParam(1, $order_id, PDO::PARAM_INT);
-$stmt->bindParam(2, $product_id, PDO::PARAM_INT);
-$stmt->bindParam(3, $product_name, PDO::PARAM_STR);
-$stmt->bindParam(4, $price, PDO::PARAM_STR);
-$stmt->bindParam(5, $quantity, PDO::PARAM_INT);
-$stmt->bindParam(6, $total_price, PDO::PARAM_STR);
-$stmt->bindParam(7, $product_image, PDO::PARAM_STR);
+                    // Bind parameters
+                    $stmt->bindParam(1, $order_id, PDO::PARAM_INT);
+                    $stmt->bindParam(2, $product_id, PDO::PARAM_INT);
+                    $stmt->bindParam(3, $product_name, PDO::PARAM_STR);
+                    $stmt->bindParam(4, $price, PDO::PARAM_STR);
+                    $stmt->bindParam(5, $quantity, PDO::PARAM_INT);
+                    $stmt->bindParam(6, $total_price, PDO::PARAM_STR);
+                    $stmt->bindParam(7, $product_image, PDO::PARAM_STR);
 
-// Execute and check for errors
-if ($stmt->execute()) {
-    echo "Item inserted into order_items.";
-} else {
-    $errorInfo = $stmt->errorInfo();
-    echo "Error inserting into order_items: " . $errorInfo[2];
-}
+                    // Execute and check for errors
+                    if ($stmt->execute()) {
+                        // Successfully inserted into order_items
+                    } else {
+                        $errorInfo = $stmt->errorInfo();
+                        echo "Error inserting into order_items: " . $errorInfo[2];
+                    }
                 }
             }
         } else {
