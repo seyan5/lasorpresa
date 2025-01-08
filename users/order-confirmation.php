@@ -32,24 +32,30 @@ $order_items = $statement->fetchAll(PDO::FETCH_ASSOC);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Order Confirmation</title>
     <style>
-        .order-summary {
+        body {
+            font-family: Arial, sans-serif;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
             margin: 20px 0;
         }
-        .order-item {
-            display: flex;
-            align-items: center;
-            margin-bottom: 15px;
+        table th, table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
         }
-        .order-item img {
+        table th {
+            background-color: #f4f4f4;
+            font-weight: bold;
+        }
+        .product-image {
             width: 50px;
             height: 50px;
             object-fit: cover;
-            margin-right: 15px;
         }
-        .order-item .details {
-            flex-grow: 1;
-        }
-        .order-item .price {
+        .summary {
+            margin-top: 20px;
             font-weight: bold;
         }
     </style>
@@ -60,25 +66,44 @@ $order_items = $statement->fetchAll(PDO::FETCH_ASSOC);
     <p>We will process your order soon.</p>
 
     <h2>Order Details</h2>
-    <div class="order-summary">
-        <?php if ($order_items): ?>
-            <?php foreach ($order_items as $item): ?>
-                <div class="order-item">
-                    <img src="../admin/uploads/<?php echo htmlspecialchars($item['product_image']); ?>" 
-                         alt="<?php echo htmlspecialchars($item['product_name']); ?>">
-                    <div class="details">
-                        <p><?php echo htmlspecialchars($item['product_name']); ?></p>
-                        <p>Quantity: <?php echo htmlspecialchars($item['product_quantity']); ?></p>
-                    </div>
-                    <div class="price">
-                        ₱<?php echo number_format($item['product_price'] * $item['product_quantity'], 2); ?>
-                    </div>
-                </div>
-            <?php endforeach; ?>
-        <?php else: ?>
-            <p>No items found for this order.</p>
-        <?php endif; ?>
-    </div>
+    <?php if ($order_items): ?>
+        <table>
+            <thead>
+                <tr>
+                    <th>Product Image</th>
+                    <th>Product Name</th>
+                    <th>Quantity</th>
+                    <th>Price (Each)</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($order_items as $item): ?>
+                    <tr>
+                        <td>
+                            <img src="../admin/uploads/<?php echo htmlspecialchars($item['product_image']); ?>" 
+                                 alt="<?php echo htmlspecialchars($item['product_name']); ?>" 
+                                 class="product-image">
+                        </td>
+                        <td><?php echo htmlspecialchars($item['product_name']); ?></td>
+                        <td><?php echo htmlspecialchars($item['product_quantity']); ?></td>
+                        <td>₱<?php echo number_format($item['product_price'], 2); ?></td>
+                        <td>₱<?php echo number_format($item['product_price'] * $item['product_quantity'], 2); ?></td>
+                    </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+        <div class="summary">
+            Total Amount: ₱<?php 
+                $total = array_sum(array_map(function($item) {
+                    return $item['product_price'] * $item['product_quantity'];
+                }, $order_items));
+                echo number_format($total, 2);
+            ?>
+        </div>
+    <?php else: ?>
+        <p>No items found for this order.</p>
+    <?php endif; ?>
 
     <a href="products.php">Continue Shopping</a>
 </body>
