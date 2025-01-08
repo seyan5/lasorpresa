@@ -22,7 +22,7 @@ $total = array_sum(array_map(function ($item) {
 </head>
 <body>
     <div class="header">
-        <a href="cart.php" class="back-link">
+        <a href="shopcart.php" class="back-link">
             <span class="back-arrow">&lt;</span> Back to Cart
         </a>
     </div>
@@ -67,4 +67,22 @@ $total = array_sum(array_map(function ($item) {
         </form>
     </div>
 </body>
+
+<script>
+    document.querySelector('.place-order').addEventListener('click', async () => {
+    const response = await fetch('checkout-handler.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' }
+    });
+    const result = await response.json();
+    if (result.success) {
+        alert('Order placed successfully!');
+        window.location.href = `order-confirmation.php?order_id=${result.order_id}`;
+    } else {
+        alert('Error: ' + result.message);
+    }
+});
+
+</script>
 </html>
+
