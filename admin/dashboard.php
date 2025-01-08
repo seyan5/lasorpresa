@@ -3,7 +3,7 @@
 include 'header.php';
 
 $user_id = $_SESSION['id'];
-$stmt = $conn->prepare("SELECT * FROM users WHERE id = ?");
+$stmt = $pdo->prepare("SELECT * FROM users WHERE id = ?");
 
 $stmt->bind_param("i", $user_id);
 $stmt->execute();
