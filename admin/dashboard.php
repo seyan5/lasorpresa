@@ -1,13 +1,10 @@
 
 <?php
-session_start();
 include 'header.php';
 
 $user_id = $_SESSION['id'];
 $stmt = $conn->prepare("SELECT * FROM users WHERE id = ?");
-if ($stmt === false) {
-    die('prepare() failed: ' . htmlspecialchars($conn->error));
-}
+
 $stmt->bind_param("i", $user_id);
 $stmt->execute();
 $result = $stmt->get_result();
