@@ -1,8 +1,8 @@
-/* General styling for the entire container */
+/* General Styling */
 .container {
     margin: 20px auto;
-    width: 90%; /* Adjust as needed */
-    max-width: 100rem; /* Optional: Set a max-width to prevent it from becoming too wide */
+    width: 90%;
+    max-width: 100rem;
     font-family: Arial, sans-serif;
 }
 
@@ -42,8 +42,6 @@
     margin-bottom: 10px;
 }
 
-
-
 /* Form styling */
 .form-horizontal {
     display: flex;
@@ -62,7 +60,7 @@
     padding: 15px;
 }
 
-.top, .mid, .end, .prodname, .oprice, .cprice, .quan, .size, .color, .photo, .otherp, .des, .sdes, .feat, .condi, .feats, .active, .addprod {
+.form-group {
     margin-bottom: 15px;
 }
 
@@ -71,7 +69,7 @@ label.control-label {
     margin-bottom: 5px;
 }
 
-.col-sm-4, .col-sm-8 {
+.col-sm-3, .col-sm-4, .col-sm-8 {
     padding-left: 0;
     padding-right: 0;
 }
@@ -81,6 +79,7 @@ label.control-label {
     padding-right: 15px;
 }
 
+/* Input & Select Styling */
 .form-control {
     width: 100%;
     padding: 8px;
@@ -97,69 +96,49 @@ label.control-label {
     width: 100% !important;
 }
 
-/* Button styling */
+/* Button Styling */
 .btn {
     padding: 8px 16px;
     border-radius: 4px;
     font-size: 14px;
     border: none;
+    cursor: pointer;
 }
 
-.btn-primary {
-    background-color: #007bff;
-    color: white;
-}
+.btn-primary { background-color: #007bff; color: white; }
+.btn-primary:hover { background-color: #0056b3; }
 
-.btn-primary:hover {
-    background-color: #0056b3;
-}
+.btn-warning { background-color: #ffc107; color: white; }
+.btn-warning:hover { background-color: #e0a800; }
 
-.btn-warning {
+.btn-success { background-color: #28a745; color: white; }
+.btn-success:hover { background-color: #218838; }
+
+.btn-danger { background-color: #dc3545; color: white; }
+.btn-danger:hover { background-color: #c82333; }
+
+#btnAddNew {
     background-color: #ffc107;
     color: white;
+    border: none;
+    cursor: pointer;
 }
 
-.btn-warning:hover {
+#btnAddNew:hover {
     background-color: #e0a800;
 }
 
-.btn-success {
-    background-color: #28a745;
-    color: white;
-}
-
-.btn-success:hover {
-    background-color: #218838;
-}
-
-.btn-danger {
-    background-color: #dc3545;
-    color: white;
-}
-
-.btn-danger:hover {
-    background-color: #c82333;
-}
-
-/* Callout box for success and error messages */
+/* Callout box */
 .callout {
     padding: 15px;
     margin-bottom: 20px;
     border-radius: 4px;
 }
 
-.callout-danger {
-    background-color: #f8d7da;
-    border-color: #f5c6cb;
-    color: #721c24;
-}
+.callout-danger { background-color: #f8d7da; border-color: #f5c6cb; color: #721c24; }
+.callout-success { background-color: #d4edda; border-color: #c3e6cb; color: #155724; }
 
-.callout-success {
-    background-color: #d4edda;
-    border-color: #c3e6cb;
-    color: #155724;
-}
-
+/* File Upload */
 .upload-btn input[type="file"] {
     border: 1px solid #ddd;
     padding: 5px;
@@ -168,6 +147,7 @@ label.control-label {
     font-size: 14px;
 }
 
+/* Table Styling */
 #ProductTable {
     width: 100%;
     margin-top: 10px;
@@ -185,24 +165,12 @@ label.control-label {
     color: darkred;
 }
 
-#btnAddNew {
-    background-color: #ffc107;
-    color: white;
-    border: none;
-    cursor: pointer;
-}
-
-#btnAddNew:hover {
-    background-color: #e0a800;
-}
-
-/* Editor text area styling */
+/* Editor Text Area */
 textarea.form-control {
     height: 150px;
 }
 
-/* Additional styling for the last form group */
+/* Additional Styling */
 .addprod .col-sm-6 {
     text-align: right;
 }
-
