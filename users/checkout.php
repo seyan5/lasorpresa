@@ -7,15 +7,23 @@ if (!isset($_SESSION['customer']['cust_id'])) {
     exit;
 }
 
-// Initialize total amount
-$subtotal = 0;
-
 // Handle order placement
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['place_order'])) {
 
+    // Initialize subtotal to zero
+    $subtotal = 0;
+
+    // Calculate the subtotal (total price of all items in the cart)
+    if (isset($_SESSION['cart']) && count($_SESSION['cart']) > 0) {
+        foreach ($_SESSION['cart'] as $item) {
+            // Calculate the total price for each item in the cart
+            $subtotal += $item['price'] * $item['quantity'];
+        }
+    }
+
     // Insert the order into the orders table
     $customer_id = $_SESSION['customer']['cust_id'];
-    $order_total = $subtotal; // Subtotal of the order
+    $order_total = $subtotal; // Subtotal of the order (total price)
     $shipping = 0; // Assume free shipping or calculate based on shipping method
     $status = 'Pending'; // Initial status of the order
 
@@ -30,10 +38,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['place_order'])) {
         // Get the inserted order ID
         $order_id = $pdo->lastInsertId(); 
 
-        // Now insert the items from the cart into the order_items table
+        // Insert items into order_items table
         if (isset($_SESSION['cart']) && count($_SESSION['cart']) > 0) {
             foreach ($_SESSION['cart'] as $item) {
-                // Check that all necessary item data is available
                 if (isset($item['id'], $item['name'], $item['price'], $item['quantity'], $item['image'])) {
                     $product_id = $item['id'];
                     $product_name = $item['name'];
@@ -56,16 +63,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['place_order'])) {
                     $stmt->bindParam(7, $product_image, PDO::PARAM_STR);
 
                     // Execute and check for errors
-                    if ($stmt->execute()) {
-                        // Successfully inserted into order_items
-                    } else {
+                    if (!$stmt->execute()) {
                         $errorInfo = $stmt->errorInfo();
                         echo "Error inserting into order_items: " . $errorInfo[2];
                     }
                 }
             }
-        } else {
-            echo "Your cart is empty. No items to place in the order.";
         }
 
         // Clear the cart session after successful order placement
