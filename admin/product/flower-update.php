@@ -8,25 +8,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $name = $_POST['name'];
     $quantity = $_POST['quantity'];
     $price = $_POST['price'];
+    $image = '';
 
-    // Image upload logic (optional)
+    // Check if a new image is uploaded
     if (isset($_FILES['image']) && $_FILES['image']['error'] === 0) {
-        $image = '../uploads/flower' . $_FILES['image']['name'];
+        $image = '../uploads/flower_' . time() . '_' . $_FILES['image']['name'];
         move_uploaded_file($_FILES['image']['tmp_name'], $image);
     } else {
-        // Keep existing image if no new one is uploaded
+        // Keep the existing image if no new image is uploaded
         $stmt = $pdo->prepare("SELECT image FROM flowers WHERE id = ?");
         $stmt->execute([$id]);
         $flower = $stmt->fetch(PDO::FETCH_ASSOC);
         $image = $flower['image'];
     }
 
-    // Update the database
+    // Update the flower record in the database
     $stmt = $pdo->prepare("UPDATE flowers SET name = ?, quantity = ?, price = ?, image = ? WHERE id = ?");
     $stmt->execute([$name, $quantity, $price, $image, $id]);
 
-    // Redirect or display a success message
-    header('Location: flower.php');
+    // Redirect to the main flowers page
+    header('Location: flowers.php');
     exit();
 }
 ?>
+
