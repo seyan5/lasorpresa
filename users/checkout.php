@@ -32,14 +32,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['place_order'])) {
         // Insert each item into the order_items table
         if (isset($_SESSION['cart']) && count($_SESSION['cart']) > 0) {
             foreach ($_SESSION['cart'] as $item) {
-                // Make sure the item has all necessary keys
+                // Check if the required data exists
                 if (isset($item['id'], $item['name'], $item['price'], $item['quantity'], $item['image'])) {
                     $product_id = $item['id'];
                     $product_name = $item['name'];
                     $price = $item['price'];
                     $quantity = $item['quantity'];
                     $total_price = $price * $quantity;
-                    $product_image = $item['image']; // Assuming you have the image in the cart
+                    $product_image = $item['image']; // Ensure product image is included
+
+                    echo '<pre>';
+print_r($item); // Check all item data
+echo '</pre>';
 
                     // Prepare the SQL statement to insert into order_items table
                     $stmt = $pdo->prepare("INSERT INTO order_items (order_id, p_id, product_name, price, quantity, total_price, product_image) 
