@@ -34,20 +34,28 @@ if (isset($_POST['form1'])) {
         }
     }
     
-    if($valid == 1) {
+    if ($valid == 1) {
 
-        // update data into the database
-
+        // Get the password from the form
         $password = strip_tags($_POST['cust_password']);
-        
+    
+        // Hash the password using bcrypt
+        $hashed_password = password_hash($password, PASSWORD_BCRYPT);
+    
+        // Update the password in the database
         $statement = $pdo->prepare("UPDATE customer SET cust_password=? WHERE cust_id=?");
-        $statement->execute(array(md5($password),$_SESSION['customer']['cust_id']));
-        
-        $_SESSION['customer']['cust_password'] = md5($password);        
-
+        $statement->execute(array($hashed_password, $_SESSION['customer']['cust_id']));
+    
+        // Clear the session password to force the next login to re-check the password
+        unset($_SESSION['customer']['cust_password']);
+    
+        // Update the session password with the new hashed password
+        $_SESSION['customer']['cust_password'] = $hashed_password;
+    
+        // Display success message
         $success_message = "Password is updated successfully";
     }
-}
+    
 ?>
 
 <div class="page">
