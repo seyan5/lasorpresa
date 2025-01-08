@@ -61,7 +61,7 @@ if (isset($_POST['form1'])) {
             $_SESSION['customer']['cust_id']
         ));
     
-        $success_message = "Profile Information Updated successfully.";
+        $success_message = "Shipping Information Updated successfully.";
     
         // Update session variables
         $_SESSION['customer']['cust_s_name'] = $_POST['cust_s_name'];
