@@ -90,7 +90,7 @@ $isLoggedIn = isset($_SESSION['id']);
       if (!isLoggedIn) {
         const loginConfirm = confirm("You need to log in to proceed to checkout. Do you want to log in now?");
         if (loginConfirm) {
-          window.location.href = "../login.php";
+          window.location.href = "login.php";
         }
       } else {
         window.location.href = "checkout.php";
