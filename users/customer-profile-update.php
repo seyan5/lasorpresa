@@ -49,30 +49,27 @@ if (isset($_POST['form1'])) {
         $error_message .= "Customer Zip cant be Empty"."<br>";
     }
 
-    if($valid == 1) {
-
-        // update data into the database
-        $statement = $pdo->prepare("UPDATE customer SET cust_name=?, cust_phone=?, cust_address=?, cust_city=?, cust_state=?, cust_zip=? WHERE cust_id=?");
-        $statement->execute(array(
-                    strip_tags($_POST['cust_name']),
-                    strip_tags($_POST['cust_cname']),
-                    strip_tags($_POST['cust_phone']),
-                    strip_tags($_POST['cust_address']),
-                    strip_tags($_POST['cust_city']),
-                    strip_tags($_POST['cust_zip']),
-                    $_SESSION['customer']['cust_id']
-                ));  
+    if ($valid == 1) {
        
+        $statement = $pdo->prepare("UPDATE customer SET cust_name=?, cust_phone=?, cust_address=?, cust_city=?, cust_zip=? WHERE cust_id=?");
+        $statement->execute(array(
+            strip_tags($_POST['cust_name']),
+            strip_tags($_POST['cust_phone']),
+            strip_tags($_POST['cust_address']),
+            strip_tags($_POST['cust_city']),
+            strip_tags($_POST['cust_zip']),
+            $_SESSION['customer']['cust_id']
+        ));
+    
         $success_message = "Profile Information Updated successfully.";
-
+    
+        // Update session variables
         $_SESSION['customer']['cust_name'] = $_POST['cust_name'];
         $_SESSION['customer']['cust_phone'] = $_POST['cust_phone'];
         $_SESSION['customer']['cust_address'] = $_POST['cust_address'];
         $_SESSION['customer']['cust_city'] = $_POST['cust_city'];
-        $_SESSION['customer']['cust_state'] = $_POST['cust_state'];
         $_SESSION['customer']['cust_zip'] = $_POST['cust_zip'];
     }
-}
 ?>
 
 
