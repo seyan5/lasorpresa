@@ -36,7 +36,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 }
 
 // Fetch user data from the database
-$user_id = $_SESSION['user_id'];
+$user_id = $_SESSION['id'];
 $stmt = $conn->prepare("SELECT * FROM users WHERE id = ?");
 if ($stmt === false) {
     die('prepare() failed: ' . htmlspecialchars($conn->error));
