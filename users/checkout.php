@@ -13,7 +13,7 @@ $subtotal = 0;
 // Handle order placement
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['place_order'])) {
     // Database connection (you may already have this)
-    include 'db_connection.php';
+    include 'header.php';
 
     // Insert the order into the orders table
     $customer_id = $_SESSION['customer']['cust_id'];
@@ -22,7 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['place_order'])) {
     $status = 'Pending'; // Order status, can be updated later
 
     // Prepare the SQL statement to insert the order
-    $stmt = $conn->prepare("INSERT INTO orders (customer_id, total_price, shipping, status) VALUES (?, ?, ?, ?)");
+    $stmt = $conn->prepare("INSERT INTO orders (cust_id, total_price, shipping, status) VALUES (?, ?, ?, ?)");
     $stmt->bind_param("idss", $customer_id, $order_total, $shipping, $status);
     $stmt->execute();
     $order_id = $stmt->insert_id; // Get the inserted order's ID
@@ -36,8 +36,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['place_order'])) {
         $total_price = $price * $quantity;
 
         // Prepare the SQL statement to insert the order items
-        $stmt = $conn->prepare("INSERT INTO order_items (order_id, product_id, product_name, price, quantity, total_price) VALUES (?, ?, ?, ?, ?, ?)");
-        $stmt->bind_param("iisdis", $order_id, $product_id, $product_name, $price, $quantity, $total_price);
+        $stmt = $conn->prepare("INSERT INTO order_items (order_id, p_id, product_name, price, quantity, total_price) VALUES (?, ?, ?, ?, ?, ?)");
+        $stmt->bind_param("iisdis", $order_id, $p_id, $product_name, $price, $quantity, $total_price);
         $stmt->execute();
     }
 
