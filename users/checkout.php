@@ -10,6 +10,45 @@ if (!isset($_SESSION['customer']['cust_id'])) {
 // Initialize total amount
 $subtotal = 0;
 
+// Handle order placement
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['place_order'])) {
+    // Database connection (you may already have this)
+    include 'db_connection.php';
+
+    // Insert the order into the orders table
+    $customer_id = $_SESSION['customer']['cust_id'];
+    $order_total = $subtotal; // Set the total price for the order
+    $shipping = 0; // Shipping cost
+    $status = 'Pending'; // Order status, can be updated later
+
+    // Prepare the SQL statement to insert the order
+    $stmt = $conn->prepare("INSERT INTO orders (customer_id, total_price, shipping, status) VALUES (?, ?, ?, ?)");
+    $stmt->bind_param("idss", $customer_id, $order_total, $shipping, $status);
+    $stmt->execute();
+    $order_id = $stmt->insert_id; // Get the inserted order's ID
+
+    // Insert each item into the order_items table
+    foreach ($_SESSION['cart'] as $item) {
+        $product_id = $item['id'];
+        $product_name = $item['name'];
+        $price = $item['price'];
+        $quantity = $item['quantity'];
+        $total_price = $price * $quantity;
+
+        // Prepare the SQL statement to insert the order items
+        $stmt = $conn->prepare("INSERT INTO order_items (order_id, product_id, product_name, price, quantity, total_price) VALUES (?, ?, ?, ?, ?, ?)");
+        $stmt->bind_param("iisdis", $order_id, $product_id, $product_name, $price, $quantity, $total_price);
+        $stmt->execute();
+    }
+
+    // Clear the cart
+    unset($_SESSION['cart']);
+
+    // Redirect to a confirmation or order history page
+    header("Location: order_confirmation.php?order_id=$order_id");
+    exit;
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -101,7 +140,9 @@ $subtotal = 0;
                     </td>
                 </tr> 
             </table>
-            <button type="submit" class="place-order">Place Order</button>
+            <form method="POST" action="">
+                <button type="submit" name="place_order" class="place-order">Place Order</button>
+            </form>
         </div>
     </div>                    
 </div>
