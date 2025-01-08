@@ -1,13 +1,13 @@
 <?php
-require 'header.php';
+session_start();
 
-// Ensure session is started
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
+if (!isset($_SESSION['cust_id'])) {
+    // Redirect to login if user is not logged in
+    header("Location: login.php");
+    exit;
 }
+print_r($_SESSION);
 
-// Check if user is logged in
-$isLoggedIn = isset($_SESSION['id']);
 ?>
 
 <!DOCTYPE html>
@@ -84,19 +84,19 @@ $isLoggedIn = isset($_SESSION['id']);
   </div>
 
   <script>
-    const isLoggedIn = <?php echo json_encode($isLoggedIn); ?>;
+  const isLoggedIn = <?php echo isset($_SESSION['cust_id']) ? 'true' : 'false'; ?>;
 
-    function checkout() {
-      if (!isLoggedIn) {
-        const loginConfirm = confirm("You need to log in to proceed to checkout. Do you want to log in now?");
-        if (loginConfirm) {
-          window.location.href = "login.php";
-        }
-      } else {
-        window.location.href = "checkout.php";
+  function checkout() {
+    if (!isLoggedIn) {
+      const loginConfirm = confirm("You need to log in to proceed to checkout. Do you want to log in now?");
+      if (loginConfirm) {
+        window.location.href = "login.php";
       }
+    } else {
+      window.location.href = "checkout.php";
     }
-  </script>
+  }
+</script>
 
   <script>
     function confirmDelete(itemIndex) {
