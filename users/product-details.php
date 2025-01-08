@@ -7,18 +7,20 @@ $p_id = isset($_GET['p_id']) ? (int) $_GET['p_id'] : 0;
 if ($p_id) {
     // Fetch product details from the database
     $statement = $pdo->prepare("
-        SELECT p_id, name, featured_photo, current_price, description 
-        FROM product 
-        WHERE p_id = :p_id
-    ");
-    $statement->bindParam(':p_id', $p_id, PDO::PARAM_INT);
-    $statement->execute();
-    $product = $statement->fetch(PDO::FETCH_ASSOC);
+    SELECT p_id, name, featured_photo, current_price, description, quantity
+    FROM product 
+    WHERE p_id = :p_id
+");
+$statement->bindParam(':p_id', $p_id, PDO::PARAM_INT);
+$statement->execute();
+$product = $statement->fetch(PDO::FETCH_ASSOC);
 
-    if (!$product) {
-        echo "<p>Product not found.</p>";
-        exit;
-    }
+if (!$product) {
+    echo "<p>Product not found.</p>";
+    exit;
+}
+
+$product_quantity = $product['quantity']; // Get product quantity
 } else {
     echo "<p>Invalid product ID.</p>";
     exit;
@@ -86,11 +88,16 @@ if ($p_id) {
 
 
                 <button id="addToCartButton" data-id="<?php echo $product['p_id']; ?>"
-                    data-name="<?php echo htmlspecialchars($product['name']); ?>"
-                    data-price="<?php echo htmlspecialchars($product['current_price']); ?>"
-                    onclick="addToCart(<?php echo $product['p_id']; ?>)">
-                    Add to Cart
-                </button>
+        data-name="<?php echo htmlspecialchars($product['name']); ?>"
+        data-price="<?php echo htmlspecialchars($product['current_price']); ?>"
+        onclick="addToCart(<?php echo $product['p_id']; ?>)"
+        <?php if ($product_quantity == 0) echo 'disabled'; ?>>
+    Add to Cart
+</button>
+
+<?php if ($product_quantity == 0): ?>
+    <p>This product is out of stock.</p>
+<?php endif; ?>
 
             </div>
         </main>
@@ -98,6 +105,16 @@ if ($p_id) {
         </section>
     </main>
     <script>
+        document.addEventListener('DOMContentLoaded', function () {
+        const productQuantity = <?php echo $product_quantity; ?>;
+        const addToCartButton = document.getElementById('addToCartButton');
+        
+        if (productQuantity === 0) {
+            addToCartButton.disabled = true;
+            alert('This product is out of stock!');
+        }
+    });
+
         function addToCart(productName) {
             alert("Product added to cart successfully!");
         }
