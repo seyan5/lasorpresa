@@ -4,11 +4,7 @@ session_start();
 // Include database configuration
 include '../config.php';
 
-// Check if user is logged in and is an admin
-if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] != 'admin') {
-    header('Location: ../login.php');
-    exit();
-}
+
 
 // Delete user if deleteid is provided in the URL
 if (isset($_GET['deleteid'])) {
@@ -40,7 +36,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 }
 
 // Fetch user data from the database
-$user_id = $_SESSION['user_id'];
+$user_id = $_SESSION['id'];
 $stmt = $conn->prepare("SELECT * FROM users WHERE id = ?");
 if ($stmt === false) {
     die('prepare() failed: ' . htmlspecialchars($conn->error));
