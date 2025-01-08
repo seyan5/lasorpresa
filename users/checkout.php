@@ -1,10 +1,9 @@
 <?php
 session_start();
 
-include("../admin/inc/config.php");
+include("../admin/inc/config.php"); // Ensure this includes your PDO connection setup
 include("../admin/inc/functions.php");
 include("../admin/inc/CSRF_Protect.php");
-
 
 if (!isset($_SESSION['customer']['cust_id'])) {
     header("Location: login.php");
@@ -24,29 +23,41 @@ $total = $subtotal + $shipping;
 
 // Handle order submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Generate order ID
-    $order_id = uniqid('ORD');
+    try {
+        // Generate order ID
+        $order_id = uniqid('ORD');
 
-    // Save order details to the database (example only; adjust to your DB structure)
-    // Assuming a database pdoection $pdo
-  
-    $stmt = $pdo->prepare("INSERT INTO orders (order_id, cust_id, total_price) VALUES (?, ?, ?)");
-    $stmt->bind_param("sid", $order_id, $_SESSION['customer']['cust_id'], $total);
-    $stmt->execute();
+        // Begin transaction
+        $pdo->beginTransaction();
 
-    foreach ($_SESSION['cart'] as $item) {
+        // Insert order details
+        $stmt = $pdo->prepare("INSERT INTO orders (order_id, cust_id, total_price) VALUES (?, ?, ?)");
+        $stmt->execute([$order_id, $_SESSION['customer']['cust_id'], $total]);
+
+        // Insert order items
         $stmt = $pdo->prepare("INSERT INTO order_items (order_id, p_id, quantity, price) VALUES (?, ?, ?, ?)");
-        $stmt->bind_param("siid", $order_id, $item['id'], $item['quantity'], $item['price']);
-        $stmt->execute();
-    }
-  
+        foreach ($_SESSION['cart'] as $item) {
+            $stmt->execute([$order_id, $item['id'], $item['quantity'], $item['price']]);
+        }
 
-    // Clear cart after checkout
-    unset($_SESSION['cart']);
-    header("Location: confirmation.php?order_id=$order_id");
-    exit();
+        // Commit transaction
+        $pdo->commit();
+
+        // Clear cart
+        unset($_SESSION['cart']);
+
+        // Redirect to confirmation page
+        header("Location: confirmation.php?order_id=$order_id");
+        exit();
+    } catch (Exception $e) {
+        // Rollback transaction on error
+        $pdo->rollBack();
+        die("Error processing your order: " . $e->getMessage());
+    }
 }
 ?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
