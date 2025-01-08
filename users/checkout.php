@@ -101,6 +101,7 @@ $subtotal = 0;
                     </td>
                 </tr> 
             </table>
+            <button type="submit" class="place-order">Place Order</button>
         </div>
     </div>                    
 </div>
