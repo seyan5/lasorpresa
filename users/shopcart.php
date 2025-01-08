@@ -1,5 +1,8 @@
 <?php
 require 'header.php';
+
+// Check if user is logged in
+$isLoggedIn = isset($_SESSION['id']);
 ?>
 
 <!DOCTYPE html>
@@ -86,8 +89,20 @@ require 'header.php';
   </div>
 
   <script>
+    // Pass login status from PHP to JavaScript
+    const isLoggedIn = <?php echo json_encode($isLoggedIn); ?>;
+
     function checkout() {
-      alert('Proceeding to checkout...');
+      if (!isLoggedIn) {
+        // Prompt user to log in if not logged in
+        const loginConfirm = confirm("You need to log in to proceed to checkout. Do you want to log in now?");
+        if (loginConfirm) {
+          window.location.href = "../login.php"; // Redirect to login page
+        }
+      } else {
+        // Redirect to checkout page if logged in
+        window.location.href = "checkout.php";
+      }
     }
   </script>
 
