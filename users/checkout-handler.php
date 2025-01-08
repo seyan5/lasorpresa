@@ -1,5 +1,4 @@
 <?php
-session_start();
 require 'header.php'; // Ensure this file includes the database connection
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
