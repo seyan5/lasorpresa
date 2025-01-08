@@ -48,56 +48,59 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     echo "</tbody>";
     echo "</table>";
 
-    // Display the selected sizes and colors with their names
-    echo "<p><strong>Size(s):</strong> " . implode(", ", mapSizes($selected_sizes)) . "</p>";
-    echo "<p><strong>Color(s):</strong> " . implode(", ", mapColors($selected_colors)) . "</p>";
+    // Fetch and display the selected sizes and colors with their names from the database
+    echo "<p><strong>Size(s):</strong> " . implode(", ", getSizeNames($selected_sizes)) . "</p>";
+    echo "<p><strong>Color(s):</strong> " . implode(", ", getColorNames($selected_colors)) . "</p>";
 
     // Display the overall total price
     echo "<p><strong>Overall Total Price: \${$overall_total_price}</strong></p>";
 }
 
-// Function to map size IDs to names
-function mapSizes($size_ids) {
-    $size_map = [
-        1 => 'Small',
-        2 => 'Medium',
-        3 => 'Large'
-    ];
-
-    $sizes = [];
+// Function to fetch size names from the database based on selected size IDs
+function getSizeNames($size_ids) {
+    global $pdo;
+    
+    $size_names = [];
     foreach ($size_ids as $size_id) {
-        if (isset($size_map[$size_id])) {
-            $sizes[] = $size_map[$size_id];
+        // Fetch the size name from the database
+        $statement = $pdo->prepare("SELECT type_name FROM type WHERE type_id = :size_id");
+        $statement->bindParam(':size_id', $size_id, PDO::PARAM_INT);
+        $statement->execute();
+        $size = $statement->fetch(PDO::FETCH_ASSOC);
+        
+        if ($size) {
+            $size_names[] = $size['type_name'];
         } else {
-            $sizes[] = 'Unknown Size';
+            $size_names[] = 'Unknown Size';
         }
     }
     
-    return $sizes;
+    return $size_names;
 }
 
-// Function to map color IDs to names
-function mapColors($color_ids) {
-    $color_map = [
-        1 => 'Red',
-        2 => 'White',
-        3 => 'Pink',
-        4 => 'Yellow',
-        5 => 'Blue'
-    ];
-
-    $colors = [];
+// Function to fetch color names from the database based on selected color IDs
+function getColorNames($color_ids) {
+    global $pdo;
+    
+    $color_names = [];
     foreach ($color_ids as $color_id) {
-        if (isset($color_map[$color_id])) {
-            $colors[] = $color_map[$color_id];
+        // Fetch the color name from the database
+        $statement = $pdo->prepare("SELECT color_name FROM color WHERE color_id = :color_id");
+        $statement->bindParam(':color_id', $color_id, PDO::PARAM_INT);
+        $statement->execute();
+        $color = $statement->fetch(PDO::FETCH_ASSOC);
+        
+        if ($color) {
+            $color_names[] = $color['color_name'];
         } else {
-            $colors[] = 'Unknown Color';
+            $color_names[] = 'Unknown Color';
         }
     }
     
-    return $colors;
+    return $color_names;
 }
 
+// Function to get flower details (name and price) by ID
 function getFlowerDetailsById($id) {
     global $pdo; // Assuming you have a PDO connection already established
 
