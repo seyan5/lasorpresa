@@ -22,12 +22,18 @@ if (!$order) {
 }
 
 // Fetch the order items
-$stmt = $pdo->prepare("SELECT oi.*, p.name, p.featured_photo FROM order_items oi
+$stmt = $pdo->prepare("SELECT oi.*, p.product_name, p.featured_photo FROM order_items oi
                         JOIN product p ON oi.p_id = p.p_id
                         WHERE oi.order_id = :order_id");
 $stmt->bindParam(':order_id', $order_id, PDO::PARAM_INT);
 $stmt->execute();
 $order_items = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+// Fetch customer details using the customer ID from the order
+$stmt = $pdo->prepare("SELECT * FROM customer WHERE cust_id = :cust_id");
+$stmt->bindParam(':cust_id', $order['cust_id'], PDO::PARAM_INT);
+$stmt->execute();
+$customer = $stmt->fetch(PDO::FETCH_ASSOC);
 
 ?>
 
@@ -49,12 +55,14 @@ $order_items = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <p><strong>Order Date:</strong> <?php echo date('F d, Y', strtotime($order['order_date'])); ?></p>
             <p><strong>Status:</strong> <?php echo htmlspecialchars($order['status']); ?></p>
             <p><strong>Total Amount:</strong> ₱<?php echo number_format($order['total_price'], 2); ?></p>
+            
+            <!-- Fetch and display customer shipping address -->
             <p><strong>Shipping Address:</strong></p>
             <ul>
-                <li><?php echo htmlspecialchars($order['cust_s_address']); ?></li>
-                <li><?php echo htmlspecialchars($order['cust_s_city']); ?></li>
-                <li>Zip: <?php echo htmlspecialchars($order['cust_s_zip']); ?></li>
-                <li>Phone: <?php echo htmlspecialchars($order['cust_s_phone']); ?></li>
+                <li><?php echo htmlspecialchars($customer['cust_s_address'] ?? 'N/A'); ?></li>
+                <li><?php echo htmlspecialchars($customer['cust_s_city'] ?? 'N/A'); ?></li>
+                <li>Zip: <?php echo htmlspecialchars($customer['cust_s_zip'] ?? 'N/A'); ?></li>
+                <li>Phone: <?php echo htmlspecialchars($customer['cust_s_phone'] ?? 'N/A'); ?></li>
             </ul>
         </div>
 
@@ -75,12 +83,12 @@ $order_items = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     <tr>
                         <td>
                             <?php if ($item['featured_photo']): ?>
-                                <img src="../admin/uploads/<?php echo htmlspecialchars($item['featured_photo']); ?>" alt="<?php echo htmlspecialchars($item['name']); ?>" width="50">
+                                <img src="../admin/uploads/<?php echo htmlspecialchars($item['featured_photo']); ?>" alt="<?php echo htmlspecialchars($item['product_name']); ?>" width="50">
                             <?php else: ?>
                                 <img src="../images/default-image.jpg" alt="No image available" width="50">
                             <?php endif; ?>
                         </td>
-                        <td><?php echo htmlspecialchars($item['name']); ?></td>
+                        <td><?php echo htmlspecialchars($item['product_name']); ?></td>
                         <td>₱<?php echo number_format($item['price'], 2); ?></td>
                         <td><?php echo htmlspecialchars($item['quantity']); ?></td>
                         <td>₱<?php echo number_format($item['total_price'], 2); ?></td>
