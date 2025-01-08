@@ -1,4 +1,13 @@
-<?php require_once('header.php'); ?>
+<?php 
+include("../admin/inc/config.php");
+include("../admin/inc/functions.php");
+include("../admin/inc/CSRF_Protect.php");
+
+
+
+
+
+?>
 <!-- css -->
 <link rel="stylesheet" href="../css/product.css">
 <script src="../js/product.js" defer></script>
