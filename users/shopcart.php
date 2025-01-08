@@ -1,10 +1,13 @@
 <?php
 session_start();
+echo '<pre>';
+print_r($_SESSION);
+echo '</pre>';
+exit;
 
-if (!isset($_SESSION['cust_id'])) {
-    // Redirect to login if user is not logged in
-    header("Location: login.php");
-    exit;
+if (!isset($_SESSION['customer']['cust_id'])) {
+  header("Location: login.php");
+  exit;
 }
 print_r($_SESSION);
 
@@ -84,7 +87,7 @@ print_r($_SESSION);
   </div>
 
   <script>
-  const isLoggedIn = <?php echo isset($_SESSION['cust_id']) ? 'true' : 'false'; ?>;
+  const isLoggedIn = <?php echo isset($_SESSION['customer']['cust_id']) ? 'true' : 'false'; ?>;
 
   function checkout() {
     if (!isLoggedIn) {
@@ -97,6 +100,7 @@ print_r($_SESSION);
     }
   }
 </script>
+
 
   <script>
     function confirmDelete(itemIndex) {
