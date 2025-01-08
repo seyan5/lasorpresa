@@ -101,10 +101,6 @@ if (isset($_POST['form1'])) {
                                 <input type="text" class="form-control" name="cust_s_name" value="<?php echo isset($_SESSION['customer']['cust_s_name']) ? $_SESSION['customer']['cust_s_name'] : ''; ?>">
                             </div>
                             <div class="col-md-6 form-group">
-                                <label for="">Email Address *</label>
-                                <input type="text" class="form-control" name="" value="<?php echo isset($_SESSION['customer']['cust_s_email']) ? $_SESSION['customer']['cust_s_email'] : ''; ?>" disabled>
-                            </div>
-                            <div class="col-md-6 form-group">
                                 <label for="">Phone Number *</label>
                                 <input type="text" class="form-control" name="cust_s_phone" value="<?php echo isset($_SESSION['customer']['cust_s_phone']) ? $_SESSION['customer']['cust_s_phone'] : ''; ?>">
                             </div>
