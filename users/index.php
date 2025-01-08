@@ -1,21 +1,6 @@
 <!-- This is main configuration File -->
 <?php
-ob_start();
-session_start();
-include("../admin/inc/config.php");
-include("../admin/inc/functions.php");
-include("../admin/inc/CSRF_Protect.php");
-$csrf = new CSRF_Protect();
-$error_message = '';
-$success_message = '';
-$error_message1 = '';
-$success_message1 = '';
-
-if (!isset($_SESSION['cust_id'])) {
-    // If the user is not logged in, redirect to login page
-    header("Location: login.php");
-    exit;
-}
+require_once('header.php'); 
 
 
 ?>
@@ -66,11 +51,22 @@ if (!isset($_SESSION['cust_id'])) {
     </nav>
      
     <div class="icons">
-        <a href="#" class="fas fa-heart"></a>
-        <a href="shopcart.php" class="fas fa-shopping-cart"></a>
-
-        <a href="#" class="fas fa-user"></a>
+    <a href="#" class="fas fa-heart"></a>
+    <a href="shopcart.php" class="fas fa-shopping-cart"></a>
+    <div class="user-dropdown">
+        <a href="#" class="fas fa-user" onclick="toggleDropdown()"></a>
+        <div class="dropdown-menu" id="userDropdown">
+            <?php if (isset($_SESSION['customer'])): ?>
+                <p>Welcome, <?php echo htmlspecialchars($_SESSION['customer']['cust_name']); ?></p>
+                <hr>
+                <a href="profile.php">Profile</a>
+                <a href="logout.php">Logout</a>
+            <?php else: ?>
+                <a href="login.php">Login</a>
+            <?php endif; ?>
+        </div>
     </div>
+</div>
 
 </header>
     
@@ -295,4 +291,71 @@ if (!isset($_SESSION['cust_id'])) {
 
 
 </body>
+
+<style>
+    .user-dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.fas.fa-user {
+    cursor: pointer;
+}
+
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background-color: white;
+    border: 1px solid #ccc;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+    width: 200px;
+    z-index: 1000;
+}
+
+.dropdown-menu p {
+    margin: 10px;
+    font-weight: bold;
+}
+
+.dropdown-menu hr {
+    margin: 5px 0;
+}
+
+.dropdown-menu a {
+    display: block;
+    padding: 10px;
+    text-decoration: none;
+    color: #333;
+}
+
+.dropdown-menu a:hover {
+    background-color: #f0f0f0;
+}
+
+.dropdown-menu.show {
+    display: block;
+}
+
+</style>
+
+<script>
+    function toggleDropdown() {
+        const dropdown = document.getElementById('userDropdown');
+        dropdown.classList.toggle('show');
+    }
+
+    // Close the dropdown when clicking outside
+    window.onclick = function(event) {
+        if (!event.target.matches('.fa-user')) {
+            const dropdown = document.getElementById('userDropdown');
+            if (dropdown && dropdown.classList.contains('show')) {
+                dropdown.classList.remove('show');
+            }
+        }
+    };
+</script>
+
 </html>
