@@ -1,7 +1,7 @@
 <?php
 require '../header.php'; // Assuming you have a header file that manages session, security, etc.
 
-if ($_SESSION['role'] !== 'admin') {
+if ($_SESSION['user_type'] !== 'admin') {
     // Redirect to the home page if the user is not an admin
     header("Location: ../index.php");
     exit();
