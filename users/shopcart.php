@@ -84,18 +84,27 @@ session_start();
 
   <script>
     // Check if the user is logged in
-    const isLoggedIn = <?php echo isset($_SESSION['customer']['cust_id']) ? 'true' : 'false'; ?>;
+const isLoggedIn = <?php echo isset($_SESSION['customer']['cust_id']) ? 'true' : 'false'; ?>;
 
-    // Handle checkout action
-    function checkout() {
-      if (!isLoggedIn) {
-        if (confirm("You need to log in to proceed to checkout. Do you want to log in now?")) {
-          window.location.href = "login.php";
-        }
-      } else {
-        window.location.href = "checkout.php";
-      }
+// Check if the cart is empty
+const isCartEmpty = <?php echo isset($_SESSION['cart']) && count($_SESSION['cart']) > 0 ? 'false' : 'true'; ?>;
+
+// Handle checkout action
+function checkout() {
+  if (isCartEmpty) {
+    if (confirm("Your cart is empty. Would you like to browse products?")) {
+      window.location.href = "product.php";
     }
+  } else {
+    if (!isLoggedIn) {
+      if (confirm("You need to log in to proceed to checkout. Do you want to log in now?")) {
+        window.location.href = "login.php";
+      }
+    } else {
+      window.location.href = "checkout.php";
+    }
+  }
+}
 
     // Confirm deletion of cart item
     function confirmDelete(itemIndex) {
