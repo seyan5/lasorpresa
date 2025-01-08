@@ -7,7 +7,7 @@ if(!isset($_SESSION['customer'])) {
     exit;
 } else {
     // If customer is logged in, but admin make him inactive, then force logout this user.
-    $statement = $pdo->prepare("SELECT * FROM tbl_customer WHERE cust_id=? AND cust_status=?");
+    $statement = $pdo->prepare("SELECT * FROM customer WHERE cust_id=? AND cust_status=?");
     $statement->execute(array($_SESSION['customer']['cust_id'],0));
     $total = $statement->rowCount();
     if($total) {
