@@ -13,7 +13,6 @@ $subtotal = 0;
 // Handle order placement
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['place_order'])) {
 
-
     // Insert the order into the orders table
     $customer_id = $_SESSION['customer']['cust_id'];
     $order_total = $subtotal; // Set the total price for the order
@@ -26,28 +25,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['place_order'])) {
     $stmt->bindParam(2, $order_total, PDO::PARAM_STR);
     $stmt->bindParam(3, $shipping, PDO::PARAM_STR);
     $stmt->bindParam(4, $status, PDO::PARAM_STR);
+
     if ($stmt->execute()) {
         $order_id = $pdo->lastInsertId(); // Get the inserted order's ID
 
         // Insert each item into the order_items table
         if (isset($_SESSION['cart']) && count($_SESSION['cart']) > 0) {
             foreach ($_SESSION['cart'] as $item) {
-                if (isset($item['id'], $item['name'], $item['price'], $item['quantity'])) {
+                // Make sure the item has all necessary keys
+                if (isset($item['id'], $item['name'], $item['price'], $item['quantity'], $item['image'])) {
                     $product_id = $item['id'];
                     $product_name = $item['name'];
                     $price = $item['price'];
                     $quantity = $item['quantity'];
                     $total_price = $price * $quantity;
-        
-                    // Insert the item into the order_items table
-                    $stmt = $pdo->prepare("INSERT INTO order_items (order_id, p_id, product_name, price, quantity, total_price) VALUES (?, ?, ?, ?, ?, ?)");
+                    $product_image = $item['image']; // Assuming you have the image in the cart
+
+                    // Prepare the SQL statement to insert into order_items table
+                    $stmt = $pdo->prepare("INSERT INTO order_items (order_id, p_id, product_name, price, quantity, total_price, product_image) 
+                                           VALUES (?, ?, ?, ?, ?, ?, ?)");
                     $stmt->bindParam(1, $order_id, PDO::PARAM_INT);
                     $stmt->bindParam(2, $product_id, PDO::PARAM_INT);
                     $stmt->bindParam(3, $product_name, PDO::PARAM_STR);
                     $stmt->bindParam(4, $price, PDO::PARAM_STR);
                     $stmt->bindParam(5, $quantity, PDO::PARAM_INT);
                     $stmt->bindParam(6, $total_price, PDO::PARAM_STR);
-        
+                    $stmt->bindParam(7, $product_image, PDO::PARAM_STR); // Insert the image URL
+
                     if (!$stmt->execute()) {
                         // Error logging
                         $errorInfo = $stmt->errorInfo();
@@ -60,7 +64,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['place_order'])) {
         } else {
             echo "Cart is empty. No items to place in the order.";
         }
-        
 
         // Clear the cart
         unset($_SESSION['cart']);
