@@ -20,9 +20,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['place_order'])) {
 
     // Prepare the SQL statement to insert the order
     $stmt = $pdo->prepare("INSERT INTO orders (cust_id, total_price, shipping, status) VALUES (?, ?, ?, ?)");
-    $stmt->bind_param("idss", $customer_id, $order_total, $shipping, $status);
+    $stmt->bindValue(1, $customer_id, PDO::PARAM_INT);
+    $stmt->bindValue(2, $order_total, PDO::PARAM_STR);  // Use PDO::PARAM_STR for decimal values
+    $stmt->bindValue(3, $shipping, PDO::PARAM_STR);
+    $stmt->bindValue(4, $status, PDO::PARAM_STR);
     $stmt->execute();
-    $order_id = $stmt->insert_id; // Get the inserted order's ID
+    $order_id = $pdo->lastInsertId(); // Get the inserted order's ID
 
     // Insert each item into the order_items table
     foreach ($_SESSION['cart'] as $item) {
@@ -34,7 +37,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['place_order'])) {
 
         // Prepare the SQL statement to insert the order items
         $stmt = $pdo->prepare("INSERT INTO order_items (order_id, p_id, product_name, price, quantity, total_price) VALUES (?, ?, ?, ?, ?, ?)");
-        $stmt->bind_param("iisdis", $order_id, $p_id, $product_name, $price, $quantity, $total_price);
+        $stmt->bindValue(1, $order_id, PDO::PARAM_INT);
+        $stmt->bindValue(2, $product_id, PDO::PARAM_INT);
+        $stmt->bindValue(3, $product_name, PDO::PARAM_STR);
+        $stmt->bindValue(4, $price, PDO::PARAM_STR);
+        $stmt->bindValue(5, $quantity, PDO::PARAM_INT);
+        $stmt->bindValue(6, $total_price, PDO::PARAM_STR);
         $stmt->execute();
     }
 
@@ -45,6 +53,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['place_order'])) {
     header("Location: order_confirmation.php?order_id=$order_id");
     exit;
 }
+
 
 ?>
 
