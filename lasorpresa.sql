@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 07, 2025 at 04:58 PM
+-- Generation Time: Jan 08, 2025 at 02:39 PM
 -- Server version: 10.4.24-MariaDB
 -- PHP Version: 8.1.4
 
@@ -88,12 +88,12 @@ CREATE TABLE `customer` (
 --
 
 INSERT INTO `customer` (`cust_id`, `cust_name`, `cust_email`, `cust_phone`, `cust_address`, `cust_city`, `cust_zip`, `cust_s_name`, `cust_s_phone`, `cust_s_address`, `cust_s_city`, `cust_s_zip`, `cust_password`, `cust_datetime`, `cust_timestamp`, `cust_status`) VALUES
-(1, 'Johnwayne', 'user@gmail.com', '09214991751', 'Blk 31 Lt 2 Lhinnete Homea', 'Cavite', '4109', NULL, NULL, NULL, NULL, NULL, '$2y$10$5AgJmhblhlQKzGHRKawNNubwSW8Ud3G6Kix4TBDDHR8hmsaNKfPmi', '2025-01-07 22:02:47', '2025-01-07 14:55:05', 'active'),
-(3, 'test', 'test@gmail.com', '8217343', 'asdasd', 'asdsad', '313', NULL, NULL, NULL, NULL, NULL, '$2y$10$ghKn.DYNTYpgkxzEFQtFkuxJfygGtMTnN2Mt7Oo7g54.iOOAuEGey', '2025-01-07 22:34:55', '2025-01-07 15:40:33', 'active'),
+(1, 'Johnwayne', 'user@gmail.com', '09214991751', 'Blk 31 Lt 2 Lhinnete Homea', 'Cavite', '4109', 'Johnwayne', '09214991751', 'Blk 31 Lt 2 Lhinnete Homea\r\nBiga Tanza Cavite', 'Cavite', '4341', '$2y$10$CVBEIYx28iz79VGVuq2R8eYoqf.o9OZ7w6ykwKFKV3q37oqts6hmW', '2025-01-07 22:02:47', '2025-01-08 08:17:16', 'active'),
+(3, 'test', 'test@gmail.com', '09214991751', 'Blk 31 Lt 2 Lhinnete Homea\r\nBiga Tanza Cavite', 'Cavite', '4314', 'Johnwayne', '09214991751', 'Blk 31 Lt 2 Lhinnete Homea\r\nBiga Tanza Cavite', 'Cavite', '4108', '979d472a84804b9f647bc185a877a8b5', '2025-01-07 22:34:55', '2025-01-08 07:37:52', 'active'),
 (5, 'test', 'qweqwe@gmail.com', '431431', 'asddsa', 'sdadsa', '1233', NULL, NULL, NULL, NULL, NULL, '$2y$10$LlJJaEWfq3GbuKZmaTXn0.86IneDNpn74YKw89bCLZNgOXINEyNwO', '2025-01-07 22:43:28', '2025-01-07 14:43:28', 'inactive'),
 (6, 'test', 'jw@mail.com', '431431', 'asddsa', 'sdadsa', '1233', NULL, NULL, NULL, NULL, NULL, '$2y$10$NO37F4xP6sQz30nLobL8NeZ08jfI6HvdxxtvjIPA2G55oyfY389DK', '2025-01-07 22:43:53', '2025-01-07 14:43:53', 'inactive'),
 (8, 'test', 'lasorpresa76@mail.com', '431431', 'asddsa', 'sdadsa', '1233', NULL, NULL, NULL, NULL, NULL, '$2y$10$Tdnqmz4o870Sp2xBBK6Vhe1oogE5lNEneUDpw1ksqtMuQeFIE6XRC', '2025-01-07 22:50:56', '2025-01-07 14:50:56', 'inactive'),
-(10, 'Johnwayne', 'jpdeogracias@gmail.com', '09214991751', 'Blk 31 Lt 2 Lhinnete Homea', 'Cavite', '4443', NULL, NULL, NULL, NULL, NULL, '$2y$10$yBumdn1uqk97O6uFTYkeG.n7wVPruq9k1lv9UPGKguAs40fHohfTC', '2025-01-07 23:00:23', '2025-01-07 15:00:33', 'active'),
+(10, 'Johnwayne', 'jpdeogracias@gmail.com', '09214991751', 'Blk 31 Lt 2 Lhinnete Homea\r\nBiga Tanza Cavite', 'Cavite', '3313', 'Johnwayne', '09214991751', 'Blk 31 Lt 2 Lhinnete Homea\r\nBiga Tanza Cavite', 'Cavite', '2213', '979d472a84804b9f647bc185a877a8b5', '2025-01-07 23:00:23', '2025-01-08 07:40:52', 'active'),
 (12, 'jay', 'jaycantemprate31@gmail.com', '31', 'ggfddf', 'hgftr', '1233', NULL, NULL, NULL, NULL, NULL, '$2y$10$VW2.gZt0DtqBcaGqIrIJW.KHw.ySiAiBaBIO1qux6PNd1HiBW9TEm', '2025-01-07 23:02:28', '2025-01-07 15:02:28', 'inactive');
 
 -- --------------------------------------------------------
@@ -193,6 +193,74 @@ INSERT INTO `mid_category` (`mcat_id`, `mcat_name`, `tcat_id`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `orders`
+--
+
+CREATE TABLE `orders` (
+  `order_id` int(11) NOT NULL,
+  `customer_id` int(11) DEFAULT NULL,
+  `full_name` varchar(255) NOT NULL,
+  `address` text NOT NULL,
+  `city` varchar(100) NOT NULL,
+  `postal_code` varchar(20) NOT NULL,
+  `phone` varchar(20) NOT NULL,
+  `total` decimal(10,2) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `orders`
+--
+
+INSERT INTO `orders` (`order_id`, `customer_id`, `full_name`, `address`, `city`, `postal_code`, `phone`, `total`, `created_at`) VALUES
+(1, 1, 'Johnwayne', 'Blk 31 Lt 2 Lhinnete Homea\r\nBiga Tanza Cavite', 'Cavite', '4341', '09214991751', '10000.00', '2025-01-08 12:27:49'),
+(2, 1, 'Johnwayne', 'Blk 31 Lt 2 Lhinnete Homea\r\nBiga Tanza Cavite', 'Cavite', '4108', '09214991751', '50.00', '2025-01-08 12:28:47'),
+(4, 1, '', '', '', '', '', '10000.00', '2025-01-08 12:45:23'),
+(5, 1, '', '', '', '', '', '10000.00', '2025-01-08 12:46:03'),
+(6, 1, '', '', '', '', '', '10000.00', '2025-01-08 12:46:20'),
+(7, 1, '', '', '', '', '', '50.00', '2025-01-08 12:46:42'),
+(8, 1, '', '', '', '', '', '20000.00', '2025-01-08 12:49:34'),
+(9, 1, '', '', '', '', '', '50.00', '2025-01-08 12:50:19'),
+(10, 1, 'Johnwayne', 'Blk 31 Lt 2 Lhinnete Homea\r\nBiga Tanza Cavite', 'Cavite', '3441', '09214991751', '50.00', '2025-01-08 12:53:26'),
+(15, 1, 'Johnwayne', 'Blk 31 Lt 2 Lhinnete Homea\r\nBiga Tanza Cavite', 'Cavite', '4108', '09214991751', '50.00', '2025-01-08 12:57:50'),
+(17, 1, 'Johnwayne', 'Blk 31 Lt 2 Lhinnete Homea\r\nBiga Tanza Cavite', 'Cavite', '4341', '09214991751', '50.00', '2025-01-08 13:29:27'),
+(18, 1, 'Johnwayne', 'Blk 31 Lt 2 Lhinnete Homea\r\nBiga Tanza Cavite', 'Cavite', '4108', '09214991751', '50.00', '2025-01-08 13:32:13');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `order_items`
+--
+
+CREATE TABLE `order_items` (
+  `order_item_id` int(11) NOT NULL,
+  `order_id` int(11) NOT NULL,
+  `product_id` int(11) NOT NULL,
+  `quantity` int(11) NOT NULL,
+  `price` decimal(10,2) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `order_items`
+--
+
+INSERT INTO `order_items` (`order_item_id`, `order_id`, `product_id`, `quantity`, `price`) VALUES
+(1, 1, 18, 1, '10000.00'),
+(2, 2, 20, 1, '50.00'),
+(4, 4, 18, 1, '10000.00'),
+(5, 5, 18, 1, '10000.00'),
+(6, 6, 18, 1, '10000.00'),
+(7, 7, 20, 1, '50.00'),
+(8, 8, 18, 2, '10000.00'),
+(9, 9, 20, 1, '50.00'),
+(10, 10, 20, 1, '50.00'),
+(15, 15, 20, 1, '50.00'),
+(17, 17, 20, 1, '50.00'),
+(18, 18, 20, 1, '50.00');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `product`
 --
 
@@ -218,9 +286,9 @@ CREATE TABLE `product` (
 --
 
 INSERT INTO `product` (`p_id`, `name`, `old_price`, `current_price`, `quantity`, `featured_photo`, `description`, `short_description`, `feature`, `other_photo`, `condition`, `is_featured`, `is_active`, `ecat_id`) VALUES
-(18, 'Red Rose', '10000', '10000', 5, 'product-featured-18.jpg', 'Red Rose', '', '', '', '', 0, 1, 14),
+(18, 'Red Rose', '10000', '10000', 0, 'product-featured-18.jpg', 'Red Rose', '', '', '', '', 0, 1, 14),
 (19, 'Choc', '1000', '1000', 5, 'product-featured-19.jpg', 'choc', '', '', '', '', 0, 1, 17),
-(20, 'Sunflower', '25', '50', 5, 'product-featured-20.jpg', 'araw bulaklak', '', '', '', '', 0, 1, 16);
+(20, 'Sunflower', '25', '50', 4, 'product-featured-20.jpg', 'araw bulaklak', '', '', '', '', 0, 1, 16);
 
 -- --------------------------------------------------------
 
@@ -489,23 +557,6 @@ INSERT INTO `tbl_language` (`lang_id`, `lang_name`, `lang_value`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `tbl_order`
---
-
-CREATE TABLE `tbl_order` (
-  `id` int(11) NOT NULL,
-  `product_id` int(11) NOT NULL,
-  `product_name` varchar(255) NOT NULL,
-  `type` varchar(100) NOT NULL,
-  `color` varchar(100) NOT NULL,
-  `quantity` varchar(50) NOT NULL,
-  `unit_price` varchar(50) NOT NULL,
-  `payment_id` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `tbl_settings`
 --
 
@@ -705,6 +756,21 @@ ALTER TABLE `mid_category`
   ADD PRIMARY KEY (`mcat_id`);
 
 --
+-- Indexes for table `orders`
+--
+ALTER TABLE `orders`
+  ADD PRIMARY KEY (`order_id`),
+  ADD KEY `customer_id` (`customer_id`);
+
+--
+-- Indexes for table `order_items`
+--
+ALTER TABLE `order_items`
+  ADD PRIMARY KEY (`order_item_id`),
+  ADD KEY `order_id` (`order_id`),
+  ADD KEY `product_id` (`product_id`);
+
+--
 -- Indexes for table `product`
 --
 ALTER TABLE `product`
@@ -739,12 +805,6 @@ ALTER TABLE `rating`
 --
 ALTER TABLE `tbl_language`
   ADD PRIMARY KEY (`lang_id`);
-
---
--- Indexes for table `tbl_order`
---
-ALTER TABLE `tbl_order`
-  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `tbl_settings`
@@ -817,6 +877,18 @@ ALTER TABLE `mid_category`
   MODIFY `mcat_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
 
 --
+-- AUTO_INCREMENT for table `orders`
+--
+ALTER TABLE `orders`
+  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+
+--
+-- AUTO_INCREMENT for table `order_items`
+--
+ALTER TABLE `order_items`
+  MODIFY `order_item_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+
+--
 -- AUTO_INCREMENT for table `product`
 --
 ALTER TABLE `product`
@@ -853,12 +925,6 @@ ALTER TABLE `tbl_language`
   MODIFY `lang_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=164;
 
 --
--- AUTO_INCREMENT for table `tbl_order`
---
-ALTER TABLE `tbl_order`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
 -- AUTO_INCREMENT for table `tbl_settings`
 --
 ALTER TABLE `tbl_settings`
@@ -891,4 +957,17 @@ ALTER TABLE `users`
 --
 ALTER TABLE `email_verifications`
   ADD CONSTRAINT `email_verifications_ibfk_1` FOREIGN KEY (`cust_id`) REFERENCES `customer` (`cust_id`);
+
+--
+-- Constraints for table `orders`
+--
+ALTER TABLE `orders`
+  ADD CONSTRAINT `orders_ibfk_1` FOREIGN KEY (`customer_id`) REFERENCES `customer` (`cust_id`) ON DELETE SET NULL;
+
+--
+-- Constraints for table `order_items`
+--
+ALTER TABLE `order_items`
+  ADD CONSTRAINT `order_items_ibfk_1` FOREIGN KEY (`order_id`) REFERENCES `orders` (`order_id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `order_items_ibfk_2` FOREIGN KEY (`product_id`) REFERENCES `product` (`p_id`) ON DELETE CASCADE;
 COMMIT;
