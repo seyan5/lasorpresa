@@ -48,14 +48,54 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     echo "</tbody>";
     echo "</table>";
 
-    // Display the selected sizes and colors
-    echo "<p><strong>Size(s):</strong> " . implode(", ", $selected_sizes) . "</p>";
-    echo "<p><strong>Color(s):</strong> " . implode(", ", $selected_colors) . "</p>";
+    // Display the selected sizes and colors with their names
+    echo "<p><strong>Size(s):</strong> " . implode(", ", mapSizes($selected_sizes)) . "</p>";
+    echo "<p><strong>Color(s):</strong> " . implode(", ", mapColors($selected_colors)) . "</p>";
 
     // Display the overall total price
     echo "<p><strong>Overall Total Price: \${$overall_total_price}</strong></p>";
+}
 
-    // Optionally, you can store this information in the database or show a summary page
+// Function to map size IDs to names
+function mapSizes($size_ids) {
+    $size_map = [
+        1 => 'Small',
+        2 => 'Medium',
+        3 => 'Large'
+    ];
+
+    $sizes = [];
+    foreach ($size_ids as $size_id) {
+        if (isset($size_map[$size_id])) {
+            $sizes[] = $size_map[$size_id];
+        } else {
+            $sizes[] = 'Unknown Size';
+        }
+    }
+    
+    return $sizes;
+}
+
+// Function to map color IDs to names
+function mapColors($color_ids) {
+    $color_map = [
+        1 => 'Red',
+        2 => 'White',
+        3 => 'Pink',
+        4 => 'Yellow',
+        5 => 'Blue'
+    ];
+
+    $colors = [];
+    foreach ($color_ids as $color_id) {
+        if (isset($color_map[$color_id])) {
+            $colors[] = $color_map[$color_id];
+        } else {
+            $colors[] = 'Unknown Color';
+        }
+    }
+    
+    return $colors;
 }
 
 function getFlowerDetailsById($id) {
