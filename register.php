@@ -1,13 +1,13 @@
 <?php
 ob_start();
 session_start();
-include("../admin/inc/config.php");
-include("../admin/inc/functions.php");
-include("../admin/inc/CSRF_Protect.php");
+include("admin/inc/config.php");
+include("admin/inc/functions.php");
+include("admin/inc/CSRF_Protect.php");
 
-require '../mail/PHPMailer/src/Exception.php';
-require '../mail/PHPMailer/src/PHPMailer.php';
-require '../mail/PHPMailer/src/SMTP.php';
+require 'mail/PHPMailer/src/Exception.php';
+require 'mail/PHPMailer/src/PHPMailer.php';
+require 'mail/PHPMailer/src/SMTP.php';
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
@@ -92,17 +92,17 @@ if (isset($_POST['register'])) {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="../registerlogin.css">
+  <link rel="stylesheet" href="registerlogin.css">
   <title>Customer Registration</title>
 </head>
 <body>
     <div class="logo-container">
-        <img src="../images/logo.png" alt="Logo" class="logo" />
+        <img src="images/logo.png" alt="Logo" class="logo" />
     </div>
 
     <!-- Flower Image -->
     <div class="flower-container">
-        <img src="../images/flower2.png" alt="Flower" class="flower" />
+        <img src="images/flower2.png" alt="Flower" class="flower" />
     </div>
 
 <h2>Create Your Account</h2>
