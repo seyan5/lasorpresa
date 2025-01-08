@@ -1,11 +1,12 @@
 <?php
 require 'header.php';
 
-// Redirect to login page if user is not logged in
-if (!isset($_SESSION['id'])) {
+
+// Redirect to login if the user is not logged in
+if (!isset($_SESSION['customer']['cust_id'])) {
     header("Location: login.php");
     exit;
-}
+  }
 
 // Initialize total amount
 $subtotal = 0;
