@@ -55,7 +55,7 @@ if (isset($_POST['form1'])) {
         // Display success message
         $success_message = "Password is updated successfully";
     }
-    
+}
 ?>
 
 <div class="page">
