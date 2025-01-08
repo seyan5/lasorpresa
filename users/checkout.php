@@ -1,70 +1,25 @@
 <?php
 session_start();
+require 'header.php'; // Include any common setup, such as database connection
 
-include("../admin/inc/config.php"); // Ensure this includes your PDO connection setup
-include("../admin/inc/functions.php");
-include("../admin/inc/CSRF_Protect.php");
-
-if (!isset($_SESSION['customer']['cust_id'])) {
-    header("Location: login.php");
-    exit();
-}
-
+// Redirect to cart if the cart is empty
 if (!isset($_SESSION['cart']) || count($_SESSION['cart']) === 0) {
-    header("Location: products.php");
-    exit();
+    header('Location: shopcart.php');
+    exit;
 }
 
-$subtotal = array_sum(array_map(function($item) {
+$total = array_sum(array_map(function ($item) {
     return $item['price'] * $item['quantity'];
 }, $_SESSION['cart']));
-$shipping = 50; // Example shipping fee
-$total = $subtotal + $shipping;
-
-// Handle order submission
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    try {
-        // Generate order ID
-        $order_id = uniqid('ORD');
-
-        // Begin transaction
-        $pdo->beginTransaction();
-
-        // Insert order details
-        $stmt = $pdo->prepare("INSERT INTO orders (order_id, cust_id, total_price) VALUES (?, ?, ?)");
-        $stmt->execute([$order_id, $_SESSION['customer']['cust_id'], $total]);
-
-        // Insert order items
-        $stmt = $pdo->prepare("INSERT INTO order_items (order_id, p_id, quantity, price) VALUES (?, ?, ?, ?)");
-        foreach ($_SESSION['cart'] as $item) {
-            $stmt->execute([$order_id, $item['id'], $item['quantity'], $item['price']]);
-        }
-
-        // Commit transaction
-        $pdo->commit();
-
-        // Clear cart
-        unset($_SESSION['cart']);
-
-        // Redirect to confirmation page
-        header("Location: order-confirmation.php?order_id=$order_id");
-        exit();
-    } catch (Exception $e) {
-        // Rollback transaction on error
-        $pdo->rollBack();
-        die("Error processing your order: " . $e->getMessage());
-    }
-}
 ?>
-
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Checkout</title>
     <link rel="stylesheet" href="../css/checkout.css">
+    <title>Checkout</title>
 </head>
 <body>
     <div class="header">
@@ -74,24 +29,41 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
 
     <div class="container">
-        <h3>Checkout</h3>
+        <h2>Checkout</h2>
         <hr>
-        <h4>Order Summary</h4>
+
+        <!-- Display Cart Summary -->
         <div class="summary">
-            <p>Subtotal: <span>₱<?php echo number_format($subtotal, 2); ?></span></p>
-            <p>Shipping: <span>₱<?php echo number_format($shipping, 2); ?></span></p>
-            <p><strong>Total:</strong> <span>₱<?php echo number_format($total, 2); ?></span></p>
+            <h3>Order Summary</h3>
+            <?php foreach ($_SESSION['cart'] as $item): ?>
+                <div class="cart-item">
+                    <img src="../admin/uploads/<?php echo htmlspecialchars($item['image']); ?>" 
+                         alt="<?php echo htmlspecialchars($item['name']); ?>" width="50">
+                    <p><?php echo htmlspecialchars($item['name']); ?> (x<?php echo htmlspecialchars($item['quantity']); ?>)</p>
+                    <p>₱<?php echo number_format($item['price'] * $item['quantity'], 2); ?></p>
+                </div>
+            <?php endforeach; ?>
+            <p><strong>Total: ₱<?php echo number_format($total, 2); ?></strong></p>
         </div>
 
-        <h4>Shipping Information</h4>
-        <form method="POST">
-            <label for="address">Address:</label>
-            <input type="text" id="address" name="address" required>
-            <label for="payment-method">Payment Method:</label>
-            <select id="payment-method" name="payment_method" required>
-                <option value="cod">Cash on Delivery</option>
-                <option value="card">Credit/Debit Card</option>
-            </select>
+        <!-- Shipping Details Form -->
+        <form action="checkout-handler.php" method="POST">
+            <h3>Shipping Information</h3>
+            <label for="full_name">Full Name</label>
+            <input type="text" id="full_name" name="full_name" required>
+
+            <label for="address">Address</label>
+            <textarea id="address" name="address" rows="3" required></textarea>
+
+            <label for="city">City</label>
+            <input type="text" id="city" name="city" required>
+
+            <label for="postal_code">Postal Code</label>
+            <input type="text" id="postal_code" name="postal_code" required>
+
+            <label for="phone">Phone Number</label>
+            <input type="text" id="phone" name="phone" required>
+
             <button type="submit" class="place-order">Place Order</button>
         </form>
     </div>
