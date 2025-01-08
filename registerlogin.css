@@ -123,6 +123,8 @@ button:hover {
     background: #e18aaa;
 }
 
+
+
 /* Responsive Design for Tablets and Smaller Devices */
 @media (max-width: 768px) {
     form {

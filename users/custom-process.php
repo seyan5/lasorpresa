@@ -8,29 +8,99 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $selected_colors = isset($_POST['color']) ? $_POST['color'] : [];
     $selected_quantities = isset($_POST['quantity']) ? $_POST['quantity'] : [];
 
-    // Example: Show the selected options (You can process further)
+    // Initialize the overall total price
+    $overall_total_price = 0;
+
     echo "<h3>Your Customized Bouquet:</h3>";
     
+    // Start the table
+    echo "<table border='1' style='width:100%; border-collapse: collapse;'>";
+    echo "<thead>
+            <tr>
+                <th>Flower Type</th>
+                <th>Quantity</th>
+                <th>Price per Flower</th>
+                <th>Total Price</th>
+            </tr>
+          </thead>";
+    echo "<tbody>";
+    
     // Flower Types, Quantities, and Prices
-    echo "<p>Flower Type(s), Quantity, and Price:</p>";
     foreach ($selected_types as $index => $flower_id) {
         // Get the flower name and price from the database using the function
-        list($flower_name, $flower_price) = getFlowerDetailsById($flower_id); 
+        list($flower_name, $flower_price) = getFlowerDetailsById($flower_id);
         $quantity = isset($selected_quantities[$index]) ? $selected_quantities[$index] : 1; // Default to 1 if no quantity is selected
         $total_price = $flower_price * $quantity; // Calculate the total price for the current flower
+        
+        // Add the flower's total price to the overall total price
+        $overall_total_price += $total_price;
 
-        echo "<p>{$flower_name}: {$quantity} flower(s) at \${$flower_price} each, Total: \${$total_price}</p>";
+        // Display the row for this flower
+        echo "<tr>
+                <td>{$flower_name}</td>
+                <td>{$quantity}</td>
+                <td>\${$flower_price}</td>
+                <td>\${$total_price}</td>
+              </tr>";
     }
+    
+    // End the table
+    echo "</tbody>";
+    echo "</table>";
 
-    // Sizes
-    echo "<p>Size(s): " . implode(", ", $selected_sizes) . "</p>";
-    
-    // Colors
-    echo "<p>Color(s): " . implode(", ", $selected_colors) . "</p>";
-    
-    // Optionally, you can store this information in the database or show a summary page
+    // Fetch and display the selected sizes and colors with their names from the database
+    echo "<p><strong>Size(s):</strong> " . implode(", ", getSizeNames($selected_sizes)) . "</p>";
+    echo "<p><strong>Color(s):</strong> " . implode(", ", getColorNames($selected_colors)) . "</p>";
+
+    // Display the overall total price
+    echo "<p><strong>Overall Total Price: \${$overall_total_price}</strong></p>";
 }
 
+// Function to fetch size names from the database based on selected size IDs
+function getSizeNames($size_ids) {
+    global $pdo;
+    
+    $size_names = [];
+    foreach ($size_ids as $size_id) {
+        // Fetch the size name from the database
+        $statement = $pdo->prepare("SELECT type_name FROM type WHERE type_id = :size_id");
+        $statement->bindParam(':size_id', $size_id, PDO::PARAM_INT);
+        $statement->execute();
+        $size = $statement->fetch(PDO::FETCH_ASSOC);
+        
+        if ($size) {
+            $size_names[] = $size['type_name'];
+        } else {
+            $size_names[] = 'Unknown Size';
+        }
+    }
+    
+    return $size_names;
+}
+
+// Function to fetch color names from the database based on selected color IDs
+function getColorNames($color_ids) {
+    global $pdo;
+    
+    $color_names = [];
+    foreach ($color_ids as $color_id) {
+        // Fetch the color name from the database
+        $statement = $pdo->prepare("SELECT color_name FROM color WHERE color_id = :color_id");
+        $statement->bindParam(':color_id', $color_id, PDO::PARAM_INT);
+        $statement->execute();
+        $color = $statement->fetch(PDO::FETCH_ASSOC);
+        
+        if ($color) {
+            $color_names[] = $color['color_name'];
+        } else {
+            $color_names[] = 'Unknown Color';
+        }
+    }
+    
+    return $color_names;
+}
+
+// Function to get flower details (name and price) by ID
 function getFlowerDetailsById($id) {
     global $pdo; // Assuming you have a PDO connection already established
 

@@ -4,16 +4,11 @@ session_start();
 // Include database configuration
 include '../config.php';
 
-// Check if user is logged in and is an admin
-if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] != 'admin') {
-    header('Location: ../login.php');
-    exit();
-}
 
 // Delete user if deleteid is provided in the URL
 if (isset($_GET['deleteid'])) {
-    $id = $_GET['deleteid'];
-    $sql = "DELETE FROM users WHERE id = $id";
+    $delete_id = intval($_GET['deleteid']);
+    $sql = "DELETE FROM customer WHERE cust_id = $delete_id";
     $result = mysqli_query($conn, $sql);
 
     if ($result) {
@@ -26,26 +21,41 @@ if (isset($_GET['deleteid'])) {
 
 // Update user if form is submitted
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $id = $_POST['id'];
-    $firstname = $_POST['firstname'];
-    $lastname = $_POST['lastname'];
-    $username = $_POST['username'];
-    $email = $_POST['email'];
-    $contact = $_POST['contact'];
-    $user_type = $_POST['user_type'];
+    $cust_name = $_POST['cust_name'];
+    $cust_email = $_POST['cust_email'];
+    $cust_phone = $_POST['cust_phone'];
+    $cust_password = password_hash($_POST['cust_password'], PASSWORD_BCRYPT);  // Hash password
+    $cust_address = $_POST['cust_address'];
+    $cust_city = $_POST['cust_city'];
+    $cust_zip = $_POST['cust_zip'];
+    $cust_status = $_POST['cust_status']; // Assuming 'cust_status' is being submitted from the form
 
-    $sql = "UPDATE users SET firstname='$firstname', lastname='$lastname', username = '$username', email='$email', contact='$contact', user_type='$user_type' WHERE id=$id";
+    $sql = "UPDATE customer SET 
+                cust_name='$cust_name', 
+                cust_email='$cust_email', 
+                cust_phone='$cust_phone', 
+                cust_password='$cust_password', 
+                cust_address='$cust_address', 
+                cust_city='$cust_city', 
+                cust_zip='$cust_zip', 
+                cust_status='$cust_status'
+            WHERE cust_id=$cust_id";
     $result = mysqli_query($conn, $sql);
 
+    if ($result) {
+        header('Location: users.php');
+        exit();
+    } else {
+        echo 'Error: ' . mysqli_error($conn);
+    }
 }
 
 // Fetch user data from the database
-$user_id = $_SESSION['user_id'];
-$stmt = $conn->prepare("SELECT * FROM users WHERE id = ?");
+$stmt = $conn->prepare("SELECT * FROM customer WHERE cust_id = ?");
 if ($stmt === false) {
     die('prepare() failed: ' . htmlspecialchars($conn->error));
 }
-$stmt->bind_param("i", $user_id);
+$stmt->bind_param("i", $cust_id);
 $stmt->execute();
 $result1 = $stmt->get_result();
 
@@ -56,19 +66,20 @@ if ($result1->num_rows > 0) {
     $row1 = null;
 }
 
-
-
 // Fetch all users data from the database
-$sql = "SELECT * FROM users";
+$sql = "SELECT * FROM customer";
 $result = mysqli_query($conn, $sql);
 
 if ($result->num_rows > 0) {
-    $row = $result->fetch_assoc();
+    $rows = [];
+    while ($row = $result->fetch_assoc()) {
+        $rows[] = $row;
+    }
 } else {
-    $row = null;
+    $rows = [];
 }
-
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -212,10 +223,6 @@ if ($result->num_rows > 0) {
                                         Email
                                     </th>
                                     <th class="table-headin">
-                                        User Type
-                                    </th>
-
-                                    <th class="table-headin">
                                         Events
                                     </th>
 
@@ -246,28 +253,23 @@ if ($result->num_rows > 0) {
                                 } else {
                                     for ($x = 0; $x < $result->num_rows; $x++) {
                                         $row = $result->fetch_assoc();
-                                        $id = $row["id"];
-                                        $name = $row["name"];
-                                        $email = $row["email"];
-                                        $user_type = $row["user_type"];
+                                        $cust_id = $row["cust_id"];
+                                        $cust_name = $row["cust_name"];
+                                        $cust_email = $row["cust_email"];
                                         echo '<tr>
                                         <td> &nbsp;' .
-                                            substr($name, 0, 30)
+                                            substr($cust_name, 0, 30)
                                             . '</td>
                                         <td>
-                                        ' . substr($email, 0, 20) . '
+                                        ' . substr($cust_email, 0, 20) . '
                                         </td>
-                                        <td>
-                                            ' . substr($user_type, 0, 20) . '
-                                        </td>
-
                                         <td>
                                         <div style="display:flex;justify-content: center;">
-                                        <a href="?action=edit&id=' . $id . '&error=0" class="non-style-link"><button  class="btn-primary-soft btn button-icon btn-edit"  style="padding-left: 40px;padding-top: 12px;padding-bottom: 12px;margin-top: 10px;"><font class="tn-in-text">Edit</font></button></a>
+                                        <a href="?action=edit&id=' . $cust_id . '&error=0" class="non-style-link"><button  class="btn-primary-soft btn button-icon btn-edit"  style="padding-left: 40px;padding-top: 12px;padding-bottom: 12px;margin-top: 10px;"><font class="tn-in-text">Edit</font></button></a>
                                         &nbsp;&nbsp;&nbsp;
-                                        <a href="?action=view&id=' . $id . '" class="non-style-link"><button  class="btn-primary-soft btn button-icon btn-view"  style="padding-left: 40px;padding-top: 12px;padding-bottom: 12px;margin-top: 10px;"><font class="tn-in-text">View</font></button></a>
+                                        <a href="?action=view&id=' . $cust_id . '" class="non-style-link"><button  class="btn-primary-soft btn button-icon btn-view"  style="padding-left: 40px;padding-top: 12px;padding-bottom: 12px;margin-top: 10px;"><font class="tn-in-text">View</font></button></a>
                                        &nbsp;&nbsp;&nbsp;
-                                       <a href="?action=drop&id=' . $id . '&name=' . $name . '" class="non-style-link"><button  class="btn-primary-soft btn button-icon btn-delete"  style="padding-left: 40px;padding-top: 12px;padding-bottom: 12px;margin-top: 10px;"><font class="tn-in-text">Remove</font></button></a>
+                                       <a href="?action=drop&id=' . $cust_id . '&name=' . $cust_name . '" class="non-style-link"><button  class="btn-primary-soft btn button-icon btn-delete"  style="padding-left: 40px;padding-top: 12px;padding-bottom: 12px;margin-top: 10px;"><font class="tn-in-text">Remove</font></button></a>
                                         </div>
                                         </td>
                                     </tr>';
@@ -291,11 +293,10 @@ if ($result->num_rows > 0) {
     </div>
     <?php
     if ($_GET) {
-
-        $id = $_GET["id"];
+        $cust_id = $_GET["id"];
         $action = $_GET["action"];
         if ($action == 'drop') {
-            $nameget = $_GET["name"];
+            $nameget = $_GET["cust_name"];
             echo '
             <div id="popup1" class="overlay">
                     <div class="popup">
@@ -307,7 +308,7 @@ if ($result->num_rows > 0) {
                             
                         </div>
                         <div style="display: flex;justify-content: center;">
-                        <a href="delete-users.php?id=' . $id . '" class="non-style-link"><button  class="btn-primary btn"  style="display: flex;justify-content: center;align-items: center;margin:10px;padding:10px;"<font class="tn-in-text">&nbsp;Yes&nbsp;</font></button></a>&nbsp;&nbsp;&nbsp;
+                        <a href="delete-users.php?id=' . $cust_id . '" class="non-style-link"><button  class="btn-primary btn"  style="display: flex;justify-content: center;align-items: center;margin:10px;padding:10px;"<font class="tn-in-text">&nbsp;Yes&nbsp;</font></button></a>&nbsp;&nbsp;&nbsp;
                         <a href="users.php" class="non-style-link"><button  class="btn-primary btn"  style="display: flex;justify-content: center;align-items: center;margin:10px;padding:10px;"><font class="tn-in-text">&nbsp;&nbsp;No&nbsp;&nbsp;</font></button></a>
 
                         </div>
@@ -315,17 +316,29 @@ if ($result->num_rows > 0) {
             </div>
             </div>
             ';
-        } elseif ($action == 'view') {
-            $sqlmain = "select * from users where id='$id'";
-            $result = $conn->query($sqlmain);
-            $row = $result->fetch_assoc();
-            $name = $row["name"];
-            $email = $row["email"];
-            $username = $row["username"];
-            $contact = $row["contact"];
-            $user_type = $row["user_type"];
-
-
+        } elseif (isset($_GET['action']) && $_GET['action'] === 'view' && isset($_GET['id'])) {
+            $cust_id = intval($_GET['id']);
+            
+            // Use a prepared statement
+            $stmt = $conn->prepare("SELECT * FROM customer WHERE cust_id = ?");
+            if ($stmt === false) {
+                die('prepare() failed: ' . htmlspecialchars($conn->error));
+            }
+        
+            $stmt->bind_param("i", $cust_id);
+            $stmt->execute();
+            $result = $stmt->get_result();
+        
+            if ($result->num_rows > 0) {
+                $row = $result->fetch_assoc();
+                $cust_name = $row["cust_name"];
+                $cust_email = $row["cust_email"];
+                $cust_phone = $row["cust_phone"];
+                $cust_address = $row["cust_address"];
+                $cust_city = $row["cust_city"];
+                $cust_zip = $row["cust_zip"];
+        
+            
             echo '
             <div id="popup1" class="overlay">
                     <div class="popup">
@@ -353,7 +366,7 @@ if ($result->num_rows > 0) {
                             </tr>
                             <tr>
                                 <td class="label-td" colspan="2">
-                                    ' . $name . '<br><br>
+                                    ' . $cust_name . '<br><br>
                                 </td>
                                 
                             </tr>
@@ -364,17 +377,7 @@ if ($result->num_rows > 0) {
                             </tr>
                             <tr>
                                 <td class="label-td" colspan="2">
-                                ' . $email . '<br><br>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="label-td" colspan="2">
-                                    <label for="username" class="form-label">Username: </label>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="label-td" colspan="2">
-                                ' . $username . '<br><br>
+                                ' . $cust_email . '<br><br>
                                 </td>
                             </tr>
                             <tr>
@@ -384,20 +387,40 @@ if ($result->num_rows > 0) {
                             </tr>
                             <tr>
                                 <td class="label-td" colspan="2">
-                                ' . $contact . '<br><br>
+                                ' . $cust_phone . '<br><br>
                                 </td>
                             </tr>
                             <tr>
                                 <td class="label-td" colspan="2">
-                                    <label for="user_type" class="form-label">User Type: </label>
-                                    
+                                    <label for="address" class="form-label">Address: </label>
                                 </td>
                             </tr>
                             <tr>
-                            <td class="label-td" colspan="2">
-                            ' . $user_type . '<br><br>
-                            </td>
+                                <td class="label-td" colspan="2">
+                                ' . $cust_address . '<br><br>
+                                </td>
                             </tr>
+                            <tr>
+                                <td class="label-td" colspan="2">
+                                    <label for="city" class="form-label">City: </label>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="label-td" colspan="2">
+                                ' . $cust_city . '<br><br>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="label-td" colspan="2">
+                                    <label for="zip" class="form-label">ZIP: </label>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="label-td" colspan="2">
+                                ' . $cust_zip . '<br><br>
+                                </td>
+                            </tr>                           
+
 
                             <tr>
                                 <td colspan="2">
@@ -416,15 +439,22 @@ if ($result->num_rows > 0) {
             </div>
             </div>
             ';
+            }
+
+        } elseif (isset($_GET['action']) && $_GET['action'] === 'edit' && isset($_GET['id'])) {
+            $cust_id = intval($_GET['id']);
 
 
-        } elseif ($action == 'edit') {
-            $sqlmain = "select * from users where id='$id'";
+            $sqlmain = "SELECT * from customer where cust_id='$cust_id'";
             $result = $conn->query($sqlmain);
             $row = $result->fetch_assoc();
-            $name = $row["name"];
-            $email = $row["email"];
-            $contact = $row["contact"];
+            $cust_name = $row["cust_name"];
+            $cust_email = $row["cust_email"];
+            $cust_phone = $row["cust_phone"];
+            $cust_address = $row["cust_address"];
+            $cust_city = $row["cust_city"];
+            $cust_zip = $row["cust_zip"];
+            $cust_status = $row['cust_status'];
             $error_1 = $_GET["error"];
             $errorlist = array(
                 '1' => '<label for="promter" class="form-label" style="color:rgb(255, 62, 62);text-align:center;">Already have an account for this Email address.</label>',
@@ -453,46 +483,95 @@ if ($result->num_rows > 0) {
                                     <tr>
                                         <td>
                                             <p style="padding: 0;margin: 0;text-align: left;font-size: 25px;font-weight: 500;">Edit Users Details.</p>
-                                        Users ID : ' . $id . ' (Auto Generated)<br><br>
+                                        Users ID : ' . $cust_id . ' (Auto Generated)<br><br>
                                         </td>
                                     </tr>
                                     <tr>
                                         <td class="label-td" colspan="2">
                                             <form action="edit-users.php" method="POST" class="add-new-form">
                                             <label for="Email" class="form-label">Email: </label>
-                                            <input type="hidden" value="' . $id . '" name="id00">
-                                            <input type="hidden" name="oldemail" value="' . $email . '" >
+                                            <input type="hidden" value="' . $cust_id . '" name="cust_id00">
+                                            <input type="hidden" name="oldemail" value="' . $cust_email . '" >
                                         </td>
                                     </tr>
                                     <tr>
                                         <td class="label-td" colspan="2">
-                                        <input type="email" name="email" class="input-text" placeholder="Email Address" value="' . $email . '" required><br>
+                                        <input type="email" name="cust_email" class="input-text" placeholder="Email Address" value="' . $cust_email . '" required><br>
                                         </td>
                                     </tr>
                                     <tr>
                                         
                                         <td class="label-td" colspan="2">
-                                            <label for="name" class="form-label">Name: </label>
+                                            <label for="cust_name" class="form-label">Name: </label>
                                         </td>
                                     </tr>
                                     <tr>
                                         <td class="label-td" colspan="2">
-                                            <input type="text" name="name" class="input-text" placeholder="Users Name" value="' . $name . '" required><br>
+                                            <input type="text" name="cust_name" class="input-text" placeholder="Name" value="' . $cust_name . '" required><br>
                                         </td>
                                         
                                     </tr>
                                     
                                     <tr>
                                         <td class="label-td" colspan="2">
-                                            <label for="contact" class="form-label">Contact: </label>
+                                            <label for="cust_phone" class="form-label">Contact: </label>
                                         </td>
                                     </tr>
                                     <tr>
                                         <td class="label-td" colspan="2">
-                                            <input type="text" name="contact" class="input-text" placeholder="Contact Number" value="' . $contact . '" required><br>
+                                            <input type="text" name="cust_phone" class="input-text" placeholder="Contact Number" value="' . $cust_phone . '" required><br>
                                         </td>
                                     </tr>                                    
                                     <tr>
+
+                                    <tr>
+                                        <td class="label-td" colspan="2">
+                                            <label for="cust_address" class="form-label">Address: </label>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="label-td" colspan="2">
+                                            <input type="text" name="cust_address" class="input-text" placeholder="Address" value="' . $cust_address . '" required><br>
+                                        </td>
+                                    </tr>                                    
+                                    <tr>
+                                    <tr>
+                                        <td class="label-td" colspan="2">
+                                            <label for="cust_city" class="form-label">City: </label>
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td class="label-td" colspan="2">
+                                            <input type="text" name="cust_city" class="input-text" placeholder="City" value="' . $cust_city . '" required><br>
+                                        </td>
+                                    </tr>                                    
+                                    <tr>
+
+                                    <tr>
+                                        <td class="label-td" colspan="2">
+                                            <label for="cust_zip" class="form-label">ZIP: </label>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="label-td" colspan="2">
+                                            <input type="text" name="cust_zip" class="input-text" placeholder="ZIP" value="' . $cust_zip . '" required><br>
+                                        </td>
+                                    </tr>                                    
+                                    <tr>
+
+                                    <tr>
+                                        <td class="label-td" colspan="2">
+                                            <label for="cust_status" class="form-label">Status: </label>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="label-td" colspan="2">
+                                            <input type="text" name="cust_status" class="input-text" placeholder="Status" value="' . $cust_status. '" required><br>
+                                        </td>
+                                    </tr>                                    
+                                    <tr>
+
                                         <td colspan="2">
                                             <input type="reset" value="Reset" class="login-btn btn-primary-soft btn" >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                         
