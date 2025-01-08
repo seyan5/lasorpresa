@@ -68,12 +68,35 @@ $subtotal = 0;
         <p>Shipping: <span>₱0.00</span></p>
         <p>Total: <span>₱<?php echo number_format($subtotal, 2); ?></span></p>
 
-        <form action="place-order.php" method="POST">
-            <h3>Shipping Address</h3>
-            <textarea name="shipping_address" placeholder="Enter your shipping address" required></textarea>
-
-            <button type="submit" class="place-order">Place Order</button>
-        </form>
+        <div class="col-md-6">
+                            <h3 class="special">Shipping Address"</h3>
+                            <table class="table table-responsive table-bordered table-hover table-striped bill-address">
+                                <tr>
+                                    <td>Full Name</td>
+                                    <td><?php echo $_SESSION['customer']['cust_s_name']; ?></p></td>
+                                </tr>
+                                <tr>
+                                    <td>Phone Number</td>
+                                    <td><?php echo $_SESSION['customer']['cust_s_phone']; ?></td>
+                                </tr>
+                                <tr>
+                                    <td>Address</td>
+                                    <td>
+                                        <?php echo nl2br($_SESSION['customer']['cust_s_address']); ?>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>City</td>
+                                    <td><?php echo $_SESSION['customer']['cust_s_city']; ?></td>
+                                </tr>
+                                <tr>
+                                    <td>Zip Code</td>
+                                    <td><?php echo $_SESSION['customer']['cust_s_zip']; ?></td>
+                                </tr> 
+                            </table>
+                        </div>
+                    </div>                    
+                </div>
     </div>
 </div>
 
