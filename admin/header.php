@@ -10,11 +10,6 @@ $success_message = '';
 $error_message1 = '';
 $success_message1 = '';
 
-// Check if user is logged in and is an admin
-if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] != 'admin') {
-    header('Location: ../login.php');
-    exit();
-}
 
 ?>
 
