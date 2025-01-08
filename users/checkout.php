@@ -16,6 +16,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['place_order'])) {
     // Calculate the subtotal (total price of all items in the cart)
     if (isset($_SESSION['cart']) && count($_SESSION['cart']) > 0) {
         foreach ($_SESSION['cart'] as $item) {
+            // Ensure the product has a valid ID
+            if (!isset($item['p_id'])) {
+                echo "Error: Product ID missing for item in cart.";
+                exit;
+            }
+
             // Calculate the total price for each item in the cart
             $subtotal += $item['price'] * $item['quantity'];
         }
@@ -73,7 +79,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['place_order'])) {
     }
 }
 ?>
-
 
 <!DOCTYPE html>
 <html lang="en">
