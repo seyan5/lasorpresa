@@ -139,19 +139,19 @@ $total = array_sum(array_map(function ($item) {
         <!-- Shipping Details Form -->
         <form action="checkout-handler.php" method="POST">
     <h3>Shipping Information</h3>
-    <label for="full_name">Full Name</label>
+    <label for="full_name">Full Name: </label>
     <input type="text" id="full_name" name="full_name" required>
 
-    <label for="address">Address</label>
+    <label for="address">Address: </label>
     <textarea id="address" name="address" rows="3" required></textarea>
 
-    <label for="city">City</label>
+    <label for="city">City: </label>
     <input type="text" id="city" name="city" required>
 
-    <label for="postal_code">Postal Code</label>
+    <label for="postal_code">Postal Code: </label>
     <input type="text" id="postal_code" name="postal_code" required>
 
-    <label for="phone">Phone Number</label>
+    <label for="phone">Phone Number: </label>
     <input type="text" id="phone" name="phone" required>
 
     <button type="submit" class="place-order">Place Order</button>
