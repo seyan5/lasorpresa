@@ -14,7 +14,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $pdo->beginTransaction();
 
         // Create a new order
-        $stmt = $pdo->prepare("INSERT INTO orders (customer_id, total, order_date) VALUES (:customer_id, :total, NOW())");
+        $stmt = $pdo->prepare("INSERT INTO orders (customer_id, total, created_at) VALUES (:customer_id, :total, NOW())");
         $stmt->execute([
             ':customer_id' => $_SESSION['customer']['cust_id'],
             ':total' => array_sum(array_map(function($item) {
