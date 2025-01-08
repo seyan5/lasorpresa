@@ -1,9 +1,9 @@
 <?php
 ob_start();
 session_start();
-include("admin/inc/config.php");
-include("admin/inc/functions.php");
-include("admin/inc/CSRF_Protect.php");
+include("../admin/inc/config.php");
+include("../admin/inc/functions.php");
+include("../admin/inc/CSRF_Protect.php");
 
 
 if (isset($_POST['login'])) {
@@ -28,7 +28,7 @@ if (isset($_POST['login'])) {
                     $_SESSION['cust_email'] = $user['cust_email'];
 
                     // Redirect to the dashboard or user home page
-                    header("Location: users/index.php"); // Change to the appropriate page
+                    header("Location: index.php"); // Change to the appropriate page
                     exit;
                 } else {
                     echo "Your account is not verified yet. Please check your email to verify your account.";
