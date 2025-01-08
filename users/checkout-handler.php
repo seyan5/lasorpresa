@@ -10,16 +10,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
+    // Capture shipping information from the form
+    $full_name = $_POST['full_name'];
+    $address = $_POST['address'];
+    $city = $_POST['city'];
+    $postal_code = $_POST['postal_code'];
+    $phone = $_POST['phone'];
+
     try {
         $pdo->beginTransaction();
 
-        // Create a new order
-        $stmt = $pdo->prepare("INSERT INTO orders (customer_id, total, created_at) VALUES (:customer_id, :total, NOW())");
+        // Create a new order with shipping information
+        $stmt = $pdo->prepare("INSERT INTO orders (customer_id, total, full_name, address, city, postal_code, phone, created_at) 
+            VALUES (:customer_id, :total, :full_name, :address, :city, :postal_code, :phone, NOW())");
         $stmt->execute([
             ':customer_id' => $_SESSION['customer']['cust_id'],
             ':total' => array_sum(array_map(function($item) {
                 return $item['price'] * $item['quantity'];
-            }, $_SESSION['cart']))
+            }, $_SESSION['cart'])),
+            ':full_name' => $full_name,
+            ':address' => $address,
+            ':city' => $city,
+            ':postal_code' => $postal_code,
+            ':phone' => $phone
         ]);
 
         $order_id = $pdo->lastInsertId();
