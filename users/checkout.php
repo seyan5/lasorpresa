@@ -1,117 +1,119 @@
+<?php
+require 'header.php';
+
+// Redirect to login page if user is not logged in
+if (!isset($_SESSION['id'])) {
+    header("Location: login.php");
+    exit;
+}
+
+// Initialize total amount
+$subtotal = 0;
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Checkout</title>
-
-    <!-- Font Awesome and Google Fonts -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-
-    <!-- CSS -->
     <link rel="stylesheet" href="../css/checkout.css">
+    <title>Checkout</title>
 </head>
 <body>
-    <!-- Header -->
-    <header>
-        <input type="checkbox" id="toggler">
-        <label for="toggler" class="fas fa-bars"></label>
+<div class="container">
+    <h1>Checkout</h1>
+    <div class="cart">
+        <table>
+            <thead>
+                <tr>
+                    <th>Photo</th>
+                    <th>Product Name</th>
+                    <th>Price</th>
+                    <th>Quantity</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php if (isset($_SESSION['cart']) && count($_SESSION['cart']) > 0): ?>
+                    <?php foreach ($_SESSION['cart'] as $item): ?>
+                        <tr>
+                            <td>
+                                <?php if (isset($item['image']) && $item['image']): ?>
+                                    <img src="../admin/uploads/<?php echo htmlspecialchars($item['image']); ?>" alt="<?php echo htmlspecialchars($item['name']); ?>" width="50">
+                                <?php else: ?>
+                                    <img src="path/to/default-image.jpg" alt="No image available" width="50">
+                                <?php endif; ?>
+                            </td>
+                            <td><?php echo htmlspecialchars($item['name']); ?></td>
+                            <td>₱<?php echo number_format($item['price'], 2); ?></td>
+                            <td><?php echo htmlspecialchars($item['quantity']); ?></td>
+                            <td>₱<?php echo number_format($item['price'] * $item['quantity'], 2); ?></td>
+                        </tr>
+                        <?php $subtotal += $item['price'] * $item['quantity']; ?>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <tr>
+                        <td colspan="5">Your cart is empty.</td>
+                    </tr>
+                <?php endif; ?>
+            </tbody>
+        </table>
+    </div>
 
-        <a href="#" class="logo">Flower<span>.</span></a>
-        <nav class="navbar">
-            <a href="#home">Home</a>
-            <a href="#about">About</a>
-            <a href="#product">Product</a>
-            <a href="#occasion">Occasion</a>
-            <a href="#review">Review</a>
-            <a href="#contacts">Contacts</a>
-        </nav>
+    <div class="summary">
+        <h3>Order Summary</h3>
+        <p>Subtotal: <span>₱<?php echo number_format($subtotal, 2); ?></span></p>
+        <p>Shipping: <span>₱0.00</span></p>
+        <p>Total: <span>₱<?php echo number_format($subtotal, 2); ?></span></p>
 
-        <div class="icons">
-            <a href="#" class="fas fa-heart"></a>
-            <a href="cart.html" class="fas fa-shopping-cart"></a>
-            <a href="#" class="fas fa-user"></a>
-        </div>
-    </header>
+        <form action="place-order.php" method="POST">
+            <h3>Shipping Address</h3>
+            <textarea name="shipping_address" placeholder="Enter your shipping address" required></textarea>
 
-    <!-- Main Section -->
-    <section>
-        <div class="container">
-            <div class="checkoutLayout">
-                <!-- Shopping Cart -->
-                <div>
-                    <h2>My Shopping Cart</h2>
-                    <div class="cart">
-                        <div class="cart-item">
-                            <div class="row">
-                                <div class="col-md-7 center-item">
-                                    <img src="../ivd/flower.png" alt="iPhone 11">
-                                    <h5>iPhone 11 128GB Black ($1219)</h5>
-                                </div>
-                                <div class="col-md-5 center-item">
-                                    <div class="input-group number-spinner">
-                                        <button class="btn btn-default" id="phone-minus"><i class="fas fa-minus"></i></button>
-                                        <input id="phone-number" type="number" min="0" class="form-control text-center" value="1">
-                                        <button class="btn btn-default" id="phone-plus"><i class="fas fa-plus"></i></button>
-                                    </div>
-                                    <h5>$<span id="phone-total">1219</span></h5>
-                                        <img src="images/remove.png" alt="Remove" class="remove-item">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- Checkout Form -->
-                <div class="right">
-                    <h1>Checkout</h1>
-                    <form class="form">
-                        <div class="group">
-                            <label for="name">Full Name</label>
-                            <input type="text" id="name" placeholder="Enter your name">
-                        </div>
-                        <div class="group">
-                            <label for="phone">Phone Number</label>
-                            <input type="text" id="phone" placeholder="Enter your phone number">
-                        </div>
-                        <div class="group">
-                            <label for="address">Address</label>
-                            <input type="text" id="address" placeholder="Enter your address">
-                        </div>
-                        <div class="group">
-                            <label for="country">Country</label>
-                            <select id="country">
-                                <option value="">Choose...</option>
-                                <option value="kingdom">Kingdom</option>
-                            </select>
-                        </div>
-                        <div class="group">
-                            <label for="city">City</label>
-                            <select id="city">
-                                <option value="">Choose...</option>
-                                <option value="london">London</option>
-                            </select>
-                        </div>
-                    </form>
-                    <div class="return">
-                        <div class="row">
-                            <div>Total Quantity</div>
-                            <div class="totalQuantity">$<span id="total-price">1278</div>
-                        </div>
-                        <div class="row">
-                            <div>Subtotal: </div>
-                            <div class="totalPrice">$<span id="sub-total">1278</div>
-                        </div>
-                    </div>
-                    <button class="buttonCheckout">CHECKOUT</button>
-                </div>
-            </div>
-        </div>
-    </section>
+            <button type="submit" class="place-order">Place Order</button>
+        </form>
+    </div>
+</div>
 
-    <!-- JavaScript -->
-    <script src="js/checkout.js"></script>
+<style>
+    .container {
+        width: 90%;
+        margin: auto;
+        padding: 20px;
+    }
+    .cart table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    .cart table th, .cart table td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: center;
+    }
+    .cart table th {
+        background-color: #f4f4f4;
+    }
+    .summary {
+        margin-top: 20px;
+    }
+    .summary textarea {
+        width: 100%;
+        height: 100px;
+        margin-top: 10px;
+        padding: 10px;
+    }
+    .place-order {
+        margin-top: 20px;
+        padding: 10px 20px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        cursor: pointer;
+    }
+    .place-order:hover {
+        background-color: #0056b3;
+    }
+</style>
 </body>
 </html>
