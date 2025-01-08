@@ -55,7 +55,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['place_order'])) {
     unset($_SESSION['cart']);
 
     // Redirect to a confirmation or order history page
-    header("Location: order_confirmation.php?order_id=$order_id");
+    header("Location: order-confirmation.php?order_id=$order_id");
     exit;
 }
 
