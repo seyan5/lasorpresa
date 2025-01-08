@@ -7,8 +7,8 @@ if(!isset($_SESSION['customer'])) {
     exit;
 } else {
     // If customer is logged in, but admin make him inactive, then force logout this user.
-    $statement = $pdo->prepare("SELECT * FROM customer WHERE cust_s_id=? AND cust_s_status=?");
-    $statement->execute(array($_SESSION['customer']['cust_s_id'],0));
+    $statement = $pdo->prepare("SELECT * FROM customer WHERE cust_id=? AND cust_s_status=?");
+    $statement->execute(array($_SESSION['customer']['cust_id'],0));
     $total = $statement->rowCount();
     if($total) {
         header('location: '.BASE_URL.'logout.php');
@@ -51,14 +51,14 @@ if (isset($_POST['form1'])) {
 
     if ($valid == 1) {
        
-        $statement = $pdo->prepare("UPDATE customer SET cust_s_name=?, cust_s_phone=?, cust_s_address=?, cust_s_city=?, cust_s_zip=? WHERE cust_s_id=?");
+        $statement = $pdo->prepare("UPDATE customer SET cust_s_name=?, cust_s_phone=?, cust_s_address=?, cust_s_city=?, cust_s_zip=? WHERE cust_id=?");
         $statement->execute(array(
             strip_tags($_POST['cust_s_name']),
             strip_tags($_POST['cust_s_phone']),
             strip_tags($_POST['cust_s_address']),
             strip_tags($_POST['cust_s_city']),
             strip_tags($_POST['cust_s_zip']),
-            $_SESSION['customer']['cust_s_id']
+            $_SESSION['customer']['cust_id']
         ));
     
         $success_message = "Profile Information Updated successfully.";
