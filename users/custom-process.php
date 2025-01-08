@@ -8,26 +8,53 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $selected_colors = isset($_POST['color']) ? $_POST['color'] : [];
     $selected_quantities = isset($_POST['quantity']) ? $_POST['quantity'] : [];
 
-    // Example: Show the selected options (You can process further)
+    // Initialize the overall total price
+    $overall_total_price = 0;
+
     echo "<h3>Your Customized Bouquet:</h3>";
     
+    // Start the table
+    echo "<table border='1' style='width:100%; border-collapse: collapse;'>";
+    echo "<thead>
+            <tr>
+                <th>Flower Type</th>
+                <th>Quantity</th>
+                <th>Price per Flower</th>
+                <th>Total Price</th>
+            </tr>
+          </thead>";
+    echo "<tbody>";
+    
     // Flower Types, Quantities, and Prices
-    echo "<p>Flower Type(s), Quantity, and Price:</p>";
     foreach ($selected_types as $index => $flower_id) {
         // Get the flower name and price from the database using the function
-        list($flower_name, $flower_price) = getFlowerDetailsById($flower_id); 
+        list($flower_name, $flower_price) = getFlowerDetailsById($flower_id);
         $quantity = isset($selected_quantities[$index]) ? $selected_quantities[$index] : 1; // Default to 1 if no quantity is selected
         $total_price = $flower_price * $quantity; // Calculate the total price for the current flower
+        
+        // Add the flower's total price to the overall total price
+        $overall_total_price += $total_price;
 
-        echo "<p>{$flower_name}: {$quantity} flower(s) at \${$flower_price} each, Total: \${$total_price}</p>";
+        // Display the row for this flower
+        echo "<tr>
+                <td>{$flower_name}</td>
+                <td>{$quantity}</td>
+                <td>\${$flower_price}</td>
+                <td>\${$total_price}</td>
+              </tr>";
     }
+    
+    // End the table
+    echo "</tbody>";
+    echo "</table>";
 
-    // Sizes
-    echo "<p>Size(s): " . implode(", ", $selected_sizes) . "</p>";
-    
-    // Colors
-    echo "<p>Color(s): " . implode(", ", $selected_colors) . "</p>";
-    
+    // Display the selected sizes and colors
+    echo "<p><strong>Size(s):</strong> " . implode(", ", $selected_sizes) . "</p>";
+    echo "<p><strong>Color(s):</strong> " . implode(", ", $selected_colors) . "</p>";
+
+    // Display the overall total price
+    echo "<p><strong>Overall Total Price: \${$overall_total_price}</strong></p>";
+
     // Optionally, you can store this information in the database or show a summary page
 }
 
