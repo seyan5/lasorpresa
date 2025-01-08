@@ -47,7 +47,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         unset($_SESSION['cart']);
 
         // Redirect to confirmation page
-        header("Location: confirmation.php?order_id=$order_id");
+        header("Location: order-confirmation.php?order_id=$order_id");
         exit();
     } catch (Exception $e) {
         // Rollback transaction on error
