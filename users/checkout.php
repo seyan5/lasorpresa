@@ -42,7 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['place_order'])) {
         if (isset($_SESSION['cart']) && count($_SESSION['cart']) > 0) {
             foreach ($_SESSION['cart'] as $item) {
                 if (isset($item['id'], $item['name'], $item['price'], $item['quantity'], $item['image'])) {
-                    $product_id = $item['id'];
+                    $p_id = $item['id'];
                     $product_name = $item['name'];
                     $price = $item['price'];
                     $quantity = $item['quantity'];
@@ -55,7 +55,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['place_order'])) {
 
                     // Bind parameters
                     $stmt->bindParam(1, $order_id, PDO::PARAM_INT);
-                    $stmt->bindParam(2, $product_id, PDO::PARAM_INT);
+                    $stmt->bindParam(2, $p_id, PDO::PARAM_INT);
                     $stmt->bindParam(3, $product_name, PDO::PARAM_STR);
                     $stmt->bindParam(4, $price, PDO::PARAM_STR);
                     $stmt->bindParam(5, $quantity, PDO::PARAM_INT);
