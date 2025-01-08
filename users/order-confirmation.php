@@ -51,10 +51,10 @@ $order_items = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <p><strong>Total Amount:</strong> ₱<?php echo number_format($order['total_price'], 2); ?></p>
             <p><strong>Shipping Address:</strong></p>
             <ul>
-                <li><?php echo htmlspecialchars($order['shipping_address']); ?></li>
-                <li><?php echo htmlspecialchars($order['shipping_city']); ?></li>
-                <li>Zip: <?php echo htmlspecialchars($order['shipping_zip']); ?></li>
-                <li>Phone: <?php echo htmlspecialchars($order['shipping_phone']); ?></li>
+                <li><?php echo htmlspecialchars($order['cust_s_address']); ?></li>
+                <li><?php echo htmlspecialchars($order['cust_s_city']); ?></li>
+                <li>Zip: <?php echo htmlspecialchars($order['cust_s_zip']); ?></li>
+                <li>Phone: <?php echo htmlspecialchars($order['cust_s_phone']); ?></li>
             </ul>
         </div>
 
