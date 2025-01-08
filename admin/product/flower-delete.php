@@ -10,6 +10,6 @@ if ($id) {
 }
 
 // Redirect to flower list page
-header('Location: flower.php');
+header('Location: flowers.php');
 exit();
 ?>
