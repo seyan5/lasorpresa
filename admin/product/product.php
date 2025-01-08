@@ -50,7 +50,7 @@
                     </a>
                 </li>
                 <li>
-                    <a href="users.php">
+                    <a href="../users.php">
                         <span class="icon">
                             <ion-icon name="people-outline"></ion-icon>
                         </span>
@@ -66,7 +66,7 @@
                     </a>
                 </li>
                 <li>
-                    <a href="product/product-add.php">
+                    <a href="product.php.php">
                         <span class="icon">
                             <ion-icon name="cube-outline"></ion-icon>
                         </span>
@@ -82,7 +82,7 @@
                     </a>
                 </li>
                 <li>
-                    <a href="settings.php">
+                    <a href="../settings.php">
                         <span class="icon">
                             <ion-icon name="settings-outline"></ion-icon>
                         </span>
@@ -90,7 +90,7 @@
                     </a>
                 </li>
                 <li>
-                    <a href="logout.php">
+                    <a href="../logout.php">
                         <span class="icon">
                             <ion-icon name="log-out-outline"></ion-icon>
                         </span>
