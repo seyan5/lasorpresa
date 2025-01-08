@@ -1,7 +1,7 @@
 
 <?php
 session_start();
-include '../config.php';
+include 'header.php';
 if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] != 'admin') {
     header('Location: login.php');
     exit();
