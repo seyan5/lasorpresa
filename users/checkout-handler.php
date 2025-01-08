@@ -74,11 +74,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Clear the cart
         unset($_SESSION['cart']);
 
-        echo json_encode([
-            'success' => true,
-            'message' => 'Order placed successfully!',
-            'order_id' => $order_id
-        ]);
+        // Redirect to the order confirmation page with order_id
+        header("Location: order-confirmation.php?order_id=" . $order_id);
+        exit;
+
     } catch (Exception $e) {
         // Rollback the transaction in case of an error
         $pdo->rollBack();
