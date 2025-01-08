@@ -27,24 +27,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['place_order'])) {
     $stmt->execute();
     $order_id = $pdo->lastInsertId(); // Get the inserted order's ID
 
-    // Insert each item into the order_items table
-    foreach ($_SESSION['cart'] as $item) {
-        $product_id = $item['p_id'];
-        $product_name = $item['name'];
-        $price = $item['price'];
-        $quantity = $item['quantity'];
-        $total_price = $price * $quantity;
+// Insert each item into the order_items table
+foreach ($_SESSION['cart'] as $item) {
+    $product_id = $item['id'];  // Ensure this is the correct key, or update it to 'p_id'
+    $product_name = $item['name'];
+    $price = $item['price'];
+    $quantity = $item['quantity'];
+    $total_price = $price * $quantity;
 
-        // Prepare the SQL statement to insert the order items
-        $stmt = $pdo->prepare("INSERT INTO order_items (order_id, p_id, product_name, price, quantity, total_price) VALUES (?, ?, ?, ?, ?, ?)");
-        $stmt->bindValue(1, $order_id, PDO::PARAM_INT);
-        $stmt->bindValue(2, $product_id, PDO::PARAM_INT);
-        $stmt->bindValue(3, $product_name, PDO::PARAM_STR);
-        $stmt->bindValue(4, $price, PDO::PARAM_STR);
-        $stmt->bindValue(5, $quantity, PDO::PARAM_INT);
-        $stmt->bindValue(6, $total_price, PDO::PARAM_STR);
-        $stmt->execute();
-    }
+    // Prepare the SQL statement to insert the order items
+    $stmt = $pdo->prepare("INSERT INTO order_items (order_id, p_id, product_name, price, quantity, total_price) VALUES (?, ?, ?, ?, ?, ?)");
+    $stmt->bindValue(1, $order_id, PDO::PARAM_INT);
+    $stmt->bindValue(2, $product_id, PDO::PARAM_INT);  // This should match your session key, i.e. 'id'
+    $stmt->bindValue(3, $product_name, PDO::PARAM_STR);
+    $stmt->bindValue(4, $price, PDO::PARAM_STR);
+    $stmt->bindValue(5, $quantity, PDO::PARAM_INT);
+    $stmt->bindValue(6, $total_price, PDO::PARAM_STR);
+    $stmt->execute();
+}
+
 
     // Clear the cart
     unset($_SESSION['cart']);
