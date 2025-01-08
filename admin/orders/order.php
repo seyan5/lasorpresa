@@ -1,5 +1,5 @@
 <?php
-require 'header.php'; // Assuming you have a header file that manages session, security, etc.
+require '../header.php'; // Assuming you have a header file that manages session, security, etc.
 
 if ($_SESSION['role'] !== 'admin') {
     // Redirect to the home page if the user is not an admin
