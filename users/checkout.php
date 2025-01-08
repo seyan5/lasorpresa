@@ -83,6 +83,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['place_order'])) {
         echo "Error placing order: " . $errorInfo[2];
     }
 }
+
 ?>
 
 <!DOCTYPE html>
