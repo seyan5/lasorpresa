@@ -19,15 +19,103 @@ $total = array_sum(array_map(function ($item) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../css/shopcart.css">
-    <title>Shopping Cart</title>
     <link rel="stylesheet" href="../css/checkout.css">
     <title>Checkout</title>
+    <script>
+        function toggleGCashModal(show) {
+            const modal = document.getElementById('gcash-modal');
+            modal.style.display = show ? 'block' : 'none';
+        }
+
+        function handleCheckout() {
+            const paymentMethod = document.querySelector('input[name="payment_method"]:checked');
+
+            if (!paymentMethod) {
+                alert('Please select a payment method.');
+                return;
+            }
+
+            if (paymentMethod.value === 'gcash') {
+                toggleGCashModal(true);
+            } else if (paymentMethod.value === 'cod') {
+                window.location.href = 'order_submitted.php';
+            }
+        }
+
+        function handleGCash() {
+            const referenceNo = document.getElementById('reference_no').value;
+            const amountPaid = document.getElementById('amount_paid').value;
+            const datePaid = document.getElementById('date_paid').value;
+            const timePaid = document.getElementById('time_paid').value;
+
+            if (!referenceNo || !amountPaid || !datePaid || !timePaid) {
+                alert('Please fill out all GCash details.');
+                return;
+            }
+
+            // Redirect after successful input (can be enhanced with AJAX for smoother experience)
+            window.location.href = 'order_submitted.php';
+        }
+
+        window.onclick = function (event) {
+            const modal = document.getElementById('gcash-modal');
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
+        }
+    </script>
+    <style>
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.4);
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 500px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .modal img {
+            max-width: 100%;
+            height: auto;
+            margin-bottom: 20px;
+        }
+    </style>
 </head>
 
 <body>
     <div class="header">
         <a href="index.php" class="back-link">
             <span class="back-arrow">&lt;</span> La Sorpresa Home Page
+        </a>
         <a href="shopcart.php" class="back-link">
             <span class="back-arrow">&lt;</span> Back to Cart
         </a>
@@ -69,31 +157,41 @@ $total = array_sum(array_map(function ($item) {
             <?php endif; ?>
         </div>
         <div class="payment">
-            <h3>Summary</h3>
-            <p></p>
-            <label for="name">Name:</label>
-            <input type="text" id="name" name="name" required>
+            <h3>Shipping Information</h3>
+            <form id="checkout-form">
+                <label for="full_name">Full Name: </label>
+                <input type="text" id="full_name" name="full_name" required>
 
-            <label for="address">Address:</label>
-            <textarea id="address" name="address" required></textarea>
+                <label for="address">Address: </label>
+                <textarea id="address" name="address" rows="3" required></textarea>
 
-            <label for="phone">Phone Number:</label>
-            <input type="tel" id="phone" name="phone" required>
-            <label for="address">Mode of Payment:</label>
-            <div>
-                <input type="radio" id="gcash" name="payment_method" value="gcash" required>
-                <label for="gcash">
-                    <img src="../images/Gcash.png" alt="" width="50">
-                    GCash
-                </label>
-            </div>
-            <div>
-                <input type="radio" id="cod" name="payment_method" value="cod" required>
-                <label for="cod">
-                    <img src="../images/cod.png" alt="" width="50">
-                    Cash on Delivery (COD)
-                </label>
-            </div>
+                <label for="city">City: </label>
+                <input type="text" id="city" name="city" required>
+
+                <label for="postal_code">Postal Code: </label>
+                <input type="text" id="postal_code" name="postal_code" required>
+
+                <label for="phone">Phone Number: </label>
+                <input type="text" id="phone" name="phone" required>
+
+                <label for="payment_method">Mode of Payment:</label>
+                <div>
+                    <input type="radio" id="gcash" name="payment_method" value="gcash" required>
+                    <label for="gcash">
+                        <img src="../images/Gcash.png" alt="GCash" width="50">
+                        GCash
+                    </label>
+                </div>
+                <div>
+                    <input type="radio" id="cod" name="payment_method" value="cod" required>
+                    <label for="cod">
+                        <img src="../images/cod.png" alt="Cash on Delivery" width="50">
+                        Cash on Delivery (COD)
+                    </label>
+                </div>
+
+                <button type="button" onclick="handleCheckout()">Checkout</button>
+            </form>
 
             <hr>
 
@@ -106,57 +204,35 @@ $total = array_sum(array_map(function ($item) {
                 ?></span></p>
                 <p>Shipping <span>₱0</span></p>
                 <p>
-                <strong>Total:</strong>
-                ₱<?php 
-                echo number_format(array_sum(array_map(function($item) {
-                    return $item['price'] * $item['quantity'];
-                }, $_SESSION['cart'])), 2); 
-                ?>
-            </p>
+                    <strong>Total:</strong>
+                    ₱<?php
+                    echo number_format($total, 2);
+                    ?>
+                </p>
             </div>
-
-            <button class="checkout" onclick="checkout()">Checkout &gt;</button>
         </div>
     </div>
-    </div>
-        <h2>Checkout</h2>
-        <hr>
 
-        <!-- Display Cart Summary -->
-        <div class="summary">
-            <h3>Order Summary</h3>
-            <?php foreach ($_SESSION['cart'] as $item): ?>
-                <div class="cart-item">
-                    <img src="../admin/uploads/<?php echo htmlspecialchars($item['image']); ?>" 
-                         alt="<?php echo htmlspecialchars($item['name']); ?>" width="50">
-                    <p><?php echo htmlspecialchars($item['name']); ?> (x<?php echo htmlspecialchars($item['quantity']); ?>)</p>
-                    <p>₱<?php echo number_format($item['price'] * $item['quantity'], 2); ?></p>
-                </div>
-            <?php endforeach; ?>
-            <p><strong>Total: ₱<?php echo number_format($total, 2); ?></strong></p>
+    <!-- GCash Modal -->
+    <div id="gcash-modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="toggleGCashModal(false)"">&times</span>
+            <h3>Scan to Pay</h3>
+            <img src=" ../images/gcash-qr.png" alt="GCash QR Code">
+                <h3>GCash Payment Details</h3>
+                <label for="reference_no">Reference Number: </label>
+                <input type="text" id="reference_no" name="reference_no">
+
+                <label for="amount_paid">Amount Paid: </label>
+                <input type="number" id="amount_paid" name="amount_paid">
+
+                <label for="date_paid">Date: </label>
+                <input type="date" id="date_paid" name="date_paid">
+
+                <label for="time_paid">Time: </label>
+                <input type="time" id="time_paid" name="time_paid">
+                <button class="checkout" onclick="handleGCash()">Checkout &gt;</button>
         </div>
-
-        <!-- Shipping Details Form -->
-        <form action="checkout-handler.php" method="POST">
-    <h3>Shipping Information</h3>
-    <label for="full_name">Full Name: </label>
-    <input type="text" id="full_name" name="full_name" required>
-
-    <label for="address">Address: </label>
-    <textarea id="address" name="address" rows="3" required></textarea>
-
-    <label for="city">City: </label>
-    <input type="text" id="city" name="city" required>
-
-    <label for="postal_code">Postal Code: </label>
-    <input type="text" id="postal_code" name="postal_code" required>
-
-    <label for="phone">Phone Number: </label>
-    <input type="text" id="phone" name="phone" required>
-
-    <button type="submit" class="place-order">Place Order</button>
-</form>
-
     </div>
 </body>
 
