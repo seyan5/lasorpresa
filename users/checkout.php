@@ -29,7 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['place_order'])) {
 
     // Insert each item into the order_items table
     foreach ($_SESSION['cart'] as $item) {
-        $product_id = $item['id'];
+        $product_id = $item['p_id'];
         $product_name = $item['name'];
         $price = $item['price'];
         $quantity = $item['quantity'];
