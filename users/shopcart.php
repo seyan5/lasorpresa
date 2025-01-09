@@ -40,10 +40,16 @@ session_start();
               <p><?php echo htmlspecialchars($item['quantity']); ?> pcs.</p>
             </div>
 
-            <!-- Quantity -->
-            <div class="quantity">
-              <?php echo htmlspecialchars($item['quantity']); ?>
-            </div>
+            <!-- Quantity Controls -->
+    <div class="quantity">
+      <form method="POST" action="cart-update.php" class="quantity-form">
+        <input type="hidden" name="item_index" value="<?php echo $index; ?>">
+        <button type="submit" name="action" value="decrease">-</button>
+        <span><?php echo htmlspecialchars($item['quantity']); ?></span>
+        <button type="submit" name="action" value="increase">+</button>
+      </form>
+    </div>
+
 
             <!-- Product Price -->
             <div class="price">
