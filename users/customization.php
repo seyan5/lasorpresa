@@ -1,5 +1,22 @@
 <?php
 require_once('header.php');
+
+// Check if the form was submitted and handle form data
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Make sure data is set before accessing
+    $container_type = isset($_POST['container_type']) ? $_POST['container_type'] : 'Not selected';
+    $container_color = isset($_POST['container_color']) ? $_POST['container_color'] : 'Not selected';
+
+    // Flower data handling: This may be an array, so loop through them
+    $flower_types = isset($_POST['flower_type']) ? $_POST['flower_type'] : [];
+    $num_flowers = isset($_POST['num_flowers']) ? $_POST['num_flowers'] : [];
+} else {
+    // Default values when form is not yet submitted
+    $container_type = 'Not selected';
+    $container_color = 'Not selected';
+    $flower_types = [];
+    $num_flowers = [];
+}
 ?>
 
 <div class="page">
