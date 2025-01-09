@@ -98,7 +98,7 @@ require_once('header.php');
 <?php
 // Fetch products for mid-category ID = 3 (adjust query based on your database structure)
 $statement = $pdo->prepare("
-    SELECT p.p_id, p.name, p.featured_photo, p.current_price, p.previous_price 
+    SELECT p.p_id, p.name, p.featured_photo, p.current_price, p.old_price 
     FROM product p
     JOIN end_category ec ON p.ecat_id = ec.ecat_id
     WHERE ec.mcat_id = 3 AND p.is_active = 1
@@ -134,8 +134,8 @@ $products = $statement->fetchAll(PDO::FETCH_ASSOC);
                     <h3><?php echo htmlspecialchars($product['name']); ?></h3>
                     <div class="price">
                         ₱<?php echo number_format($product['current_price'], 2); ?>
-                        <?php if (!empty($product['previous_price'])): ?>
-                            <span>₱<?php echo number_format($product['previous_price'], 2); ?></span>
+                        <?php if (!empty($product['old_price'])): ?>
+                            <span>₱<?php echo number_format($product['old_price'], 2); ?></span>
                         <?php endif; ?>
                     </div>
                 </div>   
