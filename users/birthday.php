@@ -55,7 +55,7 @@ $statement = $pdo->prepare("
     FROM end_category t1
     JOIN mid_category t2
     ON t1.mcat_id = t2.mcat_id
-    WHERE t1.mcat_id = 19 /* Only get categories for the mid-category with ID 19 */
+    WHERE t1.mcat_id = 3 /* Only get categories for the mid-category with ID 19 */
     ORDER BY t1.ecat_id ASC
 ");
 
