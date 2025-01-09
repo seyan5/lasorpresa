@@ -46,7 +46,7 @@ include("../admin/inc/CSRF_Protect.php");
 <section>
    <div class="container">
 
-      <h3 class="title"> Flower products </h3>
+      <h3 class="title"> Occasion </h3>
 
       <?php
 // Fetch categories (example query, adjust as per your database structure)
