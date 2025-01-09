@@ -18,7 +18,7 @@ if (isset($_SESSION['customization']) && !empty($_SESSION['customization'])) {
         // Fetch container type name from the database
         $container_type_name = 'Not selected';
         if ($container_type_id !== 'Not selected') {
-            $stmt = $pdo->prepare("SELECT name FROM container WHERE container_id = ?");
+            $stmt = $pdo->prepare("SELECT container_name FROM container WHERE container_id = ?");
             $stmt->execute([$container_type_id]);
             $container_type_data = $stmt->fetch(PDO::FETCH_ASSOC);
             $container_type_name = $container_type_data['container_name'] ?? 'Not selected';
