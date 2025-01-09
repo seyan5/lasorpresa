@@ -24,7 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $_SESSION['customization'] = $customization_details;
 
     // Redirect the user to the confirmation page
-    header('Location: checkout.php');
+    header('Location: customize-checkout.php');
     exit;
 } else {
     echo "Invalid request.";
