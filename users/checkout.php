@@ -339,7 +339,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </div>
                 <?php endforeach; ?>
             <?php else: ?>
-                <p>Your cart is empty</p>
+                <p>Your cart is empty.</p>
             <?php endif; ?>
         </div>
         <div class="payment">

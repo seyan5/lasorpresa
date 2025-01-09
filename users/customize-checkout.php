@@ -33,43 +33,58 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         // Insert the customization details into the custom_orderitems table
         foreach ($customization as $item) {
-            // Fetch flower details (price and name)
-            $stmt = $pdo->prepare("SELECT name, price FROM flowers WHERE name = :flower_type");
-            $stmt->execute(['flower_type' => $item['flower_type']]);
+            // Fetch flower details
+            $stmt = $pdo->prepare("SELECT name, price FROM flowers WHERE id = :flower_id");
+            $stmt->execute(['flower_id' => $item['flower_type']]);
             $flower = $stmt->fetch(PDO::FETCH_ASSOC);
-            $flower_name = $flower['name'];
-            $flower_price = $flower['price'];
-
-            // Fetch container details (name and price)
-            $stmt = $pdo->prepare("SELECT container_name, price FROM container WHERE container_name = :container_type");
-            $stmt->execute(['container_type' => $item['container_type']]);
+        
+            if ($flower) {
+                $flower_name = $flower['name'];
+                $flower_price = $flower['price'];
+            } else {
+                $flower_name = "Unknown Flower"; // Default value if query fails
+                $flower_price = 0; // Default price
+            }
+        
+            // Fetch container details
+            $stmt = $pdo->prepare("SELECT container_name, price FROM container WHERE container_id = :container_id");
+            $stmt->execute(['container_id' => $item['container_type']]);
             $container = $stmt->fetch(PDO::FETCH_ASSOC);
-            $container_name = $container['container_name'];
-            $container_price = $container['price'];
-
-            // Fetch color details (name, no price)
-            $stmt = $pdo->prepare("SELECT color_name FROM color WHERE color_name = :color_name");
-            $stmt->execute(['color_name' => $item['container_color']]);
+        
+            if ($container) {
+                $container_name = $container['container_name'];
+                $container_price = $container['price'];
+            } else {
+                $container_name = "Unknown Container";
+                $container_price = 0;
+            }
+        
+            // Fetch color details
+            $stmt = $pdo->prepare("SELECT color_name FROM color WHERE color_id = :color_id");
+            $stmt->execute(['color_id' => $item['container_color']]);
             $color = $stmt->fetch(PDO::FETCH_ASSOC);
-            $color_name = $color['color_name'];
-            $color_price = 0; // No extra cost for color
-
-            // Calculate price for this item
-            $item_total_price = ($flower_price * $item['num_flowers']) + $container_price + $color_price;
-            $total_price += $item_total_price; // Add to total price
-
-            // Insert the item into custom_orderitems table
+        
+            if ($color) {
+                $color_name = $color['color_name'];
+            } else {
+                $color_name = "Unknown Color";
+            }
+        
+            // Calculate item total price
+            $item_total_price = ($flower_price * $item['num_flowers']) + $container_price;
+            $total_price += $item_total_price;
+        
+            // Insert order item into the database
             $stmt = $pdo->prepare("INSERT INTO custom_orderitems (order_id, flower_type, num_flowers, container_type, container_color, flower_price, container_price, color_price, total_price) 
-                                   VALUES (:order_id, :flower_type, :num_flowers, :container_type, :container_color, :flower_price, :container_price, :color_price, :total_price)");
+                                   VALUES (:order_id, :flower_type, :num_flowers, :container_type, :container_color, :flower_price, :container_price, 0, :total_price)");
             $stmt->execute([
                 'order_id' => $order_id,
-                'flower_type' => $flower_name, // Store flower name
+                'flower_type' => $flower_name,
                 'num_flowers' => $item['num_flowers'],
-                'container_type' => $container_name, // Store container name
-                'container_color' => $color_name, // Store color name
+                'container_type' => $container_name,
+                'container_color' => $color_name,
                 'flower_price' => $flower_price,
                 'container_price' => $container_price,
-                'color_price' => $color_price,
                 'total_price' => $item_total_price
             ]);
         }
@@ -88,7 +103,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         unset($_SESSION['customization']);
 
         // Redirect to order confirmation page
-        header("Location: order-confirmation.php?order_id=" . $order_id);
+        header("Location: customize-order-confirmation.php?order_id=" . $order_id);
         exit;
 
     } catch (PDOException $e) {
@@ -106,9 +121,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <?php 
     $total_price = 0; // Initialize total price for display
     foreach ($customization as $index => $item): 
-        // Fetch flower details (name and price)
-        $stmt = $pdo->prepare("SELECT name, price FROM flowers WHERE name = :flower_type");
-        $stmt->execute(['flower_type' => $item['flower_type']]);
+        // Fetch flower details using flower_type ID
+        $stmt = $pdo->prepare("SELECT name, price FROM flowers WHERE id = :flower_id");
+        $stmt->execute(['flower_id' => $item['flower_type']]);
         $flower = $stmt->fetch(PDO::FETCH_ASSOC);
         if ($flower) {
             $flower_name = $flower['name'];
@@ -118,9 +133,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $flower_price = 0; // Default price
         }
 
-        // Fetch container details (name and price)
-        $stmt = $pdo->prepare("SELECT container_name, price FROM container WHERE container_name = :container_type");
-        $stmt->execute(['container_type' => $item['container_type']]);
+        // Fetch container details using container_type ID
+        $stmt = $pdo->prepare("SELECT container_name, price FROM container WHERE container_id = :container_id");
+        $stmt->execute(['container_id' => $item['container_type']]);
         $container = $stmt->fetch(PDO::FETCH_ASSOC);
         if ($container) {
             $container_name = $container['container_name'];
@@ -130,9 +145,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $container_price = 0; // Default price
         }
 
-        // Fetch color details (name, no price)
-        $stmt = $pdo->prepare("SELECT color_name FROM color WHERE color_name = :color_name");
-        $stmt->execute(['color_name' => $item['container_color']]);
+        // Fetch color details using container_color ID
+        $stmt = $pdo->prepare("SELECT color_name FROM color WHERE color_id = :color_id");
+        $stmt->execute(['color_id' => $item['container_color']]);
         $color = $stmt->fetch(PDO::FETCH_ASSOC);
         if ($color) {
             $color_name = $color['color_name'];
