@@ -127,7 +127,7 @@ $products = $statement->fetchAll(PDO::FETCH_ASSOC);
                     <img src="../admin/uploads/<?php echo htmlspecialchars($product['featured_photo']); ?>" alt="<?php echo htmlspecialchars($product['name']); ?>">
                     <div class="icons">
                         <!-- Add to Cart Button -->
-                        <a href="add-to-cart.php?p_id=<?php echo $product['p_id']; ?>" class="cart-btn">Add to cart</a>
+                        <a href="product-details?p_id=<?php echo $product['p_id']; ?>" class="cart-btn">Add to cart</a>
                     </div>
                 </div>
                 <div class="content">
