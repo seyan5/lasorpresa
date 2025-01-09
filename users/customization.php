@@ -1,5 +1,7 @@
 <?php
 require_once('header.php');
+// Database connection using PDO (already in your code)
+
 
 // Fetch container types from the 'container' table
 $container_types = [];
@@ -38,6 +40,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 ?>
 
 
+
 <div class="page">
     <div class="container">
         <div class="row">
@@ -51,7 +54,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             <label for="container_type">Choose Container Type:</label>
                             <select id="container_type" name="container_type" class="form-control" required>
                                 <?php foreach ($container_types as $container): ?>
-                                    <option value="<?= $container['id'] ?>" <?= ($container_type == $container['id']) ? 'selected' : ''; ?>>
+                                    <option value="<?= $container['container_id'] ?>" <?= ($container_type == $container['container_id']) ? 'selected' : ''; ?>>
                                         <?= htmlspecialchars($container['name']) ?>
                                     </option>
                                 <?php endforeach; ?>
@@ -62,7 +65,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             <label for="container_color">Choose Container Color:</label>
                             <select id="container_color" name="container_color" class="form-control" required>
                                 <?php foreach ($container_colors as $color): ?>
-                                    <option value="<?= $color['id'] ?>" <?= ($container_color == $color['id']) ? 'selected' : ''; ?>>
+                                    <option value="<?= $color['color_id'] ?>" <?= ($container_color == $color['color_id']) ? 'selected' : ''; ?>>
                                         <?= htmlspecialchars($color['name']) ?>
                                     </option>
                                 <?php endforeach; ?>
@@ -111,6 +114,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         </div>
     </div>
 </div>
+
 
 
 
