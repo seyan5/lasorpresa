@@ -56,6 +56,8 @@ session_start();
               <button type="button" class="delete" onclick="confirmDelete(<?php echo $index; ?>)">🗑️</button>
             </form>
           </div>
+          <a href="addons.php">Want to get addons?</a>
+
         <?php endforeach; ?>
       <?php else: ?>
         <p>Your cart is empty.</p>
