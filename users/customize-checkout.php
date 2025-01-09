@@ -20,19 +20,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     try {
         $pdo->beginTransaction(); // Begin transaction for multiple queries
 
-        // Insert the order into the orders table
-        $stmt = $pdo->prepare("INSERT INTO orders (customer_name, customer_email, shipping_address) VALUES (:customer_name, :customer_email, :shipping_address)");
+        // Insert the order into the custom_order table
+        $stmt = $pdo->prepare("INSERT INTO custom_order (customer_name, customer_email, shipping_address, total_price) VALUES (:customer_name, :customer_email, :shipping_address, :total_price)");
         $stmt->execute([
             'customer_name' => $customer_name,
             'customer_email' => $customer_email,
-            'shipping_address' => $shipping_address
+            'shipping_address' => $shipping_address,
+            'total_price' => 0 // This will be updated after inserting order items
         ]);
 
         $order_id = $pdo->lastInsertId(); // Get the inserted order ID
-
         $total_price = 0; // Initialize the total price
 
-        // Insert the customization details into the order_items table
+        // Insert the customization details into the custom_orderitems table
         foreach ($customization as $item) {
             // Fetch flower price
             $stmt = $pdo->prepare("SELECT price FROM flowers WHERE flower_type = :flower_type");
@@ -44,7 +44,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $stmt->execute(['container_type' => $item['container_type']]);
             $container_price = $stmt->fetchColumn();
 
-            // Fetch container color price (optional)
+            // Fetch container color price
             $stmt = $pdo->prepare("SELECT price FROM colors WHERE color_name = :color_name");
             $stmt->execute(['color_name' => $item['container_color']]);
             $color_price = $stmt->fetchColumn();
@@ -53,18 +53,28 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $item_total_price = ($flower_price * $item['num_flowers']) + $container_price + $color_price;
             $total_price += $item_total_price; // Add to total price
 
-            // Insert the item into order_items table
-            $stmt = $pdo->prepare("INSERT INTO order_items (order_id, flower_type, num_flowers, container_type, container_color, price) 
-                                   VALUES (:order_id, :flower_type, :num_flowers, :container_type, :container_color, :price)");
+            // Insert the item into custom_orderitems table
+            $stmt = $pdo->prepare("INSERT INTO custom_orderitems (order_id, flower_type, num_flowers, container_type, container_color, flower_price, container_price, color_price, total_price) 
+                                   VALUES (:order_id, :flower_type, :num_flowers, :container_type, :container_color, :flower_price, :container_price, :color_price, :total_price)");
             $stmt->execute([
                 'order_id' => $order_id,
                 'flower_type' => $item['flower_type'],
                 'num_flowers' => $item['num_flowers'],
                 'container_type' => $item['container_type'],
                 'container_color' => $item['container_color'],
-                'price' => $item_total_price
+                'flower_price' => $flower_price,
+                'container_price' => $container_price,
+                'color_price' => $color_price,
+                'total_price' => $item_total_price
             ]);
         }
+
+        // Update the total price in the custom_order table
+        $stmt = $pdo->prepare("UPDATE custom_order SET total_price = :total_price WHERE order_id = :order_id");
+        $stmt->execute([
+            'total_price' => $total_price,
+            'order_id' => $order_id
+        ]);
 
         // Commit transaction
         $pdo->commit();
@@ -125,7 +135,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <p><strong>Total Price:</strong> $<?php echo number_format($total_price, 2); ?></p>
 
     <!-- Checkout Form -->
-    <form action="checkout.php" method="POST">
+    <form action="customize-checkout.php" method="POST">
         <label for="customer_name">Name:</label>
         <input type="text" name="customer_name" required><br>
 
