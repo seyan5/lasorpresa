@@ -21,32 +21,33 @@ if (isset($_POST['login'])) {
             if (password_verify($cust_password, $user['cust_password'])) {
                 // Check if the user is active
                 if ($user['cust_status'] === 'active') {
-                    // Store user data in the session under 'customer'
+                    // Store user data in the session
                     $_SESSION['customer'] = [
                         'cust_id' => $user['cust_id'],
                         'cust_name' => $user['cust_name'],
                         'cust_email' => $user['cust_email']
                     ];
 
+                    // Debugging: Log session data after login
+                    file_put_contents('debug.log', "Login session set: " . print_r($_SESSION, true), FILE_APPEND);
+
                     // Redirect to the home page or dashboard
                     header("Location: index.php");
                     exit;
                 } else {
-                    echo "Your account is not verified yet. Please check your email to verify your account.";
+                    $error = "Your account is not verified yet. Please check your email to verify your account.";
                 }
             } else {
-                echo "Incorrect password. Please try again.";
+                $error = "Incorrect password. Please try again.";
             }
         } else {
-            echo "No account found with that email address.";
+            $error = "No account found with that email address.";
         }
     } catch (Exception $e) {
-        echo "Error: " . $e->getMessage();
+        $error = "Error: " . $e->getMessage();
     }
 }
 ?>
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -66,22 +67,25 @@ if (isset($_POST['login'])) {
         <img src="../images/flower2.png" alt="Flower" class="flower" />
     </div>
 
-<h2>Login</h2>
-<form action="login.php" method="POST">
-    <div class="infield">
-        <label for="cust_email">Email:</label>
-        <input placeholder="Email" type="email" id="cust_email" name="cust_email" required><br>
-    </div>
-    <div class="infield">
-        <label for="cust_password">Password:</label>
-        <input placeholder="Password" type="password" id="cust_password" name="cust_password" required><br>
-    </div>
-    <p style="text-align: center; margin-top: 10px; font-size: 14px;">
-        Don't Have an Account? 
-        <a href="register.php" style="color: #e18aaa; font-weight: bold; text-decoration: none;">Register</a>
-    </p>
-    <button type="submit" name="login">Login</button>
-</form>
+    <h2>Login</h2>
+    <form action="login.php" method="POST">
+        <?php if (!empty($error)): ?>
+            <p style="color: red; text-align: center;"><?php echo htmlspecialchars($error); ?></p>
+        <?php endif; ?>
+        <div class="infield">
+            <label for="cust_email">Email:</label>
+            <input placeholder="Email" type="email" id="cust_email" name="cust_email" required><br>
+        </div>
+        <div class="infield">
+            <label for="cust_password">Password:</label>
+            <input placeholder="Password" type="password" id="cust_password" name="cust_password" required><br>
+        </div>
+        <p style="text-align: center; margin-top: 10px; font-size: 14px;">
+            Don't Have an Account? 
+            <a href="register.php" style="color: #e18aaa; font-weight: bold; text-decoration: none;">Register</a>
+        </p>
+        <button type="submit" name="login">Login</button>
+    </form>
 
 </body>
 </html>
