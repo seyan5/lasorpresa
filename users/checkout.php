@@ -5,24 +5,18 @@ include("../admin/inc/config.php");
 include("../admin/inc/functions.php");
 include("../admin/inc/CSRF_Protect.php");
 
-// Check if the user is logged in by checking `$_SESSION['customer']`
+// Check if the user is logged in
 if (!isset($_SESSION['customer'])) {
-    header('Location: login.php'); // Redirect to login if not logged in
+    header('Location: login.php');
     exit;
 }
 
-// Fetch the logged-in user's details from the session
+// Fetch the logged-in user's details
 $cust_email = $_SESSION['customer']['cust_email'];
-
 try {
-    // Prepare the SQL statement to fetch user details
     $stmt = $pdo->prepare("SELECT cust_name, cust_phone, cust_address, cust_city, cust_zip FROM customer WHERE cust_email = :cust_email");
     $stmt->execute([':cust_email' => $cust_email]);
-
-    // Fetch the user data
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
-
-    // If no user found, throw an exception
     if (!$user) {
         throw new Exception("User not found. Please log in again.");
     }
@@ -30,65 +24,100 @@ try {
     die("Error: " . $e->getMessage());
 }
 
-// Calculate the total for the cart
+// Calculate the total cart value
 $total = array_sum(array_map(function ($item) {
     return $item['price'] * $item['quantity'];
 }, $_SESSION['cart'] ?? []));
 
-// Handle POST requests for payment submission
+// Handle POST request for checkout
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Log the POST request data
     file_put_contents('debug.log', "\nPOST Received: " . print_r($_POST, true) . "\n", FILE_APPEND);
 
-    if (!isset($_SESSION['customer'])) {
-        echo json_encode(['status' => 'error', 'message' => 'User not logged in']);
+    if (!isset($_SESSION['customer']) || empty($_SESSION['cart'])) {
+        echo json_encode(['status' => 'error', 'message' => 'Cart is empty or user not logged in']);
         exit;
     }
-    // Retrieve the customer details from the session
+
     $customer = $_SESSION['customer'];
     $cust_id = $customer['cust_id'];
     $cust_name = $customer['cust_name'];
     $cust_email = $customer['cust_email'];
 
-    // Get the payment details from the request
     $reference_number = $_POST['reference_number'] ?? '';
     $amount_paid = $_POST['amount_paid'] ?? '';
     $payment_method = 'gcash';
     $payment_status = 'paid';
     $shipping_status = 'pending';
 
-    // Validate the required fields
     if (empty($reference_number) || empty($amount_paid)) {
         echo json_encode(['status' => 'error', 'message' => 'All fields are required']);
         exit;
     }
 
     try {
-        // Insert the payment into the database
-        $stmt = $pdo->prepare("
-            INSERT INTO payment (cust_id, cust_name, cust_email, reference_number, amount_paid, payment_method, payment_status, shipping_status)
-            VALUES (:cust_id, :cust_name, :cust_email, :reference_number, :amount_paid, :payment_method, :payment_status, :shipping_status)
-        ");
+        // Start transaction
+        $pdo->beginTransaction();
+
+        // Insert the order
+        $stmt = $pdo->prepare("INSERT INTO orders (customer_id, total, full_name, address, city, postal_code, phone, created_at) 
+            VALUES (:customer_id, :total, :full_name, :address, :city, :postal_code, :phone, NOW())");
+        $stmt->execute([
+            ':customer_id' => $cust_id,
+            ':total' => $total,
+            ':full_name' => $user['cust_name'],
+            ':address' => $user['cust_address'],
+            ':city' => $user['cust_city'],
+            ':postal_code' => $user['cust_zip'],
+            ':phone' => $user['cust_phone']
+        ]);
+
+        // Get the order ID
+        $order_id = $pdo->lastInsertId();
+
+        // Insert items into `order_items`
+        foreach ($_SESSION['cart'] as $product_id => $item) {
+            $stmt = $pdo->prepare("INSERT INTO order_items (order_id, product_id, quantity, price)
+                VALUES (:order_id, :product_id, :quantity, :price)");
+            $stmt->execute([
+                ':order_id' => $order_id,
+                ':product_id' => $product_id,
+                ':quantity' => $item['quantity'],
+                ':price' => $item['price']
+            ]);
+        }
+
+        // Insert payment
+        $stmt = $pdo->prepare("INSERT INTO payment (cust_id, order_id, cust_name, cust_email, reference_number, amount_paid, payment_method, payment_status, shipping_status)
+            VALUES (:cust_id, :order_id, :cust_name, :cust_email, :reference_number, :amount_paid, :payment_method, :payment_status, :shipping_status)");
         $stmt->execute([
             ':cust_id' => $cust_id,
+            ':order_id' => $order_id,
             ':cust_name' => $cust_name,
             ':cust_email' => $cust_email,
             ':reference_number' => $reference_number,
             ':amount_paid' => $amount_paid,
             ':payment_method' => $payment_method,
             ':payment_status' => $payment_status,
-            ':shipping_status' => $shipping_status,
+            ':shipping_status' => $shipping_status
         ]);
 
-        echo json_encode(['status' => 'success', 'message' => 'Payment registered successfully']);
+        // Commit transaction
+        $pdo->commit();
+
+        // Clear the cart
+        unset($_SESSION['cart']);
+
+        // Return success response
+        echo json_encode(['status' => 'success', 'message' => 'Order and payment registered successfully']);
     } catch (Exception $e) {
+        // Rollback on error
+        $pdo->rollBack();
         echo json_encode(['status' => 'error', 'message' => 'Error: ' . $e->getMessage()]);
     }
-    exit; // Exit after handling POST
+    exit;
 }
-
-// If GET, simply render the checkout page (no error for GET requests)
 ?>
+
 
 
 
