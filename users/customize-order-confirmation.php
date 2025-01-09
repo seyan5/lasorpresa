@@ -57,31 +57,32 @@ $order_items = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         <h3>Items in Your Order</h3>
         <?php if ($order_items): ?>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Flower Type</th>
-                        <th>Number of Flowers</th>
-                        <th>Container Type</th>
-                        <th>Container Color</th>
-                        <th>Item Total Price</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php foreach ($order_items as $item): ?>
-                        <tr>
-                            <td><?php echo htmlspecialchars($item['flower_name']); ?></td>
-                            <td><?php echo htmlspecialchars($item['num_flowers']); ?></td>
-                            <td><?php echo htmlspecialchars($item['container_name']); ?></td>
-                            <td><?php echo htmlspecialchars($item['color_name']); ?></td>
-                            <td>$<?php echo number_format($item['total_price'], 2); ?></td>
-                        </tr>
-                    <?php endforeach; ?>
-                </tbody>
-            </table>
-        <?php else: ?>
-            <p>No items found for this order.</p>
-        <?php endif; ?>
+    <table>
+        <thead>
+            <tr>
+                <th>Flower Type</th>
+                <th>Number of Flowers</th>
+                <th>Container Type</th>
+                <th>Container Color</th>
+                <th>Item Total Price</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach ($order_items as $item): ?>
+                <tr>
+                    <td><?php echo htmlspecialchars($item['flower_name'] ?? 'Unknown Flower'); ?></td>
+                    <td><?php echo htmlspecialchars($item['num_flowers'] ?? '0'); ?></td>
+                    <td><?php echo htmlspecialchars($item['container_name'] ?? 'Unknown Container'); ?></td>
+                    <td><?php echo htmlspecialchars($item['color_name'] ?? 'Unknown Color'); ?></td>
+                    <td>$<?php echo number_format($item['total_price'] ?? 0, 2); ?></td>
+                </tr>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
+<?php else: ?>
+    <p>No items found for this order.</p>
+<?php endif; ?>
+
 
         <a href="index.php" class="btn">Continue Shopping</a>
     </div>
