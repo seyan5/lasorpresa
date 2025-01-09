@@ -149,7 +149,7 @@ function filterProducts(ecat_id) {
     container.innerHTML = "<p>Loading products...</p>";
 
     // Determine the correct API endpoint or parameter for 'all'
-    const url = ecat_id === 'all' ? 'fetch-birthday.php' : `fetch-birthday.php?ecat_id=${ecat_id}`;
+    const url = ecat_id === 'all' ? 'fetch-occasion.php' : `fetch-occasion.php?ecat_id=${ecat_id}`;
 
     const xhr = new XMLHttpRequest();
     xhr.open('GET', url, true);
