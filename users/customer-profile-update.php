@@ -64,6 +64,11 @@ if (isset($_POST['form1'])) {
             strip_tags($_POST['cust_zip']),
             $_SESSION['customer']['cust_id']
         ));
+
+        // Fetch updated data and update session
+    $statement = $pdo->prepare("SELECT * FROM customer WHERE cust_id = ?");
+    $statement->execute([$_SESSION['customer']['cust_id']]);
+    $updatedCustomer = $statement->fetch(PDO::FETCH_ASSOC);
     
         $success_message = "Profile Information Updated successfully.";
     
