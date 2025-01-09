@@ -1,7 +1,6 @@
 <?php
+require 'header.php'; // Include database connection
 session_start();
-
-
 ?>
 
 <!DOCTYPE html>
@@ -23,7 +22,7 @@ session_start();
     <div class="cart">
       <hr>
       <h3>Shopping Cart</h3>
-      
+
       <?php if (isset($_SESSION['cart']) && count($_SESSION['cart']) > 0): ?>
         <p>You have <?php echo count($_SESSION['cart']); ?> items in your cart.</p>
 
@@ -55,9 +54,10 @@ session_start();
               <input type="hidden" name="item_index" value="<?php echo $index; ?>">
               <button type="button" class="delete" onclick="confirmDelete(<?php echo $index; ?>)">🗑️</button>
             </form>
-          </div>
-          <a href="addons.php">Want to get addons?</a>
 
+            <!-- Add-ons Button -->
+            <button class="view-addons" onclick="fetchAddons(<?php echo htmlspecialchars($item['id']); ?>)">Want to get addons?</button>
+          </div>
         <?php endforeach; ?>
       <?php else: ?>
         <p>Your cart is empty.</p>
@@ -84,35 +84,75 @@ session_start();
     </div>
   </div>
 
+  <!-- Add-ons Modal -->
+  <div id="addons-modal" style="display:none; position:fixed; top:50%; left:50%; transform:translate(-50%, -50%); background:white; padding:20px; border:1px solid #ccc; z-index:1000;">
+    <h3>Available Add-ons</h3>
+    <div id="addons-content">Loading...</div>
+    <button onclick="closeModal()">Close</button>
+  </div>
+
   <script>
     // Check if the user is logged in
-const isLoggedIn = <?php echo isset($_SESSION['customer']['cust_id']) ? 'true' : 'false'; ?>;
+    const isLoggedIn = <?php echo isset($_SESSION['customer']['cust_id']) ? 'true' : 'false'; ?>;
 
-// Check if the cart is empty
-const isCartEmpty = <?php echo isset($_SESSION['cart']) && count($_SESSION['cart']) > 0 ? 'false' : 'true'; ?>;
+    // Check if the cart is empty
+    const isCartEmpty = <?php echo isset($_SESSION['cart']) && count($_SESSION['cart']) > 0 ? 'false' : 'true'; ?>;
 
-// Handle checkout action
-function checkout() {
-  if (isCartEmpty) {
-    if (confirm("Your cart is empty. Would you like to browse products?")) {
-      window.location.href = "products.php";
-    }
-  } else {
-    if (!isLoggedIn) {
-      if (confirm("You need to log in to proceed to checkout. Do you want to log in now?")) {
-        window.location.href = "login.php";
+    // Handle checkout action
+    function checkout() {
+      if (isCartEmpty) {
+        if (confirm("Your cart is empty. Would you like to browse products?")) {
+          window.location.href = "products.php";
+        }
+      } else {
+        if (!isLoggedIn) {
+          if (confirm("You need to log in to proceed to checkout. Do you want to log in now?")) {
+            window.location.href = "login.php";
+          }
+        } else {
+          window.location.href = "checkout.php";
+        }
       }
-    } else {
-      window.location.href = "checkout.php";
     }
-  }
-}
 
     // Confirm deletion of cart item
     function confirmDelete(itemIndex) {
       if (confirm("Are you sure you want to remove this item from your cart?")) {
         document.getElementById('delete-form-' + itemIndex).submit();
       }
+    }
+
+    // Fetch add-ons for a product
+    function fetchAddons(productId) {
+      const modal = document.getElementById('addons-modal');
+      const content = document.getElementById('addons-content');
+      modal.style.display = 'block';
+      content.innerHTML = 'Loading...';
+
+      fetch(`addons-fetch.php?product_id=${productId}`)
+        .then(response => response.json())
+        .then(data => {
+          if (data.length > 0) {
+            content.innerHTML = data.map(addon => `
+              <div class="addon">
+                <h4>${addon.name}</h4>
+                <p>Price: ₱${addon.price.toFixed(2)}</p>
+                <button>Add to Cart</button>
+              </div>
+            `).join('');
+          } else {
+            content.innerHTML = '<p>No add-ons available for this product.</p>';
+          }
+        })
+        .catch(error => {
+          console.error(error);
+          content.innerHTML = '<p>Error fetching add-ons.</p>';
+        });
+    }
+
+    // Close the modal
+    function closeModal() {
+      document.getElementById('addons-modal').style.display = 'none';
     }
   </script>
 </body>
