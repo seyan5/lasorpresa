@@ -3,24 +3,21 @@ require_once('header.php');
 
 // Fetch container types from the 'container' table
 $container_types = [];
-$container_result = mysqli_query($conn, "SELECT * FROM `container`");
-while ($row = mysqli_fetch_assoc($container_result)) {
-    $container_types[] = $row;
-}
+$container_query = $pdo->prepare("SELECT * FROM `container`");
+$container_query->execute();
+$container_types = $container_query->fetchAll(PDO::FETCH_ASSOC);
 
 // Fetch container colors from the 'color' table
 $container_colors = [];
-$color_result = mysqli_query($conn, "SELECT * FROM `color`");
-while ($row = mysqli_fetch_assoc($color_result)) {
-    $container_colors[] = $row;
-}
+$color_query = $pdo->prepare("SELECT * FROM `color`");
+$color_query->execute();
+$container_colors = $color_query->fetchAll(PDO::FETCH_ASSOC);
 
 // Fetch flower types from the 'flowers' table
 $flower_types = [];
-$flower_result = mysqli_query($conn, "SELECT * FROM `flowers`");
-while ($row = mysqli_fetch_assoc($flower_result)) {
-    $flower_types[] = $row;
-}
+$flower_query = $pdo->prepare("SELECT * FROM `flowers`");
+$flower_query->execute();
+$flower_types = $flower_query->fetchAll(PDO::FETCH_ASSOC);
 
 // Check if the form was submitted and handle form data
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -39,6 +36,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $num_flowers = [];
 }
 ?>
+
 
 <div class="page">
     <div class="container">
@@ -113,6 +111,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         </div>
     </div>
 </div>
+
 
 
 <script>
