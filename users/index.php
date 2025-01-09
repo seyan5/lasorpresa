@@ -33,11 +33,11 @@ require_once('header.php');
     <nav class="navbar">
         <a href="#home">Home</a>
         <a href="#about">About</a>
-        <a href="products.php">Product</a>
+        <a href="products.php">Flowers</a>
         <div class="dropdown">
         <a href="#occasion" class="dropdown-btn">Occasion</a>
         <div class="dropdown-content">
-            <a href="#birthday">Birthday</a>
+            <a href="#birthday.php">Birthday</a>
             <a href="#wedding">Wedding</a>
             <a href="#anniversary">Anniversary</a>
             <a href="#holiday">Holiday</a>
