@@ -25,7 +25,11 @@ if (isset($_POST['login'])) {
                     $_SESSION['customer'] = [
                         'cust_id' => $user['cust_id'],
                         'cust_name' => $user['cust_name'],
-                        'cust_email' => $user['cust_email']
+                        'cust_email' => $user['cust_email'],
+                        'cust_phone' => $customer['cust_phone'],
+                        'cust_address' => $customer['cust_address'],
+                        'cust_city'  => $customer['cust_city'],
+                        'cust_zip'   => $customer['cust_zip'],
                     ];
 
                     // Redirect to the home page or dashboard
