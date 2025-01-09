@@ -43,12 +43,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $stmt->execute(['container_type' => $item['container_type']]);
             $container_price = $stmt->fetchColumn();
 
-            // Fetch color price
-            $stmt = $pdo->prepare("SELECT price FROM color WHERE color_name = :color_name"); // 'color_name' as is
-            $stmt->execute(['color_name' => $item['container_color']]);
-            $color_price = $stmt->fetchColumn();
+            // No need to fetch color price if there's no price for color
+            $color_price = 0; // Set color price to 0
 
-            // Calculate price for this item
+            // Calculate price for this item (no color price involved)
             $item_total_price = ($flower_price * $item['num_flowers']) + $container_price + $color_price;
             $total_price += $item_total_price; // Add to total price
 
@@ -63,7 +61,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 'container_color' => $item['container_color'],
                 'flower_price' => $flower_price,
                 'container_price' => $container_price,
-                'color_price' => $color_price,
+                'color_price' => $color_price, // This will be 0
                 'total_price' => $item_total_price
             ]);
         }
@@ -110,10 +108,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $stmt->execute(['container_type' => $item['container_type']]);
         $container_price = $stmt->fetchColumn();
 
-        // Fetch color price
-        $stmt = $pdo->prepare("SELECT price FROM color WHERE color_name = :color_name");
-        $stmt->execute(['color_name' => $item['container_color']]);
-        $color_price = $stmt->fetchColumn();
+        // No need to fetch color price
+        $color_price = 0; // Color price is 0
 
         // Calculate total price for this flower set
         $item_total_price = ($flower_price * $item['num_flowers']) + $container_price + $color_price;
@@ -124,7 +120,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <p><strong>Flower Type:</strong> <?php echo htmlspecialchars($item['flower_type']); ?> ($<?php echo $flower_price; ?> per flower)</p>
             <p><strong>Number of Flowers:</strong> <?php echo htmlspecialchars($item['num_flowers']); ?></p>
             <p><strong>Container Type:</strong> <?php echo htmlspecialchars($item['container_type']); ?> ($<?php echo $container_price; ?>)</p>
-            <p><strong>Container Color:</strong> <?php echo htmlspecialchars($item['container_color']); ?> ($<?php echo $color_price; ?>)</p>
+            <p><strong>Container Color:</strong> <?php echo htmlspecialchars($item['container_color']); ?> (No extra cost)</p>
             <p><strong>Item Total Price:</strong> $<?php echo number_format($item_total_price, 2); ?></p>
         </div>
         <hr>
