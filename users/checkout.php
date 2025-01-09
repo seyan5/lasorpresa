@@ -1,15 +1,35 @@
 <?php
 require 'header.php'; // Include any common setup, such as database connection
 
-// Redirect to cart if the cart is empty
-if (!isset($_SESSION['cart']) || count($_SESSION['cart']) === 0) {
-    header('Location: shopcart.php');
+// Check if the user is logged in by checking `$_SESSION['customer']`
+if (!isset($_SESSION['customer'])) {
+    header('Location: login.php'); // Redirect to login if not logged in
     exit;
 }
 
+// Fetch the logged-in user's details from the session
+$cust_email = $_SESSION['customer']['cust_email'];
+
+try {
+    // Prepare the SQL statement to fetch user details
+    $stmt = $pdo->prepare("SELECT cust_name, cust_phone, cust_address, cust_city, cust_zip FROM customer WHERE cust_email = :cust_email");
+    $stmt->execute([':cust_email' => $cust_email]);
+
+    // Fetch the user data
+    $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    // If no user found, throw an exception
+    if (!$user) {
+        throw new Exception("User not found. Please log in again.");
+    }
+} catch (Exception $e) {
+    die("Error: " . $e->getMessage());
+}
+
+// Calculate the total for the cart
 $total = array_sum(array_map(function ($item) {
     return $item['price'] * $item['quantity'];
-}, $_SESSION['cart']));
+}, $_SESSION['cart'] ?? []));
 ?>
 
 <!DOCTYPE html>
@@ -27,21 +47,6 @@ $total = array_sum(array_map(function ($item) {
             modal.style.display = show ? 'block' : 'none';
         }
 
-        function validateForm() {
-            const fullName = document.getElementById('full_name').value.trim();
-            const address = document.getElementById('address').value.trim();
-            const city = document.getElementById('city').value.trim();
-            const postalCode = document.getElementById('postal_code').value.trim();
-            const phone = document.getElementById('phone').value.trim();
-            const paymentMethod = document.querySelector('input[name="payment_method"]:checked');
-
-            // Check if all fields are filled and a payment method is selected
-            const isFormValid = fullName && address && city && postalCode && phone && paymentMethod;
-
-            // Enable or disable the checkout button
-            const checkoutButton = document.querySelector('.checkout');
-            checkoutButton.disabled = !isFormValid;
-        }
 
         document.addEventListener('DOMContentLoaded', () => {
             const formFields = document.querySelectorAll('#checkout-form input, #checkout-form textarea, #checkout-form input[name="payment_method"]');
@@ -50,49 +55,52 @@ $total = array_sum(array_map(function ($item) {
             });
         });
 
-        function handleCheckout() {
-            const fullName = document.getElementById('full_name').value.trim();
-            const address = document.getElementById('address').value.trim();
-            const city = document.getElementById('city').value.trim();
-            const postalCode = document.getElementById('postal_code').value.trim();
-            const phone = document.getElementById('phone').value.trim();
+        function validateForm() {
+            // Get the payment method selection
             const paymentMethod = document.querySelector('input[name="payment_method"]:checked');
 
-            // Check if all required fields are filled
-            if (!fullName || !address || !city || !postalCode || !phone || !paymentMethod) {
-                alert('Please fill out all the required fields and select a payment method before proceeding.');
+            // Enable or disable the checkout button based on the payment method selection
+            const checkoutButton = document.querySelector('.checkout');
+            checkoutButton.disabled = !paymentMethod;
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // Add event listener to payment method inputs
+            const paymentMethods = document.querySelectorAll('input[name="payment_method"]');
+            paymentMethods.forEach(method => {
+                method.addEventListener('change', validateForm);
+            });
+
+            // Initial validation
+            validateForm();
+        });
+
+        function handleCheckout() {
+            // Get selected payment method
+            const paymentMethod = document.querySelector('input[name="payment_method"]:checked');
+
+            // Check if a payment method is selected
+            if (!paymentMethod) {
+                alert('Please select a payment method.');
                 return;
             }
 
-            // Check selected payment method and proceed accordingly
+            // Handle GCash or COD based on selection
             if (paymentMethod.value === 'gcash') {
                 toggleGCashModal(true);
             } else if (paymentMethod.value === 'cod') {
+                // Redirect to the order submission page for COD
                 window.location.href = 'order_submitted.php';
             }
         }
 
-
-        function handleGCash() {
-            const referenceNo = document.getElementById('reference_no').value;
-            const amountPaid = document.getElementById('amount_paid').value;
-            const datePaid = document.getElementById('date_paid').value;
-            const timePaid = document.getElementById('time_paid').value;
-
-            if (!referenceNo || !amountPaid || !datePaid || !timePaid) {
-                alert('Please fill out all GCash details.');
-                return;
-            }
-
-            // Redirect after successful input (can be enhanced with AJAX for smoother experience)
-            window.location.href = 'order_submitted.php';
-        }
 
         window.onclick = function (event) {
             const modal = document.getElementById('gcash-modal');
             if (event.target === modal) {
                 modal.style.display = 'none';
             }
+
         }
     </script>
     <style>
@@ -190,20 +198,21 @@ $total = array_sum(array_map(function ($item) {
         <div class="payment">
             <h3>Shipping Information</h3>
             <form id="checkout-form">
-                <label for="full_name">Full Name: </label>
-                <input type="text" id="full_name" name="full_name" required>
+                <label for="cust_name">Full Name: </label>
+                <span id="cust_name"><?php echo htmlspecialchars($user['cust_name']); ?></span>
+
+                <label for="cust_phone">Phone Number: </label>
+                <span id="cust_phone"><?php echo htmlspecialchars($user['cust_phone']); ?></span>
 
                 <label for="address">Address: </label>
-                <textarea id="address" name="address" rows="3" required></textarea>
+                <span id="cust_address"><?php echo htmlspecialchars($user['cust_address']); ?></span>
 
                 <label for="city">City: </label>
-                <input type="text" id="city" name="city" required>
+                <span id="cust_city"><?php echo htmlspecialchars($user['cust_city']); ?></span>
 
                 <label for="postal_code">Postal Code: </label>
-                <input type="text" id="postal_code" name="postal_code" required>
+                <span id="cust_zip"><?php echo htmlspecialchars($user['cust_zip']); ?></span>
 
-                <label for="phone">Phone Number: </label>
-                <input type="text" id="phone" name="phone" required>
 
                 <label for="payment_method">Mode of Payment:</label>
                 <div>
@@ -223,7 +232,6 @@ $total = array_sum(array_map(function ($item) {
             </form>
 
             <hr>
-
             <div class="summary">
                 <p>Subtotal <span>₱<?php
                 $subtotal = array_sum(array_map(function ($item) {
