@@ -1,0 +1,18 @@
+Login session set: Array
+(
+    [_csrf] => 79ff90eeebcc8aa6383bf1eb8638864e
+    [customer] => Array
+        (
+            [cust_id] => 13
+            [cust_name] => seyan1
+            [cust_email] => seanammiel@gmail.com
+        )
+
+)
+
+POST Received: Array
+(
+    [reference_number] => 111
+    [amount_paid] => 1111
+)
+
