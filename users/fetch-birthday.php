@@ -14,7 +14,7 @@ try {
             WHERE is_active = 1 AND ecat_id IN (
                 SELECT ecat_id 
                 FROM end_category 
-                WHERE mcat_id = 19
+                WHERE mcat_id = 20
             )
             ORDER BY p_id DESC
         ");
@@ -26,7 +26,7 @@ try {
             WHERE is_active = 1 AND ecat_id = :ecat_id AND ecat_id IN (
                 SELECT ecat_id 
                 FROM end_category 
-                WHERE mcat_id = 19
+                WHERE mcat_id = 20
             )
             ORDER BY p_id DESC
         ");
