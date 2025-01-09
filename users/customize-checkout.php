@@ -106,12 +106,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <?php 
     $total_price = 0; // Initialize total price for display
     foreach ($customization as $index => $item): 
-        // Debug output for customization
-        var_dump($item); // Check the values of flower_type, container_type, container_color
-        
-        // Fetch flower details (name and price)
-        $stmt = $pdo->prepare("SELECT name, price FROM flowers WHERE name = :flower_type");
-        $stmt->execute(['flower_type' => $item['flower_type']]);
+        // Fetch flower details using flower_type ID
+        $stmt = $pdo->prepare("SELECT name, price FROM flowers WHERE id = :flower_id");
+        $stmt->execute(['flower_id' => $item['flower_type']]);
         $flower = $stmt->fetch(PDO::FETCH_ASSOC);
         if ($flower) {
             $flower_name = $flower['name'];
@@ -121,9 +118,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $flower_price = 0; // Default price
         }
 
-        // Fetch container details (name and price)
-        $stmt = $pdo->prepare("SELECT container_name, price FROM container WHERE container_name = :container_type");
-        $stmt->execute(['container_type' => $item['container_type']]);
+        // Fetch container details using container_type ID
+        $stmt = $pdo->prepare("SELECT container_name, price FROM container WHERE id = :container_id");
+        $stmt->execute(['container_id' => $item['container_type']]);
         $container = $stmt->fetch(PDO::FETCH_ASSOC);
         if ($container) {
             $container_name = $container['container_name'];
@@ -133,9 +130,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $container_price = 0; // Default price
         }
 
-        // Fetch color details (name, no price)
-        $stmt = $pdo->prepare("SELECT color_name FROM color WHERE color_name = :color_name");
-        $stmt->execute(['color_name' => $item['container_color']]);
+        // Fetch color details using container_color ID
+        $stmt = $pdo->prepare("SELECT color_name FROM color WHERE id = :color_id");
+        $stmt->execute(['color_id' => $item['container_color']]);
         $color = $stmt->fetch(PDO::FETCH_ASSOC);
         if ($color) {
             $color_name = $color['color_name'];
