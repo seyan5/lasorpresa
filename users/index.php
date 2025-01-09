@@ -2,18 +2,6 @@
 <?php
 require_once('header.php'); 
 
-// Check if the search form is submitted
-$search_results = [];
-if (isset($_POST['search_query']) && !empty($_POST['search_query'])) {
-    $search_query = htmlspecialchars($_POST['search_query']);
-
-    // Prepare SQL statement to search in the products table
-    $stmt = $pdo->prepare("SELECT * FROM product WHERE name LIKE :search_query");
-    $stmt->execute(['search_query' => "%" . $search_query . "%"]);
-
-    // Fetch matching results
-    $search_results = $stmt->fetchAll(PDO::FETCH_ASSOC);
-}
 
 
 ?>
@@ -97,32 +85,10 @@ if (isset($_POST['search_query']) && !empty($_POST['search_query'])) {
             <!--<a href="#" class="btn">Shop now!</a>-->
             <div class="circle"></div>
         </div>
-
-
-
-        <!-- HTML Search Form -->
-<div class="search-container">
-    <form method="POST" action="">
-        <input type="text" name="search_query" placeholder="What are you looking for?" class="search-input">
-        <button type="submit" class="search-button"><i class="fas fa-search"></i></button>
-    </form>
-</div>
-
-<!-- Display Search Results -->
-<?php if (!empty($search_results)): ?>
-    <h3>Search Results:</h3>
-    <div class="search-results">
-        <?php foreach ($search_results as $product): ?>
-            <div class="product-item">
-                <h4><?php echo htmlspecialchars($product['product_name']); ?></h4>
-                <p><?php echo htmlspecialchars($product['product_description']); ?></p>
-                <p><strong>Price:</strong> $<?php echo number_format($product['price'], 2); ?></p>
-            </div>
-        <?php endforeach; ?>
-    </div>
-<?php elseif (isset($search_query)): ?>
-    <p>No products found matching "<?php echo htmlspecialchars($search_query); ?>"</p>
-<?php endif; ?>
+        <div class="search-container">
+            <input type="text" placeholder="What are you looking for?" class="search-input">
+            <button class="search-button"><i class="fas fa-search"></i></button>
+        </div>
     </section>
 
    
