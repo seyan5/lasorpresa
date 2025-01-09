@@ -90,75 +90,61 @@ require_once('header.php');
         </div>
     </section>
 
-    <!-- home-sec -->
-
-
-    <!-- lhome-sec -->
- 
-    <!-- icons -->
-<!-- <section class="icons-container">
-    <div class="icons">
-        <img src="" alt="">
-        <div class="info">
-            <h3>Free Delivery</h3>
-            <span>on all orders</span>
-        </div>
-    </div>
-
-    <div class="icons">
-        <img src="" alt="">
-        <div class="info">
-            <h3>10 days returns</h3>
-            <span>money back guaranteed</span>
-        </div>
-    </div>
-
-    <div class="icons">
-        <img src="" alt="">
-        <div class="info">
-            <h3>Offer & Gift</h3>
-            <span>on all orders</span>
-        </div>
-    </div>
-
-    <div class="icons">
-        <img src="" alt="">
-        <div class="info">
-            <h3>Secure Payment</h3>
-            <span>Protected by Gcash</span>
-        </div>
-    </div>
-
-</section> -->
-    <!-- icons -->
+   
 
     <!-- prod sec -->
 <section class="products" id="products">
 
-    <h1 class="heading">Latest <span>Flowers</span></h1>
-    <div class="box-container">
-        <div class="shop">
-            <h1>Best Selling</h1>
-            <h1>Flowers</h1>
-            <h3>Cheap and</h3>
-            <h3>Affordable Flowers</h3>
-            <a href="products.php" class="btn">See more -></a>
-        </div>
-        <div class="box">
-            <span class="discount">-10%</span>
-            <div class="image">
-                <img src="../ivd/flower1.jpg" alt="">
-                <div class="icons">
-                    <!-- <a href="#" class="fas fa-heart"></a> -->
-                    <a href="" class="cart-btn">Add to cart</a>
-                    <!-- <a href="#" class="fas fa-share"></a> -->
+<?php
+// Fetch products for mid-category ID = 3 (adjust query based on your database structure)
+$statement = $pdo->prepare("
+    SELECT p.p_id, p.name, p.featured_photo, p.current_price, p.previous_price 
+    FROM product p
+    JOIN end_category ec ON p.ecat_id = ec.ecat_id
+    WHERE ec.mcat_id = 3 AND p.is_active = 1
+    ORDER BY p.p_id ASC
+");
+$statement->execute();
+$products = $statement->fetchAll(PDO::FETCH_ASSOC);
+
+?>
+
+<h1 class="heading">Latest <span>Flowers</span></h1>
+<div class="box-container">
+    <div class="shop">
+        <h1>Best Selling</h1>
+        <h1>Flowers</h1>
+        <h3>Cheap and</h3>
+        <h3>Affordable Flowers</h3>
+        <a href="products.php" class="btn">See more -></a>
+    </div>
+
+    <?php if (!empty($products)): ?>
+        <?php foreach ($products as $product): ?>
+            <div class="box">
+                <span class="discount">-10%</span>
+                <div class="image">
+                    <img src="../admin/uploads/<?php echo htmlspecialchars($product['featured_photo']); ?>" alt="<?php echo htmlspecialchars($product['name']); ?>">
+                    <div class="icons">
+                        <!-- Add to Cart Button -->
+                        <a href="add-to-cart.php?p_id=<?php echo $product['p_id']; ?>" class="cart-btn">Add to cart</a>
+                    </div>
                 </div>
+                <div class="content">
+                    <h3><?php echo htmlspecialchars($product['name']); ?></h3>
+                    <div class="price">
+                        ₱<?php echo number_format($product['current_price'], 2); ?>
+                        <?php if (!empty($product['previous_price'])): ?>
+                            <span>₱<?php echo number_format($product['previous_price'], 2); ?></span>
+                        <?php endif; ?>
+                    </div>
+                </div>   
             </div>
-            <div class="content">
-                <h3>Flower Pot</h3>
-                <div class="price"> $0 <span>$0</span></div>
-            </div>   
-        </div>
+        <?php endforeach; ?>
+    <?php else: ?>
+        <p>No products found for this category.</p>
+    <?php endif; ?>
+</div>
 
         <div class="box">
             <span class="discount">-10%</span>
