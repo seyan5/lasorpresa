@@ -70,10 +70,10 @@ $order_items = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <tbody>
             <?php foreach ($order_items as $item): ?>
                 <tr>
-                    <td><?php echo htmlspecialchars($item['flower_name'] ?? 'Unknown Flower'); ?></td>
+                    <td><?php echo htmlspecialchars($item['flower_type'] ?? 'Unknown Flower'); ?></td>
                     <td><?php echo htmlspecialchars($item['num_flowers'] ?? '0'); ?></td>
-                    <td><?php echo htmlspecialchars($item['container_name'] ?? 'Unknown Container'); ?></td>
-                    <td><?php echo htmlspecialchars($item['color_name'] ?? 'Unknown Color'); ?></td>
+                    <td><?php echo htmlspecialchars($item['container_type'] ?? 'Unknown Container'); ?></td>
+                    <td><?php echo htmlspecialchars($item['container_color'] ?? 'Unknown Color'); ?></td>
                     <td>$<?php echo number_format($item['total_price'] ?? 0, 2); ?></td>
                 </tr>
             <?php endforeach; ?>
