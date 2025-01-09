@@ -2,6 +2,7 @@
 session_start();
 
 // Include database connection
+require_once('header.php'); // Make sure to include your database connection
 
 if (isset($_SESSION['customization']) && !empty($_SESSION['customization'])) {
     $customization = $_SESSION['customization'];
