@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once('db_connection.php'); // Include DB connection
+require_once('header.php'); // Include DB connection
 
 if (!isset($_SESSION['customization'])) {
     echo "No customization found. Please go back and customize your arrangement.";
