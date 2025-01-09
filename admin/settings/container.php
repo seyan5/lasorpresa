@@ -101,7 +101,8 @@
 			<thead>
 			    <tr>
 			        <th>#</th>
-			        <th>container Name</th>
+			        <th>Container Name</th>
+			        <th>Container Price</th>
 			        <th>Action</th>
 			    </tr>
 			</thead>
