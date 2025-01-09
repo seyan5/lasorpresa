@@ -103,7 +103,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         unset($_SESSION['customization']);
 
         // Redirect to order confirmation page
-        header("Location: order-confirmation.php?order_id=" . $order_id);
+        header("Location: customize-order-confirmation.php?order_id=" . $order_id);
         exit;
 
     } catch (PDOException $e) {
