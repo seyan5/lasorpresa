@@ -1,6 +1,27 @@
 <?php
 require_once('header.php');
 
+// Fetch container types from the 'container' table
+$container_types = [];
+$container_result = mysqli_query($conn, "SELECT * FROM `container`");
+while ($row = mysqli_fetch_assoc($container_result)) {
+    $container_types[] = $row;
+}
+
+// Fetch container colors from the 'color' table
+$container_colors = [];
+$color_result = mysqli_query($conn, "SELECT * FROM `color`");
+while ($row = mysqli_fetch_assoc($color_result)) {
+    $container_colors[] = $row;
+}
+
+// Fetch flower types from the 'flowers' table
+$flower_types = [];
+$flower_result = mysqli_query($conn, "SELECT * FROM `flowers`");
+while ($row = mysqli_fetch_assoc($flower_result)) {
+    $flower_types[] = $row;
+}
+
 // Check if the form was submitted and handle form data
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Make sure data is set before accessing
@@ -8,13 +29,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $container_color = isset($_POST['container_color']) ? $_POST['container_color'] : 'Not selected';
 
     // Flower data handling: This may be an array, so loop through them
-    $flower_types = isset($_POST['flower_type']) ? $_POST['flower_type'] : [];
+    $flower_types_selected = isset($_POST['flower_type']) ? $_POST['flower_type'] : [];
     $num_flowers = isset($_POST['num_flowers']) ? $_POST['num_flowers'] : [];
 } else {
     // Default values when form is not yet submitted
     $container_type = 'Not selected';
     $container_color = 'Not selected';
-    $flower_types = [];
+    $flower_types_selected = [];
     $num_flowers = [];
 }
 ?>
@@ -31,20 +52,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         <div class="form-group">
                             <label for="container_type">Choose Container Type:</label>
                             <select id="container_type" name="container_type" class="form-control" required>
-                                <option value="vase">Vase</option>
-                                <option value="basket">Basket</option>
-                                <option value="box">Box</option>
+                                <?php foreach ($container_types as $container): ?>
+                                    <option value="<?= $container['id'] ?>" <?= ($container_type == $container['id']) ? 'selected' : ''; ?>>
+                                        <?= htmlspecialchars($container['name']) ?>
+                                    </option>
+                                <?php endforeach; ?>
                             </select>
                         </div>
 
                         <div class="form-group">
                             <label for="container_color">Choose Container Color:</label>
                             <select id="container_color" name="container_color" class="form-control" required>
-                                <option value="red">Red</option>
-                                <option value="yellow">Yellow</option>
-                                <option value="white">White</option>
-                                <option value="green">Green</option>
-                                <option value="blue">Blue</option>
+                                <?php foreach ($container_colors as $color): ?>
+                                    <option value="<?= $color['id'] ?>" <?= ($container_color == $color['id']) ? 'selected' : ''; ?>>
+                                        <?= htmlspecialchars($color['name']) ?>
+                                    </option>
+                                <?php endforeach; ?>
                             </select>
                         </div>
                     </div>
@@ -52,23 +75,25 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <!-- Flower Customization Section -->
                     <div id="flower-container">
                         <h4>Flower Customization</h4>
-                        <div class="flower-item" id="flower-item-1">
-                            <div class="form-group">
-                                <label for="flower_type_1">Choose Flower Type:</label>
-                                <select id="flower_type_1" name="flower_type[]" class="form-control" required>
-                                    <option value="roses">Roses</option>
-                                    <option value="tulips">Tulips</option>
-                                    <option value="lilies">Lilies</option>
-                                    <option value="daisies">Daisies</option>
-                                    <option value="sunflowers">Sunflowers</option>
-                                </select>
-                            </div>
+                        <?php foreach ($flower_types_selected as $index => $flower_type): ?>
+                            <div class="flower-item" id="flower-item-<?php echo $index + 1; ?>">
+                                <div class="form-group">
+                                    <label for="flower_type_<?php echo $index + 1; ?>">Choose Flower Type:</label>
+                                    <select id="flower_type_<?php echo $index + 1; ?>" name="flower_type[]" class="form-control" required>
+                                        <?php foreach ($flower_types as $flower): ?>
+                                            <option value="<?= $flower['id'] ?>" <?= ($flower_type == $flower['id']) ? 'selected' : ''; ?>>
+                                                <?= htmlspecialchars($flower['name']) ?>
+                                            </option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                </div>
 
-                            <div class="form-group">
-                                <label for="num_flowers_1">Number of Flowers:</label>
-                                <input type="number" id="num_flowers_1" name="num_flowers[]" class="form-control" min="1" max="100" value="1" required>
+                                <div class="form-group">
+                                    <label for="num_flowers_<?php echo $index + 1; ?>">Number of Flowers:</label>
+                                    <input type="number" id="num_flowers_<?php echo $index + 1; ?>" name="num_flowers[]" class="form-control" min="1" max="100" value="<?php echo $num_flowers[$index] ?? 1; ?>" required>
+                                </div>
                             </div>
-                        </div>
+                        <?php endforeach; ?>
                     </div>
 
                     <!-- Button to add more flowers -->
@@ -88,6 +113,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         </div>
     </div>
 </div>
+
 
 <script>
     let flowerCount = 1; // Track the number of flower sections added
