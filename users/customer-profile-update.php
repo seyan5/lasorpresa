@@ -1,6 +1,6 @@
-<?php require_once('header.php'); ?>
-
 <?php
+require_once('header.php');
+
 // Check if the customer is logged in or not
 if (!isset($_SESSION['customer'])) {
     header('location: ' . BASE_URL . 'logout.php');
@@ -16,12 +16,11 @@ if (!isset($_SESSION['customer'])) {
     }
 }
 
+// Display the session data for debugging
 echo '<pre>';
 print_r($_SESSION['customer']);
 echo '</pre>';
-?>
 
-<?php
 if (isset($_POST['form1'])) {
     $valid = 1;
     $error_message = '';
@@ -69,7 +68,7 @@ if (isset($_POST['form1'])) {
         $statement->execute([$_SESSION['customer']['cust_id']]);
         $updatedCustomer = $statement->fetch(PDO::FETCH_ASSOC);
 
-        // Update session variables
+        // Update session variables with updated customer data
         $_SESSION['customer']['cust_name'] = $updatedCustomer['cust_name'];
         $_SESSION['customer']['cust_phone'] = $updatedCustomer['cust_phone'];
         $_SESSION['customer']['cust_address'] = $updatedCustomer['cust_address'];
@@ -83,8 +82,8 @@ if (isset($_POST['form1'])) {
 
 <div class="page">
     <div class="container">
-        <div class="row">            
-            <div class="col-md-12"> 
+        <div class="row">
+            <div class="col-md-12">
                 <?php require_once('customer-sidebar.php'); ?>
             </div>
             <div class="col-md-12">
@@ -128,7 +127,7 @@ if (isset($_POST['form1'])) {
                         </div>
                         <input type="submit" class="btn btn-primary" value="Update" name="form1">
                     </form>
-                </div>                
+                </div>
             </div>
         </div>
     </div>
