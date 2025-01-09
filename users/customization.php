@@ -1,5 +1,5 @@
 <?php
-require_once('header.php');  // Include header if necessary (navigation, etc.)
+require_once('header.php');
 ?>
 
 <div class="page">
@@ -9,6 +9,16 @@ require_once('header.php');  // Include header if necessary (navigation, etc.)
                 <h2>Customize Your Floral Arrangement</h2>
                 <form id="floral-customization-form" action="customization-submit.php" method="POST">
                     <div id="flower-container">
+                        <!-- Container section -->
+                        <div class="form-group">
+                            <label for="container_type">Choose Container:</label>
+                            <select id="container_type" name="container_type" class="form-control" required>
+                                <option value="vase">Vase</option>
+                                <option value="basket">Basket</option>
+                                <option value="box">Box</option>
+                            </select>
+                        </div>
+
                         <!-- Flower 1 -->
                         <div class="flower-item" id="flower-item-1">
                             <div class="form-group">
@@ -36,15 +46,6 @@ require_once('header.php');  // Include header if necessary (navigation, etc.)
                             <div class="form-group">
                                 <label for="num_flowers_1">Number of Flowers:</label>
                                 <input type="number" id="num_flowers_1" name="num_flowers[]" class="form-control" min="1" max="100" value="1" required>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="container_type_1">Choose Container:</label>
-                                <select id="container_type_1" name="container_type[]" class="form-control" required>
-                                    <option value="vase">Vase</option>
-                                    <option value="basket">Basket</option>
-                                    <option value="box">Box</option>
-                                </select>
                             </div>
                         </div>
                     </div>
@@ -79,26 +80,29 @@ require_once('header.php');  // Include header if necessary (navigation, etc.)
         const flowerTypes = document.querySelectorAll('[id^="flower_type_"]');
         const flowerColors = document.querySelectorAll('[id^="flower_color_"]');
         const numFlowers = document.querySelectorAll('[id^="num_flowers_"]');
-        const containerTypes = document.querySelectorAll('[id^="container_type_"]');
+        const containerType = document.getElementById('container_type').value;
+        
+        selectedSelections.innerHTML = `
+            <p><strong>Container:</strong> ${containerType}</p>
+            <hr>
+        `;
         
         flowerTypes.forEach((flowerType, index) => {
             const flowerColor = flowerColors[index].value;
             const numFlower = numFlowers[index].value;
-            const containerType = containerTypes[index].value;
 
             const selectionSummary = `
                 <p><strong>Flower ${index + 1}</strong></p>
                 <p>Flower Type: ${flowerType.value}</p>
                 <p>Flower Color: ${flowerColor}</p>
                 <p>Number of Flowers: ${numFlower}</p>
-                <p>Container: ${containerType}</p>
                 <hr>
             `;
             selectedSelections.innerHTML += selectionSummary;
         });
     }
 
-    // Add another flower option
+    // Add another flower option to the same container
     addFlowerBtn.addEventListener('click', () => {
         flowerCount++;
 
@@ -133,15 +137,6 @@ require_once('header.php');  // Include header if necessary (navigation, etc.)
             <div class="form-group">
                 <label for="num_flowers_${flowerCount}">Number of Flowers:</label>
                 <input type="number" id="num_flowers_${flowerCount}" name="num_flowers[]" class="form-control" min="1" max="100" value="1" required>
-            </div>
-
-            <div class="form-group">
-                <label for="container_type_${flowerCount}">Choose Container:</label>
-                <select id="container_type_${flowerCount}" name="container_type[]" class="form-control" required>
-                    <option value="vase">Vase</option>
-                    <option value="basket">Basket</option>
-                    <option value="box">Box</option>
-                </select>
             </div>
         `;
 

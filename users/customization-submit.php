@@ -2,11 +2,11 @@
 session_start();
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    // Get arrays of selected flower customizations
+    // Get the container and flower arrays
+    $container_type = $_POST['container_type'];
     $flower_types = $_POST['flower_type'];
     $flower_colors = $_POST['flower_color'];
     $num_flowers = $_POST['num_flowers'];
-    $container_types = $_POST['container_type'];
 
     // Process each flower customization
     $customization_details = [];
@@ -15,7 +15,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             'flower_type' => $flower_type,
             'flower_color' => $flower_colors[$index],
             'num_flowers' => $num_flowers[$index],
-            'container_type' => $container_types[$index]
+            'container_type' => $container_type
         ];
     }
 
