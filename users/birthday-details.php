@@ -71,15 +71,6 @@ $product_quantity = $product['quantity']; // Get product quantity
                     <div class="price">$<?php echo number_format($product['current_price'], 2); ?></div>
                 </div>
 
-                <div class="addons">
-                    <label for="addons">Add-ons</label>
-                    <select id="addons">
-                        <option value="">Choose...</option>
-                        <option value="chocolate">Chocolate</option>
-                        <option value="stufftoy">Stuff Toys</option>
-                        <option value="balloon">Balloon</option>
-                    </select>
-                </div>
 
                 <div class="total">
                     <span>Subtotal:</span>
