@@ -31,19 +31,10 @@ require_once('header.php');
     <!-- <a href="#" class="logo">Flower<span>.</span></a> -->
     <img src="../images/logo.png" alt="" class="logos" href="">
     <nav class="navbar">
-        <a href="#home">Home</a>
+        <a href="index.php">Home</a>
         <a href="#about">About</a>
-        <a href="products.php">Product</a>
-        <div class="dropdown">
-        <a href="#occasion" class="dropdown-btn">Occasion</a>
-        <div class="dropdown-content">
-            <a href="#birthday">Birthday</a>
-            <a href="#wedding">Wedding</a>
-            <a href="#anniversary">Anniversary</a>
-            <a href="#holiday">Holiday</a>
-        </div>
-        </div>
-
+        <a href="products.php">Flowers</a>
+        <a href="occasion.php" class="dropdown-btn">Occasion</a>
         <a href="#review">Review</a>
         <a href="#contacts">Contacts</a>
         <a href="customize.php">Customize</a>

@@ -26,20 +26,33 @@ include("../admin/inc/CSRF_Protect.php");
     <!-- <a href="#" class="logo">Flower<span>.</span></a> -->
     <img src="../images/logo.png" alt="" class="logos" href="">
     <nav class="navbar">
-        <a href="#home">Home</a>
+        <a href="index.php">Home</a>
         <a href="#about">About</a>
-        <a href="products.php">Product</a>
-        <a href="#occasion">Occasion</a>
+        <a href="products.php">Flowers</a>
+        <a href="occasion.php" class="dropdown-btn">Occasion</a>
         <a href="#review">Review</a>
         <a href="#contacts">Contacts</a>
+        <a href="customize.php">Customize</a>
+
     </nav>
      
     <div class="icons">
-        <a href="#" class="fas fa-heart"></a>
-        <a href="cart.php" class="fas fa-shopping-cart"></a>
-
-        <a href="#" class="fas fa-user"></a>
+    <a href="#" class="fas fa-heart"></a>
+    <a href="shopcart.php" class="fas fa-shopping-cart"></a>
+    <div class="user-dropdown">
+        <a href="#" class="fas fa-user" onclick="toggleDropdown()"></a>
+        <div class="dropdown-menu" id="userDropdown">
+            <?php if (isset($_SESSION['customer'])): ?>
+                <p>Welcome, <?php echo htmlspecialchars($_SESSION['customer']['cust_name']); ?></p>
+                <hr>
+                <a href="profile.php">Profile</a>
+                <a href="logout.php">Logout</a>
+            <?php else: ?>
+                <a href="login.php">Login</a>
+            <?php endif; ?>
+        </div>
     </div>
+</div>
 
 </header>
 
