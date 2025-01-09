@@ -9,13 +9,25 @@ require_once('header.php');
                 <h2>Customize Your Floral Arrangement</h2>
                 <form id="floral-customization-form" action="customization-submit.php" method="POST">
                     <div id="flower-container">
-                        <!-- Container section -->
+                        <!-- Container selection -->
                         <div class="form-group">
-                            <label for="container_type">Choose Container:</label>
+                            <label for="container_type">Choose Container Type:</label>
                             <select id="container_type" name="container_type" class="form-control" required>
                                 <option value="vase">Vase</option>
                                 <option value="basket">Basket</option>
                                 <option value="box">Box</option>
+                            </select>
+                        </div>
+
+                        <!-- Container Color -->
+                        <div class="form-group">
+                            <label for="container_color">Choose Container Color:</label>
+                            <select id="container_color" name="container_color" class="form-control" required>
+                                <option value="red">Red</option>
+                                <option value="yellow">Yellow</option>
+                                <option value="white">White</option>
+                                <option value="green">Green</option>
+                                <option value="blue">Blue</option>
                             </select>
                         </div>
 
@@ -29,17 +41,6 @@ require_once('header.php');
                                     <option value="lilies">Lilies</option>
                                     <option value="daisies">Daisies</option>
                                     <option value="sunflowers">Sunflowers</option>
-                                </select>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="flower_color_1">Choose Flower Color:</label>
-                                <select id="flower_color_1" name="flower_color[]" class="form-control" required>
-                                    <option value="red">Red</option>
-                                    <option value="yellow">Yellow</option>
-                                    <option value="white">White</option>
-                                    <option value="pink">Pink</option>
-                                    <option value="purple">Purple</option>
                                 </select>
                             </div>
 
@@ -78,23 +79,22 @@ require_once('header.php');
     function updateSelection() {
         selectedSelections.innerHTML = ''; // Clear previous selections
         const flowerTypes = document.querySelectorAll('[id^="flower_type_"]');
-        const flowerColors = document.querySelectorAll('[id^="flower_color_"]');
         const numFlowers = document.querySelectorAll('[id^="num_flowers_"]');
         const containerType = document.getElementById('container_type').value;
+        const containerColor = document.getElementById('container_color').value;
         
         selectedSelections.innerHTML = `
-            <p><strong>Container:</strong> ${containerType}</p>
+            <p><strong>Container Type:</strong> ${containerType}</p>
+            <p><strong>Container Color:</strong> ${containerColor}</p>
             <hr>
         `;
         
         flowerTypes.forEach((flowerType, index) => {
-            const flowerColor = flowerColors[index].value;
             const numFlower = numFlowers[index].value;
 
             const selectionSummary = `
                 <p><strong>Flower ${index + 1}</strong></p>
                 <p>Flower Type: ${flowerType.value}</p>
-                <p>Flower Color: ${flowerColor}</p>
                 <p>Number of Flowers: ${numFlower}</p>
                 <hr>
             `;
@@ -120,17 +120,6 @@ require_once('header.php');
                     <option value="lilies">Lilies</option>
                     <option value="daisies">Daisies</option>
                     <option value="sunflowers">Sunflowers</option>
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label for="flower_color_${flowerCount}">Choose Flower Color:</label>
-                <select id="flower_color_${flowerCount}" name="flower_color[]" class="form-control" required>
-                    <option value="red">Red</option>
-                    <option value="yellow">Yellow</option>
-                    <option value="white">White</option>
-                    <option value="pink">Pink</option>
-                    <option value="purple">Purple</option>
                 </select>
             </div>
 
