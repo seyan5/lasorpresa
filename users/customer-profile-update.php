@@ -94,35 +94,35 @@ if (isset($_POST['form1'])) {
                     }
                     ?>
                     <form action="" method="post">
-                        <?php $csrf->echoInputField(); ?>
-                        <div class="row">
-                            <div class="col-md-6 form-group">
-                                <label for="">Customer Name *</label>
-                                <input type="text" class="form-control" name="cust_name" value="<?php echo isset($_SESSION['customer']['cust_name']) ? $_SESSION['customer']['cust_name'] : ''; ?>">
-                            </div>
-                            <div class="col-md-6 form-group">
-                                <label for="">Email Address *</label>
-                                <input type="text" class="form-control" name="" value="<?php echo isset($_SESSION['customer']['cust_email']) ? $_SESSION['customer']['cust_email'] : ''; ?>" disabled>
-                            </div>
-                            <div class="col-md-6 form-group">
-                                <label for="">Phone Number *</label>
-                                <input type="text" class="form-control" name="cust_phone" value="<?php echo isset($_SESSION['customer']['cust_phone']) ? $_SESSION['customer']['cust_phone'] : ''; ?>">
-                            </div>
-                            <div class="col-md-12 form-group">
-                                <label for="">Address *</label>
-                                <textarea name="cust_address" class="form-control" cols="30" rows="10" style="height:70px;"><?php echo isset($_SESSION['customer']['cust_address']) ? $_SESSION['customer']['cust_address'] : ''; ?></textarea>
-                            </div>   
-                            <div class="col-md-6 form-group">
-                                <label for="">City *</label>
-                                <input type="text" class="form-control" name="cust_city" value="<?php echo isset($_SESSION['customer']['cust_city']) ? $_SESSION['customer']['cust_city'] : ''; ?>">
-                            </div>
-                            <div class="col-md-6 form-group">
-                                <label for="">Zip Code *</label>
-                                <input type="text" class="form-control" name="cust_zip" value="<?php echo isset($_SESSION['customer']['cust_zip']) ? $_SESSION['customer']['cust_zip'] : ''; ?>">
-                            </div>
-                        </div>
-                        <input type="submit" class="btn btn-primary" value="Update" name="form1">
-                    </form>
+    <?php $csrf->echoInputField(); ?>
+    <div class="row">
+        <div class="col-md-6 form-group">
+            <label for="">Customer Name *</label>
+            <input type="text" class="form-control" name="cust_name" value="<?php echo isset($_SESSION['customer']['cust_name']) ? htmlspecialchars($_SESSION['customer']['cust_name']) : ''; ?>">
+        </div>
+        <div class="col-md-6 form-group">
+            <label for="">Email Address *</label>
+            <input type="text" class="form-control" name="" value="<?php echo isset($_SESSION['customer']['cust_email']) ? htmlspecialchars($_SESSION['customer']['cust_email']) : ''; ?>" disabled>
+        </div>
+        <div class="col-md-6 form-group">
+            <label for="">Phone Number *</label>
+            <input type="text" class="form-control" name="cust_phone" value="<?php echo isset($_SESSION['customer']['cust_phone']) ? htmlspecialchars($_SESSION['customer']['cust_phone']) : ''; ?>">
+        </div>
+        <div class="col-md-12 form-group">
+            <label for="">Address *</label>
+            <textarea name="cust_address" class="form-control" cols="30" rows="10" style="height:70px;"><?php echo isset($_SESSION['customer']['cust_address']) ? htmlspecialchars($_SESSION['customer']['cust_address']) : ''; ?></textarea>
+        </div>
+        <div class="col-md-6 form-group">
+            <label for="">City *</label>
+            <input type="text" class="form-control" name="cust_city" value="<?php echo isset($_SESSION['customer']['cust_city']) ? htmlspecialchars($_SESSION['customer']['cust_city']) : ''; ?>">
+        </div>
+        <div class="col-md-6 form-group">
+            <label for="">Zip Code *</label>
+            <input type="text" class="form-control" name="cust_zip" value="<?php echo isset($_SESSION['customer']['cust_zip']) ? htmlspecialchars($_SESSION['customer']['cust_zip']) : ''; ?>">
+        </div>
+    </div>
+    <input type="submit" class="btn btn-primary" value="Update" name="form1">
+</form>
                 </div>                
             </div>
         </div>
