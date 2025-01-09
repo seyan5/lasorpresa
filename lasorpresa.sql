@@ -3,9 +3,11 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 09, 2025 at 01:38 PM
--- Server version: 10.4.32-MariaDB
--- PHP Version: 8.2.12
+
+-- Generation Time: Jan 09, 2025 at 02:48 PM
+-- Server version: 10.4.24-MariaDB
+-- PHP Version: 8.1.4
+
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -52,17 +54,22 @@ INSERT INTO `color` (`color_id`, `color_name`) VALUES
 
 CREATE TABLE `container` (
   `container_id` int(11) NOT NULL,
-  `container_name` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+  `container_name` varchar(255) NOT NULL,
+  `price` decimal(10,2) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
 
 --
 -- Dumping data for table `container`
 --
 
-INSERT INTO `container` (`container_id`, `container_name`) VALUES
-(1, 'Basket'),
-(2, 'Paper Wrap'),
-(3, 'Plastic Wrap');
+INSERT INTO `container` (`container_id`, `container_name`, `price`) VALUES
+(1, 'Basket', '100.00'),
+(2, 'Paper Wrap', '50.00'),
+(3, 'Plastic Wrap', '50.00'),
+(4, 'Vase', '250.00'),
+(5, 'huwaw', '10.00');
 
 -- --------------------------------------------------------
 
@@ -97,11 +104,48 @@ INSERT INTO `customer` (`cust_id`, `cust_name`, `cust_email`, `cust_phone`, `cus
 (1, 'Johnwayne', 'user@gmail.com', '09214991751', 'Blk 31 Lt 2 Lhinnete Homea', 'Cavite', '4109', 'Johnwayne', '09214991751', 'Blk 31 Lt 2 Lhinnete Homea\r\nBiga Tanza Cavite', 'Cavite', '4341', '$2y$10$CVBEIYx28iz79VGVuq2R8eYoqf.o9OZ7w6ykwKFKV3q37oqts6hmW', '2025-01-07 22:02:47', '2025-01-08 08:17:16', 'active'),
 (3, 'test', 'test@gmail.com', '09214991751', 'Blk 31 Lt 2 Lhinnete Homea\r\nBiga Tanza Cavite', 'Cavite', '4314', 'Johnwayne', '09214991751', 'Blk 31 Lt 2 Lhinnete Homea\r\nBiga Tanza Cavite', 'Cavite', '4108', '979d472a84804b9f647bc185a877a8b5', '2025-01-07 22:34:55', '2025-01-08 07:37:52', 'active'),
 (5, 'test', 'qweqwe@gmail.com', '431431', 'asddsa', 'sdadsa', '1233', NULL, NULL, NULL, NULL, NULL, '$2y$10$LlJJaEWfq3GbuKZmaTXn0.86IneDNpn74YKw89bCLZNgOXINEyNwO', '2025-01-07 22:43:28', '2025-01-07 14:43:28', 'inactive'),
-(6, 'test', 'jw@mail.com', '431431', 'asddsa', 'sdadsa', '1233', NULL, NULL, NULL, NULL, NULL, '$2y$10$NO37F4xP6sQz30nLobL8NeZ08jfI6HvdxxtvjIPA2G55oyfY389DK', '2025-01-07 22:43:53', '2025-01-07 14:43:53', 'inactive'),
-(8, 'test', 'lasorpresa76@mail.com', '431431', 'asddsa', 'sdadsa', '1233', NULL, NULL, NULL, NULL, NULL, '$2y$10$Tdnqmz4o870Sp2xBBK6Vhe1oogE5lNEneUDpw1ksqtMuQeFIE6XRC', '2025-01-07 22:50:56', '2025-01-07 14:50:56', 'inactive'),
+(6, 'test', 'jw@mail.com', '431431', 'asddsa', 'sdadsa', '1233', NULL, NULL, NULL, NULL, NULL, '$2y$10$NO37F4xP6sQz30nLobL8NeZ08jfI6HvdxxtvjIPA2G55oyfY389DK', '2025-01-07 22:43:53', '2025-01-08 21:29:49', 'active'),
 (10, 'Johnwayne', 'jpdeogracias@gmail.com', '09214991751', 'Blk 31 Lt 2 Lhinnete Homea\r\nBiga Tanza Cavite', 'Cavite', '3313', 'Johnwayne', '09214991751', 'Blk 31 Lt 2 Lhinnete Homea\r\nBiga Tanza Cavite', 'Cavite', '2213', '979d472a84804b9f647bc185a877a8b5', '2025-01-07 23:00:23', '2025-01-08 07:40:52', 'active'),
 (12, 'jay', 'jaycantemprate31@gmail.com', '31', 'ggfddf', 'hgftr', '1233', NULL, NULL, NULL, NULL, NULL, '$2y$10$VW2.gZt0DtqBcaGqIrIJW.KHw.ySiAiBaBIO1qux6PNd1HiBW9TEm', '2025-01-07 23:02:28', '2025-01-07 15:02:28', 'inactive'),
-(13, 'seyan1', 'seanammiel@gmail.com', '0956193051213', 'pogi', 'street', '3123', NULL, NULL, NULL, NULL, NULL, '$2y$10$1WFoqvQ/Jp6UwxcfQDKHIOvxFgoah5HVmBlt3j.xqLUEpEuzAO1kW', '2025-01-09 02:59:24', '2025-01-08 21:13:04', 'active');
+
+(13, 'lasorpresa76', 'lasorpresa76@gmail.com', '983218321', 'biga', 'tanza', '1234', NULL, NULL, NULL, NULL, NULL, '$2y$10$y8Miy7bu6sQFPQESNyxZnOyw/kiW6HTCiQj5y/3jSgsWG40F.4c4K', '2025-01-09 05:06:51', '2025-01-08 21:09:30', 'active'),
+(16, 'xofahon', 'xofahon594@pariag.com', '09214991751', 'Blk 31 Lt 2 Lhinnete Homea\r\nBiga Tanza Cavite', 'Cavite', '1233', NULL, NULL, NULL, NULL, NULL, '$2y$10$lwuvXXEEHRnA5XV7LY7dtuWEB/tG0Q0HY7DOJNm.PzBGXyElmlA.m', '2025-01-09 17:14:15', '2025-01-09 11:27:16', 'active');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `custom_order`
+--
+
+CREATE TABLE `custom_order` (
+  `order_id` int(11) NOT NULL,
+  `customer_name` varchar(255) NOT NULL,
+  `customer_email` varchar(255) NOT NULL,
+  `shipping_address` text NOT NULL,
+  `total_price` decimal(10,2) NOT NULL,
+  `order_date` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `custom_orderitems`
+--
+
+CREATE TABLE `custom_orderitems` (
+  `orderitem_id` int(11) NOT NULL,
+  `order_id` int(11) NOT NULL,
+  `flower_type` varchar(255) NOT NULL,
+  `num_flowers` int(11) NOT NULL,
+  `container_type` varchar(255) NOT NULL,
+  `container_color` varchar(255) NOT NULL,
+  `flower_price` decimal(10,2) NOT NULL,
+  `container_price` decimal(10,2) NOT NULL,
+  `color_price` decimal(10,2) NOT NULL,
+  `total_price` decimal(10,2) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
 
 -- --------------------------------------------------------
 
@@ -116,6 +160,7 @@ CREATE TABLE `email_verifications` (
   `created_at` datetime DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+
 --
 -- Dumping data for table `email_verifications`
 --
@@ -128,6 +173,7 @@ INSERT INTO `email_verifications` (`verification_id`, `cust_id`, `token`, `creat
 (6, 8, 'd907fdb988475d90a8827d5d46a2081b', '2025-01-07 22:50:56'),
 (10, 12, '25dae009f3e04b14f1eb214af40128f6', '2025-01-07 23:02:28'),
 (11, 13, '8b797d8e2dc0d950ad000a71eb97fdb5', '2025-01-09 02:59:24');
+
 
 -- --------------------------------------------------------
 
@@ -151,7 +197,10 @@ INSERT INTO `end_category` (`ecat_id`, `ecat_name`, `mcat_id`) VALUES
 (16, 'Sunflower', 3),
 (17, 'Chocolate', 19),
 (18, 'Balloon', 19),
-(19, 'Stuff Toy', 19);
+(19, 'Stuff Toy', 19),
+(23, 'All Souls Day', 20),
+(24, 'Valentines', 20),
+(25, 'Christmas', 20);
 
 -- --------------------------------------------------------
 
@@ -220,20 +269,6 @@ CREATE TABLE `orders` (
 -- Dumping data for table `orders`
 --
 
-INSERT INTO `orders` (`order_id`, `customer_id`, `full_name`, `address`, `city`, `postal_code`, `phone`, `total`, `created_at`) VALUES
-(1, 1, 'Johnwayne', 'Blk 31 Lt 2 Lhinnete Homea\r\nBiga Tanza Cavite', 'Cavite', '4341', '09214991751', 10000.00, '2025-01-08 12:27:49'),
-(2, 1, 'Johnwayne', 'Blk 31 Lt 2 Lhinnete Homea\r\nBiga Tanza Cavite', 'Cavite', '4108', '09214991751', 50.00, '2025-01-08 12:28:47'),
-(4, 1, '', '', '', '', '', 10000.00, '2025-01-08 12:45:23'),
-(5, 1, '', '', '', '', '', 10000.00, '2025-01-08 12:46:03'),
-(6, 1, '', '', '', '', '', 10000.00, '2025-01-08 12:46:20'),
-(7, 1, '', '', '', '', '', 50.00, '2025-01-08 12:46:42'),
-(8, 1, '', '', '', '', '', 20000.00, '2025-01-08 12:49:34'),
-(9, 1, '', '', '', '', '', 50.00, '2025-01-08 12:50:19'),
-(10, 1, 'Johnwayne', 'Blk 31 Lt 2 Lhinnete Homea\r\nBiga Tanza Cavite', 'Cavite', '3441', '09214991751', 50.00, '2025-01-08 12:53:26'),
-(15, 1, 'Johnwayne', 'Blk 31 Lt 2 Lhinnete Homea\r\nBiga Tanza Cavite', 'Cavite', '4108', '09214991751', 50.00, '2025-01-08 12:57:50'),
-(17, 1, 'Johnwayne', 'Blk 31 Lt 2 Lhinnete Homea\r\nBiga Tanza Cavite', 'Cavite', '4341', '09214991751', 50.00, '2025-01-08 13:29:27'),
-(18, 1, 'Johnwayne', 'Blk 31 Lt 2 Lhinnete Homea\r\nBiga Tanza Cavite', 'Cavite', '4108', '09214991751', 50.00, '2025-01-08 13:32:13');
-
 -- --------------------------------------------------------
 
 --
@@ -254,6 +289,19 @@ CREATE TABLE `order_items` (
 -- Table structure for table `payment`
 --
 
+
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `payment`
+--
+
+CREATE TABLE `payment` (
+  `payment_id` int(11) NOT NULL,
+  `cust_id` int(11) NOT NULL,
+  `order_id` int(11) DEFAULT NULL,
+
 CREATE TABLE `payment` (
   `payment_id` int(11) NOT NULL,
   `cust_id` int(11) NOT NULL,
@@ -266,6 +314,8 @@ CREATE TABLE `payment` (
   `shipping_status` enum('pending','shipped','delivered') DEFAULT 'pending',
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+=======
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -301,6 +351,7 @@ INSERT INTO `payment` (`payment_id`, `cust_id`, `cust_name`, `cust_email`, `refe
 (26, 13, 'seyan1', 'seanammiel@gmail.com', '123', 123.00, 'gcash', 'paid', 'pending', '2025-01-09 12:27:21', '2025-01-09 12:27:21'),
 (27, 13, 'seyan1', 'seanammiel@gmail.com', '123123', 123.00, 'gcash', 'paid', 'pending', '2025-01-09 12:28:50', '2025-01-09 12:28:50');
 
+
 -- --------------------------------------------------------
 
 --
@@ -329,12 +380,19 @@ CREATE TABLE `product` (
 --
 
 INSERT INTO `product` (`p_id`, `name`, `old_price`, `current_price`, `quantity`, `featured_photo`, `description`, `short_description`, `feature`, `other_photo`, `condition`, `is_featured`, `is_active`, `ecat_id`) VALUES
-(21, 'Rose Bouquet', '4500', '4300', 100, 'product-featured-21.jpg', 'Rose Bouquet with Black Wrapper', 'Rose Bouquet with Black Wrapper', 'Rose Bouquet with Black Wrapper', '', 'Rose Bouquet with Black Wrapper', 1, 1, 14),
-(22, 'Rose Bouquet', '4300', '4500', 100, 'product-featured-22.jpg', 'Rose Bouquet with White Wrapper', 'Rose Bouquet with White Wrapper', 'Rose Bouquet with White Wrapper', '', 'Rose Bouquet with White Wrapper', 1, 0, 14),
-(23, 'Sunflower Bouquet with Pink Wrapper', '4600', '4000', 100, 'product-featured-23.jpg', 'Sunflower Bouquet with Pink Wrapper', 'Sunflower Bouquet with Pink Wrapper', 'Sunflower Bouquet with Pink Wrapper', '', 'Sunflower Bouquet with Pink Wrapper', 1, 1, 16),
-(24, 'Red Rose White Wrapper', '4500', '4300', 100, 'product-featured-24.jpg', 'Rose Bouquet', 'Rose Bouquet', 'Rose Bouquet', '', 'Rose Bouquet', 1, 1, 14);
 
--- --------------------------------------------------------
+(18, 'Red Rose', '10000', '10000', 1, 'product-featured-18.jpg', 'Red Rose', '', '', '', '', 0, 0, 14),
+(20, 'Sunflower', '25', '50', 2, 'product-featured-20.jpg', 'araw bulaklak', '', '', '', '', 1, 1, 16),
+(21, 'Chocolate', '25', '50', 100, 'product-featured-21.jpg', 'Cholocate', '', '', '', '', 0, 1, 17),
+(22, 'baloon', '50', '25', 100, 'product-featured-22.jpeg', 'baloon', '', '', '', '', 0, 1, 18),
+(23, 'AllSoulsDay1', '25', '50', 100, 'product-featured-23.jpg', '', '', '', '', '', 0, 1, 23),
+(24, 'AllSoulsDay2', '50', '25', 100, 'product-featured-24.jpg', 'allsoulsday1', '', '', '', '', 1, 1, 23),
+(25, 'Christmas1', '25', '50', 100, 'product-featured-25.jpg', 'christmas', '', '', '', '', 0, 1, 25),
+(26, 'Christmas2', '50', '15', 20, 'product-featured-26.jpg', '', '', '', '', '', 0, 1, 25),
+(27, 'Valentine1', '1', '25', 100, 'product-featured-27.jpg', 'valentine1', '', '', '', '', 0, 1, 24),
+(28, 'valentine2', '1', '1', 100, 'product-featured-28.jpg', 'valentine2', '', '', '', '', 0, 1, 24),
+(29, 'Black Rose', '100', '25', 100, 'product-featured-29.jpg', 'Black Rose', '', '', '', '', 1, 1, 14);
+----------------------------------------------------
 
 --
 -- Table structure for table `product_color`
@@ -793,6 +851,19 @@ ALTER TABLE `customer`
   ADD UNIQUE KEY `cust_email` (`cust_email`);
 
 --
+-- Indexes for table `custom_order`
+--
+ALTER TABLE `custom_order`
+  ADD PRIMARY KEY (`order_id`);
+
+--
+-- Indexes for table `custom_orderitems`
+--
+ALTER TABLE `custom_orderitems`
+  ADD PRIMARY KEY (`orderitem_id`),
+  ADD KEY `order_id` (`order_id`);
+
+--
 -- Indexes for table `email_verifications`
 --
 ALTER TABLE `email_verifications`
@@ -913,31 +984,51 @@ ALTER TABLE `color`
 -- AUTO_INCREMENT for table `container`
 --
 ALTER TABLE `container`
-  MODIFY `container_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `container_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `customer`
 --
 ALTER TABLE `customer`
+
+  MODIFY `cust_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+
+--
+-- AUTO_INCREMENT for table `custom_order`
+--
+ALTER TABLE `custom_order`
+  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `custom_orderitems`
+--
+ALTER TABLE `custom_orderitems`
+  MODIFY `orderitem_id` int(11) NOT NULL AUTO_INCREMENT;
+
   MODIFY `cust_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+
 
 --
 -- AUTO_INCREMENT for table `email_verifications`
 --
 ALTER TABLE `email_verifications`
+
+  MODIFY `verification_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+
   MODIFY `verification_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+
 
 --
 -- AUTO_INCREMENT for table `end_category`
 --
 ALTER TABLE `end_category`
-  MODIFY `ecat_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
+  MODIFY `ecat_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 
 --
 -- AUTO_INCREMENT for table `flowers`
 --
 ALTER TABLE `flowers`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `mid_category`
@@ -949,13 +1040,19 @@ ALTER TABLE `mid_category`
 -- AUTO_INCREMENT for table `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
 -- AUTO_INCREMENT for table `order_items`
 --
 ALTER TABLE `order_items`
-  MODIFY `order_item_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+  MODIFY `order_item_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+
+--
+-- AUTO_INCREMENT for table `payment`
+--
+ALTER TABLE `payment`
+  MODIFY `payment_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
 
 --
 -- AUTO_INCREMENT for table `payment`
@@ -967,7 +1064,11 @@ ALTER TABLE `payment`
 -- AUTO_INCREMENT for table `product`
 --
 ALTER TABLE `product`
+
+  MODIFY `p_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
+
   MODIFY `p_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
+
 
 --
 -- AUTO_INCREMENT for table `product_color`
@@ -1026,6 +1127,12 @@ ALTER TABLE `users`
 --
 -- Constraints for dumped tables
 --
+
+--
+-- Constraints for table `custom_orderitems`
+--
+ALTER TABLE `custom_orderitems`
+  ADD CONSTRAINT `custom_orderitems_ibfk_1` FOREIGN KEY (`order_id`) REFERENCES `custom_order` (`order_id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `email_verifications`
