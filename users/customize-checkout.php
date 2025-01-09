@@ -101,20 +101,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         // Fetch flower price
         $stmt = $pdo->prepare("SELECT price FROM flowers WHERE name = :flower_type");
         $stmt->execute(['flower_type' => $item['flower_type']]);
-        $flower_price = $stmt->fetchColumn();
+        $flower_price = $stmt->fetchColumn() ?: 0; // Default to 0 if no price found
 
         // Fetch container price
         $stmt = $pdo->prepare("SELECT price FROM container WHERE container_name = :container_type");
         $stmt->execute(['container_type' => $item['container_type']]);
-        $container_price = $stmt->fetchColumn();
+        $container_price = $stmt->fetchColumn() ?: 0; // Default to 0 if no price found
 
         // No need to fetch color price
         $color_price = 0; // Color price is 0
 
-        // Debugging: Display the fetched prices
-echo "Flower Price: " . $flower_price . "<br>";
-echo "Container Price: " . $container_price . "<br>";
-echo "Color Price: " . $color_price . "<br>";
+
 
         // Calculate total price for this flower set
         $item_total_price = ($flower_price * $item['num_flowers']) + $container_price + $color_price;
