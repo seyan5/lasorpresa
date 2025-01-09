@@ -44,7 +44,7 @@ $product_quantity = $product['quantity']; // Get product quantity
 
 <body>
     <header>
-        <a href="products.php" class="back">← Back to Products</a>
+        <a href="occasion.php" class="back">← Back to Occasion</a>
         <a href="shopcart.php" class="back"> Cart</a>
 
     </header>

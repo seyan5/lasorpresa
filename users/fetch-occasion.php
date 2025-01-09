@@ -42,7 +42,7 @@ try {
         foreach ($products as $product) {
             echo '
             <div class="product" data-id="' . htmlspecialchars($product['p_id']) . '">
-                <a href="birthday-details.php?p_id=' . htmlspecialchars($product['p_id']) . '">
+                <a href="occasion-details.php?p_id=' . htmlspecialchars($product['p_id']) . '">
                     <img src="../admin/uploads/' . htmlspecialchars($product['featured_photo']) . '" alt="' . htmlspecialchars($product['name']) . '">
                     <h3>' . htmlspecialchars($product['name']) . '</h3>
                     <div class="price">$' . number_format($product['current_price'], 2) . '</div>
