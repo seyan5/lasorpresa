@@ -149,7 +149,7 @@ function filterProducts(ecat_id) {
     container.innerHTML = "<p>Loading products...</p>";
 
     // Determine the correct API endpoint or parameter for 'all'
-    const url = ecat_id === 'all' ? 'fetch-products.php' : `fetch-products.php?ecat_id=${ecat_id}`;
+    const url = ecat_id === 'all' ? 'fetch-birthday.php' : `fetch-birthday.php?ecat_id=${ecat_id}`;
 
     const xhr = new XMLHttpRequest();
     xhr.open('GET', url, true);
@@ -167,7 +167,7 @@ function filterProducts(ecat_id) {
 function openModal(productId) {
     // Fetch product data from the selected product using AJAX or embedded data
     const xhr = new XMLHttpRequest();
-    xhr.open('GET', 'fetch-product-details.php?p_id=' + productId, true);
+    xhr.open('GET', 'fetch-birthday-details.php?p_id=' + productId, true);
     xhr.onload = function() {
         if (xhr.status === 200) {
             const product = JSON.parse(xhr.responseText);
