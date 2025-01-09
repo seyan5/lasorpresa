@@ -1,5 +1,4 @@
 <?php
-session_start();
 
 // Include database connection
 require_once('header.php'); // Make sure to include your database connection
@@ -22,7 +21,7 @@ if (isset($_SESSION['customization']) && !empty($_SESSION['customization'])) {
             $stmt = $pdo->prepare("SELECT name FROM container WHERE container_id = ?");
             $stmt->execute([$container_type_id]);
             $container_type_data = $stmt->fetch(PDO::FETCH_ASSOC);
-            $container_type_name = $container_type_data['name'] ?? 'Not selected';
+            $container_type_name = $container_type_data['container_name'] ?? 'Not selected';
         }
 
         // Fetch container color name from the database
