@@ -106,6 +106,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <?php 
     $total_price = 0; // Initialize total price for display
     foreach ($customization as $index => $item): 
+        // Debug output for customization
+        var_dump($item); // Check the values of flower_type, container_type, container_color
+        
         // Fetch flower details (name and price)
         $stmt = $pdo->prepare("SELECT name, price FROM flowers WHERE name = :flower_type");
         $stmt->execute(['flower_type' => $item['flower_type']]);
