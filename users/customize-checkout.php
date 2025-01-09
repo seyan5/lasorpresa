@@ -1,5 +1,4 @@
 <?php
-session_start();
 require_once('header.php'); // Include DB connection
 
 if (!isset($_SESSION['customization'])) {
@@ -35,7 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         // Insert the customization details into the custom_orderitems table
         foreach ($customization as $item) {
             // Fetch flower price
-            $stmt = $pdo->prepare("SELECT price FROM flowers WHERE flower_type = :flower_type");
+            $stmt = $pdo->prepare("SELECT price FROM flowers WHERE name = :flower_type");
             $stmt->execute(['flower_type' => $item['flower_type']]);
             $flower_price = $stmt->fetchColumn();
 
