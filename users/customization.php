@@ -55,7 +55,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             <select id="container_type" name="container_type" class="form-control" required>
                                 <?php foreach ($container_types as $container): ?>
                                     <option value="<?= $container['container_id'] ?>" <?= ($container_type == $container['container_id']) ? 'selected' : ''; ?>>
-                                        <?= htmlspecialchars($container['name']) ?>
+                                        <?= htmlspecialchars($container['container_name']) ?>
                                     </option>
                                 <?php endforeach; ?>
                             </select>
@@ -66,7 +66,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             <select id="container_color" name="container_color" class="form-control" required>
                                 <?php foreach ($container_colors as $color): ?>
                                     <option value="<?= $color['color_id'] ?>" <?= ($container_color == $color['color_id']) ? 'selected' : ''; ?>>
-                                        <?= htmlspecialchars($color['name']) ?>
+                                        <?= htmlspecialchars($color['color_name']) ?>
                                     </option>
                                 <?php endforeach; ?>
                             </select>
