@@ -107,7 +107,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $total_price = 0; // Initialize total price for display
     foreach ($customization as $index => $item): 
         // Fetch flower details using flower_type ID
-        $stmt = $pdo->prepare("SELECT name, price FROM flowers WHERE flower_id = :flower_id");
+        $stmt = $pdo->prepare("SELECT name, price FROM flowers WHERE id = :flower_id");
         $stmt->execute(['flower_id' => $item['flower_type']]);
         $flower = $stmt->fetch(PDO::FETCH_ASSOC);
         if ($flower) {
