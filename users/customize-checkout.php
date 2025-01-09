@@ -46,6 +46,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             // No need to fetch color price if there's no price for color
             $color_price = 0; // Set color price to 0
 
+            // Debugging: Display the fetched prices
+echo "Flower Price: " . $flower_price . "<br>";
+echo "Container Price: " . $container_price . "<br>";
+echo "Color Price: " . $color_price . "<br>";
+
             // Calculate price for this item (no color price involved)
             $item_total_price = ($flower_price * $item['num_flowers']) + $container_price + $color_price;
             $total_price += $item_total_price; // Add to total price
