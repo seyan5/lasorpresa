@@ -47,7 +47,7 @@ include("../admin/inc/CSRF_Protect.php");
 <section>
    <div class="container">
 
-      <h3 class="title"> Occasion </h3>
+      <h3 class="title"> Addons </h3>
 
       <?php
 // Fetch categories (example query, adjust as per your database structure)
@@ -56,7 +56,7 @@ $statement = $pdo->prepare("
     FROM end_category t1
     JOIN mid_category t2
     ON t1.mcat_id = t2.mcat_id
-    WHERE t1.mcat_id = 20 /* Only get categories for the mid-category with ID 19 */
+    WHERE t1.mcat_id = 19 /* Only get categories for the mid-category with ID 19 */
     ORDER BY t1.ecat_id ASC
 ");
 
@@ -150,7 +150,7 @@ function filterProducts(ecat_id) {
     container.innerHTML = "<p>Loading products...</p>";
 
     // Determine the correct API endpoint or parameter for 'all'
-    const url = ecat_id === 'all' ? 'fetch-occasion.php' : `fetch-occasion.php?ecat_id=${ecat_id}`;
+    const url = ecat_id === 'all' ? 'addons-fetch.php' : `addons-fetch.php?ecat_id=${ecat_id}`;
 
     const xhr = new XMLHttpRequest();
     xhr.open('GET', url, true);
@@ -168,7 +168,7 @@ function filterProducts(ecat_id) {
 function openModal(productId) {
     // Fetch product data from the selected product using AJAX or embedded data
     const xhr = new XMLHttpRequest();
-    xhr.open('GET', 'fetch-occasion-details.php?p_id=' + productId, true);
+    xhr.open('GET', 'addons-fetch-details.php?p_id=' + productId, true);
     xhr.onload = function() {
         if (xhr.status === 200) {
             const product = JSON.parse(xhr.responseText);
