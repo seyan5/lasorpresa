@@ -107,7 +107,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $total_price = 0; // Initialize total price for display
     foreach ($customization as $index => $item): 
         // Fetch flower details using flower_type ID
-        $stmt = $pdo->prepare("SELECT name, price FROM flowers WHERE id = :flower_id");
+        $stmt = $pdo->prepare("SELECT name, price FROM flowers WHERE flower_id = :flower_id");
         $stmt->execute(['flower_id' => $item['flower_type']]);
         $flower = $stmt->fetch(PDO::FETCH_ASSOC);
         if ($flower) {
@@ -119,7 +119,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
 
         // Fetch container details using container_type ID
-        $stmt = $pdo->prepare("SELECT container_name, price FROM container WHERE id = :container_id");
+        $stmt = $pdo->prepare("SELECT container_name, price FROM container WHERE container_id = :container_id");
         $stmt->execute(['container_id' => $item['container_type']]);
         $container = $stmt->fetch(PDO::FETCH_ASSOC);
         if ($container) {
@@ -131,7 +131,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
 
         // Fetch color details using container_color ID
-        $stmt = $pdo->prepare("SELECT color_name FROM color WHERE id = :color_id");
+        $stmt = $pdo->prepare("SELECT color_name FROM color WHERE color_id = :color_id");
         $stmt->execute(['color_id' => $item['container_color']]);
         $color = $stmt->fetch(PDO::FETCH_ASSOC);
         if ($color) {
