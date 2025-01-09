@@ -2,39 +2,45 @@
 
 <?php
 if(isset($_POST['form1'])) {
-	$valid = 1;
+    $valid = 1;
 
     if(empty($_POST['container_name'])) {
         $valid = 0;
-        $error_message .= "container Name can not be empty<br>";
+        $error_message .= "Container Name cannot be empty<br>";
     } else {
-		// Duplicate container checking
-    	// current container name that is in the database
-    	$statement = $pdo->prepare("SELECT * FROM container WHERE container_id=?");
-		$statement->execute(array($_REQUEST['id']));
-		$result = $statement->fetchAll(PDO::FETCH_ASSOC);
-		foreach($result as $row) {
-			$current_container_name = $row['container_name'];
-		}
+        // Duplicate container name checking
+        // current container name that is in the database
+        $statement = $pdo->prepare("SELECT * FROM container WHERE container_id=?");
+        $statement->execute(array($_REQUEST['id']));
+        $result = $statement->fetchAll(PDO::FETCH_ASSOC);
+        foreach($result as $row) {
+            $current_container_name = $row['container_name'];
+        }
 
-		$statement = $pdo->prepare("SELECT * FROM container WHERE container_name=? and container_name!=?");
-    	$statement->execute(array($_POST['container_name'],$current_container_name));
-    	$total = $statement->rowCount();							
-    	if($total) {
-    		$valid = 0;
-        	$error_message .= 'container name already exists<br>';
-    	}
+        $statement = $pdo->prepare("SELECT * FROM container WHERE container_name=? AND container_name!=?");
+        $statement->execute(array($_POST['container_name'], $current_container_name));
+        $total = $statement->rowCount();                            
+        if($total) {
+            $valid = 0;
+            $error_message .= 'Container name already exists<br>';
+        }
     }
 
-    if($valid == 1) {    	
-		// updating into the database
-		$statement = $pdo->prepare("UPDATE container SET container_name=? WHERE container_id=?");
-		$statement->execute(array($_POST['container_name'],$_REQUEST['id']));
+    if(empty($_POST['container_price']) || !is_numeric($_POST['container_price'])) {
+        $valid = 0;
+        $error_message .= "Valid price is required<br>";
+    }
 
-    	$success_message = 'container is updated successfully.';
+    if($valid == 1) {        
+        // Updating container data, including price
+        $statement = $pdo->prepare("UPDATE container SET container_name=?, price=? WHERE container_id=?");
+        $statement->execute(array($_POST['container_name'], $_POST['container_price'], $_REQUEST['id']));
+
+        $success_message = 'Container is updated successfully.';
     }
 }
 ?>
+
 
 <?php
 if(!isset($_REQUEST['id'])) {
@@ -66,6 +72,7 @@ if(!isset($_REQUEST['id'])) {
 <?php							
 foreach ($result as $row) {
 	$container_name = $row['container_name'];
+	$container_price = $row['price'];
 }
 ?>
 
@@ -101,6 +108,12 @@ foreach ($result as $row) {
                         <input type="text" class="form-control" name="container_name" value="<?php echo $container_name; ?>">
                     </div>
                 </div>
+				<div class="form-group">
+    <label for="" class="col-sm-2 control-label">Container Price <span>*</span></label>
+    <div class="col-sm-4">
+        <input type="text" class="form-control" name="container_price" value="<?php echo $container_price; ?>" placeholder="Enter Price">
+    </div>
+</div>
                 <div class="form-group">
                 	<label for="" class="col-sm-2 control-label"></label>
                     <div class="col-sm-6">
