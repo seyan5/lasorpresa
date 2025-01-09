@@ -39,12 +39,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $flower_price = $stmt->fetchColumn();
 
             // Fetch container price
-            $stmt = $pdo->prepare("SELECT price FROM containers WHERE container_name = :container_type"); // 'container_name' instead of 'container_type'
+            $stmt = $pdo->prepare("SELECT price FROM container WHERE container_name = :container_type"); // 'container_name' instead of 'container_type'
             $stmt->execute(['container_type' => $item['container_type']]);
             $container_price = $stmt->fetchColumn();
 
             // Fetch color price
-            $stmt = $pdo->prepare("SELECT price FROM colors WHERE color_name = :color_name"); // 'color_name' as is
+            $stmt = $pdo->prepare("SELECT price FROM color WHERE color_name = :color_name"); // 'color_name' as is
             $stmt->execute(['color_name' => $item['container_color']]);
             $color_price = $stmt->fetchColumn();
 
