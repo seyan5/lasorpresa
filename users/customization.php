@@ -3,7 +3,6 @@ require_once('header.php');
 
 // Database connection using PDO (already in your code)
 
-
 // Fetch container types from the 'container' table
 $container_types = [];
 $container_query = $pdo->prepare("SELECT * FROM `container`");
@@ -114,10 +113,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </div>
 </div>
 
-
-
-
-
 <script>
     let flowerCount = 1; // Track the number of flower sections added
     const addFlowerBtn = document.getElementById('add-flower-btn');
@@ -143,7 +138,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
             const selectionSummary = `
                 <p><strong>Flower ${index + 1}</strong></p>
-                <p>Flower Type: ${flowerType.value}</p>
+                <p>Flower Type: ${flowerType.options[flowerType.selectedIndex].text}</p>
                 <p>Number of Flowers: ${numFlower}</p>
                 <hr>
             `;
@@ -164,11 +159,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <div class="form-group">
                 <label for="flower_type_${flowerCount}">Choose Flower Type:</label>
                 <select id="flower_type_${flowerCount}" name="flower_type[]" class="form-control" required>
-                    <option value="roses">Roses</option>
-                    <option value="tulips">Tulips</option>
-                    <option value="lilies">Lilies</option>
-                    <option value="daisies">Daisies</option>
-                    <option value="sunflowers">Sunflowers</option>
+                    <?php foreach ($flower_types as $flower): ?>
+                        <option value="<?= $flower['id'] ?>"><?= htmlspecialchars($flower['name']) ?></option>
+                    <?php endforeach; ?>
                 </select>
             </div>
 
@@ -192,4 +185,3 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Initial update on page load
     updateSelection();
 </script>
-
