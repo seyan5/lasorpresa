@@ -170,7 +170,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                         if (data.status === 'success') {
                             alert(data.message);
-                            window.location.href = 'order_submitted.php';
+                            window.location.href = 'order-confirmation.php';
                         } else {
                             alert(data.message || 'An error occurred.');
                         }
