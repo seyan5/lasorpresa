@@ -145,39 +145,6 @@ $products = $statement->fetchAll(PDO::FETCH_ASSOC);
         <p>No products found for this category.</p>
     <?php endif; ?>
 </div>
-
-        <div class="box">
-            <span class="discount">-10%</span>
-            <div class="image">
-                <img src="../ivd/flower2.jpg" alt="">
-                <div class="icons">
-                    <!-- <a href="#" class="fas fa-heart"></a> -->
-                    <a href="#" class="cart-btn">Add to cart</a>
-                    <!-- <a href="#" class="fas fa-share"></a> -->
-                </div>
-            </div>  
-            <div class="content">
-                <h3>Flower Pot</h3>
-                <div class="price"> $0 <span>$0</span></div>
-            </div> 
-        </div>
-
-        <div class="box">
-            <span class="discount">-10%</span>
-            <div class="image">
-                <img src="../ivd/flower2.jpg" alt="">
-                <div class="icons">
-                    <!-- <a href="#" class="fas fa-heart"></a> -->
-                    <a href="#" class="cart-btn">Add to cart</a>
-                    <!-- <a href="#" class="fas fa-share"></a> -->
-                </div>
-            </div>  
-            <div class="content">
-                <h3>Flower Pot</h3>
-                <div class="price"> $0 <span>$0</span></div>
-            </div> 
-        </div>
-
 </section>
     <!-- prod sec -->
 
