@@ -26,10 +26,10 @@ if (isset($_POST['login'])) {
                         'cust_id' => $user['cust_id'],
                         'cust_name' => $user['cust_name'],
                         'cust_email' => $user['cust_email'],
-                        'cust_phone' => $customer['cust_phone'],
-                        'cust_address' => $customer['cust_address'],
-                        'cust_city'  => $customer['cust_city'],
-                        'cust_zip'   => $customer['cust_zip'],
+                        'cust_phone' => $user['cust_phone'],
+                        'cust_address' => $user['cust_address'],
+                        'cust_city'  => $user['cust_city'],
+                        'cust_zip'   => $user['cust_zip'],
                     ];
 
                     // Redirect to the home page or dashboard
