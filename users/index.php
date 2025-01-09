@@ -34,7 +34,8 @@ require_once('header.php');
         <a href="index.php">Home</a>
         <a href="#about">About</a>
         <a href="products.php">Flowers</a>
-        <a href="occasion.php" class="dropdown-btn">Occasion</a>
+        <a href="occasion.php">Occasion</a>
+        <a href="addons.php">Addons</a>
         <a href="#review">Review</a>
         <a href="#contacts">Contacts</a>
         <a href="customize.php">Customize</a>
