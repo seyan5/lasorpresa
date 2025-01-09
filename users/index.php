@@ -8,7 +8,7 @@ if (isset($_POST['search_query']) && !empty($_POST['search_query'])) {
     $search_query = htmlspecialchars($_POST['search_query']);
 
     // Prepare SQL statement to search in the products table
-    $stmt = $pdo->prepare("SELECT * FROM products WHERE product_name LIKE :search_query");
+    $stmt = $pdo->prepare("SELECT * FROM product WHERE name LIKE :search_query");
     $stmt->execute(['search_query' => "%" . $search_query . "%"]);
 
     // Fetch matching results
