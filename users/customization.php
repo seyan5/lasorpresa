@@ -8,8 +8,9 @@ require_once('header.php');
             <div class="col-md-12">
                 <h2>Customize Your Floral Arrangement</h2>
                 <form id="floral-customization-form" action="customization-submit.php" method="POST">
-                    <div id="flower-container">
-                        <!-- Container selection -->
+                    <!-- Container Customization Section -->
+                    <div class="section">
+                        <h4>Container Customization</h4>
                         <div class="form-group">
                             <label for="container_type">Choose Container Type:</label>
                             <select id="container_type" name="container_type" class="form-control" required>
@@ -19,7 +20,6 @@ require_once('header.php');
                             </select>
                         </div>
 
-                        <!-- Container Color -->
                         <div class="form-group">
                             <label for="container_color">Choose Container Color:</label>
                             <select id="container_color" name="container_color" class="form-control" required>
@@ -30,8 +30,11 @@ require_once('header.php');
                                 <option value="blue">Blue</option>
                             </select>
                         </div>
+                    </div>
 
-                        <!-- Flower 1 -->
+                    <!-- Flower Customization Section -->
+                    <div id="flower-container">
+                        <h4>Flower Customization</h4>
                         <div class="flower-item" id="flower-item-1">
                             <div class="form-group">
                                 <label for="flower_type_1">Choose Flower Type:</label>
@@ -54,9 +57,9 @@ require_once('header.php');
                     <!-- Button to add more flowers -->
                     <button type="button" class="btn btn-secondary" id="add-flower-btn">Add Another Flower</button>
 
-                    <!-- Display Selections -->
-                    <div class="form-group">
-                        <h4>Your Selection</h4>
+                    <!-- Real-time Selections -->
+                    <div class="section">
+                        <h4>Your Selections</h4>
                         <div id="selected-selections">
                             <!-- This will show the real-time selections of flowers -->
                         </div>
@@ -82,7 +85,7 @@ require_once('header.php');
         const numFlowers = document.querySelectorAll('[id^="num_flowers_"]');
         const containerType = document.getElementById('container_type').value;
         const containerColor = document.getElementById('container_color').value;
-        
+
         selectedSelections.innerHTML = `
             <p><strong>Container Type:</strong> ${containerType}</p>
             <p><strong>Container Color:</strong> ${containerColor}</p>
