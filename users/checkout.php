@@ -170,7 +170,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                         if (data.status === 'success') {
                             alert(data.message);
-                            window.location.href = 'order-confirmation.php';
+                            window.location.href = 'order_submitted.php';
                         } else {
                             alert(data.message || 'An error occurred.');
                         }
@@ -339,7 +339,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </div>
                 <?php endforeach; ?>
             <?php else: ?>
-                <p>Your cart is empty</p>
+                <p>Your cart is empty.</p>
             <?php endif; ?>
         </div>
         <div class="payment">
