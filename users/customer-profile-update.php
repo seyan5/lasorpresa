@@ -15,6 +15,10 @@ if(!isset($_SESSION['customer'])) {
         exit;
     }
 }
+
+echo '<pre>';
+print_r($_SESSION['customer']);
+echo '</pre>';
 ?>
 
 <?php
