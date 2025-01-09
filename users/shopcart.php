@@ -1,5 +1,4 @@
 <?php
-require 'header.php'; // Include database connection
 session_start();
 ?>
 
