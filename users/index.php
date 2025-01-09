@@ -96,17 +96,16 @@ require_once('header.php');
 <section class="products" id="products">
 
 <?php
-// Fetch products for mid-category ID = 3 (adjust query based on your database structure)
+// Fetch products for mid-category ID = 3 and is_featured = 1
 $statement = $pdo->prepare("
     SELECT p.p_id, p.name, p.featured_photo, p.current_price, p.old_price 
     FROM product p
     JOIN end_category ec ON p.ecat_id = ec.ecat_id
-    WHERE ec.mcat_id = 3 AND p.is_active = 1
+    WHERE ec.mcat_id = 3 AND p.is_active = 1 AND p.is_featured = 1
     ORDER BY p.p_id ASC
 ");
 $statement->execute();
 $products = $statement->fetchAll(PDO::FETCH_ASSOC);
-
 ?>
 
 <h1 class="heading">Latest <span>Flowers</span></h1>
