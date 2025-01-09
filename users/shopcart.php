@@ -62,8 +62,9 @@ session_start();
       <?php else: ?>
         <p>Your cart is empty.</p>
       <?php endif; ?>
+      <a href="addons.php">Want to get addons?</a>
     </div>
-    <a href="addons.php">Want to get addons?</a>
+    
 
     <div class="payment">
       <h3>Summary</h3>
