@@ -124,4 +124,23 @@ function checkout() {
     }
   </script>
 </body>
+
+<style>
+  .quantity-form {
+  display: flex;
+  align-items: center;
+}
+
+.quantity-form button {
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
+  padding: 5px;
+  cursor: pointer;
+}
+
+.quantity-form span {
+  margin: 0 10px;
+  font-weight: bold;
+}
+</style>
 </html>
