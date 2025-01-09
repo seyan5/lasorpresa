@@ -1,5 +1,6 @@
 <?php
 require_once('header.php');
+
 // Database connection using PDO (already in your code)
 
 
@@ -39,8 +40,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 }
 ?>
 
-
-
 <div class="page">
     <div class="container">
         <div class="row">
@@ -55,7 +54,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             <select id="container_type" name="container_type" class="form-control" required>
                                 <?php foreach ($container_types as $container): ?>
                                     <option value="<?= $container['container_id'] ?>" <?= ($container_type == $container['container_id']) ? 'selected' : ''; ?>>
-                                        <?= htmlspecialchars($container['container_name']) ?>
+                                        <?= htmlspecialchars($container['name']) ?>
                                     </option>
                                 <?php endforeach; ?>
                             </select>
@@ -66,7 +65,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             <select id="container_color" name="container_color" class="form-control" required>
                                 <?php foreach ($container_colors as $color): ?>
                                     <option value="<?= $color['color_id'] ?>" <?= ($container_color == $color['color_id']) ? 'selected' : ''; ?>>
-                                        <?= htmlspecialchars($color['color_name']) ?>
+                                        <?= htmlspecialchars($color['name']) ?>
                                     </option>
                                 <?php endforeach; ?>
                             </select>
@@ -91,7 +90,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
                                 <div class="form-group">
                                     <label for="num_flowers_<?php echo $index + 1; ?>">Number of Flowers:</label>
-                                    <input type="number" id="num_flowers_<?php echo $index + 1; ?>" name="num_flowers[]" class="form-control" min="1" max="100" value="<?php echo $num_flowers[$index] ?? 1; ?>" required>
+                                    <input type="number" id="num_flowers_<?php echo $index + 1; ?>" name="num_flowers[]" class="form-control" min="1" max="100" value="<?php echo isset($num_flowers[$index]) ? $num_flowers[$index] : 1; ?>" required>
                                 </div>
                             </div>
                         <?php endforeach; ?>
@@ -114,6 +113,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         </div>
     </div>
 </div>
+
 
 
 
