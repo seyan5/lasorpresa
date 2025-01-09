@@ -1,16 +1,15 @@
 <?php
 session_start();
+require_once('header.php'); // Make sure to include your DB connection
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    // Get the container details
+    // Retrieve the customized data from the POST request
     $container_type = $_POST['container_type'];
     $container_color = $_POST['container_color'];
-    
-    // Get the flowers details
     $flower_types = $_POST['flower_type'];
     $num_flowers = $_POST['num_flowers'];
 
-    // Process each flower customization
+    // Optionally, process the customization (store in session or DB)
     $customization_details = [];
     foreach ($flower_types as $index => $flower_type) {
         $customization_details[] = [
@@ -21,14 +20,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         ];
     }
 
-    // Optionally, store this information in the session, database, or use for further processing
+    // Store the customization in session for later use
     $_SESSION['customization'] = $customization_details;
 
-    // Redirect or show confirmation page
-    header("Location: customization-view.php");
+    // Redirect the user to the confirmation page
+    header('Location: checkout.php');
     exit;
 } else {
     echo "Invalid request.";
 }
 ?>
-
