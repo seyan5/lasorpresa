@@ -29,7 +29,7 @@ include("../admin/inc/CSRF_Protect.php");
         <a href="index.php">Home</a>
         <a href="#about">About</a>
         <a href="products.php">Product</a>
-        <a href="#occasion">Occasion</a>
+        <a href="occasion.php">Occasion</a>
         <a href="#review">Review</a>
         <a href="#contacts">Contacts</a>
     </nav>
