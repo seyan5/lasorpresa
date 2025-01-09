@@ -33,20 +33,28 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         // Insert the customization details into the custom_orderitems table
         foreach ($customization as $item) {
-            // Fetch flower price
-            $stmt = $pdo->prepare("SELECT price FROM flowers WHERE name = :flower_type"); // 'name' instead of 'flower_type'
+            // Fetch flower details (price and name)
+            $stmt = $pdo->prepare("SELECT name, price FROM flowers WHERE name = :flower_type");
             $stmt->execute(['flower_type' => $item['flower_type']]);
-            $flower_price = $stmt->fetchColumn();
+            $flower = $stmt->fetch(PDO::FETCH_ASSOC);
+            $flower_name = $flower['name'];
+            $flower_price = $flower['price'];
 
-            // Fetch container price
-            $stmt = $pdo->prepare("SELECT price FROM container WHERE container_name = :container_type"); // 'container_name' instead of 'container_type'
+            // Fetch container details (name and price)
+            $stmt = $pdo->prepare("SELECT container_name, price FROM container WHERE container_name = :container_type");
             $stmt->execute(['container_type' => $item['container_type']]);
-            $container_price = $stmt->fetchColumn();
+            $container = $stmt->fetch(PDO::FETCH_ASSOC);
+            $container_name = $container['container_name'];
+            $container_price = $container['price'];
 
-            // No need to fetch color price if there's no price for color
-            $color_price = 0; // Set color price to 0
+            // Fetch color details (name, no price)
+            $stmt = $pdo->prepare("SELECT color_name FROM color WHERE color_name = :color_name");
+            $stmt->execute(['color_name' => $item['container_color']]);
+            $color = $stmt->fetch(PDO::FETCH_ASSOC);
+            $color_name = $color['color_name'];
+            $color_price = 0; // No extra cost for color
 
-            // Calculate price for this item (no color price involved)
+            // Calculate price for this item
             $item_total_price = ($flower_price * $item['num_flowers']) + $container_price + $color_price;
             $total_price += $item_total_price; // Add to total price
 
@@ -55,13 +63,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                    VALUES (:order_id, :flower_type, :num_flowers, :container_type, :container_color, :flower_price, :container_price, :color_price, :total_price)");
             $stmt->execute([
                 'order_id' => $order_id,
-                'flower_type' => $item['flower_type'],
+                'flower_type' => $flower_name, // Store flower name
                 'num_flowers' => $item['num_flowers'],
-                'container_type' => $item['container_type'],
-                'container_color' => $item['container_color'],
+                'container_type' => $container_name, // Store container name
+                'container_color' => $color_name, // Store color name
                 'flower_price' => $flower_price,
                 'container_price' => $container_price,
-                'color_price' => $color_price, // This will be 0
+                'color_price' => $color_price,
                 'total_price' => $item_total_price
             ]);
         }
@@ -98,20 +106,26 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <?php 
     $total_price = 0; // Initialize total price for display
     foreach ($customization as $index => $item): 
-        // Fetch flower price
-        $stmt = $pdo->prepare("SELECT price FROM flowers WHERE name = :flower_type");
+        // Fetch flower details (name and price)
+        $stmt = $pdo->prepare("SELECT name, price FROM flowers WHERE name = :flower_type");
         $stmt->execute(['flower_type' => $item['flower_type']]);
-        $flower_price = $stmt->fetchColumn() ?: 0; // Default to 0 if no price found
+        $flower = $stmt->fetch(PDO::FETCH_ASSOC);
+        $flower_name = $flower['name'];
+        $flower_price = $flower['price'];
 
-        // Fetch container price
-        $stmt = $pdo->prepare("SELECT price FROM container WHERE container_name = :container_type");
+        // Fetch container details (name and price)
+        $stmt = $pdo->prepare("SELECT container_name, price FROM container WHERE container_name = :container_type");
         $stmt->execute(['container_type' => $item['container_type']]);
-        $container_price = $stmt->fetchColumn() ?: 0; // Default to 0 if no price found
+        $container = $stmt->fetch(PDO::FETCH_ASSOC);
+        $container_name = $container['container_name'];
+        $container_price = $container['price'];
 
-        // No need to fetch color price
-        $color_price = 0; // Color price is 0
-
-
+        // Fetch color details (name, no price)
+        $stmt = $pdo->prepare("SELECT color_name FROM color WHERE color_name = :color_name");
+        $stmt->execute(['color_name' => $item['container_color']]);
+        $color = $stmt->fetch(PDO::FETCH_ASSOC);
+        $color_name = $color['color_name'];
+        $color_price = 0; // No extra cost for color
 
         // Calculate total price for this flower set
         $item_total_price = ($flower_price * $item['num_flowers']) + $container_price + $color_price;
@@ -119,10 +133,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     ?>
         <div class="customization-item">
             <h4>Flower Set <?php echo $index + 1; ?>:</h4>
-            <p><strong>Flower Type:</strong> <?php echo htmlspecialchars($item['flower_type']); ?> ($<?php echo $flower_price; ?> per flower)</p>
+            <p><strong>Flower Type:</strong> <?php echo htmlspecialchars($flower_name); ?> ($<?php echo $flower_price; ?> per flower)</p>
             <p><strong>Number of Flowers:</strong> <?php echo htmlspecialchars($item['num_flowers']); ?></p>
-            <p><strong>Container Type:</strong> <?php echo htmlspecialchars($item['container_type']); ?> ($<?php echo $container_price; ?>)</p>
-            <p><strong>Container Color:</strong> <?php echo htmlspecialchars($item['container_color']); ?> (No extra cost)</p>
+            <p><strong>Container Type:</strong> <?php echo htmlspecialchars($container_name); ?> ($<?php echo $container_price; ?>)</p>
+            <p><strong>Container Color:</strong> <?php echo htmlspecialchars($color_name); ?> (No extra cost)</p>
             <p><strong>Item Total Price:</strong> $<?php echo number_format($item_total_price, 2); ?></p>
         </div>
         <hr>
