@@ -1,13 +1,9 @@
 <?php 
-
-
 require("conn.php");
 
 echo "<pre>";
 print_r($_SESSION['customization']);
 echo "</pre>";
-
-
 
 if (!isset($_SESSION['customization'])) {
     echo "No customization found. Please go back and customize your arrangement.";
@@ -15,12 +11,7 @@ if (!isset($_SESSION['customization'])) {
 }
 
 $customization = $_SESSION['customization'];
-
-
 ?>
-
-
-
 
 <h3>Your Floral Arrangement Customization</h3>
 
@@ -68,26 +59,50 @@ $customization = $_SESSION['customization'];
         $item_total_price = ($flower_price * $item['num_flowers']) + $container_price + $color_price;
         $total_price += $item_total_price;
 
-        /* 
-        Rosas = 2       Basket = 1      Red = 1 
-        Tulip = 3       Wrapper = 2     Blue = 2
-        Lilac = 4       Vase = 4        Violet = 3
-        
-        
-        */
+        // Preview images array
+        $preview_images = [
+            2 => [ // Flower type 2 (e.g., Rose)
+                1 => [
+                    1 => "../images/previews/rose_red_basket.jpg", // 1 flower, basket, color 1
+                    2 => "../images/previews/rose_red_wrapper.jpg", // 1 flower, wrapper, color 1
+                    4 => "../images/previews/rose_red_vase.jpg", // 1 flower, vase, color 1
+                ],
+                2 => [
+                    1 => "../images/previews/rose_red_basket2.jpg", // 2 flowers, basket, color 1
+                    2 => "../images/previews/rose_red_wrapper2.jpg", // 2 flowers, wrapper, color 1
+                    4 => "../images/previews/rose_red_vase2.jpg", // 2 flowers, vase, color 1
+                ],
+                3 => [
+                    1 => "../images/previews/rose_red_basket3.jpg", // 3 flowers, basket, color 1
+                    2 => "../images/previews/rose_red_wrapper3.jpg", // 3 flowers, wrapper, color 1
+                    4 => "../images/previews/rose_red_vase3.jpg", // 3 flowers, vase, color 1
+                ]
+            ],
+            3 => [ // Flower type 3 (e.g., Tulip)
+                1 => [
+                    1 => "../images/previews/tulip_red_basket.jpg", // 1 flower, basket, color 1
+                    2 => "../images/previews/tulip_red_wrapper.jpg", // 1 flower, wrapper, color 1
+                    4 => "../images/previews/tulip_red_vase.jpg", // 1 flower, vase, color 1
+                ],
+                2 => [
+                    1 => "../images/previews/tulip_red_basket2.jpg", // 2 flowers, basket, color 1
+                    2 => "../images/previews/tulip_red_wrapper2.jpg", // 2 flowers, wrapper, color 1
+                    4 => "../images/previews/tulip_red_vase2.jpg", // 2 flowers, vase, color 1
+                ],
+                3 => [
+                    1 => "../images/previews/tulip_red_basket3.jpg", // 3 flowers, basket, color 1
+                    2 => "../images/previews/tulip_red_wrapper3.jpg", // 3 flowers, wrapper, color 1
+                    4 => "../images/previews/tulip_red_vase3.jpg", // 3 flowers, vase, color 1
+                ]
+            ]
+        ];
 
         // Determine the preview image based on customization
         $preview_image = "../images/previews/default.jpg"; // Default preview
-        if ($item['flower_type'] == 2 && $item['num_flowers'] == 1 && strtolower($item['container_type']) == 1 && strtolower($item['container_color']) == 1) {
-            $preview_image = ".../images/previews/rose_red_basket.jpg";
-            if ($item['num_flowers'] == 2) {
-                $preview_image = ".../images/previews/rose_red_basket2.jpg";
-            }
-            elseif($item['num_flowers'] == 3){
-                $preview_image = ".../images/previews/rose_red_basket3.jpg";
-            }
-        } elseif ($item['flower_type'] == 2 && $item['num_flowers'] > 1 && strtolower($item['container_type']) == 'basket') {
-            $preview_image = "../images/previews/rose_red_basket.jpg";
+        // Check if flower type, number of flowers, and container type are set
+        if (isset($preview_images[$item['flower_type']][$item['num_flowers']][$item['container_type']])) {
+            // Set the preview image based on the condition
+            $preview_image = $preview_images[$item['flower_type']][$item['num_flowers']][$item['container_type']];
         }
     ?>
         <div class="customization-item">
