@@ -177,7 +177,7 @@ function openModal(productId) {
             document.getElementById('modalImage').src = '../admin/uploads/' + product.featured_photo;
             document.getElementById('modalName').innerText = product.name;
             document.getElementById('modalDescription').innerText = product.description;
-            document.getElementById('modalPrice').innerText = "$" + product.current_price;
+            document.getElementById('modalPrice').innerText = "₱" + product.current_price;
 
             // Show the modal
             document.getElementById('productModal').style.display = 'block';
