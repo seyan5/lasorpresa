@@ -15,77 +15,6 @@
    transition: .2s linear;
 }
 
-section{
-   padding: 2rem 9%;
-}
-
-
-.logos{
-    width: 10rem;
-    margin-top: -2rem;
-    margin-bottom: -3rem;
-}
-
-header {
-   display: flex;
-   align-items: center;
-   justify-content: space-between;
-   padding: 1.5rem 5%;
-   position: fixed;
-   width: 100%;
-   top: 0;
-   z-index: 1000;
-   background: white;
-   box-shadow: 0 0.2rem 1rem rgba(0, 0, 0, 0.1);
-}
-
-header .logo{
-   font-size: 3rem;
-   color: #333;
-   font-weight: bolder;
-}
-
-header .logo span{
-   color: var(--pink);
-}
-
-header .navbar {
-   display: flex;
-   align-items: center;
-   gap: 2rem;
-}
-
-header .navbar a{
-   font-size: 2rem;
-   padding:0 1.5rem;
-   color: #666;
-}
-
-header .navbar a:hover{
-   color: var(--pink);
-}
-
-header .icons a{
-   font-size: 2.5rem;
-   color: #333;
-   margin-right: 5rem;
-}
-
-header #toggler{
-   display: none;
-}
-
-header .fa-bars{
-   font-size: 3rem;
-   color: #333;
-   border-radius: .5rem;
-   padding: .5rem 1.5rem;
-   cursor: pointer;
-   border: .1rem rgba(0, 0, 0, .3);
-   display: none;
-}
-
-
 .home{
    display: flex;
    align-items: center;
@@ -97,7 +26,6 @@ header .fa-bars{
 
 .home .content{
    max-width: 50rem;
-   max-width: 1500px; /* Maximum width of the box */
    width: 100%; /* Set a width percentage to make it responsive */
    min-height: 500px; /* Minimum height for the box */
    border: 2px solid #ccc; /* Border around the box */
@@ -120,8 +48,132 @@ body{
    background: #eee;
 }
 
+section{
+   padding: 2rem 9%;
+}
+
+
+.logos{
+    width: 10rem;
+    margin-top: -2rem;
+    margin-bottom: -3rem;
+}
+
+header {
+   display: flex;
+   align-items: center;
+   justify-content: space-between;
+   padding: 1.5rem 5%;
+   position: fixed;
+   width: 100%;
+   top: 0;
+   z-index: 1000;
+   background: white;
+   box-shadow: 0 0.2rem 1rem rgba(0, 0, 0, 0.1);
+   overflow: hidden; /* Prevent content from overflowing */
+}
+
+header .logo{
+   font-size: 3rem;
+   color: #333;
+   font-weight: bolder;
+}
+
+header .logo span{
+   color: var(--pink);
+}
+
+header .navbar {
+   display: flex;
+   align-items: center;
+   gap: 2rem;  
+   flex-wrap: wrap; /* Ensure navbar wraps on smaller screens */
+   
+}
+
+header .navbar a {
+   font-size: 2rem;
+   padding: 0 1.5rem;
+   color: #666;
+   white-space: nowrap; /* Prevent text from wrapping */
+}
+
+header .navbar a:hover{
+   color: var(--pink);
+   text-decoration: none;
+}
+
+header .icons {
+   display: flex;
+   align-items: center;
+   gap: 2rem; /* Adjust spacing between icons */
+}
+
+
+header .icons a {
+   font-size: 2.5rem;
+   color: #333;
+   margin-right: 2rem; /* Reduced margin to fix overflow */
+   text-decoration: none;
+}
+header #toggler{
+   display: none;
+}
+
+header .fa-bars {
+   font-size: 3rem;
+   color: #333;
+   border-radius: 0.5rem;
+   padding: 0.5rem 1.5rem;
+   cursor: pointer;
+   border: 0.1rem solid rgba(0, 0, 0, 0.3);
+   display: none; /* Hide the menu icon unless needed */
+}
+
+/* Style for the indicator container */
+.indicator {
+   list-style: none; /* Remove bullet points */
+   display: flex; /* Display list items in a row */
+   justify-content: center; /* Center align the items */
+   padding: 0; /* Remove default padding */
+   margin: 0 30px 50px; /* Remove default margin, add bottom space */
+   border-radius: 5px; /* Rounded corners */
+}
+/* Style for each list item */
+.indicator li {
+   margin: 0 10px; /* Spacing between items */
+}
+
+/* Style for links */
+.indicator li a {
+   text-decoration: none; /* Remove underline */
+   padding: 10px 15px; /* Add spacing inside links */
+   color: #333; /* Default text color */
+   font-size: 14px; /* Font size */
+   font-weight: bold; /* Bold text */
+   border-radius: 3px; /* Rounded corners */
+   transition: color 0.3s; /* Smooth text color transition */
+}
+
+/* Active class styling */
+.indicator li.active a {
+   color: var(--pink); /* Active text color (pink) */
+}
+
+/* Hover effect for links */
+.indicator li a:hover {
+   color: var(--pink); /* Hover text color (pink) */
+}
+
+/* Fallback message styling */
+.indicator li {
+   color: #6c757d; /* Grey text for fallback message */
+   font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+
 .container{
-   max-width: 1300px;
+   max-width: 10rem;
    margin:0 auto;
    padding:3rem 2rem;
 }
@@ -141,37 +193,49 @@ body{
    gap:2rem;
 }
 
-.container .products-container .product{
+.container .products-container .product {
    text-align: center;
-   padding:3rem 2rem;
+   padding: 1.5rem 1rem ; /* Reduce padding */
    background: #fff;
-   box-shadow: 0 .5rem 1rem rgba(0,0,0,.1);
-   outline: .1rem solid #ccc;
-   outline-offset: -1.5rem;
+   box-shadow: 0 .3rem .5rem rgba(0,0,0,.1); /* Reduce shadow size */
+   outline: .05rem solid #ccc; /* Reduce outline thickness */
+   outline-offset: -1rem; /* Reduce outline offset */
    cursor: pointer;
+   font-size: 0.2rem; /* Optionally reduce font size */
 }
 
 .container .products-container .product:hover{
    outline: .2rem solid #222;
    outline-offset: 0;
+   text-decoration: none; /* Remove underline */
 }
 
 .container .products-container .product img{
    height: 25rem;
+   width: auto; /* Maintain aspect ratio */
 }
 
 .container .products-container .product:hover img{
    transform: scale(.9);
 }
 
-.container .products-container .product h3{
-   padding:.5rem 0;
-   font-size: 2rem;
-   color:#444;
+.container .products-container .product h3 {
+   padding: 0.5rem 0;
+   font-size: 1.4rem;
+   color: #444;
+   font-weight: bold; /* Bold text */
+   font-family: Verdana, Geneva, Tahoma, sans-serif;
+   text-decoration: none; /* Remove underline */
+   word-wrap: break-word; /* Break long words to wrap */
+   overflow-wrap: break-word; /* Ensures text wrapping */
+   white-space: normal; /* Allow multiple lines */
+   text-overflow: ellipsis; /* Optional: Adds "..." for overflow text */
+   overflow: hidden; /* Optional: Hides overflow text */
 }
 
 .container .products-container .product:hover h3{
-   color:#27ae60;
+   color:var(--pink);
+   text-decoration: none; /* Remove underline */
 }
 
 .container .products-container .product .price{
@@ -179,112 +243,15 @@ body{
    color:#444;
 }
 
-.products-preview{
-   position: fixed;
-   top:0; left:0;
-   min-height: 100vh;
-   width: 100%;
-   background: rgba(0,0,0,.8);
-   display: none;
-   align-items: center;
-   justify-content: center;
+.container .products-container .product a {
+   text-decoration: none; /* Ensure no underline for links */
 }
 
-.products-preview .preview{
-   display: none;
-   padding:2rem;
-   text-align: center;
-   background: #fff;
-   position: relative;
-   margin:2rem;
-   width: 40rem;
-}
-
-.products-preview .preview.active{
-   display: inline-block;
-}
-
-.products-preview .preview img{
-   height: 30rem;
-}
-
-.products-preview .preview .fa-times{
-   position: absolute;
-   top:1rem; right:1.5rem;
-   cursor: pointer;
-   color:#444;
-   font-size: 4rem;
-}
-
-.products-preview .preview .fa-times:hover{
-   transform: rotate(90deg);
-}
-
-.products-preview .preview h3{
-   color:#444;
-   padding:.5rem 0;
-   font-size: 2.5rem;
-}
-
-.products-preview .preview .stars{
-   padding:1rem 0;
-   font-size: 1.7rem;
-}
-
-.products-preview .preview .stars i{
-   color:#27ae60;
-}
-
-.products-preview .preview .stars span{
-   color:#999;
-}
-
-.products-preview .preview p{
-   line-height: 1.5;
-   padding:1rem 0;
-   font-size: 1.6rem;
-   color:#777;
-}
-
-.products-preview .preview .price{
-   padding:1rem 0;
-   font-size: 2.5rem;
-   color:#27ae60;
-}
-
-.products-preview .preview .buttons{
-   display: flex;
-   gap:1.5rem;
-   flex-wrap: wrap;
-   margin-top: 1rem;
-}
-
-.products-preview .preview .buttons a{
-   flex:1 1 16rem;
-   padding:1rem;
-   font-size: 1.8rem;
-   color:#444;
-   border:.1rem solid #444;
-}
-
-.products-preview .preview .buttons a.cart{
-   background: #444;
-   color:#fff;
-}
-
-.products-preview .preview .buttons a.cart:hover{
-   background: #111;
-}
-
-.products-preview .preview .buttons a.buy:hover{
-   background: #444;
-   color:#fff;
-}
 
 .filter-condition{
    padding: 20px;
    height: 100px;
-   font-size: 20px;
+   font-size: 15px;
    font-weight: bold;
 }
 .filter-condition select{
@@ -293,7 +260,7 @@ body{
     border: none;
     outline: none;
     font-weight: bold;
-    color: purple;
+    color: var(--pink);
     background: transparent;
     cursor: pointer;
 }
@@ -338,4 +305,3 @@ body{
    }
 
 }
-

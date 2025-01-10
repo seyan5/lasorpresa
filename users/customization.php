@@ -1,5 +1,5 @@
 <?php
-require_once('header.php');
+require_once('conn.php');
 
 // Database connection using PDO (already in your code)
 
@@ -38,6 +38,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $num_flowers = [];
 }
 ?>
+
+<!-- Include Bootstrap CSS -->
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="../css/customize.css?v=1.1">
+<header>
+        <a href="index.php" class="back">← Back to Home Page</a>
+        <a href="customize-checkout.php" class="back">Check Out Cart</a>
+
+    </header>
 
 <div class="page">
     <div class="container">

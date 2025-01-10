@@ -1,0 +1,83 @@
+.user-dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.fas.fa-user {
+    cursor: pointer;
+}
+
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background-color: white;
+    border: 1px solid #ccc;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+    width: 200px;
+    z-index: 1000;
+}
+
+.dropdown-menu p {
+    margin: 10px;
+    font-weight: bold;
+}
+
+.dropdown-menu hr {
+    margin: 5px 0;
+}
+
+.dropdown-menu a {
+    display: block;
+    padding: 10px;
+    text-decoration: none;
+    color: #333;
+}
+
+.dropdown-menu a:hover {
+    background-color: #f0f0f0;
+}
+
+.dropdown-menu.show {
+    display: block;
+}
+
+
+/* Style for the dropdown container */
+.prod-dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+/* Style for the dropdown menu (hidden by default) */
+.prod-menu {
+    display: none; /* Hidden initially */
+    position: absolute;
+    top: 100%; /* Position below the parent element */
+    left: 0;
+    background-color: white;
+    min-width: 150px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Optional shadow */
+    z-index: 1000;
+}
+
+/* Links inside the dropdown menu */
+.prod-menu a {
+    display: block;
+    padding: 10px;
+    text-decoration: none;
+    color: black;
+    transition: background-color 0.3s ease;
+}
+
+.prod-menu a:hover {
+    background-color: #f0f0f0; /* Highlight the link on hover */
+}
+
+/* Show the dropdown menu when hovering over the container */
+.prod-dropdown:hover .prod-menu {
+    display: block; /* Make it visible */
+}
+

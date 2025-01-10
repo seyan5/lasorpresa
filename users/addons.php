@@ -9,13 +9,15 @@ include("../admin/inc/CSRF_Protect.php");
 
 ?>
 <!-- css -->
-<link rel="stylesheet" href="../css/product.css">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
 <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 <link href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" rel="stylesheet" />
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js"></script>
+<link rel="stylesheet" href="../css/dropdown.css">
+<link rel="stylesheet" href="../css/product.css?v=1.0">
 <script src="../js/product.js" defer></script>
 
 <header>
@@ -28,9 +30,14 @@ include("../admin/inc/CSRF_Protect.php");
     <nav class="navbar">
         <a href="index.php">Home</a>
         <a href="#about">About</a>
-        <a href="products.php">Product</a>
-        <a href="occasion.php">Occasion</a>
-        <a href="addons.php">Addons</a>
+        <div class="prod-dropdown">
+            <a href="" onclick="toggleDropdown()">Products</a>
+                <div class="prod-menu" id="prodDropdown">
+                    <a href="products.php">Flowers</a>
+                    <a href="occasion.php">Occasion</a>
+                    <a href="addons.php">Addons</a>
+                </div>
+        </div>
         <a href="#review">Review</a>
         <a href="#contacts">Contacts</a>
     </nav>
@@ -65,6 +72,15 @@ $result = $statement->fetchAll(PDO::FETCH_ASSOC);
 
 ?>
 
+<div class="filter-condition">
+    <select name="" id="select">
+        <option value="Default">Default</option>
+        <option value="LowToHigh">Low to High</option>
+        <option value="HighToLow">High to Low</option>
+    </select>
+</div>
+
+
 <!-- Categories List (Categories Filter) -->
 <ul class="indicator">
     <li data-filter="all" class="active">
@@ -89,15 +105,6 @@ $result = $statement->fetchAll(PDO::FETCH_ASSOC);
     <!-- Products will be loaded here dynamically -->
 </div>
 
-<div class="filter-condition">
-    <select name="" id="select">
-        <option value="Default">Default</option>
-        <option value="LowToHigh">Low to High</option>
-        <option value="HighToLow">High to Low</option>
-    </select>
-</div>
-
-
 <!-- Product Modal -->
 <!-- Modal for Product Details -->
 <div id="productModal" class="modal" style="display:none;">
@@ -111,31 +118,8 @@ $result = $statement->fetchAll(PDO::FETCH_ASSOC);
     </div>
 </div>
 
-   <div class="products-preview">
-
-      <div class="preview" data-target="p-1">
-         <i class="fas fa-times"></i>
-         <img src="images/1.png" alt="">
-         <h3>Flowers</h3>
-         <div class="stars">
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star-half-alt"></i>
-            <span>( 250 )</span>
-         </div>
-         <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequatur, dolorem.</p>
-         <div class="price">$2.00</div>
-         <div class="buttons">
-            <a href="#" class="buy">buy now</a>
-            <a href="#" class="cart">add to cart</a>
-         </div>
-      </div>
-   </div>
-
    <ul class="listPage">
-
+        <li>Next Page</li>
    </ul>
 </section>
 
@@ -163,6 +147,11 @@ function filterProducts(ecat_id) {
     };
     xhr.send();
 }
+
+window.onload = function() {
+    filterProducts('all');
+};
+
 
 // Function to open modal
 function openModal(productId) {
