@@ -30,7 +30,7 @@ $product_quantity = $product['quantity']; // Get product quantity
   $reviewStmt = $pdo->prepare("
   SELECT r.review, r.rating, r.created_at, c.cust_name
   FROM reviews r
-  JOIN customers c ON r.customer_id = c.cust_id
+  JOIN customer c ON r.customer_id = c.cust_id
   WHERE r.product_id = :p_id
   ORDER BY r.created_at DESC
   ");
