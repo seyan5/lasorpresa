@@ -16,3 +16,90 @@ POST Received: Array
     [amount_paid] => 1111
 )
 
+
+POST Received: Array
+(
+    [reference_number] => 123
+    [amount_paid] => 44
+)
+
+Login session set: Array
+(
+    [_csrf] => d764ef04e43f3c48ebaac838aeda6d33
+    [customer] => Array
+        (
+            [cust_id] => 14
+            [cust_name] => xofahon
+            [cust_email] => xofahon594@pariag.com
+            [cust_phone] => 09214991751
+            [cust_address] => Blk 31 Lt 2 Lhinnete Homea
+            [cust_city] => Cavite
+            [cust_zip] => 4311
+        )
+
+)
+
+POST Received: Array
+(
+    [reference_number] => 123
+    [amount_paid] => 100
+)
+
+
+POST Received: Array
+(
+    [reference_number] => 123
+    [amount_paid] => 400000
+)
+
+
+POST Received: Array
+(
+    [reference_number] => 123
+    [amount_paid] => 4300
+)
+
+Login session set: Array
+(
+    [_csrf] => 5d304dc6a08517fc4f61b04f00815016
+    [customer] => Array
+        (
+            [cust_id] => 14
+            [cust_name] => xofahon
+            [cust_email] => xofahon594@pariag.com
+            [cust_phone] => 09214991751
+            [cust_address] => Blk 31 Lt 2 Lhinnete Homea
+            [cust_city] => Cavite
+            [cust_zip] => 4311
+        )
+
+)
+Login session set: Array
+(
+    [_csrf] => 74e4840850760cd5c9ded72c0b36ab43
+    [customer] => Array
+        (
+            [cust_id] => 14
+            [cust_name] => xofahon
+            [cust_email] => xofahon594@pariag.com
+            [cust_phone] => 09214991751
+            [cust_address] => Blk 31 Lt 2 Lhinnete Homea
+            [cust_city] => Cavite
+            [cust_zip] => 4311
+        )
+
+)
+
+POST Received: Array
+(
+    [reference_number] => 1123
+    [amount_paid] => 4300
+)
+
+
+POST Received: Array
+(
+    [reference_number] => 1111
+    [amount_paid] => 321
+)
+

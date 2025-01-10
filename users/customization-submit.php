@@ -1,32 +1,44 @@
 <?php
 session_start();
-require_once('header.php'); // Make sure to include your DB connection
+require_once('conn.php'); // Include DB connection or additional setup
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    // Retrieve the customized data from the POST request
-    $container_type = $_POST['container_type'];
-    $container_color = $_POST['container_color'];
+    // Validate required POST data
+    if (!isset($_POST['container_type'], $_POST['container_color'], $_POST['flower_type'], $_POST['num_flowers'])) {
+        echo "Incomplete customization data. Please go back and try again.";
+        exit;
+    }
+
+    // Sanitize and retrieve inputs
+    $container_type = htmlspecialchars($_POST['container_type']);
+    $container_color = htmlspecialchars($_POST['container_color']);
     $flower_types = $_POST['flower_type'];
     $num_flowers = $_POST['num_flowers'];
 
-    // Optionally, process the customization (store in session or DB)
+    // Ensure inputs are arrays and match in count
+    if (!is_array($flower_types) || !is_array($num_flowers) || count($flower_types) !== count($num_flowers)) {
+        echo "Invalid flower selection data. Please try again.";
+        exit;
+    }
+
+    // Prepare customization details
     $customization_details = [];
     foreach ($flower_types as $index => $flower_type) {
         $customization_details[] = [
-            'flower_type' => $flower_type,
-            'num_flowers' => $num_flowers[$index],
+            'flower_type' => htmlspecialchars($flower_type),
+            'num_flowers' => (int) $num_flowers[$index],
             'container_type' => $container_type,
             'container_color' => $container_color
         ];
     }
 
-    // Store the customization in session for later use
+    // Store customization in session
     $_SESSION['customization'] = $customization_details;
 
-    // Redirect the user to the confirmation page
+    // Redirect to confirmation page
     header('Location: customize-checkout.php');
     exit;
 } else {
-    echo "Invalid request.";
+    echo "Invalid request. Please use the customization form.";
 }
 ?>
