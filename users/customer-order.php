@@ -5,6 +5,13 @@ include("../admin/inc/config.php");
 include("../admin/inc/functions.php");
 include("../admin/inc/CSRF_Protect.php");
 
+// Fetch customer ID from session at the beginning
+$cust_id = $_SESSION['customer']['cust_id'] ?? null;
+if (!$cust_id) {
+  echo "No customer logged in.";
+  exit;
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_review'])) {
   try {
     $order_id = $_POST['order_id'];
@@ -15,12 +22,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_review'])) {
     // If review and rating are empty, don't insert into the database
     if (!empty($review) && !empty($rating)) {
       // Insert the review into the database
-      $stmt = $pdo->prepare("INSERT INTO reviews (order_id, product_id, review, rating) VALUES (:order_id, :product_id, :review, :rating)");
+      $stmt = $pdo->prepare("INSERT INTO reviews (order_id, product_id, review, rating, customer_id) VALUES (:order_id, :product_id, :review, :rating, :customer_id)");
       $stmt->execute([
         ':order_id' => $order_id,
         ':product_id' => $product_id,
         ':review' => $review,
-        ':rating' => $rating
+        ':rating' => $rating,
+        ':customer_id' => $cust_id // Insert the logged-in customer's ID
       ]);
     }
 
@@ -28,13 +36,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_review'])) {
   } catch (Exception $e) {
     echo json_encode(['success' => false, 'message' => $e->getMessage()]);
   }
-  exit;
-}
-
-// Fetch customer ID from session
-$cust_id = $_SESSION['customer']['cust_id'] ?? null;
-if (!$cust_id) {
-  echo "No customer logged in.";
   exit;
 }
 ?>
