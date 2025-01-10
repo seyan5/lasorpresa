@@ -33,7 +33,7 @@ include("../admin/inc/CSRF_Protect.php");
         <a href="addons.php">Addons</a>
         <a href="#review">Review</a>
         <a href="#contacts">Contacts</a>
-        <a href="customize.php">Customize</a>
+        <a href="customization.php">Customize</a>
 
     </nav>
      
@@ -190,7 +190,7 @@ function openModal(productId) {
             document.getElementById('modalImage').src = '../admin/uploads/' + product.featured_photo;
             document.getElementById('modalName').innerText = product.name;
             document.getElementById('modalDescription').innerText = product.description;
-            document.getElementById('modalPrice').innerText = "$" + product.current_price;
+            document.getElementById('modalPrice').innerText = "₱" + product.current_price;
 
             // Show the modal
             document.getElementById('productModal').style.display = 'block';

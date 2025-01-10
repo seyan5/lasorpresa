@@ -39,7 +39,7 @@ require_once('header.php');
         <a href="addons.php">Addons</a>
         <a href="#review">Review</a>
         <a href="#contacts">Contacts</a>
-        <a href="customize.php">Customize</a>
+        <a href="customization.php">Customize</a>
 
     </nav>
      
