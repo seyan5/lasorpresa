@@ -1,6 +1,10 @@
 
 <?php
-include 'header.php';
+ob_start();
+session_start();
+include("inc/config.php");
+include("inc/functions.php");
+include("inc/CSRF_Protect.php");
 
 
 ?>
@@ -60,7 +64,7 @@ include 'header.php';
                     </a>
                 </li>
                 <li>
-                    <a href="#">
+                    <a href="orders/order.php">
                         <span class="icon">
                             <ion-icon name="cart-outline"></ion-icon>
                         </span>

@@ -1,24 +1,29 @@
-<?php require_once('header.php'); ?>
-
 <?php
-if( !isset($_REQUEST['id']) || !isset($_REQUEST['task']) ) {
-	header('location: logout.php');
-	exit;
-} else {
-	// Check the id is valid or not
-	$statement = $pdo->prepare("SELECT * FROM tbl_payment WHERE id=?");
-	$statement->execute(array($_REQUEST['id']));
-	$total = $statement->rowCount();
-	if( $total == 0 ) {
-		header('location: logout.php');
-		exit;
-	}
+ob_start();
+session_start();
+include("../inc/config.php");
+include("../inc/functions.php");
+include("../inc/CSRF_Protect.php");
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $order_id = $_POST['order_id'];
+    $payment_status = $_POST['payment_status'];
+    $shipping_status = $_POST['shipping_status'];
+
+    try {
+        $stmt = $pdo->prepare("
+            UPDATE payment 
+            SET payment_status = :payment_status, shipping_status = :shipping_status 
+            WHERE order_id = :order_id
+        ");
+        $stmt->execute([
+            ':payment_status' => $payment_status,
+            ':shipping_status' => $shipping_status,
+            ':order_id' => $order_id,
+        ]);
+
+        echo json_encode(['success' => true, 'message' => 'Order status updated successfully.']);
+    } catch (Exception $e) {
+        echo json_encode(['success' => false, 'message' => $e->getMessage()]);
+    }
 }
-?>
-
-<?php
-	$statement = $pdo->prepare("UPDATE tbl_payment SET payment_status=? WHERE id=?");
-	$statement->execute(array($_REQUEST['task'],$_REQUEST['id']));
-
-	header('location: order.php');
-?>

@@ -1,57 +1,36 @@
-<?php require_once('header.php'); ?>
-
 <?php
-if(!isset($_REQUEST['id'])) {
-	header('location: logout.php');
-	exit;
-} else {
-	// Check the id is valid or not
-	$statement = $pdo->prepare("SELECT * FROM tbl_payment WHERE id=?");
-	$statement->execute(array($_REQUEST['id']));
-	$total = $statement->rowCount();
-	if( $total == 0 ) {
-		header('location: logout.php');
-		exit;
-	} else {
-		$result = $statement->fetchAll(PDO::FETCH_ASSOC);							
-		foreach ($result as $row) {
-			$payment_id = $row['payment_id'];
-			$payment_status = $row['payment_status'];
-			$shipping_status = $row['shipping_status'];
-		}
-	}
+ob_start();
+session_start();
+include("../inc/config.php");
+include("../inc/functions.php");
+include("../inc/CSRF_Protect.php");
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $order_id = $_POST['order_id'];
+
+    try {
+        // Begin a transaction
+        $pdo->beginTransaction();
+
+        // Delete order items associated with the order
+        $stmt = $pdo->prepare("DELETE FROM order_items WHERE order_id = :order_id");
+        $stmt->execute([':order_id' => $order_id]);
+
+        // Delete the payment associated with the order
+        $stmt = $pdo->prepare("DELETE FROM payment WHERE order_id = :order_id");
+        $stmt->execute([':order_id' => $order_id]);
+
+        // Delete the order itself
+        $stmt = $pdo->prepare("DELETE FROM orders WHERE order_id = :order_id");
+        $stmt->execute([':order_id' => $order_id]);
+
+        // Commit the transaction
+        $pdo->commit();
+
+        echo json_encode(['success' => true, 'message' => 'Order deleted successfully.']);
+    } catch (Exception $e) {
+        // Rollback the transaction in case of an error
+        $pdo->rollBack();
+        echo json_encode(['success' => false, 'message' => $e->getMessage()]);
+    }
 }
-?>
-
-<?php
-	
-	if( ($payment_status == 'Completed') && ($shipping_status == 'Completed') ):
-		// No return to stock
-	else:
-		// Return the stock
-		$statement = $pdo->prepare("SELECT * FROM tbl_order WHERE payment_id=?");
-		$statement->execute(array($payment_id));
-		$result = $statement->fetchAll(PDO::FETCH_ASSOC);							
-		foreach ($result as $row) {
-			$statement1 = $pdo->prepare("SELECT * FROM tbl_product WHERE p_id=?");
-			$statement1->execute(array($row['product_id']));
-			$result1 = $statement1->fetchAll(PDO::FETCH_ASSOC);							
-			foreach ($result1 as $row1) {
-				$p_qty = $row1['p_qty'];
-			}
-			$final = $p_qty + $row['quantity'];
-			$statement1 = $pdo->prepare("UPDATE tbl_product SET p_qty=? WHERE p_id=?");
-			$statement1->execute(array($final,$row['product_id']));
-		}	
-	endif;	
-
-	// Delete from tbl_order
-	$statement = $pdo->prepare("DELETE FROM tbl_order WHERE payment_id=?");
-	$statement->execute(array($payment_id));
-
-	// Delete from tbl_payment
-	$statement = $pdo->prepare("DELETE FROM tbl_payment WHERE id=?");
-	$statement->execute(array($_REQUEST['id']));
-
-	header('location: order.php');
-?>
