@@ -68,10 +68,24 @@ $customization = $_SESSION['customization'];
         $item_total_price = ($flower_price * $item['num_flowers']) + $container_price + $color_price;
         $total_price += $item_total_price;
 
+        /* 
+        Rosas = 2       Basket = 1      Red = 1 
+        Tulip = 3       Wrapper = 2     Blue = 2
+        Lilac = 4       Vase = 4        Violet = 3
+        
+        
+        */
+
         // Determine the preview image based on customization
         $preview_image = "../images/previews/default.jpg"; // Default preview
-        if ($item['flower_type'] == 2 && $item['num_flowers'] == 1 && strtolower($item['container_type']) == 3 && strtolower($item['container_color']) == 2) {
-            $preview_image = "../images/previews/tulip_blue_wrapper1.jpg";
+        if ($item['flower_type'] == 2 && $item['num_flowers'] == 1 && strtolower($item['container_type']) == 1 && strtolower($item['container_color']) == 1) {
+            $preview_image = ".../images/previews/rose_red_basket.jpg";
+            if ($item['num_flowers'] == 2) {
+                $preview_image = ".../images/previews/rose_red_basket2.jpg";
+            }
+            elseif($item['num_flowers'] == 3){
+                $preview_image = ".../images/previews/rose_red_basket3.jpg";
+            }
         } elseif ($item['flower_type'] == 2 && $item['num_flowers'] > 1 && strtolower($item['container_type']) == 'basket') {
             $preview_image = "../images/previews/rose_red_basket.jpg";
         }
