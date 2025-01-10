@@ -27,17 +27,16 @@ $product_quantity = $product['quantity']; // Get product quantity
 }
 
   // Fetch reviews for the product with customer name
-// Fetch reviews with customer name
-$reviewStmt = $pdo->prepare("
-    SELECT r.review, r.rating, r.created_at, c.cust_name
-    FROM reviews r
-    JOIN customer c ON r.customer_id = c.cust_id
-    WHERE r.product_id = :product_id
-    ORDER BY r.created_at DESC
+  $reviewStmt = $pdo->prepare("
+  SELECT r.review, r.rating, r.created_at, c.cust_name
+  FROM reviews r
+  JOIN customer c ON r.customer_id = c.cust_id
+  WHERE r.product_id = :product_id
+  ORDER BY r.created_at DESC
 ");
-$reviewStmt->bindParam(':product_id', $product_id, PDO::PARAM_INT);
+$reviewStmt->bindParam(':product_id', $p_id, PDO::PARAM_INT);
 $reviewStmt->execute();
-$reviews = $reviewStmt->fetchAll(PDO::FETCH_ASSOC);
+
 ?>
 
 <!DOCTYPE html>
