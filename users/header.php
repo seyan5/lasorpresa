@@ -9,11 +9,7 @@ $csrf = new CSRF_Protect();
 $error_message = '';
 $success_message = '';
 $error_message1 = '';
-$success_message1 = '';
-
-
-
-
+$success_message1 = ''
 ?>
 
 <!DOCTYPE html>
