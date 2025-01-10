@@ -1,5 +1,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@200;300;400;500;600&display=swap');
 
+:root{
+   --pink: #e84393;
+}
+
 *{
    font-family: Verdana, Geneva, Tahoma, sans-serif;
    margin:0; padding:0;
@@ -11,10 +15,28 @@
    transition: .2s linear;
 }
 
+section{
+   padding: 2rem 9%;
+}
+
+
 .logos{
     width: 10rem;
     margin-top: -2rem;
     margin-bottom: -3rem;
+}
+
+header {
+   display: flex;
+   align-items: center;
+   justify-content: space-between;
+   padding: 1.5rem 5%;
+   position: fixed;
+   width: 100%;
+   top: 0;
+   z-index: 1000;
+   background: white;
+   box-shadow: 0 0.2rem 1rem rgba(0, 0, 0, 0.1);
 }
 
 header .logo{
@@ -25,6 +47,12 @@ header .logo{
 
 header .logo span{
    color: var(--pink);
+}
+
+header .navbar {
+   display: flex;
+   align-items: center;
+   gap: 2rem;
 }
 
 header .navbar a{
