@@ -32,7 +32,7 @@ include("../admin/inc/CSRF_Protect.php");
         <a href="occasion.php">Occasion</a>
         <a href="addons.php">Addons</a>
         <a href="#review">Review</a>
-        <a href="#contacts">Contacts</a>
+        <a href="customization.php">Customize</a>
     </nav>
      
     <div class="icons">
