@@ -1,34 +1,36 @@
-<?php require_once('../header.php'); ?>
-
 <?php
 if(isset($_POST['form1'])) {
-	$valid = 1;
+    $valid = 1;
 
     if(empty($_POST['container_name'])) {
         $valid = 0;
-        $error_message .= "container Name can not be empty<br>";
+        $error_message .= "Container Name cannot be empty<br>";
     } else {
-    	// Duplicate Category checking
-    	$statement = $pdo->prepare("SELECT * FROM container WHERE container_name=?");
-    	$statement->execute(array($_POST['container_name']));
-    	$total = $statement->rowCount();
-    	if($total)
-    	{
-    		$valid = 0;
-        	$error_message .= "Container Name already exists<br>";
-    	}
+        // Duplicate Container Name checking
+        $statement = $pdo->prepare("SELECT * FROM container WHERE container_name=?");
+        $statement->execute(array($_POST['container_name']));
+        $total = $statement->rowCount();
+        if($total) {
+            $valid = 0;
+            $error_message .= "Container Name already exists<br>";
+        }
+    }
+
+    if(empty($_POST['container_price']) || !is_numeric($_POST['container_price'])) {
+        $valid = 0;
+        $error_message .= "Valid price is required<br>";
     }
 
     if($valid == 1) {
-
-		// Saving data into the main table container
-		$statement = $pdo->prepare("INSERT INTO container (container_name) VALUES (?)");
-		$statement->execute(array($_POST['container_name']));
-	
-    	$success_message = 'Container is added successfully.';
+        // Saving data into the container table, including the price
+        $statement = $pdo->prepare("INSERT INTO container (container_name, price) VALUES (?, ?)");
+        $statement->execute(array($_POST['container_name'], $_POST['container_price']));
+        
+        $success_message = 'Container is added successfully.';
     }
 }
 ?>
+
 
 <section class="content-header">
 	<div class="content-header-left">
@@ -71,6 +73,13 @@ if(isset($_POST['form1'])) {
 								<input type="text" class="form-control" name="container_name">
 							</div>
 						</div>
+						<div class="form-group">
+    <label for="" class="col-sm-2 control-label">Container Price <span>*</span></label>
+    <div class="col-sm-4">
+        <input type="text" class="form-control" name="container_price" placeholder="Enter Price">
+    </div>
+</div>
+
 						<div class="form-group">
 							<label for="" class="col-sm-2 control-label"></label>
 							<div class="col-sm-6">

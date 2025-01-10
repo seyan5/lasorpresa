@@ -1,8 +1,23 @@
-<?php require_once('header.php'); ?>
+<?php 
+include("../admin/inc/config.php");
+include("../admin/inc/functions.php");
+include("../admin/inc/CSRF_Protect.php");
+
+
+
+
+
+?>
 <!-- css -->
 <link rel="stylesheet" href="../css/product.css">
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
 
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js"></script>
 <script src="../js/product.js" defer></script>
 
 <header>
@@ -13,20 +28,34 @@
     <!-- <a href="#" class="logo">Flower<span>.</span></a> -->
     <img src="../images/logo.png" alt="" class="logos" href="">
     <nav class="navbar">
-        <a href="#home">Home</a>
+        <a href="index.php">Home</a>
         <a href="#about">About</a>
-        <a href="products.php">Product</a>
-        <a href="#occasion">Occasion</a>
+        <a href="products.php">Flowers</a>
+        <a href="occasion.php">Occasion</a>
+        <a href="addons.php">Addons</a>
         <a href="#review">Review</a>
         <a href="#contacts">Contacts</a>
+        <a href="customization.php">Customize</a>
+
     </nav>
      
     <div class="icons">
-        <a href="#" class="fas fa-heart"></a>
-        <a href="cart.php" class="fas fa-shopping-cart"></a>
-
-        <a href="#" class="fas fa-user"></a>
+    <a href="#" class="fas fa-heart"></a>
+    <a href="shopcart.php" class="fas fa-shopping-cart"></a>
+    <div class="user-dropdown">
+        <a href="#" class="fas fa-user" onclick="toggleDropdown()"></a>
+        <div class="dropdown-menu" id="userDropdown">
+            <?php if (isset($_SESSION['customer'])): ?>
+                <p>Welcome, <?php echo htmlspecialchars($_SESSION['customer']['cust_name']); ?></p>
+                <hr>
+                <a href="profile.php">Profile</a>
+                <a href="logout.php">Logout</a>
+            <?php else: ?>
+                <a href="login.php">Login</a>
+            <?php endif; ?>
+        </div>
     </div>
+</div>
 
 </header>
 
@@ -168,7 +197,7 @@ function openModal(productId) {
             document.getElementById('modalImage').src = '../admin/uploads/' + product.featured_photo;
             document.getElementById('modalName').innerText = product.name;
             document.getElementById('modalDescription').innerText = product.description;
-            document.getElementById('modalPrice').innerText = "$" + product.current_price;
+            document.getElementById('modalPrice').innerText = "₱" + product.current_price;
 
             // Show the modal
             document.getElementById('productModal').style.display = 'block';

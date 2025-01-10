@@ -101,7 +101,8 @@
 			<thead>
 			    <tr>
 			        <th>#</th>
-			        <th>container Name</th>
+			        <th>Container Name</th>
+			        <th>Container Price</th>
 			        <th>Action</th>
 			    </tr>
 			</thead>
@@ -117,6 +118,7 @@
 					<tr>
 	                    <td><?php echo $i; ?></td>
 	                    <td><?php echo $row['container_name']; ?></td>
+                        <td><?php echo $row['price']; ?></td>
 	                    <td>
 	                        <a href="container-edit.php?id=<?php echo $row['container_id']; ?>" class="btn btn-primary btn-xs">Edit</a>
 	                        <a href="#" class="btn btn-danger btn-xs" data-href="container-delete.php?id=<?php echo $row['container_id']; ?>" data-toggle="modal" data-target="#confirm-delete">Delete</a>

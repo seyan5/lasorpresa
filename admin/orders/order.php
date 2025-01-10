@@ -1,306 +1,229 @@
-<?php require_once('header.php'); ?>
-
 <?php
-$error_message = '';
-if(isset($_POST['form1'])) {
-    $valid = 1;
-    if(empty($_POST['subject_text'])) {
-        $valid = 0;
-        $error_message .= 'Subject can not be empty\n';
+ob_start();
+session_start();
+include("../inc/config.php");
+include("../inc/functions.php");
+include("../inc/CSRF_Protect.php");
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_status'])) {
+  try {
+    $order_id = $_POST['order_id'];
+    $status_column = $_POST['status_column']; // Either 'payment_status' or 'shipping_status'
+    $new_status = $_POST['new_status'];
+
+    // Validate inputs
+    if (!in_array($status_column, ['payment_status', 'shipping_status'])) {
+      throw new Exception("Invalid status column");
     }
-    if(empty($_POST['message_text'])) {
-        $valid = 0;
-        $error_message .= 'Subject can not be empty\n';
-    }
-    if($valid == 1) {
 
-        $subject_text = strip_tags($_POST['subject_text']);
-        $message_text = strip_tags($_POST['message_text']);
+    // Update the database
+    $stmt = $pdo->prepare("UPDATE payment SET $status_column = :new_status WHERE order_id = :order_id");
+    $stmt->execute([
+      ':new_status' => $new_status,
+      ':order_id' => $order_id
+    ]);
 
-        // Getting Customer Email Address
-        $statement = $pdo->prepare("SELECT * FROM tbl_customer WHERE cust_id=?");
-        $statement->execute(array($_POST['cust_id']));
-        $result = $statement->fetchAll(PDO::FETCH_ASSOC);                            
-        foreach ($result as $row) {
-            $cust_email = $row['cust_email'];
-        }
-
-        // Getting Admin Email Address
-        $statement = $pdo->prepare("SELECT * FROM tbl_settings WHERE id=1");
-        $statement->execute();
-        $result = $statement->fetchAll(PDO::FETCH_ASSOC);                            
-        foreach ($result as $row) {
-            $admin_email = $row['contact_email'];
-        }
-
-        $order_detail = '';
-        $statement = $pdo->prepare("SELECT * FROM tbl_payment WHERE payment_id=?");
-        $statement->execute(array($_POST['payment_id']));
-        $result = $statement->fetchAll(PDO::FETCH_ASSOC);                            
-        foreach ($result as $row) {
-        	
-        	if($row['payment_method'] == 'PayPal'):
-        		$payment_details = '
-Transaction Id: '.$row['txnid'].'<br>
-        		';
-        	elseif($row['payment_method'] == 'Stripe'):
-				$payment_details = '
-Transaction Id: '.$row['txnid'].'<br>
-Card number: '.$row['card_number'].'<br>
-Card CVV: '.$row['card_cvv'].'<br>
-Card Month: '.$row['card_month'].'<br>
-Card Year: '.$row['card_year'].'<br>
-        		';
-        	elseif($row['payment_method'] == 'Bank Deposit'):
-				$payment_details = '
-Transaction Details: <br>'.$row['bank_transaction_info'];
-        	endif;
-
-            $order_detail .= '
-Customer Name: '.$row['customer_name'].'<br>
-Customer Email: '.$row['customer_email'].'<br>
-Payment Method: '.$row['payment_method'].'<br>
-Payment Date: '.$row['payment_date'].'<br>
-Payment Details: <br>'.$payment_details.'<br>
-Paid Amount: '.$row['paid_amount'].'<br>
-Payment Status: '.$row['payment_status'].'<br>
-Shipping Status: '.$row['shipping_status'].'<br>
-Payment Id: '.$row['payment_id'].'<br>
-            ';
-        }
-
-        $i=0;
-        $statement = $pdo->prepare("SELECT * FROM tbl_order WHERE payment_id=?");
-        $statement->execute(array($_POST['payment_id']));
-        $result = $statement->fetchAll(PDO::FETCH_ASSOC);                            
-        foreach ($result as $row) {
-            $i++;
-            $order_detail .= '
-<br><b><u>Product Item '.$i.'</u></b><br>
-Product Name: '.$row['product_name'].'<br>
-Size: '.$row['size'].'<br>
-Color: '.$row['color'].'<br>
-Quantity: '.$row['quantity'].'<br>
-Unit Price: '.$row['unit_price'].'<br>
-            ';
-        }
-
-        $statement = $pdo->prepare("INSERT INTO tbl_customer_message (subject,message,order_detail,cust_id) VALUES (?,?,?,?)");
-        $statement->execute(array($subject_text,$message_text,$order_detail,$_POST['cust_id']));
-
-        // sending email
-        $to_customer = $cust_email;
-        $message = '
-<html><body>
-<h3>Message: </h3>
-'.$message_text.'
-<h3>Order Details: </h3>
-'.$order_detail.'
-</body></html>
-';
-        $headers = 'From: ' . $admin_email . "\r\n" .
-                   'Reply-To: ' . $admin_email . "\r\n" .
-                   'X-Mailer: PHP/' . phpversion() . "\r\n" . 
-                   "MIME-Version: 1.0\r\n" . 
-                   "Content-Type: text/html; charset=ISO-8859-1\r\n";
-
-        // Sending email to admin                  
-        mail($to_customer, $subject_text, $message, $headers);
-        
-        $success_message = 'Your email to customer is sent successfully.';
-
-    }
+    echo json_encode(['success' => true, 'message' => 'Status updated successfully']);
+  } catch (Exception $e) {
+    echo json_encode(['success' => false, 'message' => $e->getMessage()]);
+  }
+  exit;
 }
-?>
-<?php
-if($error_message != '') {
-    echo "<script>alert('".$error_message."')</script>";
-}
-if($success_message != '') {
-    echo "<script>alert('".$success_message."')</script>";
-}
+
+
 ?>
 
-<section class="content-header">
-	<div class="content-header-left">
-		<h1>View Orders</h1>
-	</div>
-</section>
+<!DOCTYPE html>
+<html lang="en">
 
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Order Dashboard</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    .action-btn {
+      margin-top: 10px;
+    }
 
-<section class="content">
+    .completed {
+      background-color: #d4edda;
+    }
 
-  <div class="row">
-    <div class="col-md-12">
+    .pending {
+      background-color: #ffeeba;
+    }
+  </style>
+</head>
 
+<!DOCTYPE html>
+<html lang="en">
 
-      <div class="box box-info">
-        
-        <div class="box-body table-responsive">
-          <table id="example1" class="table table-bordered table-hover table-striped">
-			<thead>
-			    <tr>
-			        <th>#</th>
-                    <th>Customer</th>
-			        <th>Product Details</th>
-                    <th>
-                    	Payment Information
-                    </th>
-                    <th>Paid Amount</th>
-                    <th>Payment Status</th>
-                    <th>Shipping Status</th>
-			        <th>Action</th>
-			    </tr>
-			</thead>
-            <tbody>
-            	<?php
-            	$i=0;
-            	$statement = $pdo->prepare("SELECT * FROM tbl_payment ORDER by id DESC");
-            	$statement->execute();
-            	$result = $statement->fetchAll(PDO::FETCH_ASSOC);							
-            	foreach ($result as $row) {
-            		$i++;
-            		?>
-					<tr class="<?php if($row['payment_status']=='Pending'){echo 'bg-r';}else{echo 'bg-g';} ?>">
-	                    <td><?php echo $i; ?></td>
-	                    <td>
-                            <b>Id:</b> <?php echo $row['customer_id']; ?><br>
-                            <b>Name:</b><br> <?php echo $row['customer_name']; ?><br>
-                            <b>Email:</b><br> <?php echo $row['customer_email']; ?><br><br>
-                            <a href="#" data-toggle="modal" data-target="#model-<?php echo $i; ?>"class="btn btn-warning btn-xs" style="width:100%;margin-bottom:4px;">Send Message</a>
-                            <div id="model-<?php echo $i; ?>" class="modal fade" role="dialog">
-								<div class="modal-dialog">
-									<div class="modal-content">
-										<div class="modal-header">
-											<button type="button" class="close" data-dismiss="modal">&times;</button>
-											<h4 class="modal-title" style="font-weight: bold;">Send Message</h4>
-										</div>
-										<div class="modal-body" style="font-size: 14px">
-											<form action="" method="post">
-                                                <input type="hidden" name="cust_id" value="<?php echo $row['customer_id']; ?>">
-                                                <input type="hidden" name="payment_id" value="<?php echo $row['payment_id']; ?>">
-												<table class="table table-bordered">
-													<tr>
-														<td>Subject</td>
-														<td>
-                                                            <input type="text" name="subject_text" class="form-control" style="width: 100%;">
-														</td>
-													</tr>
-                                                    <tr>
-                                                        <td>Message</td>
-                                                        <td>
-                                                            <textarea name="message_text" class="form-control" cols="30" rows="10" style="width:100%;height: 200px;"></textarea>
-                                                        </td>
-                                                    </tr>
-													<tr>
-														<td></td>
-														<td><input type="submit" value="Send Message" name="form1"></td>
-													</tr>
-												</table>
-											</form>
-										</div>
-										<div class="modal-footer">
-											<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-										</div>
-									</div>
-								</div>
-							</div>
-                        </td>
-                        <td>
-                           <?php
-                           $statement1 = $pdo->prepare("SELECT * FROM tbl_order WHERE payment_id=?");
-                           $statement1->execute(array($row['payment_id']));
-                           $result1 = $statement1->fetchAll(PDO::FETCH_ASSOC);
-                           foreach ($result1 as $row1) {
-                                echo '<b>Product:</b> '.$row1['product_name'];
-                                echo '<br>(<b>Size:</b> '.$row1['size'];
-                                echo ', <b>Color:</b> '.$row1['color'].')';
-                                echo '<br>(<b>Quantity:</b> '.$row1['quantity'];
-                                echo ', <b>Unit Price:</b> '.$row1['unit_price'].')';
-                                echo '<br><br>';
-                           }
-                           ?>
-                        </td>
-                        <td>
-                        	<?php if($row['payment_method'] == 'PayPal'): ?>
-                        		<b>Payment Method:</b> <?php echo '<span style="color:red;"><b>'.$row['payment_method'].'</b></span>'; ?><br>
-                        		<b>Payment Id:</b> <?php echo $row['payment_id']; ?><br>
-                        		<b>Date:</b> <?php echo $row['payment_date']; ?><br>
-                        		<b>Transaction Id:</b> <?php echo $row['txnid']; ?><br>
-                        	<?php elseif($row['payment_method'] == 'Stripe'): ?>
-                        		<b>Payment Method:</b> <?php echo '<span style="color:red;"><b>'.$row['payment_method'].'</b></span>'; ?><br>
-                        		<b>Payment Id:</b> <?php echo $row['payment_id']; ?><br>
-								<b>Date:</b> <?php echo $row['payment_date']; ?><br>
-                        		<b>Transaction Id:</b> <?php echo $row['txnid']; ?><br>
-                        		<b>Card Number:</b> <?php echo $row['card_number']; ?><br>
-                        		<b>Card CVV:</b> <?php echo $row['card_cvv']; ?><br>
-                        		<b>Expire Month:</b> <?php echo $row['card_month']; ?><br>
-                        		<b>Expire Year:</b> <?php echo $row['card_year']; ?><br>
-                        	<?php elseif($row['payment_method'] == 'Bank Deposit'): ?>
-                        		<b>Payment Method:</b> <?php echo '<span style="color:red;"><b>'.$row['payment_method'].'</b></span>'; ?><br>
-                        		<b>Payment Id:</b> <?php echo $row['payment_id']; ?><br>
-								<b>Date:</b> <?php echo $row['payment_date']; ?><br>
-                        		<b>Transaction Information:</b> <br><?php echo $row['bank_transaction_info']; ?><br>
-                        	<?php endif; ?>
-                        </td>
-                        <td>$<?php echo $row['paid_amount']; ?></td>
-                        <td>
-                            <?php echo $row['payment_status']; ?>
-                            <br><br>
-                            <?php
-                                if($row['payment_status']=='Pending'){
-                                    ?>
-                                    <a href="order-change-status.php?id=<?php echo $row['id']; ?>&task=Completed" class="btn btn-success btn-xs" style="width:100%;margin-bottom:4px;">Mark Complete</a>
-                                    <?php
-                                }
-                            ?>
-                        </td>
-                        <td>
-                            <?php echo $row['shipping_status']; ?>
-                            <br><br>
-                            <?php
-                            if($row['payment_status']=='Completed') {
-                                if($row['shipping_status']=='Pending'){
-                                    ?>
-                                    <a href="shipping-change-status.php?id=<?php echo $row['id']; ?>&task=Completed" class="btn btn-warning btn-xs" style="width:100%;margin-bottom:4px;">Mark Complete</a>
-                                    <?php
-                                }
-                            }
-                            ?>
-                        </td>
-	                    <td>
-                            <a href="#" class="btn btn-danger btn-xs" data-href="order-delete.php?id=<?php echo $row['id']; ?>" data-toggle="modal" data-target="#confirm-delete" style="width:100%;">Delete</a>
-	                    </td>
-	                </tr>
-            		<?php
-            	}
-            	?>
-            </tbody>
-          </table>
-        </div>
-      </div>
-  
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Order Dashboard</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+  <style>
+    .form-select {
+      width: auto;
+    }
+  </style>
+</head>
 
-</section>
+<body>
+  <div class="container my-4">
+    <h1 class="text-center">Order Dashboard</h1>
+    <table class="table table-bordered table-hover">
+      <thead class="table-dark">
+        <tr>
+          <th>#</th>
+          <th>Customer</th>
+          <th>Product Details</th>
+          <th>Payment Information</th>
+          <th>Paid Amount</th>
+          <th>Payment Status</th>
+          <th>Shipping Status</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <?php
+        // Query to join the relevant tables
+        $stmt = $pdo->query("
+                    SELECT 
+                        c.cust_id, 
+                        c.cust_name, 
+                        c.cust_email, 
+                        p.name AS product_name, 
+                        oi.quantity, 
+                        p.current_price AS unit_price, 
+                        pay.payment_method, 
+                        pay.payment_id, 
+                        pay.created_at AS payment_date, 
+                        pay.amount_paid, 
+                        pay.shipping_status, 
+                        pay.payment_status, 
+                        o.order_id
+                    FROM 
+                        customer c
+                    JOIN orders o ON c.cust_id = o.customer_id
+                    JOIN order_items oi ON o.order_id = oi.order_id
+                    JOIN product p ON oi.product_id = p.p_id
+                    JOIN payment pay ON o.order_id = pay.order_id
+                ");
 
+        // Fetch all orders
+        $orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-<div class="modal fade" id="confirm-delete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title" id="myModalLabel">Delete Confirmation</h4>
-            </div>
-            <div class="modal-body">
-                Sure you want to delete this item?
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                <a class="btn btn-danger btn-ok">Delete</a>
-            </div>
-        </div>
-    </div>
-</div>
+        foreach ($orders as $index => $order) {
+          ?>
+          <tr>
+            <td><?= $index + 1 ?></td>
+            <td>
+              <strong>Id:</strong> <?= $order['cust_id'] ?><br>
+              <strong>Name:</strong> <?= htmlspecialchars($order['cust_name']) ?><br>
+              <strong>Email:</strong> <?= htmlspecialchars($order['cust_email']) ?>
+            </td>
+            <td>
+              <strong>Product:</strong> <?= htmlspecialchars($order['product_name']) ?><br>
+              <strong>Quantity:</strong> <?= $order['quantity'] ?><br>
+              <strong>Unit Price:</strong> <?= $order['unit_price'] ?>
+            </td>
+            <td>
+              <strong>Payment Method:</strong> <?= $order['payment_method'] ?><br>
+              <strong>Payment Id:</strong> <?= $order['payment_id'] ?><br>
+              <strong>Date:</strong> <?= $order['payment_date'] ?>
+            </td>
+            <td>$<?= number_format($order['amount_paid'], 2) ?></td>
+            <td>
+              <select class="form-select" id="payment-status-<?= $order['order_id'] ?>">
+                <option <?= $order['payment_status'] === 'pending' ? 'selected' : '' ?> value="pending">Pending</option>
+                <option <?= $order['payment_status'] === 'paid' ? 'selected' : '' ?> value="paid">Paid</option>
+                <option <?= $order['payment_status'] === 'failed' ? 'selected' : '' ?> value="failed">Failed</option>
+              </select>
+            </td>
+            <td>
+              <select class="form-select" id="shipping-status-<?= $order['order_id'] ?>">
+                <option <?= $order['shipping_status'] === 'pending' ? 'selected' : '' ?> value="pending">Pending</option>
+                <option <?= $order['shipping_status'] === 'shipped' ? 'selected' : '' ?> value="shipped">Shipped</option>
+                <option <?= $order['shipping_status'] === 'delivered' ? 'selected' : '' ?> value="delivered">Delivered
+                </option>
+              </select>
+            </td>
+            <td>
+              <button class="btn btn-primary" onclick="updateOrderStatus(<?= $order['order_id'] ?>)">Update</button>
+              <button class="btn btn-danger" onclick="deleteOrder(<?= $order['order_id'] ?>)">Delete</button>
 
+            </td>
+          </tr>
+        <?php } ?>
+      </tbody>
+    </table>
+  </div>
 
-<?php require_once('footer.php'); ?>
+  <script>
+    function updateOrderStatus(orderId) {
+      const paymentStatus = document.getElementById(`payment-status-${orderId}`).value;
+      const shippingStatus = document.getElementById(`shipping-status-${orderId}`).value;
+
+      fetch('order-change-status.php', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: new URLSearchParams({
+          order_id: orderId,
+          payment_status: paymentStatus,
+          shipping_status: shippingStatus,
+        }),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.success) {
+            alert(data.message);
+            location.reload();
+          } else {
+            alert('Error: ' + data.message);
+          }
+        })
+        .catch((error) => {
+          console.error('Error:', error);
+          alert('An unexpected error occurred.');
+        });
+    }
+
+    function deleteOrder(orderId) {
+      if (confirm('Are you sure you want to delete this order?')) {
+        fetch('order-delete.php', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+          },
+          body: new URLSearchParams({
+            order_id: orderId,
+          }),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.success) {
+              alert(data.message);
+              // Remove the row from the table on success
+              const row = document.querySelector(`tr[data-order-id="${orderId}"]`);
+              if (row) row.remove();
+            } else {
+              alert('Error: ' + data.message);
+            }
+          })
+          .catch((error) => {
+            console.error('Error:', error);
+            alert('An unexpected error occurred.');
+          });
+      }
+    }
+
+  </script>
+</body>
+
+</html>

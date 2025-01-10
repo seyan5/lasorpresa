@@ -7,22 +7,35 @@ $p_id = isset($_GET['p_id']) ? (int) $_GET['p_id'] : 0;
 if ($p_id) {
     // Fetch product details from the database
     $statement = $pdo->prepare("
-        SELECT p_id, name, featured_photo, current_price, description 
-        FROM product 
-        WHERE p_id = :p_id
-    ");
-    $statement->bindParam(':p_id', $p_id, PDO::PARAM_INT);
-    $statement->execute();
-    $product = $statement->fetch(PDO::FETCH_ASSOC);
+    SELECT p_id, name, featured_photo, current_price, description, quantity
+    FROM product 
+    WHERE p_id = :p_id
+");
+$statement->bindParam(':p_id', $p_id, PDO::PARAM_INT);
+$statement->execute();
+$product = $statement->fetch(PDO::FETCH_ASSOC);
 
-    if (!$product) {
-        echo "<p>Product not found.</p>";
-        exit;
-    }
+if (!$product) {
+    echo "<p>Product not found.</p>";
+    exit;
+}
+
+$product_quantity = $product['quantity']; // Get product quantity
 } else {
     echo "<p>Invalid product ID.</p>";
     exit;
 }
+
+  // Fetch reviews for the product
+  $reviewStmt = $pdo->prepare("
+  SELECT review, rating, created_at
+  FROM reviews
+  WHERE product_id = :p_id
+  ORDER BY created_at DESC
+  ");
+  $reviewStmt->bindParam(':p_id', $p_id, PDO::PARAM_INT);
+  $reviewStmt->execute();
+  $reviews = $reviewStmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
 <!DOCTYPE html>
@@ -52,11 +65,25 @@ if ($p_id) {
                 alt="<?php echo htmlspecialchars($product['name']); ?>">
             <h1><?php echo htmlspecialchars($product['name']); ?></h1>
             <p><?php echo htmlspecialchars($product['description']); ?></p>
-            <section>
+    
         </div>
-                
 
+        <!-- Reviews Section -->
+        <section id="reviews">
+                <h3>Customer Reviews</h3>
+                <?php if (empty($reviews)): ?>
+                    <p>No reviews yet. Be the first to review this product!</p>
+                <?php else: ?>
+                    <?php foreach ($reviews as $review): ?>
+                        <div class="review">
+                            <p><strong>Rating:</strong> <?php echo htmlspecialchars($review['rating']) ?: 'No rating'; ?></p>
+                            <p><strong>Review:</strong> <?php echo nl2br(htmlspecialchars($review['review'])); ?></p>
+                            <p><small>Reviewed on <?php echo htmlspecialchars($review['created_at']); ?></small></p>
+                        </div>
+                    <?php endforeach; ?>
+                <?php endif; ?>
             </section>
+                
         <main>
 
             <!-- Right Sidebar -->
@@ -69,15 +96,6 @@ if ($p_id) {
                     <div class="price">$<?php echo number_format($product['current_price'], 2); ?></div>
                 </div>
 
-                <div class="addons">
-                    <label for="addons">Add-ons</label>
-                    <select id="addons">
-                        <option value="">Choose...</option>
-                        <option value="chocolate">Chocolate</option>
-                        <option value="stufftoy">Stuff Toys</option>
-                        <option value="balloon">Balloon</option>
-                    </select>
-                </div>
 
                 <div class="total">
                     <span>Subtotal:</span>
@@ -86,11 +104,16 @@ if ($p_id) {
 
 
                 <button id="addToCartButton" data-id="<?php echo $product['p_id']; ?>"
-                    data-name="<?php echo htmlspecialchars($product['name']); ?>"
-                    data-price="<?php echo htmlspecialchars($product['current_price']); ?>"
-                    onclick="addToCart(<?php echo $product['p_id']; ?>)">
-                    Add to Cart
-                </button>
+        data-name="<?php echo htmlspecialchars($product['name']); ?>"
+        data-price="<?php echo htmlspecialchars($product['current_price']); ?>"
+        onclick="addToCart(<?php echo $product['p_id']; ?>)"
+        <?php if ($product_quantity == 0) echo 'disabled'; ?>>
+    Add to Cart
+</button>
+
+<?php if ($product_quantity == 0): ?>
+    <p>This product is out of stock.</p>
+<?php endif; ?>
 
             </div>
         </main>
@@ -98,6 +121,16 @@ if ($p_id) {
         </section>
     </main>
     <script>
+        document.addEventListener('DOMContentLoaded', function () {
+        const productQuantity = <?php echo $product_quantity; ?>;
+        const addToCartButton = document.getElementById('addToCartButton');
+        
+        if (productQuantity === 0) {
+            addToCartButton.disabled = true;
+            alert('This product is out of stock!');
+        }
+    });
+
         function addToCart(productName) {
             alert("Product added to cart successfully!");
         }

@@ -45,7 +45,7 @@ require 'header.php';
             </table>
             <p>
                 <strong>Total:</strong>
-                $<?php 
+                P<?php 
                 echo number_format(array_sum(array_map(function($item) {
                     return $item['price'] * $item['quantity'];
                 }, $_SESSION['cart'])), 2); 

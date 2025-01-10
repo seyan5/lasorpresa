@@ -40,10 +40,16 @@ session_start();
               <p><?php echo htmlspecialchars($item['quantity']); ?> pcs.</p>
             </div>
 
-            <!-- Quantity -->
-            <div class="quantity">
-              <?php echo htmlspecialchars($item['quantity']); ?>
-            </div>
+            <!-- Quantity Controls -->
+    <div class="quantity">
+      <form method="POST" action="cart-update.php" class="quantity-form">
+        <input type="hidden" name="item_index" value="<?php echo $index; ?>">
+        <button type="submit" name="action" value="decrease">-</button>
+        <span><?php echo htmlspecialchars($item['quantity']); ?></span>
+        <button type="submit" name="action" value="increase">+</button>
+      </form>
+    </div>
+
 
             <!-- Product Price -->
             <div class="price">
@@ -56,11 +62,15 @@ session_start();
               <button type="button" class="delete" onclick="confirmDelete(<?php echo $index; ?>)">🗑️</button>
             </form>
           </div>
+          
+
         <?php endforeach; ?>
       <?php else: ?>
         <p>Your cart is empty.</p>
       <?php endif; ?>
+      <a href="addons.php">Want to get addons?</a>
     </div>
+    
 
     <div class="payment">
       <h3>Summary</h3>
@@ -114,4 +124,23 @@ function checkout() {
     }
   </script>
 </body>
+
+<style>
+  .quantity-form {
+  display: flex;
+  align-items: center;
+}
+
+.quantity-form button {
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
+  padding: 5px;
+  cursor: pointer;
+}
+
+.quantity-form span {
+  margin: 0 10px;
+  font-weight: bold;
+}
+</style>
 </html>

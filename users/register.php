@@ -75,7 +75,7 @@ if (isset($_POST['register'])) {
 
         $mail->isHTML(true);
         $mail->Subject = 'Verify Your Email Address';
-        $mail->Body    = "Hi $cust_name,<br><br>Please click the link below to verify your email address:<br><br><a href='http://localhost/lasorpresa/verify-email.php?token=$token'>Verify Email</a><br><br>Thank you!";
+        $mail->Body    = "Hi $cust_name,<br><br>Please click the link below to verify your email address:<br><br><a href='http://localhost/lasorpresa/users/verify-email.php?token=$token'>Verify Email</a><br><br>Thank you!";
 
         $mail->send();
         echo "Registration successful! Please check your email to verify your account.";
@@ -97,12 +97,12 @@ if (isset($_POST['register'])) {
 </head>
 <body>
     <div class="logo-container">
-        <img src="images/logo.png" alt="Logo" class="logo" />
+        <img src="../images/logo.png" alt="Logo" class="logo" />
     </div>
 
     <!-- Flower Image -->
     <div class="flower-container">
-        <img src="images/flower2.png" alt="Flower" class="flower" />
+        <img src="../images/flower2.png" alt="Flower" class="flower" />
     </div>
 
 <h2>Create Your Account</h2>

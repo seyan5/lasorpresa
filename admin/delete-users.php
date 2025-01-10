@@ -7,10 +7,10 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] != 'admin') {
     exit();
 }
 
-if (isset($_GET['id'])) {
-    $id = intval($_GET['id']);
+if (isset($_GET['cust_id'])) {
+    $id = intval($_GET['cust_id']);
 
-    if ($stmt = $conn->prepare("DELETE FROM users WHERE id = ?")) {
+    if ($stmt = $conn->prepare("DELETE FROM customer WHERE cust_id = ?")) {
         $stmt->bind_param("i", $id);
 
         if ($stmt->execute()) {
