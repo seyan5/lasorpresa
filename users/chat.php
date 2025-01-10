@@ -1,32 +1,50 @@
-<h3>Customer Support Chat</h3>
-<div id="chat-box"></div>
+<?php
+session_start();
+require_once('db_connection.php'); // Connect to DB
 
-<form id="chat-form">
-  <textarea id="message" placeholder="Type your message..." required></textarea>
-  <button type="submit">Send</button>
-</form>
+// Check if user is logged in
+if (!isset($_SESSION['customer'])) {
+    header('Location: login.php');
+    exit;
+}
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script>
-  function loadMessages() {
-    $.get('fetch-chat.php', function(data) {
-      $('#chat-box').html(data);
-    });
-  }
+$cust_id = $_SESSION['customer']['cust_id'];
 
-  // Load messages every 3 seconds
-  setInterval(loadMessages, 3000);
+// Handle message submission
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST['message'])) {
+    $message = trim($_POST['message']);
+    $stmt = $pdo->prepare("INSERT INTO chat_messages (sender_id, sender_type, message) VALUES (:sender_id, 'customer', :message)");
+    $stmt->execute(['sender_id' => $cust_id, 'message' => $message]);
+}
 
-  // Send message on form submit
-  $('#chat-form').submit(function(e) {
-    e.preventDefault();
-    const message = $('#message').val();
-    $.post('send-message.php', { message: message }, function() {
-      $('#message').val('');  // Clear the message input
-      loadMessages();
-    });
-  });
+// Retrieve chat messages
+$stmt = $pdo->prepare("SELECT * FROM chat_messages WHERE sender_id = :cust_id OR sender_type = 'admin' ORDER BY timestamp ASC");
+$stmt->execute(['cust_id' => $cust_id]);
+$messages = $stmt->fetchAll(PDO::FETCH_ASSOC);
+?>
 
-  // Initial load
-  loadMessages();
-</script>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Customer Chat</title>
+</head>
+<body>
+    <h2>Chat with Support</h2>
+
+    <div class="chat-box">
+        <?php foreach ($messages as $msg): ?>
+            <div>
+                <strong><?php echo ($msg['sender_type'] == 'customer') ? 'You' : 'Admin'; ?>:</strong>
+                <?php echo htmlspecialchars($msg['message']); ?>
+                <small>(<?php echo $msg['timestamp']; ?>)</small>
+            </div>
+        <?php endforeach; ?>
+    </div>
+
+    <form method="POST">
+        <textarea name="message" required></textarea><br>
+        <button type="submit">Send Message</button>
+    </form>
+</body>
+</html>
