@@ -1,9 +1,9 @@
 <?php
 ob_start();
 session_start();
-include("../admim/inc/config.php");
-include("../admim/inc/functions.php");
-include("../admim/inc/CSRF_Protect.php");
+include("../admin/inc/config.php");
+include("../admin/inc/functions.php");
+include("../admin/inc/CSRF_Protect.php");
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_status'])) {
   try {
