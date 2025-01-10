@@ -49,7 +49,7 @@
         if ($item['flower_type'] == 1 && $item['num_flowers'] == 1 && strtolower($item['container_type']) == 'wrapper' && strtolower($item['container_color']) == 'blue') {
             $preview_image = "images/previews/tulip_blue_wrapper.jpg";
         } elseif ($item['flower_type'] == 2 && $item['num_flowers'] > 1 && strtolower($item['container_type']) == 'basket') {
-            $preview_image = "images/previews/rosas_basket.jpg";
+            $preview_image = "images/previews/rose_red_basket.jpg";
         }
     ?>
         <div class="customization-item">
