@@ -5,25 +5,26 @@ include("../admin/inc/config.php");
 include("../admin/inc/functions.php");
 include("../admin/inc/CSRF_Protect.php");
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_status'])) {
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_review'])) {
   try {
     $order_id = $_POST['order_id'];
-    $status_column = $_POST['status_column']; // Either 'payment_status' or 'shipping_status'
-    $new_status = $_POST['new_status'];
+    $product_id = $_POST['product_id'];
+    $review = $_POST['review'] ?? null;
+    $rating = $_POST['rating'] ?? null;
 
-    // Validate inputs
-    if (!in_array($status_column, ['payment_status', 'shipping_status'])) {
-      throw new Exception("Invalid status column");
+    // If review and rating are empty, don't insert into the database
+    if (!empty($review) && !empty($rating)) {
+      // Insert the review into the database
+      $stmt = $pdo->prepare("INSERT INTO reviews (order_id, product_id, review, rating) VALUES (:order_id, :product_id, :review, :rating)");
+      $stmt->execute([
+        ':order_id' => $order_id,
+        ':product_id' => $product_id,
+        ':review' => $review,
+        ':rating' => $rating
+      ]);
     }
 
-    // Update the database
-    $stmt = $pdo->prepare("UPDATE payment SET $status_column = :new_status WHERE order_id = :order_id");
-    $stmt->execute([
-      ':new_status' => $new_status,
-      ':order_id' => $order_id
-    ]);
-
-    echo json_encode(['success' => true, 'message' => 'Status updated successfully']);
+    echo json_encode(['success' => true, 'message' => 'Review submitted successfully']);
   } catch (Exception $e) {
     echo json_encode(['success' => false, 'message' => $e->getMessage()]);
   }
@@ -66,6 +67,7 @@ if (!$cust_id) {
           <th>Paid Amount</th>
           <th>Payment Status</th>
           <th>Shipping Status</th>
+          <th>Action</th>
         </tr>
       </thead>
       <tbody>
@@ -85,7 +87,8 @@ if (!$cust_id) {
                         pay.amount_paid, 
                         pay.shipping_status, 
                         pay.payment_status, 
-                        o.order_id
+                        o.order_id, 
+                        p.p_id
                     FROM 
                         customer c
                     JOIN orders o ON c.cust_id = o.customer_id
@@ -102,7 +105,7 @@ if (!$cust_id) {
         $orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         if (empty($orders)) {
-          echo "<tr><td colspan='7' class='text-center'>No orders found</td></tr>";
+          echo "<tr><td colspan='8' class='text-center'>No orders found</td></tr>";
         } else {
           foreach ($orders as $index => $order) {
             ?>
@@ -134,6 +137,9 @@ if (!$cust_id) {
                   <?= ucfirst($order['shipping_status']) ?>
                 </span>
               </td>
+              <td>
+                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#reviewModal" data-order-id="<?= $order['order_id'] ?>" data-product-id="<?= $order['p_id'] ?>">Add Review</button>
+              </td>
             </tr>
           <?php }
         } ?>
@@ -141,6 +147,87 @@ if (!$cust_id) {
     </table>
   </div>
 
+  <!-- Modal for Adding Review -->
+  <div class="modal fade" id="reviewModal" tabindex="-1" aria-labelledby="reviewModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="reviewModalLabel">Add Review</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form id="reviewForm">
+            <div class="mb-3">
+              <label for="review" class="form-label">Review</label>
+              <textarea class="form-control" id="review" rows="3"></textarea>
+            </div>
+            <div class="mb-3">
+              <label for="rating" class="form-label">Rating</label>
+              <select class="form-select" id="rating">
+                <option value="">Select Rating (Optional)</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+              </select>
+            </div>
+            <input type="hidden" id="order-id">
+            <input type="hidden" id="product-id">
+            <button type="submit" class="btn btn-primary">Submit Review</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    // Handle opening the review modal with the correct order and product ID
+    const reviewModal = document.getElementById('reviewModal');
+    reviewModal.addEventListener('show.bs.modal', function(event) {
+      const button = event.relatedTarget; 
+      const orderId = button.getAttribute('data-order-id');
+      const productId = button.getAttribute('data-product-id');
+
+      const orderInput = document.getElementById('order-id');
+      const productInput = document.getElementById('product-id');
+
+      orderInput.value = orderId;
+      productInput.value = productId;
+    });
+
+    // Handle the review form submission
+    document.getElementById('reviewForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      const orderId = document.getElementById('order-id').value;
+      const productId = document.getElementById('product-id').value;
+      const review = document.getElementById('review').value;
+      const rating = document.getElementById('rating').value;
+
+      // Send the review data to the server
+      fetch('', {
+        method: 'POST',
+        body: new URLSearchParams({
+          add_review: 'true',
+          order_id: orderId,
+          product_id: productId,
+          review: review,
+          rating: rating
+        }),
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          alert('Review submitted successfully');
+          window.location.reload(); // Reload to show updated data
+        } else {
+          alert('Error: ' + data.message);
+        }
+      });
+    });
+  </script>
 </body>
 
 </html>
