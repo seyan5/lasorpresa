@@ -16,10 +16,6 @@ if (!isset($_SESSION['customer'])) {
     }
 }
 
-// Display the session data for debugging
-echo '<pre>';
-print_r($_SESSION['customer']);
-echo '</pre>';
 
 if (isset($_POST['form1'])) {
     $valid = 1;
