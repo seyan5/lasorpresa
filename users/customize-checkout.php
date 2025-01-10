@@ -3,6 +3,17 @@ echo "<pre>";
 print_r($_SESSION['customization']);
 echo "</pre>";
 
+
+session_start();
+
+if (!isset($_SESSION['customization'])) {
+    echo "No customization found. Please go back and customize your arrangement.";
+    exit;
+}
+
+$customization = $_SESSION['customization'];
+
+
 ?>
 
 
