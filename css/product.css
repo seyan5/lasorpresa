@@ -1,19 +1,113 @@
 @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@200;300;400;500;600&display=swap');
 
+:root{
+   --pink: #e84393;
+}
+
 *{
-   font-family: 'Nunito', sans-serif;
+   font-family: Verdana, Geneva, Tahoma, sans-serif;
    margin:0; padding:0;
    box-sizing: border-box;
    outline: none; border:none;
    text-decoration: none;
    transition: all .2s linear;
    text-transform: capitalize;
+   transition: .2s linear;
 }
+
+section{
+   padding: 2rem 9%;
+}
+
 
 .logos{
     width: 10rem;
     margin-top: -2rem;
     margin-bottom: -3rem;
+}
+
+header {
+   display: flex;
+   align-items: center;
+   justify-content: space-between;
+   padding: 1.5rem 5%;
+   position: fixed;
+   width: 100%;
+   top: 0;
+   z-index: 1000;
+   background: white;
+   box-shadow: 0 0.2rem 1rem rgba(0, 0, 0, 0.1);
+}
+
+header .logo{
+   font-size: 3rem;
+   color: #333;
+   font-weight: bolder;
+}
+
+header .logo span{
+   color: var(--pink);
+}
+
+header .navbar {
+   display: flex;
+   align-items: center;
+   gap: 2rem;
+}
+
+header .navbar a{
+   font-size: 2rem;
+   padding:0 1.5rem;
+   color: #666;
+}
+
+header .navbar a:hover{
+   color: var(--pink);
+}
+
+header .icons a{
+   font-size: 2.5rem;
+   color: #333;
+   margin-right: 5rem;
+}
+
+header #toggler{
+   display: none;
+}
+
+header .fa-bars{
+   font-size: 3rem;
+   color: #333;
+   border-radius: .5rem;
+   padding: .5rem 1.5rem;
+   cursor: pointer;
+   border: .1rem rgba(0, 0, 0, .3);
+   display: none;
+}
+
+
+.home{
+   display: flex;
+   align-items: center;
+   min-height: 100vh;
+   background: url() no-repeat;
+   background-size: contain;
+   background-position: center;
+}
+
+.home .content{
+   max-width: 50rem;
+   max-width: 1500px; /* Maximum width of the box */
+   width: 100%; /* Set a width percentage to make it responsive */
+   min-height: 500px; /* Minimum height for the box */
+   border: 2px solid #ccc; /* Border around the box */
+   border-radius: 30px; /* Rounded corners */
+   padding: 40px; /* Increased padding inside the box */
+   background-color: #c294ce; /* Background color */
+   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+   text-align: left; /* Center text */
+   margin: 0 auto; /* Center the box horizontally */
+   position: relative;
 }
 
 

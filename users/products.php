@@ -10,6 +10,8 @@ include("../admin/inc/CSRF_Protect.php");
 ?>
 <!-- css -->
 <link rel="stylesheet" href="../css/product.css">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+
 <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 <link href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" rel="stylesheet" />
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -177,6 +179,11 @@ function filterProducts(ecat_id) {
     xhr.send();
 }
 
+// Load all products by default when the page loads
+window.onload = function() {
+    filterProducts('all');
+};
+
 // Function to open modal
 function openModal(productId) {
     // Fetch product data from the selected product using AJAX or embedded data
@@ -211,11 +218,7 @@ function addToCart() {
     alert("Added to cart!");
 }
 </script>
+
 </body>
-
-
-
-
-
 
 </html>
