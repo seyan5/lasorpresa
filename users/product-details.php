@@ -65,11 +65,11 @@ $product_quantity = $product['quantity']; // Get product quantity
                 alt="<?php echo htmlspecialchars($product['name']); ?>">
             <h1><?php echo htmlspecialchars($product['name']); ?></h1>
             <p><?php echo htmlspecialchars($product['description']); ?></p>
-            <section>
+    
         </div>
 
         <!-- Reviews Section -->
-       
+        <section id="reviews">
                 <h3>Customer Reviews</h3>
                 <?php if (empty($reviews)): ?>
                     <p>No reviews yet. Be the first to review this product!</p>
@@ -82,7 +82,7 @@ $product_quantity = $product['quantity']; // Get product quantity
                         </div>
                     <?php endforeach; ?>
                 <?php endif; ?>
-           
+            </section>
                 
         <main>
 
