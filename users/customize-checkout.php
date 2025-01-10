@@ -1,120 +1,3 @@
-<?php
-require_once('header.php'); // Include DB connection
-
-if (!isset($_SESSION['customization'])) {
-    echo "No customization found. Please go back and customize your arrangement.";
-    exit;
-}
-
-$customization = $_SESSION['customization']; // Retrieve customization data from session
-
-// Handle form submission for order confirmation
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    // Customer details
-    $customer_name = $_POST['customer_name'];
-    $customer_email = $_POST['customer_email'];
-    $shipping_address = $_POST['shipping_address'];
-
-    // Start transaction
-    try {
-        $pdo->beginTransaction(); // Begin transaction for multiple queries
-
-        // Insert the order into the custom_order table
-        $stmt = $pdo->prepare("INSERT INTO custom_order (customer_name, customer_email, shipping_address, total_price) VALUES (:customer_name, :customer_email, :shipping_address, :total_price)");
-        $stmt->execute([
-            'customer_name' => $customer_name,
-            'customer_email' => $customer_email,
-            'shipping_address' => $shipping_address,
-            'total_price' => 0 // This will be updated after inserting order items
-        ]);
-
-        $order_id = $pdo->lastInsertId(); // Get the inserted order ID
-        $total_price = 0; // Initialize the total price
-
-        // Insert the customization details into the custom_orderitems table
-        foreach ($customization as $item) {
-            // Fetch flower details
-            $stmt = $pdo->prepare("SELECT name, price FROM flowers WHERE id = :flower_id");
-            $stmt->execute(['flower_id' => $item['flower_type']]);
-            $flower = $stmt->fetch(PDO::FETCH_ASSOC);
-        
-            if ($flower) {
-                $flower_name = $flower['name'];
-                $flower_price = $flower['price'];
-            } else {
-                $flower_name = "Unknown Flower"; // Default value if query fails
-                $flower_price = 0; // Default price
-            }
-        
-            // Fetch container details
-            $stmt = $pdo->prepare("SELECT container_name, price FROM container WHERE container_id = :container_id");
-            $stmt->execute(['container_id' => $item['container_type']]);
-            $container = $stmt->fetch(PDO::FETCH_ASSOC);
-        
-            if ($container) {
-                $container_name = $container['container_name'];
-                $container_price = $container['price'];
-            } else {
-                $container_name = "Unknown Container";
-                $container_price = 0;
-            }
-        
-            // Fetch color details
-            $stmt = $pdo->prepare("SELECT color_name FROM color WHERE color_id = :color_id");
-            $stmt->execute(['color_id' => $item['container_color']]);
-            $color = $stmt->fetch(PDO::FETCH_ASSOC);
-        
-            if ($color) {
-                $color_name = $color['color_name'];
-            } else {
-                $color_name = "Unknown Color";
-            }
-        
-            // Calculate item total price
-            $item_total_price = ($flower_price * $item['num_flowers']) + $container_price;
-            $total_price += $item_total_price;
-        
-            // Insert order item into the database
-            $stmt = $pdo->prepare("INSERT INTO custom_orderitems (order_id, flower_type, num_flowers, container_type, container_color, flower_price, container_price, color_price, total_price) 
-                                   VALUES (:order_id, :flower_type, :num_flowers, :container_type, :container_color, :flower_price, :container_price, 0, :total_price)");
-            $stmt->execute([
-                'order_id' => $order_id,
-                'flower_type' => $flower_name,
-                'num_flowers' => $item['num_flowers'],
-                'container_type' => $container_name,
-                'container_color' => $color_name,
-                'flower_price' => $flower_price,
-                'container_price' => $container_price,
-                'total_price' => $item_total_price
-            ]);
-        }
-
-        // Update the total price in the custom_order table
-        $stmt = $pdo->prepare("UPDATE custom_order SET total_price = :total_price WHERE order_id = :order_id");
-        $stmt->execute([
-            'total_price' => $total_price,
-            'order_id' => $order_id
-        ]);
-
-        // Commit transaction
-        $pdo->commit();
-
-        // Clear the customization session data after successful order placement
-        unset($_SESSION['customization']);
-
-        // Redirect to order confirmation page
-        header("Location: customize-order-confirmation.php?order_id=" . $order_id);
-        exit;
-
-    } catch (PDOException $e) {
-        // Rollback if there's any error
-        $pdo->rollBack();
-        echo "Error: " . $e->getMessage();
-    }
-}
-
-?>
-
 <h3>Your Floral Arrangement Customization</h3>
 
 <div class="customization-summary">
@@ -160,9 +43,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         // Calculate total price for this flower set
         $item_total_price = ($flower_price * $item['num_flowers']) + $container_price + $color_price;
         $total_price += $item_total_price;
+
+        // Determine the preview image based on customization
+        $preview_image = "images/previews/default.jpg"; // Default preview
+        if ($item['flower_type'] == 1 && $item['num_flowers'] == 1 && strtolower($item['container_type']) == 'wrapper' && strtolower($item['container_color']) == 'blue') {
+            $preview_image = "images/previews/tulip_blue_wrapper.jpg";
+        } elseif ($item['flower_type'] == 2 && $item['num_flowers'] > 1 && strtolower($item['container_type']) == 'basket') {
+            $preview_image = "images/previews/rosas_basket.jpg";
+        }
     ?>
         <div class="customization-item">
             <h4>Flower Set <?php echo $index + 1; ?>:</h4>
+            <!-- Preview Image -->
+            <img src="<?php echo htmlspecialchars($preview_image); ?>" alt="Customization Preview" class="preview-img" style="width: 200px; height: auto;">
+
             <p><strong>Flower Type:</strong> <?php echo htmlspecialchars($flower_name); ?> ($<?php echo number_format($flower_price, 2); ?> per flower)</p>
             <p><strong>Number of Flowers:</strong> <?php echo htmlspecialchars($item['num_flowers']); ?></p>
             <p><strong>Container Type:</strong> <?php echo htmlspecialchars($container_name); ?> ($<?php echo number_format($container_price, 2); ?>)</p>
