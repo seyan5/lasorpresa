@@ -1,6 +1,5 @@
 <?php
-
-require_once('header.php'); // Connect to DB
+require_once('header.php');
 
 // Check if user is logged in
 if (!isset($_SESSION['customer'])) {
@@ -9,42 +8,68 @@ if (!isset($_SESSION['customer'])) {
 }
 
 $cust_id = $_SESSION['customer']['cust_id'];
-
-// Handle message submission
-if ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST['message'])) {
-    $message = trim($_POST['message']);
-    $stmt = $pdo->prepare("INSERT INTO chat_messages (sender_id, sender_type, message) VALUES (:sender_id, 'customer', :message)");
-    $stmt->execute(['sender_id' => $cust_id, 'message' => $message]);
-}
-
-// Retrieve chat messages
-$stmt = $pdo->prepare("SELECT * FROM chat_messages WHERE sender_id = :cust_id OR sender_type = 'admin' ORDER BY timestamp ASC");
-$stmt->execute(['cust_id' => $cust_id]);
-$messages = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Customer Chat</title>
+    <title>Customer Support Chat</title>
+    <style>
+        .chat-box {
+            border: 1px solid #ddd;
+            padding: 10px;
+            height: 300px;
+            overflow-y: scroll;
+            background-color: #f9f9f9;
+        }
+        .chat-message {
+            margin: 5px 0;
+        }
+        .customer { color: blue; }
+        .admin { color: green; }
+    </style>
+    <script>
+        // Function to fetch new messages every 2 seconds
+        setInterval(function () {
+            fetchMessages();
+        }, 2000);
+
+        function fetchMessages() {
+            const xhr = new XMLHttpRequest();
+            xhr.open("GET", "fetch-messages.php", true);
+            xhr.onload = function () {
+                if (xhr.status === 200) {
+                    document.getElementById("chat-box").innerHTML = xhr.responseText;
+                    document.getElementById("chat-box").scrollTop = document.getElementById("chat-box").scrollHeight;
+                }
+            };
+            xhr.send();
+        }
+
+        // Function to send a new message
+        function sendMessage() {
+            const message = document.getElementById("message-input").value;
+            if (message.trim() === "") return;
+            
+            const xhr = new XMLHttpRequest();
+            xhr.open("POST", "send-message.php", true);
+            xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            xhr.onload = function () {
+                if (xhr.status === 200) {
+                    document.getElementById("message-input").value = "";
+                    fetchMessages();
+                }
+            };
+            xhr.send("message=" + encodeURIComponent(message));
+        }
+    </script>
 </head>
 <body>
-    <h2>Chat with Support</h2>
-
-    <div class="chat-box">
-        <?php foreach ($messages as $msg): ?>
-            <div>
-                <strong><?php echo ($msg['sender_type'] == 'customer') ? 'You' : 'Admin'; ?>:</strong>
-                <?php echo htmlspecialchars($msg['message']); ?>
-                <small>(<?php echo $msg['timestamp']; ?>)</small>
-            </div>
-        <?php endforeach; ?>
-    </div>
-
-    <form method="POST">
-        <textarea name="message" required></textarea><br>
-        <button type="submit">Send Message</button>
-    </form>
+    <h2>Customer Chat</h2>
+    <div id="chat-box" class="chat-box"></div>
+    
+    <textarea id="message-input" placeholder="Type your message here..."></textarea>
+    <button onclick="sendMessage()">Send</button>
 </body>
 </html>
