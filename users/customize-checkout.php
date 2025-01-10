@@ -1,3 +1,13 @@
+<?php 
+echo "<pre>";
+print_r($_SESSION['customization']);
+echo "</pre>";
+
+?>
+
+
+
+
 <h3>Your Floral Arrangement Customization</h3>
 
 <div class="customization-summary">
