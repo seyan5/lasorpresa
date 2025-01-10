@@ -43,7 +43,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <div class="container">
         <div class="row">
             <div class="col-md-12">
-                <h2>wawa</h2>
+                <h2>Customize Your Floral Arrangement</h2>
                 <form id="floral-customization-form" action="customization-submit.php" method="POST">
                     <!-- Container Customization Section -->
                     <div class="section">
