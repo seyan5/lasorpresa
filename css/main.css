@@ -13,10 +13,29 @@
     transition: .2s linear;
 }
 
+html{
+    font-size: 62.5%;
+    scroll-behavior: smooth;
+    scroll-padding-top: 6rem;
+    overflow-x: hidden;
+}
+
 section{
     padding: 2rem 9%;
 }
 
+.heading{
+    text-align: center;
+    font-size: 4rem;
+    color: #333;
+    padding: 1rem;
+    margin: 2rem 0;
+    background: rgba(225, 51, 153, .05);
+}
+
+.heading span{
+    color: var(--pink);
+}
 
 .btn{
     display: inline-block;
@@ -64,71 +83,7 @@ section{
     color: black;
     padding: 12px 16px;
     text-decoration: none;
-    display: block;header .logo{
-        font-size: 3rem;
-        color: #333;
-        font-weight: bolder;
-    }
-    
-    header .logo span{
-        color: var(--pink);
-    }
-    
-    header .navbar a{
-        font-size: 2rem;
-        padding:0 1.5rem;
-        color: #666;
-    }
-    
-    header .navbar a:hover{
-        color: var(--pink);
-    }
-    
-    header .icons a{
-        font-size: 2.5rem;
-        color: #333;
-        margin-right: 5rem;
-    }
-    
-    header #toggler{
-        display: none;
-    }
-    
-    header .fa-bars{
-        font-size: 3rem;
-        color: #333;
-        border-radius: .5rem;
-        padding: .5rem 1.5rem;
-        cursor: pointer;
-        border: .1rem rgba(0, 0, 0, .3);
-        display: none;
-    }
-    
-    
-    .home{
-        display: flex;
-        align-items: center;
-        min-height: 100vh;
-        background: url() no-repeat;
-        background-size: contain;
-        background-position: center;
-    }
-    
-    .home .content{
-        max-width: 50rem;
-        max-width: 1500px; /* Maximum width of the box */
-        width: 100%; /* Set a width percentage to make it responsive */
-        min-height: 500px; /* Minimum height for the box */
-        border: 2px solid #ccc; /* Border around the box */
-        border-radius: 30px; /* Rounded corners */
-        padding: 40px; /* Increased padding inside the box */
-        background-color: #c294ce; /* Background color */
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
-        text-align: left; /* Center text */
-        margin: 0 auto; /* Center the box horizontally */
-        position: relative;
-    }
-    
+    display: block;
   }
   
   /* Hover effect for links */
@@ -581,112 +536,4 @@ icons-container .icons span{
 .review .box-container .box .user h3{
     font-size: 2rem;
     color: #333;
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/* media */
-
-@media (max-width:991px){
-    html{
-        font-size: 55%;
-    }
-
-    header{
-        padding: 2rem;
-    }
-
-    section{
-        padding: 2rem;
-    }
-}
-
-@media (max-width:768px){
-    html .fa-bars{ 
-        display: block; 
-    }
-    header .navbar{
-        position: absolute;
-        top: 100%;
-        left: 0;
-        right: 0;
-        background: #eee;
-        border-top: .1rem solid rgba(0, 0, 0, .1);
-        clip-path: polygon(0 0, 100% 0, 100% 0, 0 0);
-    }
-
-    header #toggler:checked .navbar{
-        clip-path: polygon(0 0, 100% 0, 100% 0, 0 0);
-    }
-
-    header .navbar a{
-        margin: 1.5rem;
-        padding: 1.5rem;
-        background: #fff;
-        border: .1rem solid rgba(0, 0, 0, .1);
-        display: block;
-    }
-
-    .home .content h3{
-        font-size: 5rem;
-    }
-
-    .home .content span{
-        font-size: 2.5rem;
-    }
-
-    icons-container .icons h3{
-        font-size: 2rem;
-    }
-    
-    icons-container .icons span{
-        font-size: 1.7rem;
-    } 
-
-    .circle {
-        position: absolute; /* Position the circle absolutely */
-        top: 50%; /* Center it vertically */
-        right: 20px; /* Distance from the right side */
-        transform: translateY(-50%); /* Adjust for vertical centering */
-        width: 300px; /* Width of the circle */
-        height: 300px; /* Height of the circle */
-        background-color: #1a1919; /* Circle color */
-        border-radius: 50%; /* Makes it a perfect circle */
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Shadow for the circle */
-    }
-
-}
-
-@media (max-width:450px){ 
-    html{ 
-        font-size: 50%; 
-    }
-
-    .heading{
-        padding: 3rem;
-    }
 }
