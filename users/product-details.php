@@ -25,6 +25,17 @@ $product_quantity = $product['quantity']; // Get product quantity
     echo "<p>Invalid product ID.</p>";
     exit;
 }
+
+  // Fetch reviews for the product
+  $reviewStmt = $pdo->prepare("
+  SELECT review, rating, created_at
+  FROM reviews
+  WHERE product_id = :p_id
+  ORDER BY created_at DESC
+  ");
+  $reviewStmt->bindParam(':p_id', $p_id, PDO::PARAM_INT);
+  $reviewStmt->execute();
+  $reviews = $reviewStmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
 <!DOCTYPE html>
@@ -56,9 +67,23 @@ $product_quantity = $product['quantity']; // Get product quantity
             <p><?php echo htmlspecialchars($product['description']); ?></p>
             <section>
         </div>
-                
 
+        <!-- Reviews Section -->
+        <section id="reviews">
+                <h3>Customer Reviews</h3>
+                <?php if (empty($reviews)): ?>
+                    <p>No reviews yet. Be the first to review this product!</p>
+                <?php else: ?>
+                    <?php foreach ($reviews as $review): ?>
+                        <div class="review">
+                            <p><strong>Rating:</strong> <?php echo htmlspecialchars($review['rating']) ?: 'No rating'; ?></p>
+                            <p><strong>Review:</strong> <?php echo nl2br(htmlspecialchars($review['review'])); ?></p>
+                            <p><small>Reviewed on <?php echo htmlspecialchars($review['created_at']); ?></small></p>
+                        </div>
+                    <?php endforeach; ?>
+                <?php endif; ?>
             </section>
+                
         <main>
 
             <!-- Right Sidebar -->
