@@ -66,7 +66,6 @@ if (!$cust_id) {
           <th>Paid Amount</th>
           <th>Payment Status</th>
           <th>Shipping Status</th>
-          <th>Action</th>
         </tr>
       </thead>
       <tbody>
@@ -103,7 +102,7 @@ if (!$cust_id) {
         $orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         if (empty($orders)) {
-          echo "<tr><td colspan='8' class='text-center'>No orders found</td></tr>";
+          echo "<tr><td colspan='7' class='text-center'>No orders found</td></tr>";
         } else {
           foreach ($orders as $index => $order) {
             ?>
@@ -126,22 +125,14 @@ if (!$cust_id) {
               </td>
               <td>$<?= number_format($order['amount_paid'], 2) ?></td>
               <td>
-                <select class="form-select" id="payment-status-<?= $order['order_id'] ?>">
-                  <option <?= $order['payment_status'] === 'pending' ? 'selected' : '' ?> value="pending">Pending</option>
-                  <option <?= $order['payment_status'] === 'paid' ? 'selected' : '' ?> value="paid">Paid</option>
-                  <option <?= $order['payment_status'] === 'failed' ? 'selected' : '' ?> value="failed">Failed</option>
-                </select>
+                <span class="badge <?= $order['payment_status'] === 'pending' ? 'bg-warning' : ($order['payment_status'] === 'paid' ? 'bg-success' : 'bg-danger') ?>">
+                  <?= ucfirst($order['payment_status']) ?>
+                </span>
               </td>
               <td>
-                <select class="form-select" id="shipping-status-<?= $order['order_id'] ?>">
-                  <option <?= $order['shipping_status'] === 'pending' ? 'selected' : '' ?> value="pending">Pending</option>
-                  <option <?= $order['shipping_status'] === 'shipped' ? 'selected' : '' ?> value="shipped">Shipped</option>
-                  <option <?= $order['shipping_status'] === 'delivered' ? 'selected' : '' ?> value="delivered">Delivered</option>
-                </select>
-              </td>
-              <td>
-                <button class="btn btn-primary" onclick="updateOrderStatus(<?= $order['order_id'] ?>)">Update</button>
-                <button class="btn btn-danger" onclick="deleteOrder(<?= $order['order_id'] ?>)">Delete</button>
+                <span class="badge <?= $order['shipping_status'] === 'pending' ? 'bg-warning' : ($order['shipping_status'] === 'shipped' ? 'bg-info' : 'bg-success') ?>">
+                  <?= ucfirst($order['shipping_status']) ?>
+                </span>
               </td>
             </tr>
           <?php }
