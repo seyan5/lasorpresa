@@ -70,7 +70,7 @@ $customization = $_SESSION['customization'];
 
         // Determine the preview image based on customization
         $preview_image = "../images/previews/default.jpg"; // Default preview
-        if ($item['flower_type'] == 1 && $item['num_flowers'] == 1 && strtolower($item['container_type']) == 'wrapper' && strtolower($item['container_color']) == 'blue') {
+        if ($item['flower_type'] == 2 && $item['num_flowers'] == 1 && strtolower($item['container_type']) == 3 && strtolower($item['container_color']) == 2) {
             $preview_image = "images/previews/tulip_blue_wrapper.jpg";
         } elseif ($item['flower_type'] == 2 && $item['num_flowers'] > 1 && strtolower($item['container_type']) == 'basket') {
             $preview_image = "../images/previews/rose_red_basket.jpg";
