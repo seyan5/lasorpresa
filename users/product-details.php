@@ -26,17 +26,16 @@ $product_quantity = $product['quantity']; // Get product quantity
     exit;
 }
 
-  // Fetch reviews for the product with customer name
+  // Fetch reviews for the product
   $reviewStmt = $pdo->prepare("
-  SELECT r.review, r.rating, r.created_at, c.cust_name
-  FROM reviews r
-  JOIN customer c ON r.customer_id = c.cust_id
-  WHERE r.product_id = :product_id
-  ORDER BY r.created_at DESC
-");
-$reviewStmt->bindParam(':product_id', $p_id, PDO::PARAM_INT);
-$reviewStmt->execute();
-
+  SELECT review, rating, created_at
+  FROM reviews
+  WHERE product_id = :p_id
+  ORDER BY created_at DESC
+  ");
+  $reviewStmt->bindParam(':p_id', $p_id, PDO::PARAM_INT);
+  $reviewStmt->execute();
+  $reviews = $reviewStmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
 <!DOCTYPE html>
@@ -77,7 +76,6 @@ $reviewStmt->execute();
                 <?php else: ?>
                     <?php foreach ($reviews as $review): ?>
                         <div class="review">
-                            <p><strong>Customer:</strong> <?php echo htmlspecialchars($review['cust_name']); ?></p>
                             <p><strong>Rating:</strong> <?php echo htmlspecialchars($review['rating']) ?: 'No rating'; ?></p>
                             <p><strong>Review:</strong> <?php echo nl2br(htmlspecialchars($review['review'])); ?></p>
                             <p><small>Reviewed on <?php echo htmlspecialchars($review['created_at']); ?></small></p>
