@@ -1,7 +1,8 @@
 <?php 
 
 
-require("conn.php")
+require("conn.php");
+
 echo "<pre>";
 print_r($_SESSION['customization']);
 echo "</pre>";
