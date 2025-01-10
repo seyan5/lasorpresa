@@ -1,25 +1,43 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.1
+-- version 5.1.3
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 09, 2025 at 03:22 PM
--- Server version: 10.4.32-MariaDB
--- PHP Version: 8.2.12
+-- Generation Time: Jan 10, 2025 at 05:50 AM
+-- Server version: 10.4.24-MariaDB
+-- PHP Version: 8.1.4
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
 SET time_zone = "+00:00";
 
-
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8mb4 */;
-
 --
 -- Database: `lasorpresa`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `chat_messages`
+--
+
+CREATE TABLE `chat_messages` (
+  `message_id` int(11) NOT NULL,
+  `sender_id` int(11) NOT NULL,
+  `sender_type` enum('customer','admin') NOT NULL,
+  `message` text NOT NULL,
+  `timestamp` datetime DEFAULT current_timestamp(),
+  `read_status` enum('unread','read') DEFAULT 'unread'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `chat_messages`
+--
+
+INSERT INTO `chat_messages` (`message_id`, `sender_id`, `sender_type`, `message`, `timestamp`, `read_status`) VALUES
+(1, 14, 'customer', 'hey', '2025-01-10 11:25:24', 'unread'),
+(2, 14, 'customer', 'hello', '2025-01-10 11:25:52', 'unread'),
+(3, 14, 'customer', 'test', '2025-01-10 11:31:51', 'unread');
 
 -- --------------------------------------------------------
 
@@ -30,7 +48,7 @@ SET time_zone = "+00:00";
 CREATE TABLE `color` (
   `color_id` int(11) NOT NULL,
   `color_name` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `color`
@@ -54,18 +72,18 @@ CREATE TABLE `container` (
   `container_id` int(11) NOT NULL,
   `container_name` varchar(255) NOT NULL,
   `price` decimal(10,2) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `container`
 --
 
 INSERT INTO `container` (`container_id`, `container_name`, `price`) VALUES
-(1, 'Basket', 100.00),
-(2, 'Paper Wrap', 50.00),
-(3, 'Plastic Wrap', 50.00),
-(4, 'Vase', 250.00),
-(5, 'huwaw', 10.00);
+(1, 'Basket', '100.00'),
+(2, 'Paper Wrap', '50.00'),
+(3, 'Plastic Wrap', '50.00'),
+(4, 'Vase', '250.00'),
+(5, 'huwaw', '10.00');
 
 -- --------------------------------------------------------
 
@@ -90,7 +108,7 @@ CREATE TABLE `customer` (
   `cust_datetime` datetime DEFAULT current_timestamp(),
   `cust_timestamp` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   `cust_status` enum('active','inactive','suspended') DEFAULT 'active'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `customer`
@@ -104,7 +122,23 @@ INSERT INTO `customer` (`cust_id`, `cust_name`, `cust_email`, `cust_phone`, `cus
 (8, 'test', 'lasorpresa76@mail.com', '431431', 'asddsa', 'sdadsa', '1233', NULL, NULL, NULL, NULL, NULL, '$2y$10$Tdnqmz4o870Sp2xBBK6Vhe1oogE5lNEneUDpw1ksqtMuQeFIE6XRC', '2025-01-07 22:50:56', '2025-01-07 14:50:56', 'inactive'),
 (10, 'Johnwayne', 'jpdeogracias@gmail.com', '09214991751', 'Blk 31 Lt 2 Lhinnete Homea\r\nBiga Tanza Cavite', 'Cavite', '3313', 'Johnwayne', '09214991751', 'Blk 31 Lt 2 Lhinnete Homea\r\nBiga Tanza Cavite', 'Cavite', '2213', '979d472a84804b9f647bc185a877a8b5', '2025-01-07 23:00:23', '2025-01-08 07:40:52', 'active'),
 (12, 'jay', 'jaycantemprate31@gmail.com', '31', 'ggfddf', 'hgftr', '1233', NULL, NULL, NULL, NULL, NULL, '$2y$10$VW2.gZt0DtqBcaGqIrIJW.KHw.ySiAiBaBIO1qux6PNd1HiBW9TEm', '2025-01-07 23:02:28', '2025-01-07 15:02:28', 'inactive'),
-(13, 'seyan1', 'seanammiel@gmail.com', '0956193051213', 'pogi', 'street', '3123', NULL, NULL, NULL, NULL, NULL, '$2y$10$1WFoqvQ/Jp6UwxcfQDKHIOvxFgoah5HVmBlt3j.xqLUEpEuzAO1kW', '2025-01-09 02:59:24', '2025-01-08 21:13:04', 'active');
+(13, 'seyan1', 'seanammiel@gmail.com', '0956193051213', 'pogi', 'street', '3123', NULL, NULL, NULL, NULL, NULL, '$2y$10$1WFoqvQ/Jp6UwxcfQDKHIOvxFgoah5HVmBlt3j.xqLUEpEuzAO1kW', '2025-01-09 02:59:24', '2025-01-08 21:13:04', 'active'),
+(14, 'xofahon', 'xofahon594@pariag.com', '09214991751', 'Blk 31 Lt 2 Lhinnete Homea', 'Cavite', '4311', NULL, NULL, NULL, NULL, NULL, '$2y$10$/c10sj9aSwwRD0Ewr89zieFX.SIibYEpdJlBIa1egTnI7ANFEdAnm', '2025-01-09 22:30:52', '2025-01-09 14:31:19', 'active');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `customer_messages`
+--
+
+CREATE TABLE `customer_messages` (
+  `message_id` int(11) NOT NULL,
+  `cust_id` int(11) NOT NULL,
+  `admin_id` int(11) DEFAULT NULL,
+  `message_text` text NOT NULL,
+  `sent_by` enum('customer','admin') NOT NULL,
+  `timestamp` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -119,7 +153,15 @@ CREATE TABLE `custom_order` (
   `shipping_address` text NOT NULL,
   `total_price` decimal(10,2) NOT NULL,
   `order_date` timestamp NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `custom_order`
+--
+
+INSERT INTO `custom_order` (`order_id`, `customer_name`, `customer_email`, `shipping_address`, `total_price`, `order_date`) VALUES
+(3, 'Johnwayne', 'jw@gmail.com', 'Blk 31 Lt 2 Lhinnete Homea\r\nBiga Tanza Cavite', '125.00', '2025-01-09 15:00:42'),
+(4, 'Johnwayne', 'jw@gmail.com', 'Blk 31 Lt 2 Lhinnete Homea\r\nBiga Tanza Cavite', '669.00', '2025-01-09 15:07:26');
 
 -- --------------------------------------------------------
 
@@ -138,7 +180,17 @@ CREATE TABLE `custom_orderitems` (
   `container_price` decimal(10,2) NOT NULL,
   `color_price` decimal(10,2) NOT NULL,
   `total_price` decimal(10,2) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `custom_orderitems`
+--
+
+INSERT INTO `custom_orderitems` (`orderitem_id`, `order_id`, `flower_type`, `num_flowers`, `container_type`, `container_color`, `flower_price`, `container_price`, `color_price`, `total_price`) VALUES
+(4, 3, 'Tulip', 1, 'Basket', 'Red', '25.00', '100.00', '0.00', '125.00'),
+(5, 4, 'Tulip', 5, 'Plastic Wrap', 'Yellow', '25.00', '50.00', '0.00', '175.00'),
+(6, 4, 'Rosas', 3, 'Plastic Wrap', 'Yellow', '123.00', '50.00', '0.00', '419.00'),
+(7, 4, 'Lilac', 1, 'Plastic Wrap', 'Yellow', '25.00', '50.00', '0.00', '75.00');
 
 -- --------------------------------------------------------
 
@@ -151,7 +203,7 @@ CREATE TABLE `email_verifications` (
   `cust_id` int(11) DEFAULT NULL,
   `token` varchar(255) NOT NULL,
   `created_at` datetime DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `email_verifications`
@@ -176,7 +228,7 @@ CREATE TABLE `end_category` (
   `ecat_id` int(11) NOT NULL,
   `ecat_name` varchar(255) NOT NULL,
   `mcat_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `end_category`
@@ -188,7 +240,8 @@ INSERT INTO `end_category` (`ecat_id`, `ecat_name`, `mcat_id`) VALUES
 (16, 'Sunflower', 3),
 (17, 'Chocolate', 19),
 (18, 'Balloon', 19),
-(19, 'Stuff Toy', 19);
+(19, 'Stuff Toy', 19),
+(23, 'Valentines', 20);
 
 -- --------------------------------------------------------
 
@@ -202,16 +255,16 @@ CREATE TABLE `flowers` (
   `quantity` int(11) NOT NULL,
   `price` decimal(10,2) DEFAULT NULL,
   `image` varchar(255) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `flowers`
 --
 
 INSERT INTO `flowers` (`id`, `name`, `quantity`, `price`, `image`) VALUES
-(2, 'Rosas', 100, 123.00, '../uploads/flowerRose Flower.jpeg'),
-(3, 'Tulip', 100, 25.00, '../uploads/flowertulip flower.png'),
-(4, 'Lilac', 10, 25.00, '../uploads/flowerlilac.jpeg');
+(2, 'Rosas', 100, '123.00', '../uploads/flowerRose Flower.jpeg'),
+(3, 'Tulip', 100, '25.00', '../uploads/flowertulip flower.png'),
+(4, 'Lilac', 10, '25.00', '../uploads/flowerlilac.jpeg');
 
 -- --------------------------------------------------------
 
@@ -223,7 +276,7 @@ CREATE TABLE `mid_category` (
   `mcat_id` int(11) NOT NULL,
   `mcat_name` varchar(255) NOT NULL,
   `tcat_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `mid_category`
@@ -251,27 +304,32 @@ CREATE TABLE `orders` (
   `phone` varchar(20) NOT NULL,
   `total` decimal(10,2) NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `orders`
 --
 
 INSERT INTO `orders` (`order_id`, `customer_id`, `full_name`, `address`, `city`, `postal_code`, `phone`, `total`, `created_at`) VALUES
-(1, 1, 'Johnwayne', 'Blk 31 Lt 2 Lhinnete Homea\r\nBiga Tanza Cavite', 'Cavite', '4341', '09214991751', 10000.00, '2025-01-08 12:27:49'),
-(2, 1, 'Johnwayne', 'Blk 31 Lt 2 Lhinnete Homea\r\nBiga Tanza Cavite', 'Cavite', '4108', '09214991751', 50.00, '2025-01-08 12:28:47'),
-(4, 1, '', '', '', '', '', 10000.00, '2025-01-08 12:45:23'),
-(5, 1, '', '', '', '', '', 10000.00, '2025-01-08 12:46:03'),
-(6, 1, '', '', '', '', '', 10000.00, '2025-01-08 12:46:20'),
-(7, 1, '', '', '', '', '', 50.00, '2025-01-08 12:46:42'),
-(8, 1, '', '', '', '', '', 20000.00, '2025-01-08 12:49:34'),
-(9, 1, '', '', '', '', '', 50.00, '2025-01-08 12:50:19'),
-(10, 1, 'Johnwayne', 'Blk 31 Lt 2 Lhinnete Homea\r\nBiga Tanza Cavite', 'Cavite', '3441', '09214991751', 50.00, '2025-01-08 12:53:26'),
-(15, 1, 'Johnwayne', 'Blk 31 Lt 2 Lhinnete Homea\r\nBiga Tanza Cavite', 'Cavite', '4108', '09214991751', 50.00, '2025-01-08 12:57:50'),
-(17, 1, 'Johnwayne', 'Blk 31 Lt 2 Lhinnete Homea\r\nBiga Tanza Cavite', 'Cavite', '4341', '09214991751', 50.00, '2025-01-08 13:29:27'),
-(18, 1, 'Johnwayne', 'Blk 31 Lt 2 Lhinnete Homea\r\nBiga Tanza Cavite', 'Cavite', '4108', '09214991751', 50.00, '2025-01-08 13:32:13'),
-(20, 13, 'seyan1', 'pogi', 'street', '3123', '0956193051213', 8600.00, '2025-01-09 13:36:13'),
-(21, 13, 'seyan1', 'pogi', 'street', '3123', '0956193051213', 4300.00, '2025-01-09 14:09:22');
+(1, 1, 'Johnwayne', 'Blk 31 Lt 2 Lhinnete Homea\r\nBiga Tanza Cavite', 'Cavite', '4341', '09214991751', '10000.00', '2025-01-08 12:27:49'),
+(2, 1, 'Johnwayne', 'Blk 31 Lt 2 Lhinnete Homea\r\nBiga Tanza Cavite', 'Cavite', '4108', '09214991751', '50.00', '2025-01-08 12:28:47'),
+(4, 1, '', '', '', '', '', '10000.00', '2025-01-08 12:45:23'),
+(5, 1, '', '', '', '', '', '10000.00', '2025-01-08 12:46:03'),
+(6, 1, '', '', '', '', '', '10000.00', '2025-01-08 12:46:20'),
+(7, 1, '', '', '', '', '', '50.00', '2025-01-08 12:46:42'),
+(8, 1, '', '', '', '', '', '20000.00', '2025-01-08 12:49:34'),
+(9, 1, '', '', '', '', '', '50.00', '2025-01-08 12:50:19'),
+(10, 1, 'Johnwayne', 'Blk 31 Lt 2 Lhinnete Homea\r\nBiga Tanza Cavite', 'Cavite', '3441', '09214991751', '50.00', '2025-01-08 12:53:26'),
+(15, 1, 'Johnwayne', 'Blk 31 Lt 2 Lhinnete Homea\r\nBiga Tanza Cavite', 'Cavite', '4108', '09214991751', '50.00', '2025-01-08 12:57:50'),
+(17, 1, 'Johnwayne', 'Blk 31 Lt 2 Lhinnete Homea\r\nBiga Tanza Cavite', 'Cavite', '4341', '09214991751', '50.00', '2025-01-08 13:29:27'),
+(18, 1, 'Johnwayne', 'Blk 31 Lt 2 Lhinnete Homea\r\nBiga Tanza Cavite', 'Cavite', '4108', '09214991751', '50.00', '2025-01-08 13:32:13'),
+(20, 13, 'seyan1', 'pogi', 'street', '3123', '0956193051213', '8600.00', '2025-01-09 13:36:13'),
+(21, 13, 'seyan1', 'pogi', 'street', '3123', '0956193051213', '4300.00', '2025-01-09 14:09:22'),
+(22, 14, 'xofahon', 'Blk 31 Lt 2 Lhinnete Homea', 'Cavite', '4311', '09214991751', '4300.00', '2025-01-09 14:31:46'),
+(23, 14, 'xofahon', 'Blk 31 Lt 2 Lhinnete Homea', 'Cavite', '4311', '09214991751', '4000.00', '2025-01-09 14:49:01'),
+(24, 14, 'xofahon', 'Blk 31 Lt 2 Lhinnete Homea', 'Cavite', '4311', '09214991751', '4300.00', '2025-01-09 14:50:14'),
+(25, 14, 'xofahon', 'Blk 31 Lt 2 Lhinnete Homea', 'Cavite', '4311', '09214991751', '4300.00', '2025-01-10 04:09:28'),
+(26, 14, 'xofahon', 'Blk 31 Lt 2 Lhinnete Homea', 'Cavite', '4311', '09214991751', '4300.00', '2025-01-10 04:25:09');
 
 -- --------------------------------------------------------
 
@@ -285,15 +343,20 @@ CREATE TABLE `order_items` (
   `product_id` int(11) NOT NULL,
   `quantity` int(11) NOT NULL,
   `price` decimal(10,2) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `order_items`
 --
 
 INSERT INTO `order_items` (`order_item_id`, `order_id`, `product_id`, `quantity`, `price`) VALUES
-(20, 20, 24, 2, 4300.00),
-(21, 21, 24, 1, 4300.00);
+(20, 20, 24, 2, '4300.00'),
+(21, 21, 24, 1, '4300.00'),
+(22, 22, 21, 1, '4300.00'),
+(23, 23, 23, 1, '4000.00'),
+(24, 24, 24, 1, '4300.00'),
+(25, 25, 24, 1, '4300.00'),
+(26, 26, 24, 1, '4300.00');
 
 -- --------------------------------------------------------
 
@@ -314,43 +377,48 @@ CREATE TABLE `payment` (
   `shipping_status` enum('pending','shipped','delivered') DEFAULT 'pending',
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `payment`
 --
 
 INSERT INTO `payment` (`payment_id`, `cust_id`, `order_id`, `cust_name`, `cust_email`, `reference_number`, `amount_paid`, `payment_method`, `payment_status`, `shipping_status`, `created_at`, `updated_at`) VALUES
-(1, 13, NULL, 'seyan1', 'seanammiel@gmail.com', '2893123123', 4300.00, 'gcash', 'paid', 'pending', '2025-01-09 11:06:44', '2025-01-09 11:06:44'),
-(2, 13, NULL, 'seyan1', 'seanammiel@gmail.com', '2893123123', 4300.00, 'gcash', 'paid', 'pending', '2025-01-09 11:06:47', '2025-01-09 11:06:47'),
-(3, 13, NULL, 'seyan1', 'seanammiel@gmail.com', '231123', 4300.00, 'gcash', 'paid', 'pending', '2025-01-09 11:08:46', '2025-01-09 11:08:46'),
-(4, 13, NULL, 'seyan1', 'seanammiel@gmail.com', '12213', 1212.00, 'gcash', 'paid', 'pending', '2025-01-09 11:12:30', '2025-01-09 11:12:30'),
-(5, 13, NULL, 'seyan1', 'seanammiel@gmail.com', '12323', 2133.00, 'gcash', 'paid', 'pending', '2025-01-09 11:17:11', '2025-01-09 11:17:11'),
-(6, 13, NULL, 'seyan1', 'seanammiel@gmail.com', '123', 123.00, 'gcash', 'paid', 'pending', '2025-01-09 11:21:35', '2025-01-09 11:21:35'),
-(7, 13, NULL, 'seyan1', 'seanammiel@gmail.com', '12312', 2133.00, 'gcash', 'paid', 'pending', '2025-01-09 11:32:01', '2025-01-09 11:32:01'),
-(8, 13, NULL, 'seyan1', 'seanammiel@gmail.com', '12312', 2133.00, 'gcash', 'paid', 'pending', '2025-01-09 11:32:15', '2025-01-09 11:32:15'),
-(9, 13, NULL, 'seyan1', 'seanammiel@gmail.com', '123123', 4324.00, 'gcash', 'paid', 'pending', '2025-01-09 11:36:36', '2025-01-09 11:36:36'),
-(10, 13, NULL, 'seyan1', 'seanammiel@gmail.com', '2893123123', 1222.00, 'gcash', 'paid', 'pending', '2025-01-09 11:42:52', '2025-01-09 11:42:52'),
-(11, 13, NULL, 'seyan1', 'seanammiel@gmail.com', '123', 4444.00, 'gcash', 'paid', 'pending', '2025-01-09 11:51:38', '2025-01-09 11:51:38'),
-(12, 13, NULL, 'seyan1', 'seanammiel@gmail.com', '123', 4444.00, 'gcash', 'paid', 'pending', '2025-01-09 11:51:46', '2025-01-09 11:51:46'),
-(13, 13, NULL, 'seyan1', 'seanammiel@gmail.com', '13123', 12323.00, 'gcash', 'paid', 'pending', '2025-01-09 12:02:26', '2025-01-09 12:02:26'),
-(14, 13, NULL, 'seyan1', 'seanammiel@gmail.com', '123', 4324.00, 'gcash', 'paid', 'pending', '2025-01-09 12:05:47', '2025-01-09 12:05:47'),
-(15, 13, NULL, 'seyan1', 'seanammiel@gmail.com', '123', 5678.00, 'gcash', 'paid', 'pending', '2025-01-09 12:09:50', '2025-01-09 12:09:50'),
-(16, 13, NULL, 'seyan1', 'seanammiel@gmail.com', '123', 5678.00, 'gcash', 'paid', 'pending', '2025-01-09 12:12:23', '2025-01-09 12:12:23'),
-(17, 13, NULL, 'seyan1', 'seanammiel@gmail.com', '123', 5678.00, 'gcash', 'paid', 'pending', '2025-01-09 12:13:28', '2025-01-09 12:13:28'),
-(18, 13, NULL, 'seyan1', 'seanammiel@gmail.com', '123', 432.00, 'gcash', 'paid', 'pending', '2025-01-09 12:15:40', '2025-01-09 12:15:40'),
-(19, 13, NULL, 'seyan1', 'seanammiel@gmail.com', '123', 432.00, 'gcash', 'paid', 'pending', '2025-01-09 12:15:45', '2025-01-09 12:15:45'),
-(20, 13, NULL, 'seyan1', 'seanammiel@gmail.com', '123', 432.00, 'gcash', 'paid', 'pending', '2025-01-09 12:17:21', '2025-01-09 12:17:21'),
-(21, 13, NULL, 'seyan1', 'seanammiel@gmail.com', '123', 432.00, 'gcash', 'paid', 'pending', '2025-01-09 12:18:15', '2025-01-09 12:18:15'),
-(22, 13, NULL, 'seyan1', 'seanammiel@gmail.com', '123', 432.00, 'gcash', 'paid', 'pending', '2025-01-09 12:19:57', '2025-01-09 12:19:57'),
-(23, 13, NULL, 'seyan1', 'seanammiel@gmail.com', '12', 123.00, 'gcash', 'paid', 'pending', '2025-01-09 12:21:01', '2025-01-09 12:21:01'),
-(24, 13, NULL, 'seyan1', 'seanammiel@gmail.com', '654', 756.00, 'gcash', 'paid', 'pending', '2025-01-09 12:21:08', '2025-01-09 12:21:08'),
-(25, 13, NULL, 'seyan1', 'seanammiel@gmail.com', '4234', 123.00, 'gcash', 'paid', 'pending', '2025-01-09 12:24:56', '2025-01-09 12:24:56'),
-(26, 13, NULL, 'seyan1', 'seanammiel@gmail.com', '123', 123.00, 'gcash', 'paid', 'pending', '2025-01-09 12:27:21', '2025-01-09 12:27:21'),
-(27, 13, NULL, 'seyan1', 'seanammiel@gmail.com', '123123', 123.00, 'gcash', 'paid', 'pending', '2025-01-09 12:28:50', '2025-01-09 12:28:50'),
-(28, 13, NULL, 'seyan1', 'seanammiel@gmail.com', '123', 123.00, 'gcash', 'paid', 'pending', '2025-01-09 13:30:44', '2025-01-09 13:30:44'),
-(29, 13, 20, 'seyan1', 'seanammiel@gmail.com', '123', 1123.00, 'gcash', 'paid', 'pending', '2025-01-09 13:36:13', '2025-01-09 13:36:13'),
-(30, 13, 21, 'seyan1', 'seanammiel@gmail.com', '111', 1111.00, 'gcash', 'paid', 'pending', '2025-01-09 14:09:22', '2025-01-09 14:09:22');
+(1, 13, NULL, 'seyan1', 'seanammiel@gmail.com', '2893123123', '4300.00', 'gcash', 'paid', 'pending', '2025-01-09 11:06:44', '2025-01-09 11:06:44'),
+(2, 13, NULL, 'seyan1', 'seanammiel@gmail.com', '2893123123', '4300.00', 'gcash', 'paid', 'pending', '2025-01-09 11:06:47', '2025-01-09 11:06:47'),
+(3, 13, NULL, 'seyan1', 'seanammiel@gmail.com', '231123', '4300.00', 'gcash', 'paid', 'pending', '2025-01-09 11:08:46', '2025-01-09 11:08:46'),
+(4, 13, NULL, 'seyan1', 'seanammiel@gmail.com', '12213', '1212.00', 'gcash', 'paid', 'pending', '2025-01-09 11:12:30', '2025-01-09 11:12:30'),
+(5, 13, NULL, 'seyan1', 'seanammiel@gmail.com', '12323', '2133.00', 'gcash', 'paid', 'pending', '2025-01-09 11:17:11', '2025-01-09 11:17:11'),
+(6, 13, NULL, 'seyan1', 'seanammiel@gmail.com', '123', '123.00', 'gcash', 'paid', 'pending', '2025-01-09 11:21:35', '2025-01-09 11:21:35'),
+(7, 13, NULL, 'seyan1', 'seanammiel@gmail.com', '12312', '2133.00', 'gcash', 'paid', 'pending', '2025-01-09 11:32:01', '2025-01-09 11:32:01'),
+(8, 13, NULL, 'seyan1', 'seanammiel@gmail.com', '12312', '2133.00', 'gcash', 'paid', 'pending', '2025-01-09 11:32:15', '2025-01-09 11:32:15'),
+(9, 13, NULL, 'seyan1', 'seanammiel@gmail.com', '123123', '4324.00', 'gcash', 'paid', 'pending', '2025-01-09 11:36:36', '2025-01-09 11:36:36'),
+(10, 13, NULL, 'seyan1', 'seanammiel@gmail.com', '2893123123', '1222.00', 'gcash', 'paid', 'pending', '2025-01-09 11:42:52', '2025-01-09 11:42:52'),
+(11, 13, NULL, 'seyan1', 'seanammiel@gmail.com', '123', '4444.00', 'gcash', 'paid', 'pending', '2025-01-09 11:51:38', '2025-01-09 11:51:38'),
+(12, 13, NULL, 'seyan1', 'seanammiel@gmail.com', '123', '4444.00', 'gcash', 'paid', 'pending', '2025-01-09 11:51:46', '2025-01-09 11:51:46'),
+(13, 13, NULL, 'seyan1', 'seanammiel@gmail.com', '13123', '12323.00', 'gcash', 'paid', 'pending', '2025-01-09 12:02:26', '2025-01-09 12:02:26'),
+(14, 13, NULL, 'seyan1', 'seanammiel@gmail.com', '123', '4324.00', 'gcash', 'paid', 'pending', '2025-01-09 12:05:47', '2025-01-09 12:05:47'),
+(15, 13, NULL, 'seyan1', 'seanammiel@gmail.com', '123', '5678.00', 'gcash', 'paid', 'pending', '2025-01-09 12:09:50', '2025-01-09 12:09:50'),
+(16, 13, NULL, 'seyan1', 'seanammiel@gmail.com', '123', '5678.00', 'gcash', 'paid', 'pending', '2025-01-09 12:12:23', '2025-01-09 12:12:23'),
+(17, 13, NULL, 'seyan1', 'seanammiel@gmail.com', '123', '5678.00', 'gcash', 'paid', 'pending', '2025-01-09 12:13:28', '2025-01-09 12:13:28'),
+(18, 13, NULL, 'seyan1', 'seanammiel@gmail.com', '123', '432.00', 'gcash', 'paid', 'pending', '2025-01-09 12:15:40', '2025-01-09 12:15:40'),
+(19, 13, NULL, 'seyan1', 'seanammiel@gmail.com', '123', '432.00', 'gcash', 'paid', 'pending', '2025-01-09 12:15:45', '2025-01-09 12:15:45'),
+(20, 13, NULL, 'seyan1', 'seanammiel@gmail.com', '123', '432.00', 'gcash', 'paid', 'pending', '2025-01-09 12:17:21', '2025-01-09 12:17:21'),
+(21, 13, NULL, 'seyan1', 'seanammiel@gmail.com', '123', '432.00', 'gcash', 'paid', 'pending', '2025-01-09 12:18:15', '2025-01-09 12:18:15'),
+(22, 13, NULL, 'seyan1', 'seanammiel@gmail.com', '123', '432.00', 'gcash', 'paid', 'pending', '2025-01-09 12:19:57', '2025-01-09 12:19:57'),
+(23, 13, NULL, 'seyan1', 'seanammiel@gmail.com', '12', '123.00', 'gcash', 'paid', 'pending', '2025-01-09 12:21:01', '2025-01-09 12:21:01'),
+(24, 13, NULL, 'seyan1', 'seanammiel@gmail.com', '654', '756.00', 'gcash', 'paid', 'pending', '2025-01-09 12:21:08', '2025-01-09 12:21:08'),
+(25, 13, NULL, 'seyan1', 'seanammiel@gmail.com', '4234', '123.00', 'gcash', 'paid', 'pending', '2025-01-09 12:24:56', '2025-01-09 12:24:56'),
+(26, 13, NULL, 'seyan1', 'seanammiel@gmail.com', '123', '123.00', 'gcash', 'paid', 'pending', '2025-01-09 12:27:21', '2025-01-09 12:27:21'),
+(27, 13, NULL, 'seyan1', 'seanammiel@gmail.com', '123123', '123.00', 'gcash', 'paid', 'pending', '2025-01-09 12:28:50', '2025-01-09 12:28:50'),
+(28, 13, NULL, 'seyan1', 'seanammiel@gmail.com', '123', '123.00', 'gcash', 'paid', 'pending', '2025-01-09 13:30:44', '2025-01-09 13:30:44'),
+(29, 13, 20, 'seyan1', 'seanammiel@gmail.com', '123', '1123.00', 'gcash', 'failed', 'shipped', '2025-01-09 13:36:13', '2025-01-10 02:52:10'),
+(30, 13, 21, 'seyan1', 'seanammiel@gmail.com', '111', '1111.00', 'gcash', 'paid', 'pending', '2025-01-09 14:09:22', '2025-01-09 14:09:22'),
+(31, 14, 22, 'xofahon', 'xofahon594@pariag.com', '123', '100.00', 'gcash', 'paid', 'pending', '2025-01-09 14:31:46', '2025-01-09 14:31:46'),
+(32, 14, 23, 'xofahon', 'xofahon594@pariag.com', '123', '400000.00', 'gcash', 'paid', 'pending', '2025-01-09 14:49:01', '2025-01-09 14:49:01'),
+(33, 14, 24, 'xofahon', 'xofahon594@pariag.com', '123', '4300.00', 'gcash', 'failed', 'delivered', '2025-01-09 14:50:14', '2025-01-10 02:52:34'),
+(34, 14, 25, 'xofahon', 'xofahon594@pariag.com', '1123', '4300.00', 'gcash', 'paid', 'pending', '2025-01-10 04:09:28', '2025-01-10 04:09:28'),
+(35, 14, 26, 'xofahon', 'xofahon594@pariag.com', '1111', '321.00', 'gcash', 'paid', 'pending', '2025-01-10 04:25:09', '2025-01-10 04:25:09');
 
 -- --------------------------------------------------------
 
@@ -373,7 +441,7 @@ CREATE TABLE `product` (
   `is_featured` int(1) NOT NULL,
   `is_active` int(1) NOT NULL,
   `ecat_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `product`
@@ -395,7 +463,7 @@ CREATE TABLE `product_color` (
   `id` int(11) NOT NULL,
   `color_id` int(11) NOT NULL,
   `p_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `product_color`
@@ -426,7 +494,7 @@ CREATE TABLE `product_photo` (
   `pp_id` int(11) NOT NULL,
   `photo` varchar(255) NOT NULL,
   `p_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `product_photo`
@@ -448,7 +516,7 @@ CREATE TABLE `product_type` (
   `id` int(11) NOT NULL,
   `type_id` int(11) NOT NULL,
   `p_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `product_type`
@@ -484,7 +552,31 @@ CREATE TABLE `rating` (
   `p_id` int(11) NOT NULL,
   `id` int(11) NOT NULL,
   `comment` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `reviews`
+--
+
+CREATE TABLE `reviews` (
+  `review_id` int(11) NOT NULL,
+  `order_id` int(11) NOT NULL,
+  `product_id` int(11) NOT NULL,
+  `review` text DEFAULT NULL,
+  `rating` int(11) DEFAULT NULL CHECK (`rating` between 1 and 5),
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `customer_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `reviews`
+--
+
+INSERT INTO `reviews` (`review_id`, `order_id`, `product_id`, `review`, `rating`, `created_at`, `customer_id`) VALUES
+(4, 25, 24, 'test', 3, '2025-01-10 04:23:57', 14),
+(5, 26, 24, 'test', 1, '2025-01-10 04:25:23', 14);
 
 -- --------------------------------------------------------
 
@@ -496,7 +588,7 @@ CREATE TABLE `tbl_language` (
   `lang_id` int(11) NOT NULL,
   `lang_name` varchar(255) NOT NULL,
   `lang_value` text NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `tbl_language`
@@ -745,7 +837,7 @@ CREATE TABLE `tbl_settings` (
   `ads_above_popular_product_on_off` int(1) NOT NULL,
   `ads_above_testimonial_on_off` int(1) NOT NULL,
   `ads_category_sidebar_on_off` int(1) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `tbl_settings`
@@ -764,7 +856,7 @@ CREATE TABLE `top_category` (
   `tcat_id` int(11) NOT NULL,
   `tcat_name` varchar(255) NOT NULL,
   `show_on_menu` int(1) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `top_category`
@@ -784,7 +876,7 @@ INSERT INTO `top_category` (`tcat_id`, `tcat_name`, `show_on_menu`) VALUES
 CREATE TABLE `type` (
   `type_id` int(11) NOT NULL,
   `type_name` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `type`
@@ -809,7 +901,7 @@ CREATE TABLE `users` (
   `contact` varchar(100) NOT NULL,
   `password` varchar(255) NOT NULL,
   `user_type` enum('admin','user') NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `users`
@@ -823,6 +915,13 @@ INSERT INTO `users` (`id`, `name`, `email`, `username`, `contact`, `password`, `
 --
 -- Indexes for dumped tables
 --
+
+--
+-- Indexes for table `chat_messages`
+--
+ALTER TABLE `chat_messages`
+  ADD PRIMARY KEY (`message_id`),
+  ADD KEY `sender_id` (`sender_id`);
 
 --
 -- Indexes for table `color`
@@ -842,6 +941,13 @@ ALTER TABLE `container`
 ALTER TABLE `customer`
   ADD PRIMARY KEY (`cust_id`),
   ADD UNIQUE KEY `cust_email` (`cust_email`);
+
+--
+-- Indexes for table `customer_messages`
+--
+ALTER TABLE `customer_messages`
+  ADD PRIMARY KEY (`message_id`),
+  ADD KEY `cust_id` (`cust_id`);
 
 --
 -- Indexes for table `custom_order`
@@ -934,6 +1040,15 @@ ALTER TABLE `rating`
   ADD PRIMARY KEY (`rt_id`);
 
 --
+-- Indexes for table `reviews`
+--
+ALTER TABLE `reviews`
+  ADD PRIMARY KEY (`review_id`),
+  ADD KEY `order_id` (`order_id`),
+  ADD KEY `product_id` (`product_id`),
+  ADD KEY `fk_customer_id` (`customer_id`);
+
+--
 -- Indexes for table `tbl_language`
 --
 ALTER TABLE `tbl_language`
@@ -968,6 +1083,12 @@ ALTER TABLE `users`
 --
 
 --
+-- AUTO_INCREMENT for table `chat_messages`
+--
+ALTER TABLE `chat_messages`
+  MODIFY `message_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
 -- AUTO_INCREMENT for table `color`
 --
 ALTER TABLE `color`
@@ -977,19 +1098,37 @@ ALTER TABLE `color`
 -- AUTO_INCREMENT for table `customer`
 --
 ALTER TABLE `customer`
-  MODIFY `cust_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `cust_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+
+--
+-- AUTO_INCREMENT for table `customer_messages`
+--
+ALTER TABLE `customer_messages`
+  MODIFY `message_id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `custom_order`
+--
+ALTER TABLE `custom_order`
+  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT for table `custom_orderitems`
+--
+ALTER TABLE `custom_orderitems`
+  MODIFY `orderitem_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `email_verifications`
 --
 ALTER TABLE `email_verifications`
-  MODIFY `verification_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `verification_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `end_category`
 --
 ALTER TABLE `end_category`
-  MODIFY `ecat_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
+  MODIFY `ecat_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
 
 --
 -- AUTO_INCREMENT for table `flowers`
@@ -1007,19 +1146,19 @@ ALTER TABLE `mid_category`
 -- AUTO_INCREMENT for table `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
 
 --
 -- AUTO_INCREMENT for table `order_items`
 --
 ALTER TABLE `order_items`
-  MODIFY `order_item_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+  MODIFY `order_item_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
 
 --
 -- AUTO_INCREMENT for table `payment`
 --
 ALTER TABLE `payment`
-  MODIFY `payment_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
+  MODIFY `payment_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
 
 --
 -- AUTO_INCREMENT for table `product`
@@ -1050,6 +1189,12 @@ ALTER TABLE `product_type`
 --
 ALTER TABLE `rating`
   MODIFY `rt_id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `reviews`
+--
+ALTER TABLE `reviews`
+  MODIFY `review_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `tbl_language`
@@ -1086,10 +1231,16 @@ ALTER TABLE `users`
 --
 
 --
--- Constraints for table `custom_orderitems`
+-- Constraints for table `chat_messages`
 --
-ALTER TABLE `custom_orderitems`
-  ADD CONSTRAINT `custom_orderitems_ibfk_1` FOREIGN KEY (`order_id`) REFERENCES `custom_order` (`order_id`) ON DELETE CASCADE;
+ALTER TABLE `chat_messages`
+  ADD CONSTRAINT `chat_messages_ibfk_1` FOREIGN KEY (`sender_id`) REFERENCES `customer` (`cust_id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `customer_messages`
+--
+ALTER TABLE `customer_messages`
+  ADD CONSTRAINT `customer_messages_ibfk_1` FOREIGN KEY (`cust_id`) REFERENCES `customer` (`cust_id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `email_verifications`
@@ -1115,8 +1266,12 @@ ALTER TABLE `order_items`
 --
 ALTER TABLE `payment`
   ADD CONSTRAINT `payment_ibfk_1` FOREIGN KEY (`cust_id`) REFERENCES `customer` (`cust_id`) ON DELETE CASCADE;
-COMMIT;
 
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+--
+-- Constraints for table `reviews`
+--
+ALTER TABLE `reviews`
+  ADD CONSTRAINT `fk_customer_id` FOREIGN KEY (`customer_id`) REFERENCES `customer` (`cust_id`),
+  ADD CONSTRAINT `reviews_ibfk_1` FOREIGN KEY (`order_id`) REFERENCES `orders` (`order_id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `reviews_ibfk_2` FOREIGN KEY (`product_id`) REFERENCES `product` (`p_id`) ON DELETE CASCADE;
+COMMIT;
