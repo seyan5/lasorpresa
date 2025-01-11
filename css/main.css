@@ -465,13 +465,13 @@ icons-container .icons span{
 }
 
 .products .box-container .box .content h3{
-    font-size: 2.5rem;
+    font-size: 2rem;
     color: #333;
 }
 
 
 .products .box-container .box .content .price{
-    font-size: 2.5rem;
+    font-size: 1.8rem;
     color: var(--pink);
     font-weight: bolder;
     padding-top: 1rem;
