@@ -116,7 +116,7 @@ $statement->execute();
 $products = $statement->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
-<h1 class="heading">Featured <span>Flowers</span></h1>
+<h1 class="heading">Latest <span>Flowers</span></h1>
 <div class="box-container">
     <div class="shop">
         <h1>Best Selling</h1>
