@@ -64,11 +64,11 @@ session_start();
 
 
   </header>
-      <div class="header">
+      <!-- <div class="header">
         <a href="index.php" class="back-link">
           <span class="back-arrow">&lt;</span> La Sorpresa Home Page
         </a>
-      </div>
+      </div> -->
 
       <div class="container">
         <div class="cart">
@@ -92,14 +92,16 @@ session_start();
                 </div>
 
                 <!-- Quantity Controls -->
-        <div class="quantity">
-          <form method="POST" action="cart-update.php" class="quantity-form">
-            <input type="hidden" name="item_index" value="<?php echo $index; ?>">
-            <button type="submit" name="action" value="decrease">-</button>
-            <span><?php echo htmlspecialchars($item['quantity']); ?></span>
-            <button type="submit" name="action" value="increase">+</button>
-          </form>
+                <div class="quantity">
+    <form method="POST" action="cart-update.php" class="quantity-form">
+        <input type="hidden" name="item_index" value="<?php echo $index; ?>">
+        <div class="quantity-controls">
+            <button type="submit" name="action" value="decrease" class="btn-control">-</button>
+            <span class="quantity-value"><?php echo htmlspecialchars($item['quantity']); ?></span>
+            <button type="submit" name="action" value="increase" class="btn-control">+</button>
         </div>
+    </form>
+</div>
 
 
                 <!-- Product Price -->
@@ -211,4 +213,43 @@ function checkout() {
         }
     };
 </script>
+<style>
+  <style>
+    /* Container to align items side by side */
+    .quantity-controls {
+        display: flex;
+        align-items: center;
+        gap: 8px; /* Adjust spacing between controls */
+    }
+
+    /* Button styles */
+    .btn-control {
+        background-color: #007bff;
+        color: black;
+        border: none;
+        padding: 5px 10px;
+        font-size: 16px;
+        cursor: pointer;
+        border-radius: 4px;
+    }
+
+    .btn-control:hover {
+        background-color: #0056b3;
+    }
+
+    /* Quantity display style */
+    .quantity-value {
+        min-width: 24px;
+        text-align: center;
+        font-size: 16px;
+    }
+
+    /* Optional: Form styling */
+    .quantity-form {
+        margin: 0;
+    }
+</style>
+
+</style>
+
 </html>

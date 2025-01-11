@@ -204,6 +204,37 @@ function addToCart() {
     alert("Added to cart!");
 }
 </script>
+<script>
+    document.getElementById('select').addEventListener('change', function () {
+    filterProducts('all');
+});
+
+function filterProducts(ecat_id, element) {
+    const container = document.getElementById('productContainer');
+    const sortOrder = document.getElementById('select').value;
+
+    // Show loading message
+    container.innerHTML = "<p>Loading products...</p>";
+
+    // Determine the correct API endpoint
+    const url = ecat_id === 'all' 
+        ? `fetch-products.php?sort=${sortOrder}` 
+        : `fetch-products.php?ecat_id=${ecat_id}&sort=${sortOrder}`;
+
+    // Fetch sorted products
+    const xhr = new XMLHttpRequest();
+    xhr.open('GET', url, true);
+    xhr.onload = function () {
+        if (xhr.status === 200) {
+            container.innerHTML = xhr.responseText;
+        } else {
+            container.innerHTML = "<p>Error loading products. Please try again.</p>";
+        }
+    };
+    xhr.send();
+}
+
+</script>
 
 </body>
 
