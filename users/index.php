@@ -170,7 +170,7 @@ $products = $statement->fetchAll(PDO::FETCH_ASSOC);
     
         <div class="content">
             <h3>why choose us?</h3>
-            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ipsum fugit, nulla similique eius ipsa reiciendis. A delectus commodi fugiat. Vitae, voluptatum sequi. Itaque omnis facere harum nostrum beatae maiores delectus.</p>
+            <p>qweqwewqewqeLorem ipsum dolor sit amet, consectetur adipisicing elit. Ipsum fugit, nulla similique eius ipsa reiciendis. A delectus commodi fugiat. Vitae, voluptatum sequi. Itaque omnis facere harum nostrum beatae maiores delectus.</p>
             <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Voluptatem, temporibus tempore aliquam cum laboriosam atque nostrum expedita perspiciatis aut, veniam sequi deserunt, ducimus qui! Quasi officia velit aperiam quia sit!</p>
             <a href="#" class="btn">Learn More!</a>
         </div>
