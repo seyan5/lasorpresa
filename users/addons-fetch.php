@@ -1,5 +1,5 @@
 <?php
-require 'header.php'; // Include database connection
+require 'conn.php'; // Include database connection
 
 // Check if ecat_id is passed
 $ecat_id = isset($_GET['ecat_id']) ? (int)$_GET['ecat_id'] : 'all';
