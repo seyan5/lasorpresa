@@ -1,9 +1,9 @@
 <?php
-require 'header.php'; // Include database connection
+require 'conn.php'; // Include database connection
 
 // Check if ecat_id is passed
 $ecat_id = isset($_GET['ecat_id']) ? (int)$_GET['ecat_id'] : 'all';
-
+try {   
 // Check for sorting order parameter
 $sort_order = isset($_GET['sort']) ? $_GET['sort'] : 'Default';
 $order_by_clause = "";
@@ -81,4 +81,5 @@ try {
     color: #6c757d;
 }
 
+?>
 </style>
