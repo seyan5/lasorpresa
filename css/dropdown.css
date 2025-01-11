@@ -17,7 +17,7 @@
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     border-radius: 5px;
     width: 200px;
-    z-index: 1000;
+    z-index: 9999; /* Increase if needed */
 }
 
 .dropdown-menu p {

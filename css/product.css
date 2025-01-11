@@ -36,12 +36,12 @@
    text-align: left; /* Center text */
    margin: 0 auto; /* Center the box horizontally */
    position: relative;
+   overflow: visible; /* Ensure the dropdown can overflow */
 }
 
 
 html{
    font-size: 62.5%;
-   overflow-x: hidden;
 }
 
 body{
@@ -136,7 +136,7 @@ header .fa-bars {
    display: flex; /* Display list items in a row */
    justify-content: center; /* Center align the items */
    padding: 0; /* Remove default padding */
-   margin: 0 30px 50px; /* Remove default margin, add bottom space */
+   margin: 0 10px 20px; /* Remove default margin, add bottom space */
    border-radius: 5px; /* Rounded corners */
 }
 /* Style for each list item */
@@ -172,56 +172,66 @@ header .fa-bars {
 }
 
 
-.container{
-   max-width: 10rem;
-   margin:0 auto;
-   padding:3rem 2rem;
+.container {
+   max-width: 100%;
+   margin: 0 auto; /* Centers the container horizontally */
+   padding: 3rem 2rem;
+   display: flex; /* Enable flexbox */
+   flex-direction: column; /* Stack the title and product grid vertically */
+   align-items: center; /* Center content horizontally */
 }
 
-.container .title{
+.container .title {
    font-size: 3.5rem;
-   color:#444;
-   margin-bottom: 3rem;
+   color: #444;
+   margin-bottom: 1rem;
    text-transform: uppercase;
-   text-align: center;
-   padding-top: 8rem;
+   text-align: center; /* Center the title */
+   padding-top: 8rem; /* Space from the top */
+   white-space: nowrap; /* Prevent wrapping */
+   text-overflow: ellipsis; /* Add ellipsis if text overflows (optional) */
 }
 
-.container .products-container{
+.container .products-container {
    display: grid;
-   grid-template-columns: repeat(auto-fit, minmax(30rem, 1fr));
-   gap:2rem;
+   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Auto-fit with minimum width of 250px */
+   gap: 1rem;
+   justify-items: center; /* Center items horizontally */
+   align-items: center; /* Center items vertically */
+   width: 100%; /* Ensures the grid takes full width of the container */
+   max-width: 1200px; /* Optional: Set a maximum width for large screens */
 }
 
 .container .products-container .product {
    text-align: center;
-   padding: 1.5rem 1rem ; /* Reduce padding */
+   padding: 1.5rem 1rem; /* Reduce padding */
    background: #fff;
-   box-shadow: 0 .3rem .5rem rgba(0,0,0,.1); /* Reduce shadow size */
+   box-shadow: 0 .3rem .5rem rgba(0, 0, 0, .1); /* Reduce shadow size */
    outline: .05rem solid #ccc; /* Reduce outline thickness */
    outline-offset: -1rem; /* Reduce outline offset */
    cursor: pointer;
    font-size: 0.2rem; /* Optionally reduce font size */
+   margin: 20px; /* Adjust margins */
 }
 
-.container .products-container .product:hover{
+.container .products-container .product:hover {
    outline: .2rem solid #222;
    outline-offset: 0;
    text-decoration: none; /* Remove underline */
 }
 
-.container .products-container .product img{
+.container .products-container .product img {
    height: 25rem;
    width: auto; /* Maintain aspect ratio */
 }
 
-.container .products-container .product:hover img{
+.container .products-container .product:hover img {
    transform: scale(.9);
 }
 
 .container .products-container .product h3 {
    padding: 0.5rem 0;
-   font-size: 1.4rem;
+   font-size: 1.2rem;
    color: #444;
    font-weight: bold; /* Bold text */
    font-family: Verdana, Geneva, Tahoma, sans-serif;
@@ -233,36 +243,43 @@ header .fa-bars {
    overflow: hidden; /* Optional: Hides overflow text */
 }
 
-.container .products-container .product:hover h3{
-   color:var(--pink);
+.container .products-container .product:hover h3 {
+   color: var(--pink);
    text-decoration: none; /* Remove underline */
 }
 
-.container .products-container .product .price{
-   font-size: 2rem;
-   color:#444;
+.container .products-container .product .price {
+   font-size: 1.2rem;
+   color: var(--pink);
+   font-weight: bold;
 }
 
 .container .products-container .product a {
    text-decoration: none; /* Ensure no underline for links */
 }
 
-
-.filter-condition{
+.filter-condition {
    padding: 20px;
    height: 100px;
    font-size: 15px;
    font-weight: bold;
+   margin-left: -100rem; /* Move it to the left side */
+   margin-top: 20px; /* Optional: space from the top */
+   border-top-left-radius: 10px; /* Rounded top-left corner */
+   border-bottom-left-radius: 10px; /* Rounded bottom-left corner */
 }
-.filter-condition select{
+
+.filter-condition select {
    width: 120px;
-    padding: 0 0 0 10px;
-    border: none;
-    outline: none;
-    font-weight: bold;
-    color: var(--pink);
-    background: transparent;
-    cursor: pointer;
+   padding: 0 0 0 10px;
+   border: none;
+   outline: none;
+   font-weight: bold;
+   color: var(--pink);
+   background: transparent;
+   cursor: pointer;
+   border-top-left-radius: 5px; /* Rounded corners for the select box */
+   border-bottom-left-radius: 5px; /* Rounded corners for the select box */
 }
 
 .listPage{
