@@ -104,7 +104,7 @@ $customization = $_SESSION['customization'];
         <div class="customization-item">
             <h4>Flower Set <?php echo $index + 1; ?>:</h4>
             <!-- Preview Image -->
-            <img src="<?php echo htmlspecialchars($preview_image); ?>" alt="Customization Preview" class="preview-img" style="width: 200px; height: auto;">
+            <img src="<?php echo htmlspecialchars($preview_image); ?>" alt="Customization Preview" class="preview-img" style="width: 500px; height: auto;">
 
             <p><strong>Flower Type:</strong> <?php echo htmlspecialchars($flower_name); ?> ($<?php echo number_format($flower_price, 2); ?> per flower)</p>
             <p><strong>Number of Flowers:</strong> <?php echo htmlspecialchars($item['num_flowers']); ?></p>
