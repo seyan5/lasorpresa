@@ -2,8 +2,6 @@
 include("../admin/inc/config.php");
 include("../admin/inc/functions.php");
 include("../admin/inc/CSRF_Protect.php");
-
-
 ?>
 <!-- css -->
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
