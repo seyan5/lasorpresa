@@ -1,0 +1,15 @@
+Login session set: Array
+(
+    [_csrf] => f9d72614aab9bd579327355997a83970
+    [customer] => Array
+        (
+            [cust_id] => 12
+            [cust_name] => jay
+            [cust_email] => jaycantemprate31@gmail.com
+            [cust_phone] => 31
+            [cust_address] => ggfddf
+            [cust_city] => hgftr
+            [cust_zip] => 1233
+        )
+
+)
