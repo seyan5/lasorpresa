@@ -4,20 +4,17 @@ include("../admin/inc/functions.php");
 include("../admin/inc/CSRF_Protect.php");
 
 
-
-
-
 ?>
 <!-- css -->
-<link rel="stylesheet" href="../css/product.css">
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
-
 <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 <link href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" rel="stylesheet" />
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js"></script>
+<link rel="stylesheet" href="../css/product.css?v=1.0">
+<link rel="stylesheet" href="../css/dropdown.css"> 
 <script src="../js/product.js" defer></script>
 
 <header>
@@ -30,9 +27,14 @@ include("../admin/inc/CSRF_Protect.php");
     <nav class="navbar">
         <a href="index.php">Home</a>
         <a href="#about">About</a>
-        <a href="products.php">Flowers</a>
-        <a href="occasion.php">Occasion</a>
-        <a href="addons.php">Addons</a>
+        <div class="prod-dropdown">
+            <a href="" onclick="toggleDropdown()">Products</a>
+                <div class="prod-menu" id="prodDropdown">
+                    <a href="products.php">Flowers</a>
+                    <a href="occasion.php">Occasion</a>
+                    <a href="addons.php">Addons</a>
+                </div>
+        </div>
         <a href="#review">Review</a>
         <a href="#contacts">Contacts</a>
         <a href="customization.php">Customize</a>
@@ -80,17 +82,26 @@ $result = $statement->fetchAll(PDO::FETCH_ASSOC);
 
 ?>
 
+<div class="filter-condition">
+    <select name="" id="select">
+        <option value="Default">Default</option>
+        <option value="LowToHigh">Low to High</option>
+        <option value="HighToLow">High to Low</option>
+    </select>
+</div>
+
+
 <!-- Categories List (Categories Filter) -->
 <ul class="indicator">
     <li data-filter="all" class="active">
-        <a href="#" onclick="filterProducts('all')">All</a>
+        <a href="#" onclick="filterProducts('all', this)">All</a>
     </li>
     <?php
     // Ensure $result is defined and not empty
     if (!empty($result) && is_array($result)) {
         foreach ($result as $row) {
             echo '<li data-filter="' . htmlspecialchars($row['ecat_id']) . '">
-                    <a href="#" onclick="filterProducts(' . htmlspecialchars($row['ecat_id']) . ')">' . htmlspecialchars($row['ecat_name']) . '</a>
+                    <a href="#" onclick="filterProducts(\'' . htmlspecialchars($row['ecat_id']) . '\', this)">' . htmlspecialchars($row['ecat_name']) . '</a>
                   </li>';
         }
     } else {
@@ -103,15 +114,6 @@ $result = $statement->fetchAll(PDO::FETCH_ASSOC);
 <div class="products-container" id="productContainer">
     <!-- Products will be loaded here dynamically -->
 </div>
-
-<div class="filter-condition">
-    <select name="" id="select">
-        <option value="Default">Default</option>
-        <option value="LowToHigh">Low to High</option>
-        <option value="HighToLow">High to Low</option>
-    </select>
-</div>
-
 
 <!-- Product Modal -->
 <!-- Modal for Product Details -->
@@ -126,31 +128,8 @@ $result = $statement->fetchAll(PDO::FETCH_ASSOC);
     </div>
 </div>
 
-   <div class="products-preview">
-
-      <div class="preview" data-target="p-1">
-         <i class="fas fa-times"></i>
-         <img src="images/1.png" alt="">
-         <h3>Flowers</h3>
-         <div class="stars">
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star-half-alt"></i>
-            <span>( 250 )</span>
-         </div>
-         <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequatur, dolorem.</p>
-         <div class="price">$2.00</div>
-         <div class="buttons">
-            <a href="#" class="buy">buy now</a>
-            <a href="#" class="cart">add to cart</a>
-         </div>
-      </div>
-   </div>
-
    <ul class="listPage">
-
+        <li>Next Page</li>
    </ul>
 </section>
 
@@ -158,7 +137,7 @@ $result = $statement->fetchAll(PDO::FETCH_ASSOC);
 <!-- JavaScript to Handle AJAX Requests -->
 <script>
 // Function to filter products by ecat_id
-function filterProducts(ecat_id) {
+function filterProducts(ecat_id, element) {
     const container = document.getElementById('productContainer');
     
     // Show loading message
@@ -167,6 +146,14 @@ function filterProducts(ecat_id) {
     // Determine the correct API endpoint or parameter for 'all'
     const url = ecat_id === 'all' ? 'fetch-products.php' : `fetch-products.php?ecat_id=${ecat_id}`;
 
+    // Update the active class in the indicator
+    const indicators = document.querySelectorAll('.indicator li');
+    indicators.forEach(indicator => indicator.classList.remove('active')); // Remove active class from all
+    if (element) {
+        element.parentElement.classList.add('active'); // Add active class to the clicked element
+    }
+
+    // Fetch products using AJAX
     const xhr = new XMLHttpRequest();
     xhr.open('GET', url, true);
     xhr.onload = function() {

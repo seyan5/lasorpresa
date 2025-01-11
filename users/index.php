@@ -6,8 +6,6 @@ include("../admin/inc/config.php");
 include("../admin/inc/functions.php");
 include("../admin/inc/CSRF_Protect.php");
 
-
-
 ?>
 
 <!DOCTYPE html>
@@ -22,6 +20,7 @@ include("../admin/inc/CSRF_Protect.php");
     <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
 
     <!-- css -->
+     <link rel="stylesheet" href="../css/dropdown.css"> 
     <link rel="stylesheet" href="../css/main.css">
 </head>
 
@@ -38,9 +37,14 @@ include("../admin/inc/CSRF_Protect.php");
     <nav class="navbar">
         <a href="index.php">Home</a>
         <a href="#about">About</a>
-        <a href="products.php">Flowers</a>
-        <a href="occasion.php">Occasion</a>
-        <a href="addons.php">Addons</a>
+        <div class="prod-dropdown">
+            <a href="" onclick="toggleDropdown()">Products</a>
+                <div class="prod-menu" id="prodDropdown">
+                    <a href="products.php">Flowers</a>
+                    <a href="occasion.php">Occasion</a>
+                    <a href="addons.php">Addons</a>
+                </div>
+        </div>
         <a href="#review">Review</a>
         <a href="#contacts">Contacts</a>
         <a href="customization.php">Customize</a>
@@ -48,7 +52,6 @@ include("../admin/inc/CSRF_Protect.php");
     </nav>
      
     <div class="icons">
-    <a href="#" class="fas fa-heart"></a>
     <a href="shopcart.php" class="fas fa-shopping-cart"></a>
     <div class="user-dropdown">
         <a href="#" class="fas fa-user" onclick="toggleDropdown()"></a>
@@ -241,55 +244,6 @@ $products = $statement->fetchAll(PDO::FETCH_ASSOC);
 
 </body>
 
-<style>
-    .user-dropdown {
-    position: relative;
-    display: inline-block;
-}
-
-.fas.fa-user {
-    cursor: pointer;
-}
-
-.dropdown-menu {
-    display: none;
-    position: absolute;
-    top: 100%;
-    right: 0;
-    background-color: white;
-    border: 1px solid #ccc;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    border-radius: 5px;
-    width: 200px;
-    z-index: 1000;
-}
-
-.dropdown-menu p {
-    margin: 10px;
-    font-weight: bold;
-}
-
-.dropdown-menu hr {
-    margin: 5px 0;
-}
-
-.dropdown-menu a {
-    display: block;
-    padding: 10px;
-    text-decoration: none;
-    color: #333;
-}
-
-.dropdown-menu a:hover {
-    background-color: #f0f0f0;
-}
-
-.dropdown-menu.show {
-    display: block;
-}
-
-</style>
-
 <script>
     function toggleDropdown() {
         const dropdown = document.getElementById('userDropdown');
@@ -305,6 +259,7 @@ $products = $statement->fetchAll(PDO::FETCH_ASSOC);
             }
         }
     };
+
 </script>
 
 </html>
