@@ -4,9 +4,6 @@ include("../admin/inc/functions.php");
 include("../admin/inc/CSRF_Protect.php");
 
 
-
-
-
 ?>
 <!-- css -->
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
@@ -43,7 +40,6 @@ include("../admin/inc/CSRF_Protect.php");
     </nav>
      
     <div class="icons">
-    <a href="#" class="fas fa-heart"></a>
     <a href="shopcart.php" class="fas fa-shopping-cart"></a>
     <div class="user-dropdown">
         <a href="#" class="fas fa-user" onclick="toggleDropdown()"></a>

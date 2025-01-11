@@ -43,7 +43,6 @@ include("../admin/inc/CSRF_Protect.php");
     </nav>
      
     <div class="icons">
-        <a href="#" class="fas fa-heart"></a>
         <a href="shopcart.php" class="fas fa-shopping-cart"></a>
 
         <a href="#" class="fas fa-user"></a>

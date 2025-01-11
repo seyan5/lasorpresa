@@ -1,10 +1,10 @@
 <?php
-require 'header.php'; // Include database connection
+require 'conn.php'; // Include database connection
 
 // Check if ecat_id is passed
 $ecat_id = isset($_GET['ecat_id']) ? (int)$_GET['ecat_id'] : 'all';
 
-try {
+try {   
     // Prepare SQL query based on whether 'all' or a specific category is selected
     if ($ecat_id === 'all') {
         // Fetch all products for ecat_id that is linked to mcat_id = 3
@@ -60,3 +60,5 @@ try {
 
 
 ?>
+
+

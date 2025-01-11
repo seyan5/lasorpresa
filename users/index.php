@@ -105,15 +105,18 @@ include("../admin/inc/CSRF_Protect.php");
 
 <?php
 // Fetch products for mid-category ID = 3 and is_featured = 1
+// Fetch the latest 3 products for mid-category ID = 3 and is_featured = 1
 $statement = $pdo->prepare("
     SELECT p.p_id, p.name, p.featured_photo, p.current_price, p.old_price 
     FROM product p
     JOIN end_category ec ON p.ecat_id = ec.ecat_id
     WHERE ec.mcat_id = 3 AND p.is_active = 1 AND p.is_featured = 1
-    ORDER BY p.p_id ASC
+    ORDER BY p.p_id DESC  -- Order by product ID in descending order to show the latest products first
+    LIMIT 3  -- Limit the results to 3 products
 ");
 $statement->execute();
 $products = $statement->fetchAll(PDO::FETCH_ASSOC);
+
 ?>
 
 <h1 class="heading">Latest <span>Flowers</span></h1>
@@ -123,34 +126,34 @@ $products = $statement->fetchAll(PDO::FETCH_ASSOC);
         <h1>Flowers</h1>
         <h3>Cheap and</h3>
         <h3>Affordable Flowers</h3>
-        <a href="products.php" class="btn">See more -></a>
+        <a href="products.php" class="btn">See more &gt;</a>
     </div>
 
     <?php if (!empty($products)): ?>
-        <?php foreach ($products as $product): ?>
-            <div class="box">
-                <span class="discount">-10%</span>
-                <div class="image">
-                    <img src="../admin/uploads/<?php echo htmlspecialchars($product['featured_photo']); ?>" alt="<?php echo htmlspecialchars($product['name']); ?>">
-                    <div class="icons">
-                        <!-- Add to Cart Button -->
-                        <a href="product-details.php?p_id=<?php echo $product['p_id']; ?>" class="cart-btn">Add to cart</a>
-                    </div>
+    <?php foreach ($products as $product): ?>
+        <div class="box">
+            <span class="discount">-10%</span>
+            <div class="image">
+                <img src="../admin/uploads/<?php echo htmlspecialchars($product['featured_photo']); ?>" alt="<?php echo htmlspecialchars($product['name']); ?>">
+                <div class="icons">
+                    <a href="product-details.php?p_id=<?php echo $product['p_id']; ?>" class="cart-btn">Add to cart</a>
                 </div>
-                <div class="content">
-                    <h3><?php echo htmlspecialchars($product['name']); ?></h3>
-                    <div class="price">
-                        ₱<?php echo number_format($product['current_price'], 2); ?>
-                        <?php if (!empty($product['old_price'])): ?>
-                            <span>₱<?php echo number_format($product['old_price'], 2); ?></span>
-                        <?php endif; ?>
-                    </div>
-                </div>   
             </div>
-        <?php endforeach; ?>
-    <?php else: ?>
-        <p>No products found for this category.</p>
-    <?php endif; ?>
+            <div class="content">
+                <h3><?php echo htmlspecialchars($product['name']); ?></h3>
+                <div class="price">
+                    ₱<?php echo number_format($product['current_price'], 2); ?>
+                    <?php if (!empty($product['old_price'])): ?>
+                        <span>₱<?php echo number_format($product['old_price'], 2); ?></span>
+                    <?php endif; ?>
+                </div>
+            </div>   
+        </div>
+    <?php endforeach; ?>
+<?php else: ?>
+    <p>No products found for this category.</p>
+<?php endif; ?>
+
 </div>
 </section>
     <!-- prod sec -->
