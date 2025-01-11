@@ -31,8 +31,6 @@ $total = array_sum(array_map(function ($item) {
 
 // Handle POST request for checkout
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    file_put_contents('debug.log', "\nPOST Received: " . print_r($_POST, true) . "\n", FILE_APPEND);
-
     if (!isset($_SESSION['customer']) || empty($_SESSION['cart'])) {
         echo json_encode(['status' => 'error', 'message' => 'Cart is empty or user not logged in']);
         exit;
