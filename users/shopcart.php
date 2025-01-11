@@ -1,96 +1,147 @@
 <?php
 session_start();
-
-
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- font -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+
+    <!-- css -->
+     <link rel="stylesheet" href="../css/dropdown.css">
+    <link rel="stylesheet" href="../css/main.css">
   <link rel="stylesheet" href="../css/shopcart.css">
   <title>Shopping Cart</title>
 </head>
 <body>
-  <div class="header">
-    <a href="index.php" class="back-link">
-      <span class="back-arrow">&lt;</span> La Sorpresa Home Page
-    </a>
-  </div>
+  <header>
 
-  <div class="container">
-    <div class="cart">
-      <hr>
-      <h3>Shopping Cart</h3>
-      
-      <?php if (isset($_SESSION['cart']) && count($_SESSION['cart']) > 0): ?>
-        <p>You have <?php echo count($_SESSION['cart']); ?> items in your cart.</p>
+  <input type="checkbox" name="" id="toggler">
+    <label for="toggler" class="fas fa-bars"></label>
 
-        <?php foreach ($_SESSION['cart'] as $index => $item): ?>
-          <div class="cart-item">
-            <!-- Product Image -->
-            <img src="../admin/uploads/<?php echo !empty($item['image']) ? htmlspecialchars($item['image']) : 'default-image.jpg'; ?>" 
-                 alt="<?php echo htmlspecialchars($item['name']); ?>" width="50">
+    <!-- <a href="#" class="logo">Flower<span>.</span></a> -->
+    <img src="../images/logo.png" alt="" class="logos" href="">
+    <nav class="navbar">
+        <a href="index.php">Home</a>
+        <a href="#about">About</a>
+        <div class="prod-dropdown">
+            <a href="" onclick="toggleDropdown()">Products</a>
+                <div class="prod-menu" id="prodDropdown">
+                    <a href="products.php">Flowers</a>
+                    <a href="occasion.php">Occasion</a>
+                    <a href="addons.php">Addons</a>
+                </div>
+        </div>
+        <a href="#review">Review</a>
+        <a href="#contacts">Contacts</a>
+        <a href="customization.php">Customize</a>
 
-            <div>
-              <!-- Product Name -->
-              <p><?php echo htmlspecialchars($item['name']); ?></p>
-              <!-- Product Quantity -->
-              <p><?php echo htmlspecialchars($item['quantity']); ?> pcs.</p>
-            </div>
-
-            <!-- Quantity Controls -->
-    <div class="quantity">
-      <form method="POST" action="cart-update.php" class="quantity-form">
-        <input type="hidden" name="item_index" value="<?php echo $index; ?>">
-        <button type="submit" name="action" value="decrease">-</button>
-        <span><?php echo htmlspecialchars($item['quantity']); ?></span>
-        <button type="submit" name="action" value="increase">+</button>
-      </form>
+    </nav>
+     
+    <div class="icons">
+    <a href="#" class="fas fa-heart"></a>
+    <a href="shopcart.php" class="fas fa-shopping-cart"></a>
+    <div class="user-dropdown">
+        <a href="#" class="fas fa-user" onclick="toggleDropdown()"></a>
+        <div class="dropdown-menu" id="userDropdown">
+            <?php if (isset($_SESSION['customer'])): ?>
+                <p>Welcome, <?php echo htmlspecialchars($_SESSION['customer']['cust_name']); ?></p>
+                <hr>
+                <a href="profile.php">Profile</a>
+                <a href="logout.php">Logout</a>
+            <?php else: ?>
+                <a href="login.php">Login</a>
+            <?php endif; ?>
+        </div>
     </div>
+</div>
 
 
-            <!-- Product Price -->
-            <div class="price">
-              ₱<?php echo number_format($item['price'], 2); ?>
-            </div>
-
-            <!-- Delete Item Form -->
-            <form method="POST" action="cart-delete.php" id="delete-form-<?php echo $index; ?>">
-              <input type="hidden" name="item_index" value="<?php echo $index; ?>">
-              <button type="button" class="delete" onclick="confirmDelete(<?php echo $index; ?>)">🗑️</button>
-            </form>
-          </div>
-          
-
-        <?php endforeach; ?>
-      <?php else: ?>
-        <p>Your cart is empty.</p>
-      <?php endif; ?>
-      <a href="addons.php">Want to get addons?</a>
-    </div>
-    
-
-    <div class="payment">
-      <h3>Summary</h3>
-      <hr>
-      <div class="summary">
-        <p>Subtotal <span>₱<?php 
-          $subtotal = isset($_SESSION['cart']) 
-                      ? array_sum(array_map(function($item) {
-                          return $item['price'] * $item['quantity'];
-                        }, $_SESSION['cart'])) 
-                      : 0;
-          echo number_format($subtotal, 2);
-        ?></span></p>
-        <p>Shipping <span>₱0</span></p>
-        <p>Total <span>₱<?php echo number_format($subtotal, 2); ?></span></p>
+  </header>
+      <div class="header">
+        <a href="index.php" class="back-link">
+          <span class="back-arrow">&lt;</span> La Sorpresa Home Page
+        </a>
       </div>
 
-      <button class="checkout" onclick="checkout()">Checkout &gt;</button>
-    </div>
-  </div>
+      <div class="container">
+        <div class="cart">
+          <hr>
+          <h3>Shopping Cart</h3>
+          
+          <?php if (isset($_SESSION['cart']) && count($_SESSION['cart']) > 0): ?>
+            <p>You have <?php echo count($_SESSION['cart']); ?> items in your cart.</p>
+
+            <?php foreach ($_SESSION['cart'] as $index => $item): ?>
+              <div class="cart-item">
+                <!-- Product Image -->
+                <img src="../admin/uploads/<?php echo !empty($item['image']) ? htmlspecialchars($item['image']) : 'default-image.jpg'; ?>" 
+                    alt="<?php echo htmlspecialchars($item['name']); ?>" width="50">
+
+                <div>
+                  <!-- Product Name -->
+                  <p><?php echo htmlspecialchars($item['name']); ?></p>
+                  <!-- Product Quantity -->
+                  <p><?php echo htmlspecialchars($item['quantity']); ?> pcs.</p>
+                </div>
+
+                <!-- Quantity Controls -->
+        <div class="quantity">
+          <form method="POST" action="cart-update.php" class="quantity-form">
+            <input type="hidden" name="item_index" value="<?php echo $index; ?>">
+            <button type="submit" name="action" value="decrease">-</button>
+            <span><?php echo htmlspecialchars($item['quantity']); ?></span>
+            <button type="submit" name="action" value="increase">+</button>
+          </form>
+        </div>
+
+
+                <!-- Product Price -->
+                <div class="price">
+                  ₱<?php echo number_format($item['price'], 2); ?>
+                </div>
+
+                <!-- Delete Item Form -->
+                <form method="POST" action="cart-delete.php" id="delete-form-<?php echo $index; ?>">
+                  <input type="hidden" name="item_index" value="<?php echo $index; ?>">
+                  <button type="button" class="delete" onclick="confirmDelete(<?php echo $index; ?>)">🗑️</button>
+                </form>
+              </div>
+              
+
+            <?php endforeach; ?>
+          <?php else: ?>
+            <p>Your cart is empty.</p>
+          <?php endif; ?>
+          <a href="addons.php">Want to get addons?</a>
+        </div>
+        
+
+        <div class="payment">
+          <h3>Summary</h3>
+          <hr>
+          <div class="summary">
+            <p>Subtotal <span>₱<?php 
+              $subtotal = isset($_SESSION['cart']) 
+                          ? array_sum(array_map(function($item) {
+                              return $item['price'] * $item['quantity'];
+                            }, $_SESSION['cart'])) 
+                          : 0;
+              echo number_format($subtotal, 2);
+            ?></span></p>
+            <p>Shipping <span>₱0</span></p>
+            <p>Total <span>₱<?php echo number_format($subtotal, 2); ?></span></p>
+          </div>
+
+          <button class="checkout" onclick="checkout()">Checkout &gt;</button>
+        </div>
+      </div>
 
   <script>
     // Check if the user is logged in
@@ -143,4 +194,21 @@ function checkout() {
   font-weight: bold;
 }
 </style>
+
+<script>
+    function toggleDropdown() {
+        const dropdown = document.getElementById('userDropdown');
+        dropdown.classList.toggle('show');
+    }
+
+    // Close the dropdown when clicking outside
+    window.onclick = function(event) {
+        if (!event.target.matches('.fa-user')) {
+            const dropdown = document.getElementById('userDropdown');
+            if (dropdown && dropdown.classList.contains('show')) {
+                dropdown.classList.remove('show');
+            }
+        }
+    };
+</script>
 </html>
