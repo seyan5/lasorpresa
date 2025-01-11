@@ -31,8 +31,6 @@ $total = array_sum(array_map(function ($item) {
 
 // Handle POST request for checkout
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    file_put_contents('debug.log', "\nPOST Received: " . print_r($_POST, true) . "\n", FILE_APPEND);
-
     if (!isset($_SESSION['customer']) || empty($_SESSION['cart'])) {
         echo json_encode(['status' => 'error', 'message' => 'Cart is empty or user not logged in']);
         exit;
@@ -170,7 +168,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                         if (data.status === 'success') {
                             alert(data.message);
-                            window.location.href = 'order_submitted.php';
+                            window.location.href = 'shopcart.php';
                         } else {
                             alert(data.message || 'An error occurred.');
                         }
@@ -235,9 +233,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Handle GCash or COD based on selection
             if (paymentMethod.value === 'gcash') {
                 toggleGCashModal(true);
-            } else if (paymentMethod.value === 'cod') {
+            } else if (paymentMethod.value === 'cop') {
                 // Redirect to the order submission page for COD
-                window.location.href = 'order_submitted.php';
+                window.location.href = 'shopcart.php';
             }
         }
 
@@ -370,10 +368,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </label>
                 </div>
                 <div>
-                    <input type="radio" id="cod" name="payment_method" value="cod" required>
-                    <label for="cod">
-                        <img src="../images/cod.png" alt="Cash on Delivery" width="50">
-                        Cash on Delivery (COD)
+                    <input type="radio" id="cop" name="payment_method" value="cop" required>
+                    <label for="cop">
+                        <img src="../images/cop.png" alt="Cash on PickUp" width="50">
+                        Cash on Pickup
                     </label>
                 </div>
             </form>
