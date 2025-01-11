@@ -132,107 +132,64 @@
             <!-- ======================= Cards ================== -->
             <tr>
                 <td colspan="4">
-                    <div class="abc scroll">
-                        <table width="93%" class="sub-table scrolldown" border="0">
-                            <thead>
-                                <tr>
-                                    <th class="table-headin">
-                                        #
-                                    </th>
-                                    <th class="table-headin">
-                                        Photo
-                                    </th>
-                                    <th class="table-headin">
-                                        Product Name
-                                    </th>
-
-                                    <th class="table-headin">
-                                        Old Price
-                                    </th>
-                                    <th class="table-headin">
-                                        (C) Price
-                                    </th>
-                                    <th class="table-headin">
-                                        Quantity
-                                    </th>
-                                    <th class="table-headin">
-                                        Featured?
-                                    </th>
-                                    <th class="table-headin">
-                                        Active?
-                                    </th>
-                                    <th class="table-headin">
-                                        Category
-                                    </th>
-
-                            </thead>
-
-                            <?php
-                            $i = 0;
-                            $statement = $pdo->prepare("SELECT
-    t1.p_id,
-    t1.name,
-    t1.old_price,
-    t1.current_price,
-    t1.quantity,
-    t1.featured_photo,
-    t1.is_featured,
-    t1.is_active,
-    t1.ecat_id,
-    IFNULL(t2.ecat_name, 'No Category') AS ecat_name,
-    IFNULL(t3.mcat_name, 'No Category') AS mcat_name,
-    IFNULL(t4.tcat_name, 'No Category') AS tcat_name
-FROM product t1
-LEFT JOIN end_category t2 ON t1.ecat_id = t2.ecat_id
-LEFT JOIN mid_category t3 ON t2.mcat_id = t3.mcat_id
-LEFT JOIN top_category t4 ON t3.tcat_id = t4.tcat_id
-ORDER BY t1.p_id DESC
-							                           	");
-                            $statement->execute();
-                            $result = $statement->fetchAll(PDO::FETCH_ASSOC);
-                            foreach ($result as $row) {
-                                $i++;
-
-
-                                ?>
-                                <tr>
-                                    <td><?php echo $i; ?></td>
-                                    <td style="width:82px;"><img src="../uploads/<?php echo $row['featured_photo']; ?>"
-                                            alt="<?php echo $row['name']; ?>" style="width:80px;"></td>
-                                    <td><?php echo $row['name']; ?></td>
-                                    <td>$<?php echo $row['old_price']; ?></td>
-                                    <td>$<?php echo $row['current_price']; ?></td>
-                                    <td><?php echo $row['quantity']; ?></td>
-                                    <td>
-                                        <?php if ($row['is_featured'] == 1) {
-                                            echo '<span class="badge badge-success" style="background-color:green;">Yes</span>';
-                                        } else {
-                                            echo '<span class="badge badge-success" style="background-color:red;">No</span>';
-                                        } ?>
-                                    </td>
-                                    <td>
-                                        <?php if ($row['is_active'] == 1) {
-                                            echo '<span class="badge badge-success" style="background-color:green;">Yes</span>';
-                                        } else {
-                                            echo '<span class="badge badge-danger" style="background-color:red;">No</span>';
-                                        } ?>
-                                    </td>
-                                    <td><?php echo $row['tcat_name']; ?><br><?php echo $row['mcat_name']; ?><br><?php echo $row['ecat_name']; ?>
-                                    </td>
-                                    <td>
-                                        <a href="product-edit.php?id=<?php echo $row['p_id']; ?>"
-                                            class="btn btn-primary btn-xs">Edit</a>
-                                        <a href="#" class="btn btn-danger btn-xs"
-                                            data-href="product-delete.php?id=<?php echo $row['p_id']; ?>"
-                                            data-toggle="modal" data-target="#confirm-delete">Delete</a>
-                                    </td>
-                                </tr>
-                                <?php
-                            }
-                            ?>
-                            </tbody>
-                        </table>
-                    </div>
+                <div class="abc">
+    <table width="100%" class="sub-table" border="0">
+        <thead>
+            <tr>
+                <th class="table-headin">#</th>
+                <th class="table-headin">Photo</th>
+                <th class="table-headin">Product Name</th>
+                <th class="table-headin">Old Price</th>
+                <th class="table-headin">(C) Price</th>
+                <th class="table-headin">Quantity</th>
+                <th class="table-headin">Featured?</th>
+                <th class="table-headin">Active?</th>
+                <th class="table-headin">Category</th>
+                <th class="table-headin">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php
+            $i = 0;
+            $statement = $pdo->prepare("
+                SELECT t1.p_id, t1.name, t1.old_price, t1.current_price, t1.quantity, t1.featured_photo,
+                t1.is_featured, t1.is_active, t1.ecat_id, 
+                IFNULL(t2.ecat_name, 'No Category') AS ecat_name,
+                IFNULL(t3.mcat_name, 'No Category') AS mcat_name,
+                IFNULL(t4.tcat_name, 'No Category') AS tcat_name
+                FROM product t1
+                LEFT JOIN end_category t2 ON t1.ecat_id = t2.ecat_id
+                LEFT JOIN mid_category t3 ON t2.mcat_id = t3.mcat_id
+                LEFT JOIN top_category t4 ON t3.tcat_id = t4.tcat_id
+                ORDER BY t1.p_id DESC
+            ");
+            $statement->execute();
+            $result = $statement->fetchAll(PDO::FETCH_ASSOC);
+            
+            foreach ($result as $row) {
+                $i++;
+                ?>
+                <tr>
+                    <td><?php echo $i; ?></td>
+                    <td><img src="../uploads/<?php echo $row['featured_photo']; ?>" alt="<?php echo $row['name']; ?>" style="width:80px;"></td>
+                    <td><?php echo $row['name']; ?></td>
+                    <td>$<?php echo $row['old_price']; ?></td>
+                    <td>$<?php echo $row['current_price']; ?></td>
+                    <td><?php echo $row['quantity']; ?></td>
+                    <td><?php echo ($row['is_featured'] == 1) ? '<span style="color:green;">Yes</span>' : '<span style="color:red;">No</span>'; ?></td>
+                    <td><?php echo ($row['is_active'] == 1) ? '<span style="color:green;">Yes</span>' : '<span style="color:red;">No</span>'; ?></td>
+                    <td><?php echo $row['tcat_name']; ?><br><?php echo $row['mcat_name']; ?><br><?php echo $row['ecat_name']; ?></td>
+                    <td>
+                        <a href="product-edit.php?id=<?php echo $row['p_id']; ?>" class="btn btn-primary btn-xs">Edit</a>
+                        <a href="#" class="btn btn-danger btn-xs" data-href="product-delete.php?id=<?php echo $row['p_id']; ?>" data-toggle="modal" data-target="#confirm-delete">Delete</a>
+                    </td>
+                </tr>
+                <?php
+            }
+            ?>
+        </tbody>
+    </table>
+</div>
         </div>
     </div>
     </div>
