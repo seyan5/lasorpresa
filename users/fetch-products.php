@@ -3,7 +3,7 @@ require 'conn.php'; // Include database connection
 
 // Check if ecat_id is passed
 $ecat_id = isset($_GET['ecat_id']) ? (int)$_GET['ecat_id'] : 'all';
-try {   
+
 // Check for sorting order parameter
 $sort_order = isset($_GET['sort']) ? $_GET['sort'] : 'Default';
 $order_by_clause = "";
@@ -43,9 +43,13 @@ try {
         $statement->bindParam(':ecat_id', $ecat_id, PDO::PARAM_INT);
     }
 
+    // Execute the statement
     $statement->execute();
+
+    // Fetch products
     $products = $statement->fetchAll(PDO::FETCH_ASSOC);
 
+    // Check if products were found
     if ($products) {
         foreach ($products as $product) {
             echo '
@@ -73,13 +77,11 @@ try {
 
 <style>
     .no-products {
-    background-color: #f8f9fa;
-    border: 1px solid #dee2e6;
-    border-radius: 8px;
-}
-.no-products i {
-    color: #6c757d;
-}
-
-?>
+        background-color: #f8f9fa;
+        border: 1px solid #dee2e6;
+        border-radius: 8px;
+    }
+    .no-products i {
+        color: #6c757d;
+    }
 </style>
