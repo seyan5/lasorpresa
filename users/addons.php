@@ -2,23 +2,26 @@
 include("../admin/inc/config.php");
 include("../admin/inc/functions.php");
 include("../admin/inc/CSRF_Protect.php");
-
-
-
-
-
 ?>
-<!-- css -->
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
-<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-<link href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" rel="stylesheet" />
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js"></script>
-<link rel="stylesheet" href="../css/dropdown.css">
-<link rel="stylesheet" href="../css/product.css?v=1.0">
-<script src="../js/product.js" defer></script>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- font -->
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+
+    <!-- css -->
+     <link rel="stylesheet" href="../css/navhead.css"> 
+</head>
+
+<body>
+    <!-- header -->
 
 <header>
 
@@ -40,13 +43,26 @@ include("../admin/inc/CSRF_Protect.php");
         </div>
         <a href="#review">Review</a>
         <a href="#contacts">Contacts</a>
+        <a href="customization.php">Customize</a>
+
     </nav>
      
     <div class="icons">
-        <a href="shopcart.php" class="fas fa-shopping-cart"></a>
-
-        <a href="#" class="fas fa-user"></a>
+    <a href="shopcart.php" class="fas fa-shopping-cart"></a>
+    <div class="user-dropdown">
+        <a href="#" class="fas fa-user" onclick="toggleDropdown()"></a>
+        <div class="dropdown-menu" id="userDropdown">
+            <?php if (isset($_SESSION['customer'])): ?>
+                <p>Welcome, <?php echo htmlspecialchars($_SESSION['customer']['cust_name']); ?></p>
+                <hr>
+                <a href="profile.php">Profile</a>
+                <a href="logout.php">Logout</a>
+            <?php else: ?>
+                <a href="login.php">Login</a>
+            <?php endif; ?>
+        </div>
     </div>
+</div>
 
 </header>
 
@@ -123,7 +139,6 @@ $result = $statement->fetchAll(PDO::FETCH_ASSOC);
 </section>
 
 
-<!-- JavaScript to Handle AJAX Requests -->
 <script>
 // Function to filter products by ecat_id
 function filterProducts(ecat_id) {
@@ -151,8 +166,6 @@ window.onload = function() {
     filterProducts('all');
 };
 
-
-// Function to open modal
 function openModal(productId) {
     // Fetch product data from the selected product using AJAX or embedded data
     const xhr = new XMLHttpRequest();
@@ -175,7 +188,6 @@ function openModal(productId) {
     };
     xhr.send();
 }
-
 // Close modal
 function closeModal() {
     document.getElementById('productModal').style.display = 'none';
@@ -185,12 +197,20 @@ function closeModal() {
 function addToCart() {
     alert("Added to cart!");
 }
+
+function toggleDropdown() {
+    const dropdown = document.getElementById('userDropdown');
+    dropdown.classList.toggle('show');
+}
+
+ // Close the dropdown when clicking outside
+window.onclick = function(event) {
+    if (!event.target.matches('.fa-user')) {
+        const dropdown = document.getElementById('userDropdown');
+        if (dropdown && dropdown.classList.contains('show')) {
+            dropdown.classList.remove('show');
+        }
+    }
+};
+
 </script>
-</body>
-
-
-
-
-
-
-</html>

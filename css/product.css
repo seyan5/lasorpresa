@@ -88,6 +88,7 @@ header .navbar {
    align-items: center;
    gap: 2rem;  
    flex-wrap: wrap; /* Ensure navbar wraps on smaller screens */
+   z-index: -1;
    
 }
 
