@@ -36,7 +36,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $_SESSION['customization'] = $customization_details;
 
     // Redirect to confirmation page
-    header('Location: customize-checkout.php');
+    header('Location: customize-cart.php');
     exit;
 } else {
     echo "Invalid request. Please use the customization form.";
