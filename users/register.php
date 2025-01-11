@@ -12,6 +12,7 @@ require '../mail/PHPMailer/src/SMTP.php';
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
+
 if (isset($_POST['register'])) {
     $cust_name = $_POST['cust_name'];
     $cust_email = $_POST['cust_email'];
@@ -75,7 +76,7 @@ if (isset($_POST['register'])) {
 
         $mail->isHTML(true);
         $mail->Subject = 'Verify Your Email Address';
-        $mail->Body    = "Hi $cust_name,<br><br>Please click the link below to verify your email address:<br><br><a href='http://localhost/lasorpresa/users/verify-email.php?token=$token'>Verify Email</a><br><br>Thank you!";
+        $mail->Body    = "Hi $cust_name,<br><br>Please click the link below to verify your email address:<br><br><a href='http://localhost/lasorpresa/verify-email.php?token=$token'>Verify Email</a><br><br>Thank you!";
 
         $mail->send();
         echo "Registration successful! Please check your email to verify your account.";
