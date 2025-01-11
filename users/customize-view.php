@@ -46,96 +46,46 @@ try {
         ];
     }
 
-    // Display the modal trigger button and modal
+    // Display the orders directly on the page
     echo "<style>
-            .modal {
-                display: none; 
-                position: fixed; 
-                z-index: 1; 
-                left: 0; 
-                top: 0; 
-                width: 100%; 
-                height: 100%; 
-                overflow: auto; 
-                background-color: rgba(0, 0, 0, 0.4); 
-            }
-            .modal-content {
-                background-color: #333;
-                color: #fff;
-                margin: 15% auto;
-                padding: 20px;
-                border: 1px solid #888;
-                width: 80%;
-                border-radius: 10px;
-                font-family: Arial, sans-serif;
-            }
-            .close {
-                color: #aaa;
-                float: right;
-                font-size: 28px;
-                font-weight: bold;
-            }
-            .close:hover,
-            .close:focus {
-                color: white;
-                text-decoration: none;
-                cursor: pointer;
-            }
             .order-section {
                 margin-bottom: 20px;
                 border-bottom: 1px solid #555;
                 padding-bottom: 10px;
             }
+            h2 {
+                font-family: Arial, sans-serif;
+                color: #333;
+            }
+            p {
+                font-family: Arial, sans-serif;
+                color: #555;
+            }
+            label {
+                font-family: Arial, sans-serif;
+                color: #555;
+                font-weight: bold;
+            }
           </style>";
 
-    echo "<button id='openModal'>View My Orders</button>";
-
-    // Modal structure
-    echo "<div id='myModal' class='modal'>
-            <div class='modal-content'>
-                <span class='close'>&times;</span>
-                <h2>My Orders</h2>";
+    echo "<h2>My Custom Orders</h2>";
 
     if (!empty($groupedData)) {
         foreach ($groupedData as $orderId => $details) {
             echo "<div class='order-section'>
                     <h3>Order ID: {$orderId}</h3>
-                    <p><strong>Container Type:</strong> {$details['container_type']}</p>
-                    <p><strong>Container Color:</strong> {$details['container_color']}</p>";
+                    <p><label>Container Type:</label> {$details['container_type']}</p>
+                    <p><label>Container Color:</label> {$details['container_color']}</p>";
             foreach ($details['flowers'] as $flower) {
-                echo "<p><strong>Flower Type:</strong> {$flower['flower_type']}</p>
-                      <p><strong>Quantity:</strong> {$flower['quantity']}</p>";
+                echo "<p><label>Flower Type:</label> {$flower['flower_type']}</p>
+                      <p><label>Quantity:</label> {$flower['quantity']}</p>";
             }
-            echo "<p><strong>Order Total Price:</strong> {$details['order_total_price']}</p>
+            echo "<p><label>Order Total Price:</label> {$details['order_total_price']}</p>
                   </div>";
         }
     } else {
         echo "<p>You have no orders.</p>";
     }
-
-    echo "  </div>
-          </div>";
-
-    // Modal JavaScript
-    echo "<script>
-            var modal = document.getElementById('myModal');
-            var btn = document.getElementById('openModal');
-            var span = document.getElementsByClassName('close')[0];
-
-            btn.onclick = function() {
-                modal.style.display = 'block';
-            }
-
-            span.onclick = function() {
-                modal.style.display = 'none';
-            }
-
-            window.onclick = function(event) {
-                if (event.target == modal) {
-                    modal.style.display = 'none';
-                }
-            }
-          </script>";
 
 } catch (PDOException $e) {
     echo "Error: " . $e->getMessage();
