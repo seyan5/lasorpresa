@@ -3,7 +3,6 @@ ob_start();
 session_start();
 include("../admin/inc/config.php");
 include("../admin/inc/functions.php");
-include("../admin/inc/CSRF_Protect.php");
 
 // Check if the user is logged in
 if (!isset($_SESSION['customer'])) {
@@ -72,8 +71,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Get the order ID
         $order_id = $pdo->lastInsertId();
 
-        // Insert items into `order_items`
+        // Insert items into `order_items` and update product stock
         foreach ($_SESSION['cart'] as $product_id => $item) {
+            // Insert into order_items table
             $stmt = $pdo->prepare("INSERT INTO order_items (order_id, product_id, quantity, price)
                 VALUES (:order_id, :product_id, :quantity, :price)");
             $stmt->execute([
@@ -81,6 +81,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 ':product_id' => $product_id,
                 ':quantity' => $item['quantity'],
                 ':price' => $item['price']
+            ]);
+
+            // Update product stock
+            $stmt = $pdo->prepare("
+                UPDATE product
+                SET quantity = quantity - :quantity
+                WHERE p_id = :product_id AND quantity >= :quantity
+            ");
+            $stmt->execute([
+                ':quantity' => $item['quantity'],
+                ':product_id' => $product_id
             ]);
         }
 
