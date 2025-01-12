@@ -13,3 +13,44 @@ Login session set: Array
         )
 
 )
+Login session set: Array
+(
+    [_csrf] => d839685df438f6621cf961819d095c47
+    [cart] => Array
+        (
+            [30] => Array
+                (
+                    [name] => test
+                    [price] => 25
+                    [quantity] => 1
+                    [image] => product-featured-30.jpg
+                )
+
+        )
+
+    [customer] => Array
+        (
+            [cust_id] => 14
+            [cust_name] => xofahon
+            [cust_email] => xofahon594@pariag.com
+            [cust_phone] => 09214991751
+            [cust_address] => Blk 31 Lt 2 Lhinnete Homea
+            [cust_city] => Cavite
+            [cust_zip] => 4311
+        )
+
+)
+Login session set: Array
+(
+    [customer] => Array
+        (
+            [cust_id] => 14
+            [cust_name] => xofahon
+            [cust_email] => xofahon594@pariag.com
+            [cust_phone] => 09214991751
+            [cust_address] => Blk 31 Lt 2 Lhinnete Homea
+            [cust_city] => Cavite
+            [cust_zip] => 4311
+        )
+
+)
