@@ -69,7 +69,7 @@ include("../admin/inc/CSRF_Protect.php");
 <section>
    <div class="container">
 
-      <h3 class="title"> Flower products </h3>
+      <h3 class="title"> Occasion </h3>
 
       <?php
 // Fetch categories (example query, adjust as per your database structure)
@@ -78,7 +78,7 @@ $statement = $pdo->prepare("
     FROM end_category t1
     JOIN mid_category t2
     ON t1.mcat_id = t2.mcat_id
-    WHERE t1.mcat_id = 3 /* Only get categories for the mid-category with ID 3 */
+    WHERE t1.mcat_id = 20 /* Only get categories for the mid-category with ID 19 */
     ORDER BY t1.ecat_id ASC
 ");
 
@@ -95,18 +95,17 @@ $result = $statement->fetchAll(PDO::FETCH_ASSOC);
     </select>
 </div>
 
-
 <!-- Categories List (Categories Filter) -->
 <ul class="indicator">
     <li data-filter="all" class="active">
-        <a href="#" onclick="filterProducts('all', this)">All</a>
+        <a href="#" onclick="filterProducts('all')">All</a>
     </li>
     <?php
     // Ensure $result is defined and not empty
     if (!empty($result) && is_array($result)) {
         foreach ($result as $row) {
             echo '<li data-filter="' . htmlspecialchars($row['ecat_id']) . '">
-                    <a href="#" onclick="filterProducts(\'' . htmlspecialchars($row['ecat_id']) . '\', this)">' . htmlspecialchars($row['ecat_name']) . '</a>
+                    <a href="#" onclick="filterProducts(' . htmlspecialchars($row['ecat_id']) . ')">' . htmlspecialchars($row['ecat_name']) . '</a>
                   </li>';
         }
     } else {
@@ -133,31 +132,24 @@ $result = $statement->fetchAll(PDO::FETCH_ASSOC);
     </div>
 </div>
 
+
    <ul class="listPage">
-        <li>Next Page</li>
+        <li>Next Page</li>  
    </ul>
 </section>
 
 
-
 <script>
-    function filterProducts(ecat_id, element) {
+// Function to filter products by ecat_id
+function filterProducts(ecat_id) {
     const container = document.getElementById('productContainer');
     
     // Show loading message
     container.innerHTML = "<p>Loading products...</p>";
 
     // Determine the correct API endpoint or parameter for 'all'
-    const url = ecat_id === 'all' ? 'fetch-products.php' : `fetch-products.php?ecat_id=${ecat_id}`;
+    const url = ecat_id === 'all' ? 'fetch-occasion.php' : `fetch-occasion.php?ecat_id=${ecat_id}`;
 
-    // Update the active class in the indicator
-    const indicators = document.querySelectorAll('.indicator li');
-    indicators.forEach(indicator => indicator.classList.remove('active')); // Remove active class from all
-    if (element) {
-        element.parentElement.classList.add('active'); // Add active class to the clicked element
-    }
-
-    // Fetch products using AJAX
     const xhr = new XMLHttpRequest();
     xhr.open('GET', url, true);
     xhr.onload = function() {
@@ -170,16 +162,14 @@ $result = $statement->fetchAll(PDO::FETCH_ASSOC);
     xhr.send();
 }
 
-// Load all products by default when the page loads
 window.onload = function() {
     filterProducts('all');
 };
 
-// Function to open modal
 function openModal(productId) {
     // Fetch product data from the selected product using AJAX or embedded data
     const xhr = new XMLHttpRequest();
-    xhr.open('GET', 'fetch-product-details.php?p_id=' + productId, true);
+    xhr.open('GET', 'fetch-occasion-details.php?p_id=' + productId, true);
     xhr.onload = function() {
         if (xhr.status === 200) {
             const product = JSON.parse(xhr.responseText);
@@ -198,7 +188,6 @@ function openModal(productId) {
     };
     xhr.send();
 }
-
 // Close modal
 function closeModal() {
     document.getElementById('productModal').style.display = 'none';
@@ -208,53 +197,20 @@ function closeModal() {
 function addToCart() {
     alert("Added to cart!");
 }
-</script>
-<script>
-    document.getElementById('select').addEventListener('change', function () {
-    filterProducts('all');
-});
 
-function filterProducts(ecat_id, element) {
-    const container = document.getElementById('productContainer');
-    const sortOrder = document.getElementById('select').value;
-
-    // Show loading message
-    container.innerHTML = "<p>Loading products...</p>";
-
-    // Determine the correct API endpoint
-    const url = ecat_id === 'all' 
-        ? `fetch-products.php?sort=${sortOrder}` 
-        : `fetch-products.php?ecat_id=${ecat_id}&sort=${sortOrder}`;
-
-    // Fetch sorted products
-    const xhr = new XMLHttpRequest();
-    xhr.open('GET', url, true);
-    xhr.onload = function () {
-        if (xhr.status === 200) {
-            container.innerHTML = xhr.responseText;
-        } else {
-            container.innerHTML = "<p>Error loading products. Please try again.</p>";
-        }
-    };
-    xhr.send();
+function toggleDropdown() {
+    const dropdown = document.getElementById('userDropdown');
+    dropdown.classList.toggle('show');
 }
 
-
-    function toggleDropdown() {
+ // Close the dropdown when clicking outside
+window.onclick = function(event) {
+    if (!event.target.matches('.fa-user')) {
         const dropdown = document.getElementById('userDropdown');
-        dropdown.classList.toggle('show');
-    }
-
-    // Close the dropdown when clicking outside
-    window.onclick = function(event) {
-        if (!event.target.matches('.fa-user')) {
-            const dropdown = document.getElementById('userDropdown');
-            if (dropdown && dropdown.classList.contains('show')) {
-                dropdown.classList.remove('show');
-            }
+        if (dropdown && dropdown.classList.contains('show')) {
+            dropdown.classList.remove('show');
         }
-    };
-
-
+    }
+};
 
 </script>
