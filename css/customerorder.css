@@ -1,0 +1,685 @@
+:root{
+    --pink: #e84393;
+}
+
+*{
+    margin: 0;
+    padding: 0;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    outline: none;
+    border: none;
+    text-decoration: none;
+    text-transform: capitalize;
+    transition: .2s linear;
+}
+
+html{
+    font-size: 62.5%;
+    scroll-behavior: smooth;
+    scroll-padding-top: 6rem;
+    overflow-x: hidden;
+}
+
+
+header{
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background: #fff;
+    padding: 2rem 9%;
+    display: flex;
+    align-items: center; 
+    justify-content: space-between; 
+    z-index: 1000;
+    box-shadow: 0 .5rem 1rem rgba(0, 0, 0, .1);    
+}
+
+header{
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background: #fff;
+    padding: 2rem 9%;
+    display: flex;
+    align-items: center; 
+    justify-content: space-between; 
+    z-index: 1000;
+    box-shadow: 0 .5rem 1rem rgba(0, 0, 0, .1);    
+}
+
+.logos{
+    width: 10rem;
+    margin-top: -2rem;
+    margin-bottom: -3rem;
+}
+
+header .logo{
+    font-size: 3rem;
+    color: #333;
+    font-weight: bolder;
+}
+
+header .logo span{
+    color: var(--pink);
+}
+
+header .navbar a{
+    font-size: 2rem;
+    padding:0 1.5rem;
+    color: #666;
+}
+
+header .navbar a:hover{
+    color: var(--pink);
+}
+
+header .icons a{
+    font-size: 2.5rem;
+    color: #333;
+    margin-right: 5rem;
+}
+
+header #toggler{
+    display: none;
+}
+
+header .fa-bars{
+    font-size: 3rem;
+    color: #333;
+    border-radius: .5rem;
+    padding: .5rem 1.5rem;
+    cursor: pointer;
+    border: .1rem rgba(0, 0, 0, .3);
+    display: none;
+}
+
+/* dropdown */
+
+.user-dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.fas.fa-user {
+    cursor: pointer;
+}
+
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background-color: white;
+    border: 1px solid #ccc;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+    width: 200px;
+    z-index: 9999; /* Increase if needed */
+}
+
+.dropdown-menu p {
+    margin: 10px;
+    font-weight: bold;
+}
+
+.dropdown-menu hr {
+    margin: 5px 0;
+}
+
+.dropdown-menu a {
+    display: block;
+    padding: 10px;
+    text-decoration: none;
+    color: #333;
+}
+
+.dropdown-menu a:hover {
+    background-color: #f0f0f0;
+}
+
+.dropdown-menu.show {
+    display: block;
+}
+
+
+/* Style for the dropdown container */
+.prod-dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+/* Style for the dropdown menu (hidden by default) */
+.prod-menu {
+    display: none; /* Hidden initially */
+    position: absolute;
+    top: 100%; /* Position below the parent element */
+    left: 0;
+    background-color: white;
+    min-width: 150px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Optional shadow */
+    z-index: 1000;
+}
+
+/* Links inside the dropdown menu */
+.prod-menu a {
+    display: block;
+    padding: 10px;
+    text-decoration: none;
+    color: black;
+    transition: background-color 0.3s ease;
+}
+
+.prod-menu a:hover {
+    background-color: #f0f0f0; /* Highlight the link on hover */
+}
+
+/* Show the dropdown menu when hovering over the container */
+.prod-dropdown:hover .prod-menu {
+    display: block; /* Make it visible */
+}
+
+/* Container settings */
+.container {
+    max-width: 100%;
+    margin: 0 auto; /* Centers the container horizontally */
+    padding: 3rem 2rem; /* Adjust container padding */
+    display: flex; /* Enable Flexbox */
+    flex-direction: column; /* Stack the title and product grid vertically */
+    align-items: center; /* Center content horizontally */
+}
+
+/* Title style */
+.container .title {
+    font-size: 3.5rem; /* 35px (since 1rem = 10px) */
+    color: #444;
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+    text-align: center; /* Center the title */
+    padding-top: 8rem; /* Space from the top */
+    white-space: nowrap; /* Prevent wrapping */
+    text-overflow: ellipsis; /* Add ellipsis if text overflows */
+}
+
+/* Products container style */
+.container .products-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Auto-fit with min-width 250px */
+    gap: 1rem;
+    justify-items: center; /* Center items horizontally */
+    align-items: center; /* Center items vertically */
+    width: 100%; /* Full width */
+    max-width: 1200px; /* Optional: Set max width */
+}
+
+/* Product card styling */
+.container .products-container .product {
+    text-align: center;
+    padding: 1.5rem 1rem; /* Reduced padding */
+    background: #fff;
+    box-shadow: 0 .3rem .5rem rgba(0, 0, 0, .1); /* Reduced shadow size */
+    outline: .05rem solid #ccc; /* Light outline */
+    outline-offset: -1rem; /* Outline offset */
+    cursor: pointer;
+    font-size: 1.4rem; /* Adjust font size to fit better */
+    margin: 2rem; /* Adjust margins for spacing */
+}
+
+/* Hover effect on product */
+.container .products-container .product:hover {
+    outline: .2rem solid #222;
+    outline-offset: 0;
+    text-decoration: none;
+}
+
+/* Product image styling */
+.container .products-container .product img {
+    height: 25rem; /* Set height */
+    width: auto; /* Maintain aspect ratio */
+}
+
+/* Hover effect on product image */
+.container .products-container .product:hover img {
+    transform: scale(.9); /* Slightly shrink the image on hover */
+}
+
+/* Product name styling */
+.container .products-container .product h3 {
+    padding: 0.5rem 0;
+    font-size: 1.2rem;
+    color: #444;
+    font-weight: bold; /* Bold text */
+    font-family: Verdana, Geneva, sans-serif;
+    text-decoration: none;
+    word-wrap: break-word; /* Wrap long words */
+    overflow-wrap: break-word; /* Ensure text wraps */
+    white-space: normal; /* Allow wrapping */
+    text-overflow: ellipsis; /* Optionally add ellipsis for overflow */
+    overflow: hidden; /* Hide overflow text */
+}
+
+/* Hover effect on product name */
+.container .products-container .product:hover h3 {
+    color: var(--pink);
+    text-decoration: none;
+}
+
+/* Price styling */
+.container .products-container .product .price {
+    font-size: 1.2rem;
+    color: var(--pink);
+    font-weight: bold;
+}
+
+/* Remove underline from links */
+.container .products-container .product a {
+    text-decoration: none;
+}
+
+ /* Style for the indicator container */
+.indicator {
+    list-style: none; /* Remove bullet points */
+    display: flex; /* Display list items in a row */
+    justify-content: center; /* Center align the items */
+    padding: 0; /* Remove default padding */
+    margin: 0 10px 20px; /* Remove default margin, add bottom space */
+    border-radius: 5px; /* Rounded corners */
+ }
+ /* Style for each list item */
+ .indicator li {
+    margin: 0 10px; /* Spacing between items */
+ }
+ 
+ /* Style for links */
+ .indicator li a {
+    text-decoration: none; /* Remove underline */
+    padding: 10px 15px; /* Add spacing inside links */
+    color: #333; /* Default text color */
+    font-size: 14px; /* Font size */
+    font-weight: bold; /* Bold text */
+    border-radius: 3px; /* Rounded corners */
+    transition: color 0.3s; /* Smooth text color transition */
+ }
+ 
+ /* Active class styling */
+ .indicator li.active a {
+    color: var(--pink); /* Active text color (pink) */
+ }
+ 
+ /* Hover effect for links */
+ .indicator li a:hover {
+    color: var(--pink); /* Hover text color (pink) */
+ }
+ 
+ /* Fallback message styling */
+ .indicator li {
+    color: #6c757d; /* Grey text for fallback message */
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+ }
+
+ /* filter */
+
+ .filter-condition {
+    padding: 20px;
+    height: 100px;
+    font-size: 15px;
+    font-weight: bold;
+    margin-left: -100rem; /* Move it to the left side */
+    margin-top: 20px; /* Optional: space from the top */
+    border-top-left-radius: 10px; /* Rounded top-left corner */
+    border-bottom-left-radius: 10px; /* Rounded bottom-left corner */
+ }
+ 
+ .filter-condition select {
+    width: 120px;
+    padding: 0 0 0 10px;
+    border: none;
+    outline: none;
+    font-weight: bold;
+    color: var(--pink);
+    background: transparent;
+    cursor: pointer;
+    border-top-left-radius: 5px; /* Rounded corners for the select box */
+    border-bottom-left-radius: 5px; /* Rounded corners for the select box */
+ }
+ 
+ .listPage{
+    padding:10px;
+    text-align: center;
+    list-style: none;
+ }
+ .listPage li{
+    background-color: #ffffffBD;
+    padding:20px;
+    display: inline-block;
+    margin:0 10px;
+    cursor: pointer;
+ }
+ .listPage .active{
+    background-color: #B192EF;
+    color:#fff;
+ }
+ 
+
+/* General Styles */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    color: #333;
+}
+
+.container {
+    width: 97rem;
+    margin-top: -20rem;
+    border-radius: 12px;  /* Increased border-radius for a smoother corner */
+    padding: 20px;
+}
+
+/* Title */
+h1 {
+    font-size: 2.5em;
+    text-align: center;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+/* Table Styles */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    border-radius: 12px;  /* Added border-radius to the table */
+    overflow: hidden;  /* Prevents border-radius clipping */
+}
+
+strong{
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-size: .85rem;
+}
+
+/* Remove internal lines by eliminating the border in the cells */
+th, td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;  /* Only add bottom border for rows */
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+th {
+    background-color: var(--pink);
+    color: white;
+    text-transform: uppercase;
+}
+
+td {
+    background-color: #fff;
+    color: #555;
+}
+
+/* Badge Styles */
+td .badge {
+    padding: 5px 10px;
+    font-size: 0.9em;
+    border-radius: 4px;
+    text-transform: capitalize;
+}
+
+.badge.bg-warning {
+    background-color: #ffc107;
+    color: white;
+}
+
+.badge.bg-success {
+    background-color: #28a745;
+    color: white;
+}
+
+.badge.bg-danger {
+    background-color: #dc3545;
+    color: white;
+}
+
+.badge.bg-info {
+    background-color: #17a2b8;
+    color: white;
+}
+
+button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 8px 12px; /* Reduced padding */
+    cursor: pointer;
+    border-radius: 6px;
+    font-size: 0.9rem; /* Reduced font size */
+    transition: background-color 0.3s;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+button:focus {
+    outline: none;
+}
+
+/* Style for the close button */
+.btn-close {
+    background: none; /* Remove the default background */
+    border: none; /* Remove the border */
+    padding: 0; /* Remove padding */
+    font-size: 1.5rem; /* Adjust font size of the "X" */
+    color: #333; /* Set the color of the "X" */
+    cursor: pointer; /* Add a pointer cursor on hover */
+    position: absolute; /* Ensure it's positioned properly */
+    top: 10px; /* Adjust the top position */
+    right: 10px; /* Adjust the right position */
+    border-radius: 50%; /* Create a rounded button */
+    width: 30px; /* Set width */
+    height: 30px; /* Set height */
+    display: flex; /* Use flexbox to center the "X" */
+    justify-content: center; /* Center the "X" horizontally */
+    align-items: center; /* Center the "X" vertically */
+}
+
+.btn-close:hover {
+    background-color: #f0f0f0; /* Light background on hover */
+    color: var(--pink); /* Change the color on hover */
+}
+
+.btn-close:focus {
+    outline: none; /* Remove focus outline */
+}
+
+.star-rating i {
+    font-size: 2rem;
+    color: #d3d3d3; /* Light gray for unfilled stars */
+    cursor: pointer;
+  }
+  
+  .star-rating i.filled {
+    color: #ffcd00; /* Gold color for filled stars */
+  }
+  
+
+/* Modal Styles */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1050;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    overflow-y: auto;
+}
+
+.modal-dialog {
+    position: relative;
+    margin: 100px auto;
+    width: 500px;
+    background-color: #fff;
+    border-radius: 12px;  /* Match modal border-radius with container */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    padding: 20px;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid #ddd;
+    padding-bottom: 10px;
+}
+
+.modal-title {
+    font-size: 1.5em;
+    color: #333;
+}
+
+.modal-close {
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.modal-body {
+    margin-top: 20px;
+}
+
+textarea {
+    width: 100%;
+    padding: 10px;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+    resize: vertical;
+    min-height: 120px;
+}
+
+.form-select,
+.form-control {
+    width: 100%;
+    padding: 10px;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+    margin-bottom: 15px;
+}
+
+input[type="hidden"] {
+    display: none;
+}
+
+button[type="submit"] {
+    background-color: #28a745;
+    color: white;
+}
+
+button[type="submit"]:hover {
+    background-color: #218838;
+}
+
+/* Form Styles */
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+/* Centered Modal */
+.modal.show {
+    display: block;
+}
+
+.user-dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.fas.fa-user {
+    cursor: pointer;
+}
+
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background-color: white;
+    border: 1px solid #ccc;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+    width: 200px;
+    z-index: 9999; /* Increase if needed */
+}
+
+.dropdown-menu p {
+    margin: 10px;
+    font-weight: bold;
+}
+
+.dropdown-menu hr {
+    margin: 5px 0;
+}
+
+.dropdown-menu a {
+    display: block;
+    padding: 10px;
+    text-decoration: none;
+    color: #333;
+}
+
+.dropdown-menu a:hover {
+    background-color: #f0f0f0;
+}
+
+.dropdown-menu.show {
+    display: block;
+}
+
+
+/* Style for the dropdown container */
+.prod-dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+/* Style for the dropdown menu (hidden by default) */
+.prod-menu {
+    display: none; /* Hidden initially */
+    position: absolute;
+    top: 100%; /* Position below the parent element */
+    left: 0;
+    background-color: white;
+    min-width: 150px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Optional shadow */
+    z-index: 1000;
+}
+
+/* Links inside the dropdown menu */
+.prod-menu a {
+    display: block;
+    padding: 10px;
+    text-decoration: none;
+    color: black;
+    transition: background-color 0.3s ease;
+}
+
+.prod-menu a:hover {
+    background-color: #f0f0f0; /* Highlight the link on hover */
+}
+
+/* Show the dropdown menu when hovering over the container */
+.prod-dropdown:hover .prod-menu {
+    display: block; /* Make it visible */
+}
+
+
+

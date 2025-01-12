@@ -40,7 +40,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 ?>
 
 <!-- Include Bootstrap CSS -->
-<link rel="stylesheet" href="../css/customize.css?v=1.1">
+<link rel="stylesheet" href="../css/customize.css?v=1.2">
+
 <header>
         <a href="index.php" class="back">← Back to Home Page</a>
         <a href="customize-checkout.php" class="back">Check Out Cart</a>

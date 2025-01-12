@@ -363,12 +363,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <label for="address">Address: </label>
                 <span id="cust_address"><?php echo htmlspecialchars($user['cust_address']); ?></span>
 
-                <label for="city">City: </label>
-                <span id="cust_city"><?php echo htmlspecialchars($user['cust_city']); ?></span>
-
-                <label for="postal_code">Postal Code: </label>
-                <span id="cust_zip"><?php echo htmlspecialchars($user['cust_zip']); ?></span>
-
 
                 <label for="payment_method">Mode of Payment:</label>
                 <div>
@@ -395,7 +389,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 }, $_SESSION['cart']));
                 echo number_format($subtotal, 2);
                 ?></span></p>
-                <p>Shipping <span>₱0</span></p>
                 <p>
                     <strong>Total:</strong>
                     ₱<?php
