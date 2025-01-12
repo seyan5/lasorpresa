@@ -83,6 +83,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 ':price' => $item['price']
             ]);
         }
+        $stmt = $pdo->prepare("
+                UPDATE product
+                SET quantity = quantity - :quantity
+                WHERE p_id = :product_id AND quantity >= :quantity
+            ");
+            $stmt->execute([
+                ':quantity' => $item['quantity'],
+                ':product_id' => $product_id
+            ]);
 
         // Insert payment
         $stmt = $pdo->prepare("INSERT INTO payment (cust_id, order_id, cust_name, cust_email, reference_number, amount_paid, payment_method, payment_status, shipping_status)
