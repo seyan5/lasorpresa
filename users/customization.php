@@ -105,7 +105,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     </div>
 
                     <!-- Button to add more flowers -->
-                    <button type="button" class="btn btn-secondary" id="add-flower-btn">Add Another Flower</button>
+                    <button type="button" class="btn btn-secondary" id="add-flower-btn">Add Flower</button>
 
                     <!-- Real-time Selections -->
                     <div class="section">
