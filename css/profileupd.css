@@ -1,0 +1,139 @@
+:root{
+    --pink: #e84393;
+  }
+  
+
+/* General Styles */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f8f9fa;
+    margin: 100px 0 0; /* Add space on top */
+    padding: 0;
+    color: #333;
+}
+
+.container {
+    width: 100rem !important;  /* Adjust the width as needed */
+    margin: 40px auto 20px;    /* Center the container by using 'auto' for left and right margins */
+    padding: 15px;
+    border-radius: 8px;
+    max-width: 100%;           /* Ensure it doesn't overflow beyond the viewport */
+    box-sizing: border-box;    /* Make sure padding is included in the element's total width */
+}
+
+
+
+h3 {
+    margin-bottom: 20px;
+    font-size: 24px;
+    color: var(--pink);
+    border-bottom: 2px solid #e9ecef;
+    padding-bottom: 5px;
+}
+
+.error {
+    color: #d9534f;
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+    border-radius: 5px;
+    padding: 10px;
+    margin-bottom: 20px;
+}
+
+.success {
+    color: #155724;
+    background-color: #d4edda;
+    border: 1px solid #c3e6cb;
+    border-radius: 5px;
+    padding: 10px;
+    margin-bottom: 20px;
+}
+
+/* Form Styles */
+form {
+    margin-top: 20px;
+}
+
+label {
+    font-size: 16px; /* Explicitly set the font size */
+    font-weight: bold;
+    margin-bottom: 5px;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    color: #666;
+}
+
+
+/* Form element styles */
+input[type="text"], textarea, .form-control {
+    width: 95%;               /* Make them take up 100% of their container's width */
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    background-color: #f9f9f9;
+}
+
+/* Disabled input styling */
+input[type="text"]:disabled {
+    background-color: #e9ecef;
+    color: #6c757d;
+}
+
+/* Grid layout for form */
+.row {
+    gap: 20px;                             /* Space between items */
+}
+
+.form-group {
+    margin-bottom: 20px;                  /* Ensure there's space between form groups */
+    gap: 20px;
+}
+
+
+textarea {
+    resize: none;
+}
+
+.btn-primary {
+    background-color: var(--pink);
+    color: #fff;
+    border: none;
+    padding: 10px 15px;
+    font-size: 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn-primary:hover {
+    background-color: #af37b9;
+}
+
+/* Layout Styles */
+.row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.col-md-6 {
+    flex: 0 0 48%;
+    max-width: 48%;
+}
+
+.col-md-12 {
+    flex: 0 0 100%;
+    max-width: 100%;
+}
+
+/* Sidebar Styles */
+.user-content {
+    padding: 20px;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    background-color: #f8f9fa;
+}
+
+.customer-sidebar {
+    margin-bottom: 20px;
+}
