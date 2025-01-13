@@ -392,24 +392,26 @@ h1 {
 
 /* Table Styles */
 table {
-    width: 100%;
+    width: 150%;
     border-collapse: collapse;
     margin-top: 20px;
     border-radius: 12px;  /* Added border-radius to the table */
     overflow: hidden;  /* Prevents border-radius clipping */
+    font-size: 16px;  /* Fixed font size for the table */
 }
 
-strong{
+strong {
     font-family: Verdana, Geneva, Tahoma, sans-serif;
-    font-size: .85rem;
+    font-size: 14px;  /* Fixed font size for strong elements */
 }
 
-/* Remove internal lines by eliminating the border in the cells */
+/* Table header and cell styles */
 th, td {
     padding: 12px;
     text-align: left;
     border-bottom: 1px solid #ddd;  /* Only add bottom border for rows */
     font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-size: 16px;  /* Fixed font size for table cells */
 }
 
 th {
@@ -426,7 +428,7 @@ td {
 /* Badge Styles */
 td .badge {
     padding: 5px 10px;
-    font-size: 0.9em;
+    font-size: 14px;  /* Fixed font size for badge */
     border-radius: 4px;
     text-transform: capitalize;
 }
