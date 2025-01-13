@@ -179,47 +179,7 @@ Login session set: Array
 )
 Login session set: Array
 (
-    [_csrf] => 6367b49585eebd38320d9e11b6f03bc8
-    [customer] => Array
-        (
-            [cust_id] => 12
-            [cust_name] => jay
-            [cust_email] => jaycantemprate31@gmail.com
-            [cust_phone] => 31
-            [cust_address] => ggfddf
-            [cust_city] => hgftr
-            [cust_zip] => 1233
-        )
-
-    [cart] => Array
-        (
-            [0] => Array
-                (
-                    [name] => Red Rose White Wrapper
-                    [price] => 4300
-                    [quantity] => 1
-                    [image] => product-featured-24.jpg
-                )
-
-        )
-
-    [customization] => Array
-        (
-            [0] => Array
-                (
-                    [flower_type] => 2
-                    [num_flowers] => 4
-                    [container_type] => 1
-                    [container_color] => 1
-                )
-
-        )
-
-    [user_no] => 
-    [email_address] => 
-)
-Login session set: Array
-(
+<<<<<<<<< Temporary merge branch 1
     [_csrf] => 50b173e3d6b2375e6bf3edd11c2075b5
     [customer] => Array
         (
@@ -1135,6 +1095,16 @@ Session Data: Array
                     [container_color] => 1
                 )
 
+    [_csrf] => 6367b49585eebd38320d9e11b6f03bc8
+    [customer] => Array
+        (
+            [cust_id] => 12
+            [cust_name] => jay
+            [cust_email] => jaycantemprate31@gmail.com
+            [cust_phone] => 31
+            [cust_address] => ggfddf
+            [cust_city] => hgftr
+            [cust_zip] => 1233
         )
 
     [cart] => Array
@@ -1204,12 +1174,23 @@ Session Data: Array
             [cust_zip] => 3123
         )
 
+            [0] => Array
+                (
+                    [name] => Red Rose White Wrapper
+                    [price] => 4300
+                    [quantity] => 1
+                    [image] => product-featured-24.jpg
+                )
+
+        )
+
     [customization] => Array
         (
             [0] => Array
                 (
                     [flower_type] => 2
                     [num_flowers] => 1
+                    [num_flowers] => 4
                     [container_type] => 1
                     [container_color] => 1
                 )
@@ -1230,3 +1211,8 @@ Session Data: Array
 
 )
 Payment inserted: Method - cop
+=========
+    [user_no] => 
+    [email_address] => 
+)
+>>>>>>>>> Temporary merge branch 2
