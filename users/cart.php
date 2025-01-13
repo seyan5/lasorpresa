@@ -17,7 +17,7 @@ require 'header.php';
             <table>
                 <thead>
                     <tr>
-                        <th>Imag</th>
+                        <th>Image</th>
                         <th>Product</th>
                         <th>Price</th>
                         <th>Quantity</th>

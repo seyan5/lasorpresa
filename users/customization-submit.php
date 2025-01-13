@@ -1,5 +1,5 @@
 <?php
-session_start();
+
 require_once('conn.php'); // Include DB connection or additional setup
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
