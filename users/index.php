@@ -15,6 +15,7 @@ include("../admin/inc/CSRF_Protect.php");
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- font -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -23,8 +24,9 @@ include("../admin/inc/CSRF_Protect.php");
         rel="stylesheet">
 
     <!-- css -->
+     <link rel="stylesheet" href="../css/footer.css">
     <link rel="stylesheet" href="../css/dropdown.css">
-    <link rel="stylesheet" href="../css/main.css">
+    <link rel="stylesheet" href="../css/main.css?v=1.2">
 </head>
 
 <body>
@@ -268,6 +270,13 @@ include("../admin/inc/CSRF_Protect.php");
     </section>
     <!-- review -->
 
+    <div class="footer-basic">
+        <footer>
+            <div class="social"><a href="https://www.instagram.com/lasorpresaflowershop/"><i class="icon ion-social-instagram"></i></a><a href="https://www.facebook.com/messages/t/105108568239439"><i class="icon ion-android-textsms"></i></a><a href="https://www.facebook.com/lasorpresabyjb"><i class="icon ion-social-facebook"></i></a></div>
+            <p class="copyright">La Sorpresa by J & B © 2021</p>
+        </footer>
+    </div>
+
 
 </body>
 
@@ -286,7 +295,6 @@ include("../admin/inc/CSRF_Protect.php");
             }
         }
     };
-
 </script>
 
 </html>
