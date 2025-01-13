@@ -59,7 +59,7 @@ include("../admin/inc/CSRF_Protect.php");
             <?php if (isset($_SESSION['customer'])): ?>
                 <p>Welcome, <?php echo htmlspecialchars($_SESSION['customer']['cust_name']); ?></p>
                 <hr>
-                <a href="profile.php">Profile</a>
+                <a href="customer-profile-update.php">Profile</a>
                 <a href="logout.php">Logout</a>
             <?php else: ?>
                 <a href="login.php">Login</a>

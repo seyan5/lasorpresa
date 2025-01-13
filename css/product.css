@@ -88,6 +88,7 @@ header .navbar {
    align-items: center;
    gap: 2rem;  
    flex-wrap: wrap; /* Ensure navbar wraps on smaller screens */
+   z-index: -1;
    
 }
 
@@ -223,6 +224,7 @@ header .fa-bars {
 .container .products-container .product img {
    height: 25rem;
    width: auto; /* Maintain aspect ratio */
+   object-fit: cover; /* Cover the entire container */   
 }
 
 .container .products-container .product:hover img {
@@ -256,7 +258,26 @@ header .fa-bars {
 
 .container .products-container .product a {
    text-decoration: none; /* Ensure no underline for links */
-}
+   display: inline-block;
+   width: 100%; /* Optional: You can adjust the width */
+   white-space: nowrap; /* Prevent the text from wrapping */
+   overflow: hidden; /* Hide the overflowed text */
+   text-overflow: ellipsis; /* Add ellipsis for overflowed text */
+   max-width: 100%; /* Optional: Adjust the max-width */
+ }
+ 
+ .container .products-container .product a span {
+   display: inline-block;
+   max-width: 100%;
+   overflow: hidden;
+   text-overflow: ellipsis;
+ }
+ 
+ .container .products-container .product a:after {
+   content: attr(data-text);
+   display: block;
+   max-width: 100%;
+ }
 
 .filter-condition {
    padding: 20px;

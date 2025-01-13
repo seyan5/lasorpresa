@@ -1,0 +1,179 @@
+Login session set: Array
+(
+    [_csrf] => f9d72614aab9bd579327355997a83970
+    [customer] => Array
+        (
+            [cust_id] => 12
+            [cust_name] => jay
+            [cust_email] => jaycantemprate31@gmail.com
+            [cust_phone] => 31
+            [cust_address] => ggfddf
+            [cust_city] => hgftr
+            [cust_zip] => 1233
+        )
+
+)
+Login session set: Array
+(
+    [_csrf] => d839685df438f6621cf961819d095c47
+    [cart] => Array
+        (
+            [30] => Array
+                (
+                    [name] => test
+                    [price] => 25
+                    [quantity] => 1
+                    [image] => product-featured-30.jpg
+                )
+
+        )
+
+    [customer] => Array
+        (
+            [cust_id] => 14
+            [cust_name] => xofahon
+            [cust_email] => xofahon594@pariag.com
+            [cust_phone] => 09214991751
+            [cust_address] => Blk 31 Lt 2 Lhinnete Homea
+            [cust_city] => Cavite
+            [cust_zip] => 4311
+        )
+
+)
+Login session set: Array
+(
+    [customer] => Array
+        (
+            [cust_id] => 14
+            [cust_name] => xofahon
+            [cust_email] => xofahon594@pariag.com
+            [cust_phone] => 09214991751
+            [cust_address] => Blk 31 Lt 2 Lhinnete Homea
+            [cust_city] => Cavite
+            [cust_zip] => 4311
+        )
+
+)
+Login session set: Array
+(
+    [_csrf] => 6367b49585eebd38320d9e11b6f03bc8
+    [customer] => Array
+        (
+            [cust_id] => 12
+            [cust_name] => jay
+            [cust_email] => jaycantemprate31@gmail.com
+            [cust_phone] => 31
+            [cust_address] => ggfddf
+            [cust_city] => hgftr
+            [cust_zip] => 1233
+        )
+
+    [cart] => Array
+        (
+            [0] => Array
+                (
+                    [name] => Red Rose White Wrapper
+                    [price] => 4300
+                    [quantity] => 1
+                    [image] => product-featured-24.jpg
+                )
+
+        )
+
+    [customization] => Array
+        (
+            [0] => Array
+                (
+                    [flower_type] => 2
+                    [num_flowers] => 1
+                    [container_type] => 1
+                    [container_color] => 1
+                )
+
+        )
+
+    [user_no] => 
+    [email_address] => 
+)
+Login session set: Array
+(
+    [_csrf] => 6367b49585eebd38320d9e11b6f03bc8
+    [customer] => Array
+        (
+            [cust_id] => 12
+            [cust_name] => jay
+            [cust_email] => jaycantemprate31@gmail.com
+            [cust_phone] => 31
+            [cust_address] => ggfddf
+            [cust_city] => hgftr
+            [cust_zip] => 1233
+        )
+
+    [cart] => Array
+        (
+            [0] => Array
+                (
+                    [name] => Red Rose White Wrapper
+                    [price] => 4300
+                    [quantity] => 1
+                    [image] => product-featured-24.jpg
+                )
+
+        )
+
+    [customization] => Array
+        (
+            [0] => Array
+                (
+                    [flower_type] => 2
+                    [num_flowers] => 4
+                    [container_type] => 1
+                    [container_color] => 1
+                )
+
+        )
+
+    [user_no] => 
+    [email_address] => 
+)
+Login session set: Array
+(
+    [_csrf] => 6367b49585eebd38320d9e11b6f03bc8
+    [customer] => Array
+        (
+            [cust_id] => 12
+            [cust_name] => jay
+            [cust_email] => jaycantemprate31@gmail.com
+            [cust_phone] => 31
+            [cust_address] => ggfddf
+            [cust_city] => hgftr
+            [cust_zip] => 1233
+        )
+
+    [cart] => Array
+        (
+            [0] => Array
+                (
+                    [name] => Red Rose White Wrapper
+                    [price] => 4300
+                    [quantity] => 1
+                    [image] => product-featured-24.jpg
+                )
+
+        )
+
+    [customization] => Array
+        (
+            [0] => Array
+                (
+                    [flower_type] => 2
+                    [num_flowers] => 4
+                    [container_type] => 1
+                    [container_color] => 1
+                )
+
+        )
+
+    [user_no] => 
+    [email_address] => 
+)
