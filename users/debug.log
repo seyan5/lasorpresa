@@ -177,3 +177,1015 @@ Login session set: Array
     [user_no] => 
     [email_address] => 
 )
+Login session set: Array
+(
+    [_csrf] => 50b173e3d6b2375e6bf3edd11c2075b5
+    [customer] => Array
+        (
+            [cust_id] => 13
+            [cust_name] => seyan1
+            [cust_email] => seanammiel@gmail.com
+            [cust_phone] => 0956193051213
+            [cust_address] => Brgy Tapia General Trias Cavite
+            [cust_city] => street
+            [cust_zip] => 3123
+        )
+
+    [customization] => Array
+        (
+            [0] => Array
+                (
+                    [flower_type] => 2
+                    [num_flowers] => 1
+                    [container_type] => 2
+                    [container_color] => 4
+                )
+
+        )
+
+    [cart] => Array
+        (
+            [35] => Array
+                (
+                    [name] => Roseee
+                    [price] => 12
+                    [quantity] => 1
+                    [image] => product-featured-35.jpg
+                )
+
+        )
+
+)
+Array
+(
+)
+Array
+(
+    [payment_method] => cop
+)
+Array
+(
+    [payment_method] => cop
+)
+Array
+(
+    [payment_method] => cop
+)
+Array
+(
+    [payment_method] => cop
+)
+Array
+(
+    [payment_method] => cop
+)
+cust_id: 
+total: 72
+order_id: 49
+Error: SQLSTATE[23000]: Integrity constraint violation: 1048 Column 'cust_id' cannot be null
+Session Data: Array
+(
+    [_csrf] => 50b173e3d6b2375e6bf3edd11c2075b5
+    [customer] => Array
+        (
+            [cust_id] => 13
+            [cust_name] => seyan1
+            [cust_email] => seanammiel@gmail.com
+            [cust_phone] => 0956193051213
+            [cust_address] => Brgy Tapia General Trias Cavite
+            [cust_city] => street
+            [cust_zip] => 3123
+        )
+
+    [customization] => Array
+        (
+            [0] => Array
+                (
+                    [flower_type] => 2
+                    [num_flowers] => 1
+                    [container_type] => 1
+                    [container_color] => 1
+                )
+
+        )
+
+    [cart] => Array
+        (
+            [35] => Array
+                (
+                    [name] => Roseee
+                    [price] => 12
+                    [quantity] => 6
+                    [image] => product-featured-35.jpg
+                )
+
+        )
+
+)
+Order ID: 50
+Payment inserted for order_id: 50
+Session Data: Array
+(
+    [_csrf] => 50b173e3d6b2375e6bf3edd11c2075b5
+    [customer] => Array
+        (
+            [cust_id] => 13
+            [cust_name] => seyan1
+            [cust_email] => seanammiel@gmail.com
+            [cust_phone] => 0956193051213
+            [cust_address] => Brgy Tapia General Trias Cavite
+            [cust_city] => street
+            [cust_zip] => 3123
+        )
+
+    [customization] => Array
+        (
+            [0] => Array
+                (
+                    [flower_type] => 2
+                    [num_flowers] => 1
+                    [container_type] => 1
+                    [container_color] => 1
+                )
+
+        )
+
+    [cart] => Array
+        (
+            [36] => Array
+                (
+                    [name] => Rose3
+                    [price] => 120
+                    [quantity] => 1
+                    [image] => product-featured-36.jpg
+                )
+
+        )
+
+)
+Session Data: Array
+(
+    [_csrf] => 50b173e3d6b2375e6bf3edd11c2075b5
+    [customer] => Array
+        (
+            [cust_id] => 13
+            [cust_name] => seyan1
+            [cust_email] => seanammiel@gmail.com
+            [cust_phone] => 0956193051213
+            [cust_address] => Brgy Tapia General Trias Cavite
+            [cust_city] => street
+            [cust_zip] => 3123
+        )
+
+    [customization] => Array
+        (
+            [0] => Array
+                (
+                    [flower_type] => 2
+                    [num_flowers] => 1
+                    [container_type] => 1
+                    [container_color] => 1
+                )
+
+        )
+
+    [cart] => Array
+        (
+            [36] => Array
+                (
+                    [name] => Rose3
+                    [price] => 120
+                    [quantity] => 1
+                    [image] => product-featured-36.jpg
+                )
+
+        )
+
+)
+Session Data: Array
+(
+    [_csrf] => 50b173e3d6b2375e6bf3edd11c2075b5
+    [customer] => Array
+        (
+            [cust_id] => 13
+            [cust_name] => seyan1
+            [cust_email] => seanammiel@gmail.com
+            [cust_phone] => 0956193051213
+            [cust_address] => Brgy Tapia General Trias Cavite
+            [cust_city] => street
+            [cust_zip] => 3123
+        )
+
+    [customization] => Array
+        (
+            [0] => Array
+                (
+                    [flower_type] => 2
+                    [num_flowers] => 1
+                    [container_type] => 1
+                    [container_color] => 1
+                )
+
+        )
+
+    [cart] => Array
+        (
+            [36] => Array
+                (
+                    [name] => Rose3
+                    [price] => 120
+                    [quantity] => 1
+                    [image] => product-featured-36.jpg
+                )
+
+        )
+
+)
+Session Data: Array
+(
+    [_csrf] => 50b173e3d6b2375e6bf3edd11c2075b5
+    [customer] => Array
+        (
+            [cust_id] => 13
+            [cust_name] => seyan1
+            [cust_email] => seanammiel@gmail.com
+            [cust_phone] => 0956193051213
+            [cust_address] => Brgy Tapia General Trias Cavite
+            [cust_city] => street
+            [cust_zip] => 3123
+        )
+
+    [customization] => Array
+        (
+            [0] => Array
+                (
+                    [flower_type] => 2
+                    [num_flowers] => 1
+                    [container_type] => 1
+                    [container_color] => 1
+                )
+
+        )
+
+    [cart] => Array
+        (
+            [36] => Array
+                (
+                    [name] => Rose3
+                    [price] => 120
+                    [quantity] => 1
+                    [image] => product-featured-36.jpg
+                )
+
+        )
+
+)
+Order ID: 51
+Payment inserted for order_id: 51
+Session Data: Array
+(
+    [_csrf] => 50b173e3d6b2375e6bf3edd11c2075b5
+    [customer] => Array
+        (
+            [cust_id] => 13
+            [cust_name] => seyan1
+            [cust_email] => seanammiel@gmail.com
+            [cust_phone] => 0956193051213
+            [cust_address] => Brgy Tapia General Trias Cavite
+            [cust_city] => street
+            [cust_zip] => 3123
+        )
+
+    [customization] => Array
+        (
+            [0] => Array
+                (
+                    [flower_type] => 2
+                    [num_flowers] => 1
+                    [container_type] => 1
+                    [container_color] => 1
+                )
+
+        )
+
+    [cart] => Array
+        (
+            [35] => Array
+                (
+                    [name] => Roseee
+                    [price] => 12
+                    [quantity] => 1
+                    [image] => product-featured-35.jpg
+                )
+
+        )
+
+)
+Session Data: Array
+(
+    [_csrf] => 50b173e3d6b2375e6bf3edd11c2075b5
+    [customer] => Array
+        (
+            [cust_id] => 13
+            [cust_name] => seyan1
+            [cust_email] => seanammiel@gmail.com
+            [cust_phone] => 0956193051213
+            [cust_address] => Brgy Tapia General Trias Cavite
+            [cust_city] => street
+            [cust_zip] => 3123
+        )
+
+    [customization] => Array
+        (
+            [0] => Array
+                (
+                    [flower_type] => 2
+                    [num_flowers] => 1
+                    [container_type] => 1
+                    [container_color] => 1
+                )
+
+        )
+
+    [cart] => Array
+        (
+            [35] => Array
+                (
+                    [name] => Roseee
+                    [price] => 12
+                    [quantity] => 1
+                    [image] => product-featured-35.jpg
+                )
+
+        )
+
+)
+Session Data: Array
+(
+    [_csrf] => 50b173e3d6b2375e6bf3edd11c2075b5
+    [customer] => Array
+        (
+            [cust_id] => 13
+            [cust_name] => seyan1
+            [cust_email] => seanammiel@gmail.com
+            [cust_phone] => 0956193051213
+            [cust_address] => Brgy Tapia General Trias Cavite
+            [cust_city] => street
+            [cust_zip] => 3123
+        )
+
+    [customization] => Array
+        (
+            [0] => Array
+                (
+                    [flower_type] => 2
+                    [num_flowers] => 1
+                    [container_type] => 1
+                    [container_color] => 1
+                )
+
+        )
+
+    [cart] => Array
+        (
+            [35] => Array
+                (
+                    [name] => Roseee
+                    [price] => 12
+                    [quantity] => 1
+                    [image] => product-featured-35.jpg
+                )
+
+        )
+
+)
+Session Data: Array
+(
+    [_csrf] => 50b173e3d6b2375e6bf3edd11c2075b5
+    [customer] => Array
+        (
+            [cust_id] => 13
+            [cust_name] => seyan1
+            [cust_email] => seanammiel@gmail.com
+            [cust_phone] => 0956193051213
+            [cust_address] => Brgy Tapia General Trias Cavite
+            [cust_city] => street
+            [cust_zip] => 3123
+        )
+
+    [customization] => Array
+        (
+            [0] => Array
+                (
+                    [flower_type] => 2
+                    [num_flowers] => 1
+                    [container_type] => 1
+                    [container_color] => 1
+                )
+
+        )
+
+    [cart] => Array
+        (
+            [35] => Array
+                (
+                    [name] => Roseee
+                    [price] => 12
+                    [quantity] => 1
+                    [image] => product-featured-35.jpg
+                )
+
+        )
+
+)
+Session Data: Array
+(
+    [_csrf] => 50b173e3d6b2375e6bf3edd11c2075b5
+    [customer] => Array
+        (
+            [cust_id] => 13
+            [cust_name] => seyan1
+            [cust_email] => seanammiel@gmail.com
+            [cust_phone] => 0956193051213
+            [cust_address] => Brgy Tapia General Trias Cavite
+            [cust_city] => street
+            [cust_zip] => 3123
+        )
+
+    [customization] => Array
+        (
+            [0] => Array
+                (
+                    [flower_type] => 2
+                    [num_flowers] => 1
+                    [container_type] => 1
+                    [container_color] => 1
+                )
+
+        )
+
+    [cart] => Array
+        (
+            [35] => Array
+                (
+                    [name] => Roseee
+                    [price] => 12
+                    [quantity] => 1
+                    [image] => product-featured-35.jpg
+                )
+
+        )
+
+)
+Session Data: Array
+(
+    [_csrf] => 50b173e3d6b2375e6bf3edd11c2075b5
+    [customer] => Array
+        (
+            [cust_id] => 13
+            [cust_name] => seyan1
+            [cust_email] => seanammiel@gmail.com
+            [cust_phone] => 0956193051213
+            [cust_address] => Brgy Tapia General Trias Cavite
+            [cust_city] => street
+            [cust_zip] => 3123
+        )
+
+    [customization] => Array
+        (
+            [0] => Array
+                (
+                    [flower_type] => 2
+                    [num_flowers] => 1
+                    [container_type] => 1
+                    [container_color] => 1
+                )
+
+        )
+
+    [cart] => Array
+        (
+            [35] => Array
+                (
+                    [name] => Roseee
+                    [price] => 12
+                    [quantity] => 1
+                    [image] => product-featured-35.jpg
+                )
+
+        )
+
+)
+Session Data: Array
+(
+    [_csrf] => 50b173e3d6b2375e6bf3edd11c2075b5
+    [customer] => Array
+        (
+            [cust_id] => 13
+            [cust_name] => seyan1
+            [cust_email] => seanammiel@gmail.com
+            [cust_phone] => 0956193051213
+            [cust_address] => Brgy Tapia General Trias Cavite
+            [cust_city] => street
+            [cust_zip] => 3123
+        )
+
+    [customization] => Array
+        (
+            [0] => Array
+                (
+                    [flower_type] => 2
+                    [num_flowers] => 1
+                    [container_type] => 1
+                    [container_color] => 1
+                )
+
+        )
+
+    [cart] => Array
+        (
+            [35] => Array
+                (
+                    [name] => Roseee
+                    [price] => 12
+                    [quantity] => 1
+                    [image] => product-featured-35.jpg
+                )
+
+        )
+
+)
+Session Data: Array
+(
+    [_csrf] => 50b173e3d6b2375e6bf3edd11c2075b5
+    [customer] => Array
+        (
+            [cust_id] => 13
+            [cust_name] => seyan1
+            [cust_email] => seanammiel@gmail.com
+            [cust_phone] => 0956193051213
+            [cust_address] => Brgy Tapia General Trias Cavite
+            [cust_city] => street
+            [cust_zip] => 3123
+        )
+
+    [customization] => Array
+        (
+            [0] => Array
+                (
+                    [flower_type] => 2
+                    [num_flowers] => 1
+                    [container_type] => 1
+                    [container_color] => 1
+                )
+
+        )
+
+    [cart] => Array
+        (
+            [34] => Array
+                (
+                    [name] => Sunflower
+                    [price] => 13
+                    [quantity] => 1
+                    [image] => product-featured-34.jpg
+                )
+
+        )
+
+)
+Session Data: Array
+(
+    [_csrf] => 50b173e3d6b2375e6bf3edd11c2075b5
+    [customer] => Array
+        (
+            [cust_id] => 13
+            [cust_name] => seyan1
+            [cust_email] => seanammiel@gmail.com
+            [cust_phone] => 0956193051213
+            [cust_address] => Brgy Tapia General Trias Cavite
+            [cust_city] => street
+            [cust_zip] => 3123
+        )
+
+    [customization] => Array
+        (
+            [0] => Array
+                (
+                    [flower_type] => 2
+                    [num_flowers] => 1
+                    [container_type] => 1
+                    [container_color] => 1
+                )
+
+        )
+
+    [cart] => Array
+        (
+            [34] => Array
+                (
+                    [name] => Sunflower
+                    [price] => 13
+                    [quantity] => 1
+                    [image] => product-featured-34.jpg
+                )
+
+        )
+
+)
+Payment inserted: Method - cop
+Session Data: Array
+(
+    [_csrf] => 50b173e3d6b2375e6bf3edd11c2075b5
+    [customer] => Array
+        (
+            [cust_id] => 13
+            [cust_name] => seyan1
+            [cust_email] => seanammiel@gmail.com
+            [cust_phone] => 0956193051213
+            [cust_address] => Brgy Tapia General Trias Cavite
+            [cust_city] => street
+            [cust_zip] => 3123
+        )
+
+    [customization] => Array
+        (
+            [0] => Array
+                (
+                    [flower_type] => 2
+                    [num_flowers] => 1
+                    [container_type] => 1
+                    [container_color] => 1
+                )
+
+        )
+
+    [cart] => Array
+        (
+            [37] => Array
+                (
+                    [name] => Sunflower
+                    [price] => 4
+                    [quantity] => 1
+                    [image] => product-featured-37.jpg
+                )
+
+        )
+
+)
+Session Data: Array
+(
+    [_csrf] => 50b173e3d6b2375e6bf3edd11c2075b5
+    [customer] => Array
+        (
+            [cust_id] => 13
+            [cust_name] => seyan1
+            [cust_email] => seanammiel@gmail.com
+            [cust_phone] => 0956193051213
+            [cust_address] => Brgy Tapia General Trias Cavite
+            [cust_city] => street
+            [cust_zip] => 3123
+        )
+
+    [customization] => Array
+        (
+            [0] => Array
+                (
+                    [flower_type] => 2
+                    [num_flowers] => 1
+                    [container_type] => 1
+                    [container_color] => 1
+                )
+
+        )
+
+    [cart] => Array
+        (
+            [37] => Array
+                (
+                    [name] => Sunflower
+                    [price] => 4
+                    [quantity] => 1
+                    [image] => product-featured-37.jpg
+                )
+
+        )
+
+)
+Payment inserted: Method - cop
+Session Data: Array
+(
+    [_csrf] => 50b173e3d6b2375e6bf3edd11c2075b5
+    [customer] => Array
+        (
+            [cust_id] => 13
+            [cust_name] => seyan1
+            [cust_email] => seanammiel@gmail.com
+            [cust_phone] => 0956193051213
+            [cust_address] => Brgy Tapia General Trias Cavite
+            [cust_city] => street
+            [cust_zip] => 3123
+        )
+
+    [customization] => Array
+        (
+            [0] => Array
+                (
+                    [flower_type] => 2
+                    [num_flowers] => 1
+                    [container_type] => 1
+                    [container_color] => 1
+                )
+
+        )
+
+    [cart] => Array
+        (
+            [33] => Array
+                (
+                    [name] => Tulip1
+                    [price] => 12
+                    [quantity] => 1
+                    [image] => product-featured-33.jpg
+                )
+
+        )
+
+)
+Session Data: Array
+(
+    [_csrf] => 50b173e3d6b2375e6bf3edd11c2075b5
+    [customer] => Array
+        (
+            [cust_id] => 13
+            [cust_name] => seyan1
+            [cust_email] => seanammiel@gmail.com
+            [cust_phone] => 0956193051213
+            [cust_address] => Brgy Tapia General Trias Cavite
+            [cust_city] => street
+            [cust_zip] => 3123
+        )
+
+    [customization] => Array
+        (
+            [0] => Array
+                (
+                    [flower_type] => 2
+                    [num_flowers] => 1
+                    [container_type] => 1
+                    [container_color] => 1
+                )
+
+        )
+
+    [cart] => Array
+        (
+            [33] => Array
+                (
+                    [name] => Tulip1
+                    [price] => 12
+                    [quantity] => 1
+                    [image] => product-featured-33.jpg
+                )
+
+        )
+
+)
+Payment inserted: Method - cop
+Session Data: Array
+(
+    [_csrf] => 50b173e3d6b2375e6bf3edd11c2075b5
+    [customer] => Array
+        (
+            [cust_id] => 13
+            [cust_name] => seyan1
+            [cust_email] => seanammiel@gmail.com
+            [cust_phone] => 0956193051213
+            [cust_address] => Brgy Tapia General Trias Cavite
+            [cust_city] => street
+            [cust_zip] => 3123
+        )
+
+    [customization] => Array
+        (
+            [0] => Array
+                (
+                    [flower_type] => 2
+                    [num_flowers] => 1
+                    [container_type] => 1
+                    [container_color] => 1
+                )
+
+        )
+
+    [cart] => Array
+        (
+            [33] => Array
+                (
+                    [name] => Tulip1
+                    [price] => 12
+                    [quantity] => 1
+                    [image] => product-featured-33.jpg
+                )
+
+        )
+
+)
+Session Data: Array
+(
+    [_csrf] => 50b173e3d6b2375e6bf3edd11c2075b5
+    [customer] => Array
+        (
+            [cust_id] => 13
+            [cust_name] => seyan1
+            [cust_email] => seanammiel@gmail.com
+            [cust_phone] => 0956193051213
+            [cust_address] => Brgy Tapia General Trias Cavite
+            [cust_city] => street
+            [cust_zip] => 3123
+        )
+
+    [customization] => Array
+        (
+            [0] => Array
+                (
+                    [flower_type] => 2
+                    [num_flowers] => 1
+                    [container_type] => 1
+                    [container_color] => 1
+                )
+
+        )
+
+    [cart] => Array
+        (
+            [33] => Array
+                (
+                    [name] => Tulip1
+                    [price] => 12
+                    [quantity] => 1
+                    [image] => product-featured-33.jpg
+                )
+
+        )
+
+)
+Payment inserted: Method - cop
+Session Data: Array
+(
+    [_csrf] => 50b173e3d6b2375e6bf3edd11c2075b5
+    [customer] => Array
+        (
+            [cust_id] => 13
+            [cust_name] => seyan1
+            [cust_email] => seanammiel@gmail.com
+            [cust_phone] => 0956193051213
+            [cust_address] => Brgy Tapia General Trias Cavite
+            [cust_city] => street
+            [cust_zip] => 3123
+        )
+
+    [customization] => Array
+        (
+            [0] => Array
+                (
+                    [flower_type] => 2
+                    [num_flowers] => 1
+                    [container_type] => 1
+                    [container_color] => 1
+                )
+
+        )
+
+    [cart] => Array
+        (
+            [32] => Array
+                (
+                    [name] => Vday 10 Roses Boquet
+                    [price] => 4000
+                    [quantity] => 1
+                    [image] => product-featured-32.jpg
+                )
+
+        )
+
+)
+Session Data: Array
+(
+    [_csrf] => 50b173e3d6b2375e6bf3edd11c2075b5
+    [customer] => Array
+        (
+            [cust_id] => 13
+            [cust_name] => seyan1
+            [cust_email] => seanammiel@gmail.com
+            [cust_phone] => 0956193051213
+            [cust_address] => Brgy Tapia General Trias Cavite
+            [cust_city] => street
+            [cust_zip] => 3123
+        )
+
+    [customization] => Array
+        (
+            [0] => Array
+                (
+                    [flower_type] => 2
+                    [num_flowers] => 1
+                    [container_type] => 1
+                    [container_color] => 1
+                )
+
+        )
+
+    [cart] => Array
+        (
+            [32] => Array
+                (
+                    [name] => Vday 10 Roses Boquet
+                    [price] => 4000
+                    [quantity] => 1
+                    [image] => product-featured-32.jpg
+                )
+
+        )
+
+)
+Payment inserted: Method - cop
+Session Data: Array
+(
+    [_csrf] => 50b173e3d6b2375e6bf3edd11c2075b5
+    [customer] => Array
+        (
+            [cust_id] => 13
+            [cust_name] => seyan1
+            [cust_email] => seanammiel@gmail.com
+            [cust_phone] => 0956193051213
+            [cust_address] => Brgy Tapia General Trias Cavite
+            [cust_city] => street
+            [cust_zip] => 3123
+        )
+
+    [customization] => Array
+        (
+            [0] => Array
+                (
+                    [flower_type] => 2
+                    [num_flowers] => 1
+                    [container_type] => 1
+                    [container_color] => 1
+                )
+
+        )
+
+    [cart] => Array
+        (
+            [31] => Array
+                (
+                    [name] => Red Life Size Teddy Bear
+                    [price] => 2000
+                    [quantity] => 1
+                    [image] => product-featured-31.jpg
+                )
+
+        )
+
+)
+Session Data: Array
+(
+    [_csrf] => 50b173e3d6b2375e6bf3edd11c2075b5
+    [customer] => Array
+        (
+            [cust_id] => 13
+            [cust_name] => seyan1
+            [cust_email] => seanammiel@gmail.com
+            [cust_phone] => 0956193051213
+            [cust_address] => Brgy Tapia General Trias Cavite
+            [cust_city] => street
+            [cust_zip] => 3123
+        )
+
+    [customization] => Array
+        (
+            [0] => Array
+                (
+                    [flower_type] => 2
+                    [num_flowers] => 1
+                    [container_type] => 1
+                    [container_color] => 1
+                )
+
+        )
+
+    [cart] => Array
+        (
+            [31] => Array
+                (
+                    [name] => Red Life Size Teddy Bear
+                    [price] => 2000
+                    [quantity] => 1
+                    [image] => product-featured-31.jpg
+                )
+
+        )
+
+)
+Payment inserted: Method - cop
