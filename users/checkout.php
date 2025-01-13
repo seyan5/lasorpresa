@@ -133,14 +133,176 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../css/shopcart.css">
+    <!-- font -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+
+    <!-- css -->
+     <link rel="stylesheet" href="../css/dropdown.css"> 
+    <link rel="stylesheet" href="../css/main.css">
+    <link rel="stylesheet" href="../css/shopcart.css?v1.1">
     <link rel="stylesheet" href="../css/checkout.css">
-    <title>Checkout</title>
-    <script>
+</head>
+
+<body>
+    <!-- header -->
+
+<header>
+
+    <input type="checkbox" name="" id="toggler">
+    <label for="toggler" class="fas fa-bars"></label>
+
+    <!-- <a href="#" class="logo">Flower<span>.</span></a> -->
+    <img src="../images/logo.png" alt="" class="logos" href="">
+    <nav class="navbar">
+        <a href="index.php">Home</a>
+        <a href="#about">About</a>
+        <div class="prod-dropdown">
+            <a href="" onclick="toggleDropdown()">Products</a>
+                <div class="prod-menu" id="prodDropdown">
+                    <a href="products.php">Flowers</a>
+                    <a href="occasion.php">Occasion</a>
+                    <a href="addons.php">Addons</a>
+                </div>
+        </div>
+        <a href="#review">Review</a>
+        <a href="#contacts">Contacts</a>
+        <a href="customization.php">Customize</a>
+
+    </nav>
+     
+    <div class="icons">
+    <a href="shopcart.php" class="fas fa-shopping-cart"></a>
+    <div class="user-dropdown">
+        <a href="#" class="fas fa-user" onclick="toggleDropdown()"></a>
+        <div class="dropdown-menu" id="userDropdown">
+            <?php if (isset($_SESSION['customer'])): ?>
+                <p>Welcome, <?php echo htmlspecialchars($_SESSION['customer']['cust_name']); ?></p>
+                <hr>
+                <a href="customer-profile-update.php">Profile</a>
+                <a href="logout.php">Logout</a>
+            <?php else: ?>
+                <a href="login.php">Login</a>
+            <?php endif; ?>
+        </div>
+    </div>
+</div>
+
+</header>
+<body>
+    <div class="header">
+        <a href="shopcart.php" class="back-link">
+            <span class="back-arrow">&lt;</span> Back to Cart
+        </a>
+    </div>
+
+    <div class="container">
+        <div class="cart">
+            <hr>
+            <h3>Order Summary</h3>
+
+            <?php if (isset($_SESSION['cart']) && count($_SESSION['cart']) > 0): ?>
+                <p>You have <?php echo count($_SESSION['cart']); ?> items in your cart</p>
+
+                <?php foreach ($_SESSION['cart'] as $index => $item): ?>
+                    <div class="cart-item">
+                        <?php if (isset($item['image']) && $item['image']): ?>
+                            <img src="../admin/uploads/<?php echo htmlspecialchars($item['image']); ?>"
+                                alt="<?php echo htmlspecialchars($item['name']); ?>" width="50">
+                        <?php else: ?>
+                            <img src="path/to/default-image.jpg" alt="No image available" width="50">
+                        <?php endif; ?>
+
+                        <div>
+                            <p><?php echo htmlspecialchars($item['name']); ?></p>
+                            <p><?php echo htmlspecialchars($item['quantity']); ?> pcs.</p>
+                        </div>
+
+                        <div class="quantity">
+                            <?php echo $item['quantity']; ?>
+                        </div>
+
+                        <div class="price">
+                            ₱<?php echo number_format($item['price'], 2); ?>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+            <?php else: ?>
+                <p>Your cart is empty.</p>
+            <?php endif; ?>
+        </div>
+        <div class="payment">
+            <h3>Shipping Information</h3>
+            <form id="checkout-form">
+                <label for="cust_name">Full Name: </label>
+                <span id="cust_name"><?php echo htmlspecialchars($user['cust_name']); ?></span>
+
+                <label for="cust_phone">Phone Number: </label>
+                <span id="cust_phone"><?php echo htmlspecialchars($user['cust_phone']); ?></span>
+
+                <label for="address">Address: </label>
+                <span id="cust_address"><?php echo htmlspecialchars($user['cust_address']); ?></span>
+
+
+                <label for="payment_method">Mode of Payment:</label>
+                <div>
+                    <input type="radio" id="gcash" name="payment_method" value="gcash" required>
+                    <label for="gcash">
+                        <img src="../images/Gcash.png" alt="GCash" width="50">
+                        GCash
+                    </label>
+                </div>
+                <div>
+                    <input type="radio" id="cop" name="payment_method" value="cop" required>
+                    <label for="cop">
+                        <img src="../images/cop.png" alt="Cash on PickUp" width="50">
+                        Cash on Pickup
+                    </label>
+                </div>
+            </form>
+
+            <hr>
+            <div class="summary">
+                <p>Subtotal <span>₱<?php
+                $subtotal = array_sum(array_map(function ($item) {
+                    return $item['price'] * $item['quantity'];
+                }, $_SESSION['cart']));
+                echo number_format($subtotal, 2);
+                ?></span></p>
+                <p>
+                    <strong>Total:</strong>
+                    ₱<?php
+                    echo number_format($total, 2);
+                    ?>
+                </p>
+            </div>
+            <button class="checkout" type="button" onclick="handleCheckout()" disabled>Checkout</button>
+        </div>
+    </div>
+
+    <!-- GCash Modal -->
+    <div id="gcash-modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="toggleGCashModal(false)">&times</span>
+            <h3>Scan to Pay</h3>
+            <img src="../images/gcashqr.jpg" alt="GCash QR Code">
+            <h3>GCash Payment Details</h3>
+            <label for="reference_number">Reference Number: </label>
+            <input type="text" id="reference_number" name="reference_no">
+
+            <label for="amount_paid">Amount Paid: </label>
+            <input type="number" id="amount_paid" name="amount_paid">
+            <button class="checkout" type="button" onclick="handleGCash()">Done</button>
+        </div>
+    </div>
+</body>
+
+<script>
 
         function handleGCash() {
             const referenceNumber = document.getElementById('reference_number').value.trim();
@@ -258,6 +420,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
 
         }
+
+        function toggleDropdown() {
+        const dropdown = document.getElementById('userDropdown');
+        dropdown.classList.toggle('show');
+    }
+
+    // Close the dropdown when clicking outside
+    window.onclick = function(event) {
+        if (!event.target.matches('.fa-user')) {
+            const dropdown = document.getElementById('userDropdown');
+            if (dropdown && dropdown.classList.contains('show')) {
+                dropdown.classList.remove('show');
+            }
+        }
+    };
+
     </script>
     <style>
         /* Modal styles */
@@ -340,117 +518,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         background-color: #218838;
     }
     </style>
-</head>
-
-<body>
-    <div class="header">
-        <a href="index.php" class="back-link">
-            <span class="back-arrow">&lt;</span> La Sorpresa Home Page
-        </a>
-        <a href="shopcart.php" class="back-link">
-            <span class="back-arrow">&lt;</span> Back to Cart
-        </a>
-    </div>
-
-    <div class="container">
-        <div class="cart">
-            <hr>
-            <h3>Order Summary</h3>
-
-            <?php if (isset($_SESSION['cart']) && count($_SESSION['cart']) > 0): ?>
-                <p>You have <?php echo count($_SESSION['cart']); ?> items in your cart</p>
-
-                <?php foreach ($_SESSION['cart'] as $index => $item): ?>
-                    <div class="cart-item">
-                        <?php if (isset($item['image']) && $item['image']): ?>
-                            <img src="../admin/uploads/<?php echo htmlspecialchars($item['image']); ?>"
-                                alt="<?php echo htmlspecialchars($item['name']); ?>" width="50">
-                        <?php else: ?>
-                            <img src="path/to/default-image.jpg" alt="No image available" width="50">
-                        <?php endif; ?>
-
-                        <div>
-                            <p><?php echo htmlspecialchars($item['name']); ?></p>
-                            <p><?php echo htmlspecialchars($item['quantity']); ?> pcs.</p>
-                        </div>
-
-                        <div class="quantity">
-                            <?php echo $item['quantity']; ?>
-                        </div>
-
-                        <div class="price">
-                            ₱<?php echo number_format($item['price'], 2); ?>
-                        </div>
-                    </div>
-                <?php endforeach; ?>
-            <?php else: ?>
-                <p>Your cart is empty.</p>
-            <?php endif; ?>
-        </div>
-        <div class="payment">
-            <h3>Shipping Information</h3>
-            <form id="checkout-form">
-                <label for="cust_name">Full Name: </label>
-                <span id="cust_name"><?php echo htmlspecialchars($user['cust_name']); ?></span>
-
-                <label for="cust_phone">Phone Number: </label>
-                <span id="cust_phone"><?php echo htmlspecialchars($user['cust_phone']); ?></span>
-
-                <label for="address">Address: </label>
-                <span id="cust_address"><?php echo htmlspecialchars($user['cust_address']); ?></span>
-
-
-                <label for="payment_method">Mode of Payment:</label>
-                <div>
-                    <input type="radio" id="gcash" name="payment_method" value="gcash" required>
-                    <label for="gcash">
-                        <img src="../images/Gcash.png" alt="GCash" width="50">
-                        GCash
-                    </label>
-                </div>
-                <div>
-                    <input type="radio" id="cop" name="payment_method" value="cop" required>
-                    <label for="cop">
-                        <img src="../images/cop.png" alt="Cash on PickUp" width="50">
-                        Cash on Pickup
-                    </label>
-                </div>
-            </form>
-
-            <hr>
-            <div class="summary">
-                <p>Subtotal <span>₱<?php
-                $subtotal = array_sum(array_map(function ($item) {
-                    return $item['price'] * $item['quantity'];
-                }, $_SESSION['cart']));
-                echo number_format($subtotal, 2);
-                ?></span></p>
-                <p>
-                    <strong>Total:</strong>
-                    ₱<?php
-                    echo number_format($total, 2);
-                    ?>
-                </p>
-            </div>
-            <button class="checkout" type="button" onclick="handleCheckout()" disabled>Checkout</button>
-        </div>
-    </div>
-
-    <!-- GCash Modal -->
-    <div id="gcash-modal" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="toggleGCashModal(false)">&times</span>
-            <h3>Scan to Pay</h3>
-            <img src="../images/gcashqr.jpg" alt="GCash QR Code">
-            <h3>GCash Payment Details</h3>
-            <label for="reference_number">Reference Number: </label>
-            <input type="text" id="reference_number" name="reference_no">
-
-            <label for="amount_paid">Amount Paid: </label>
-            <input type="number" id="amount_paid" name="amount_paid">
-            <button class="checkout" type="button" onclick="handleGCash()">Done</button>
-        </div>
-    </div>
-</body>
 
 </html>
