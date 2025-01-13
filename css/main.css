@@ -222,12 +222,12 @@ header .fa-bars{
     display: flex;
     align-items: center;
     min-height: 100vh;
-    background: url() no-repeat;
+    background: url("ivd/bgbg.png") no-repeat;
     background-size: contain;
     background-position: center;
 }
 
-.home .content{
+.home .content {
     max-width: 50rem;
     max-width: 1500px; /* Maximum width of the box */
     width: 100%; /* Set a width percentage to make it responsive */
@@ -235,24 +235,15 @@ header .fa-bars{
     border: 2px solid #ccc; /* Border around the box */
     border-radius: 30px; /* Rounded corners */
     padding: 40px; /* Increased padding inside the box */
-    background-color: #c294ce; /* Background color */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
-    text-align: left; /* Center text */
+    background-image: url("../ivd/bgbg.png"); /* Background image */
+    background-size: auto; /* Keep the original size of the image */
+    background-repeat: no-repeat; /* Prevent the image from repeating */
+    background-position: center -65px; /* Move the image up by 20px */
+    text-align: left; /* Align text to the left */
     margin: 0 auto; /* Center the box horizontally */
     position: relative;
 }
 
-.circle {
-    position: absolute; /* Position the circle absolutely */
-    top: 61.3%; /* Center it vertically */
-    right: 150px; /* Distance from the right side */
-    transform: translateY(-50%); /* Adjust for vertical centering */
-    width: 500px; /* Width of the circle */
-    height: 450px; /* Height of the circle */
-    background-color: #1a1919; /* Circle color */
-    border-radius: 230px 230px 0px 230px; /* Makes it a circle */
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Shadow for the circle */
-}
 
 .line {
     border-left: 1px solid black; /* Left border */
@@ -280,6 +271,7 @@ header .fa-bars{
 }
 
 .home .content h3{
+    margin-top: 20px;
     font-size: 6rem;
     color: #000000;
 }
@@ -289,7 +281,6 @@ header .fa-bars{
     color: var(--pink);
     padding: 1rem 0;
     line-height: 1.5;
-    font-family: Arial, Helvetica, sans-serif;
 }
 
 .home .content p{
@@ -297,6 +288,7 @@ header .fa-bars{
     color: #000000;
     padding: 1rem 0;
     line-height: 1.5;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 
 .about .row{
@@ -344,11 +336,12 @@ header .fa-bars{
 }
 
 .about .row .content p{
-    font-size: 1.5rem;
+    font-size: 1.7rem;
     color: #999;
     padding: .5rem 0;
-    padding-top: 1rem;
+    padding-top: 1.3rem;
     line-height: 1.5;
+    font-family: Verdana, Geneva, Tahoma, sans-serif
 }
 
 .icons-container{
