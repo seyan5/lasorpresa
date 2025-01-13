@@ -1,4 +1,4 @@
-<?php 
+<?php
 require("conn.php");
 
 if (!isset($_SESSION['customization'])) {
@@ -12,9 +12,9 @@ $customization = $_SESSION['customization'];
 <h3>Your Floral Arrangement Customization</h3>
 
 <div class="customization-summary">
-    <?php 
+    <?php
     $total_price = 0; // Initialize total price for display
-    foreach ($customization as $index => $item): 
+    foreach ($customization as $index => $item):
         // Fetch flower details using flower_type ID
         $stmt = $pdo->prepare("SELECT name, price FROM flowers WHERE id = :flower_id");
         $stmt->execute(['flower_id' => $item['flower_type']]);
@@ -59,76 +59,83 @@ $customization = $_SESSION['customization'];
         $preview_images = [
             2 => [ // Flower type 2 (e.g., Rose)
                 1 => [
-                    1 => "../images/previews/rose_red_basket.jpg", // 1 flower, basket, color 1
-                    2 => "../images/previews/rose_red_wrapper.jpg", // 1 flower, wrapper, color 1
-                    4 => "../images/previews/rose_red_vase.jpg", // 1 flower, vase, color 1
+                    1 => "../images/previews/rose_red_basket.jpg",
+                    2 => "../images/previews/rose_red_wrapper.jpg",
+                    4 => "../images/previews/rose_red_vase.jpg",
                 ],
                 2 => [
-                    1 => "../images/previews/rose_red_basket2.jpg", // 2 flowers, basket, color 1
-                    2 => "../images/previews/rose_red_wrapper2.jpg", // 2 flowers, wrapper, color 1
-                    4 => "../images/previews/rose_red_vase2.jpg", // 2 flowers, vase, color 1
+                    1 => "../images/previews/rose_red_basket2.jpg",
+                    2 => "../images/previews/rose_red_wrapper2.jpg",
+                    4 => "../images/previews/rose_red_vase2.jpg",
                 ],
                 3 => [
-                    1 => "../images/previews/rose_red_basket3.jpg", // 3 flowers, basket, color 1
-                    2 => "../images/previews/rose_red_wrapper3.jpg", // 3 flowers, wrapper, color 1
-                    4 => "../images/previews/rose_red_vase3.jpg", // 3 flowers, vase, color 1
+                    1 => "../images/previews/rose_red_basket3.jpg",
+                    2 => "../images/previews/rose_red_wrapper3.jpg",
+                    4 => "../images/previews/rose_red_vase3.jpg",
                 ]
             ],
             3 => [ // Flower type 3 (e.g., Tulip)
                 1 => [
-                    1 => "../images/previews/tulip_red_basket.jpg", // 1 flower, basket, color 1
-                    2 => "../images/previews/tulip_red_wrapper.jpg", // 1 flower, wrapper, color 1
-                    4 => "../images/previews/tulip_red_vase.jpg", // 1 flower, vase, color 1
+                    1 => "../images/previews/tulip_red_basket.jpg",
+                    2 => "../images/previews/tulip_red_wrapper.jpg",
+                    4 => "../images/previews/tulip_red_vase.jpg",
                 ],
                 2 => [
-                    1 => "../images/previews/tulip_red_basket2.jpg", // 2 flowers, basket, color 1
-                    2 => "../images/previews/tulip_red_wrapper2.jpg", // 2 flowers, wrapper, color 1
-                    4 => "../images/previews/tulip_red_vase2.jpg", // 2 flowers, vase, color 1
+                    1 => "../images/previews/tulip_red_basket2.jpg",
+                    2 => "../images/previews/tulip_red_wrapper2.jpg",
+                    4 => "../images/previews/tulip_red_vase2.jpg",
                 ],
                 3 => [
-                    1 => "../images/previews/tulip_red_basket3.jpg", // 3 flowers, basket, color 1
-                    2 => "../images/previews/tulip_red_wrapper3.jpg", // 3 flowers, wrapper, color 1
-                    4 => "../images/previews/tulip_red_vase3.jpg", // 3 flowers, vase, color 1
+                    1 => "../images/previews/tulip_red_basket3.jpg",
+                    2 => "../images/previews/tulip_red_wrapper3.jpg",
+                    4 => "../images/previews/tulip_red_vase3.jpg",
                 ]
             ]
         ];
 
         // Determine the preview image based on customization
         $preview_image = "../images/previews/default.jpg"; // Default preview
-        // Check if flower type, number of flowers, and container type are set
         if (isset($preview_images[$item['flower_type']][$item['num_flowers']][$item['container_type']])) {
-            // Set the preview image based on the condition
             $preview_image = $preview_images[$item['flower_type']][$item['num_flowers']][$item['container_type']];
         }
-    ?>
+        ?>
         <div class="customization-item">
             <h4>Flower Set <?php echo $index + 1; ?>:</h4>
-            <!-- Preview Image -->
-            <img src="<?php echo htmlspecialchars($preview_image); ?>" alt="Customization Preview" class="preview-img" style="width: 500px; height: auto;">
-
-            <p><strong>Flower Type:</strong> <?php echo htmlspecialchars($flower_name); ?> ($<?php echo number_format($flower_price, 2); ?> per flower)</p>
+            <img src="<?php echo htmlspecialchars($preview_image); ?>" alt="Customization Preview" class="preview-img"
+                style="width: 500px; height: auto;">
+            <p><strong>Flower Type:</strong> <?php echo htmlspecialchars($flower_name); ?>
+                ($<?php echo number_format($flower_price, 2); ?> per flower)</p>
             <p><strong>Number of Flowers:</strong> <?php echo htmlspecialchars($item['num_flowers']); ?></p>
-            <p><strong>Container Type:</strong> <?php echo htmlspecialchars($container_name); ?> ($<?php echo number_format($container_price, 2); ?>)</p>
+            <p><strong>Container Type:</strong> <?php echo htmlspecialchars($container_name); ?>
+                ($<?php echo number_format($container_price, 2); ?>)</p>
             <p><strong>Container Color:</strong> <?php echo htmlspecialchars($color_name); ?> (No extra cost)</p>
             <p><strong>Item Total Price:</strong> $<?php echo number_format($item_total_price, 2); ?></p>
         </div>
         <hr>
     <?php endforeach; ?>
-
-    <!-- Total Price -->
-    <p><strong>Total Price:</strong> $<?php echo number_format($total_price, 2); ?></p>
-
-    <!-- Checkout Form -->
-    <form action="customize-cart.php" method="POST">
-        <label for="customer_name">Name:</label>
-        <input type="text" name="customer_name" required><br>
-
-        <label for="customer_email">Email:</label>
-        <input type="email" name="customer_email" required><br>
-
-        <label for="shipping_address">Shipping Address:</label>
-        <textarea name="shipping_address" required></textarea><br>
-
-        <button type="submit" class="btn btn-primary">Confirm Purchase</button>
-    </form>
 </div>
+
+<!-- Total Price -->
+<p><strong>Total Price:</strong> $<?php echo number_format($total_price, 2); ?></p>
+
+<!-- Checkout Button -->
+<button class="customize-checkout" onclick="checkout()">Checkout &gt;</button>
+
+<script>
+    // Check if the user is logged in
+    const isLoggedIn = <?php echo isset($_SESSION['customer']['cust_id']) ? 'true' : 'false'; ?>;
+
+    // Handle checkout action
+    function checkout() {
+        console.log("Checkout function triggered");
+        if (!isLoggedIn) {
+            console.log("User not logged in");
+            if (confirm("You need to log in to proceed to checkout. Do you want to log in now?")) {
+                window.location.href = "login.php"; // Redirect to login page
+            }
+        } else {
+            console.log("User logged in");
+            window.location.href = "customize-checkout.php"; // Redirect to the checkout page
+        }
+    }
+</script>
