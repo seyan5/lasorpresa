@@ -42,7 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $reference_number = $payment_method === 'cop' ? '0' : ($_POST['reference_number'] ?? null);
     $amount_paid = $payment_method === 'cop' ? $total : ($_POST['amount_paid'] ?? null);
     $shipping_status = 'pending';
-    $payment_status = $payment_method === 'gcash' ? 'paid' : 'pending';
+    $payment_status = 'pending';
 
     // Validate payment method
     if (empty($payment_method)) {

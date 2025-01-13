@@ -12,41 +12,44 @@ require '../../mail/PHPMailer/src/SMTP.php';
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
+// Disable error reporting to prevent HTML errors in the response
+error_reporting(0); 
+ini_set('display_errors', 0);
+
+// Test database connection
+try {
+    $pdo->getAttribute(PDO::ATTR_CONNECTION_STATUS);
+} catch (PDOException $e) {
+    echo json_encode(['success' => false, 'message' => 'Database connection failed: ' . $e->getMessage()]);
+    exit;
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $order_id = $_POST['order_id'];
-    $payment_status = $_POST['payment_status'];
-    $shipping_status = $_POST['shipping_status'];
+    $status_column = $_POST['status_column'];
+    $new_status = $_POST['new_status'];
+
+    // Validate inputs
+    if (!in_array($status_column, ['payment_status', 'shipping_status'])) {
+        echo json_encode(['success' => false, 'message' => 'Invalid status column']);
+        exit;
+    }
 
     try {
-        // Update the payment and shipping status
-        $stmt = $pdo->prepare("
-            UPDATE payment 
-            SET payment_status = :payment_status, shipping_status = :shipping_status 
-            WHERE order_id = :order_id
-        ");
+        // Update the order status
+        $stmt = $pdo->prepare("UPDATE payment SET $status_column = :new_status WHERE order_id = :order_id");
         $stmt->execute([
-            ':payment_status' => $payment_status,
-            ':shipping_status' => $shipping_status,
-            ':order_id' => $order_id,
+            ':new_status' => $new_status,
+            ':order_id' => $order_id
         ]);
 
-        // Fetch customer information for email notification
-        $stmt = $pdo->prepare("
-            SELECT c.cust_email, c.cust_name 
-            FROM customer c
-            JOIN orders o ON c.cust_id = o.customer_id
-            WHERE o.order_id = :order_id
-        ");
-        $stmt->execute([':order_id' => $order_id]);
-        $customer = $stmt->fetch(PDO::FETCH_ASSOC);
-
-        if ($shipping_status === 'shipped' && $customer) {
-            sendShippingNotification($customer['cust_email'], $customer['cust_name'], $order_id);
+        if ($stmt->rowCount() > 0) {
+            echo json_encode(['success' => true, 'message' => ucfirst($status_column) . ' updated successfully.']);
+        } else {
+            echo json_encode(['success' => false, 'message' => 'No changes made to the order status.']);
         }
-
-        echo json_encode(['success' => true, 'message' => 'Order status updated successfully.']);
-    } catch (Exception $e) {
-        echo json_encode(['success' => false, 'message' => $e->getMessage()]);
+    } catch (PDOException $e) {
+        echo json_encode(['success' => false, 'message' => 'Error: ' . $e->getMessage()]);
     }
 }
 
@@ -54,7 +57,7 @@ function sendShippingNotification($customerEmail, $customerName, $orderId) {
     $mail = new PHPMailer(true);
 
     try {
-        // Server settings
+        // SMTP settings
         $mail->isSMTP();
         $mail->Host = 'smtp.gmail.com'; // Replace with your SMTP host
         $mail->SMTPAuth = true;
@@ -75,8 +78,9 @@ function sendShippingNotification($customerEmail, $customerName, $orderId) {
                        <p>Thank you for shopping with us!</p>
                        <p>Best Regards,<br>Your Flower Shop</p>";
 
+        // Send the email
         $mail->send();
     } catch (Exception $e) {
-        error_log("Error sending email: {$mail->ErrorInfo}");
+        error_log("Error sending email: {$mail->ErrorInfo}"); // Log the error but don't output to user
     }
 }
