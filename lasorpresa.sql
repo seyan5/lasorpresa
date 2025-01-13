@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 13, 2025 at 04:55 PM
+-- Generation Time: Jan 13, 2025 at 05:25 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -170,7 +170,13 @@ INSERT INTO `custom_order` (`order_id`, `cust_id`, `customer_name`, `customer_em
 (6, 13, 'seyan1', 'seanammiel@gmail.com', 'Brgy Tapia General Trias Cavite', 123.00, '2025-01-13 15:48:24'),
 (7, 13, 'seyan1', 'seanammiel@gmail.com', 'Brgy Tapia General Trias Cavite', 123.00, '2025-01-13 15:49:02'),
 (8, 13, 'seyan1', 'seanammiel@gmail.com', 'Brgy Tapia General Trias Cavite', 123.00, '2025-01-13 15:54:04'),
-(9, 13, 'seyan1', 'seanammiel@gmail.com', 'Brgy Tapia General Trias Cavite', 123.00, '2025-01-13 15:54:08');
+(9, 13, 'seyan1', 'seanammiel@gmail.com', 'Brgy Tapia General Trias Cavite', 123.00, '2025-01-13 15:54:08'),
+(10, 13, 'seyan1', 'seanammiel@gmail.com', 'Brgy Tapia General Trias Cavite', 123.00, '2025-01-13 16:03:55'),
+(11, 13, 'seyan1', 'seanammiel@gmail.com', 'Brgy Tapia General Trias Cavite', 123.00, '2025-01-13 16:17:26'),
+(12, 13, 'seyan1', 'seanammiel@gmail.com', 'Brgy Tapia General Trias Cavite', 123.00, '2025-01-13 16:18:28'),
+(13, 13, 'seyan1', 'seanammiel@gmail.com', 'Brgy Tapia General Trias Cavite', 123.00, '2025-01-13 16:20:52'),
+(14, 13, 'seyan1', 'seanammiel@gmail.com', 'Brgy Tapia General Trias Cavite', 123.00, '2025-01-13 16:23:17'),
+(15, 13, 'seyan1', 'seanammiel@gmail.com', 'Brgy Tapia General Trias Cavite', 246.00, '2025-01-13 16:24:32');
 
 -- --------------------------------------------------------
 
@@ -202,7 +208,9 @@ INSERT INTO `custom_orderitems` (`orderitem_id`, `order_id`, `flower_type`, `num
 (7, 4, 'Lilac', 1, 'Plastic Wrap', 'Yellow', 25.00, 50.00, 0.00, 75.00),
 (8, 5, 'Tulip', 1, 'Plastic Wrap', 'Blue', 25.00, 50.00, 0.00, 75.00),
 (9, 5, 'Tulip', 5, 'Plastic Wrap', 'Blue', 25.00, 50.00, 0.00, 175.00),
-(10, 5, 'Lilac', 3, 'Plastic Wrap', 'Blue', 25.00, 50.00, 0.00, 125.00);
+(10, 5, 'Lilac', 3, 'Plastic Wrap', 'Blue', 25.00, 50.00, 0.00, 125.00),
+(13, 14, 'Rosas', 1, 'Basket', 'Red', 123.00, 100.00, 0.00, 223.00),
+(14, 15, 'Rosas', 2, 'Paper Wrap', 'Blue', 123.00, 50.00, 0.00, 296.00);
 
 -- --------------------------------------------------------
 
@@ -233,7 +241,12 @@ INSERT INTO `custom_payment` (`cpayment_id`, `order_id`, `customer_name`, `custo
 (3, 6, 'seyan1', 'seanammiel@gmail.com', '123', 123.00, 'gcash', 'Pending', 'Pending', '0000-00-00 00:00:00', '2025-01-13 15:48:24', '2025-01-13 15:48:24'),
 (4, 7, 'seyan1', 'seanammiel@gmail.com', '', 123.00, '', 'Pending', 'Pending', '0000-00-00 00:00:00', '2025-01-13 15:49:02', '2025-01-13 15:49:02'),
 (5, 8, 'seyan1', 'seanammiel@gmail.com', '', 123.00, '', 'Pending', 'Pending', '0000-00-00 00:00:00', '2025-01-13 15:54:04', '2025-01-13 15:54:04'),
-(6, 9, 'seyan1', 'seanammiel@gmail.com', '', 123.00, 'cop', 'Pending', 'Pending', '0000-00-00 00:00:00', '2025-01-13 15:54:08', '2025-01-13 15:54:08');
+(6, 9, 'seyan1', 'seanammiel@gmail.com', '', 123.00, 'cop', 'Pending', 'Pending', '0000-00-00 00:00:00', '2025-01-13 15:54:08', '2025-01-13 15:54:08'),
+(7, 10, 'seyan1', 'seanammiel@gmail.com', '12335', 123.00, 'gcash', 'Pending', 'Pending', '0000-00-00 00:00:00', '2025-01-13 16:03:55', '2025-01-13 16:03:55'),
+(8, 12, 'seyan1', 'seanammiel@gmail.com', '3213123', 123.00, 'gcash', 'Pending', 'Pending', '0000-00-00 00:00:00', '2025-01-13 16:18:28', '2025-01-13 16:18:28'),
+(9, 13, 'seyan1', 'seanammiel@gmail.com', '3213123', 123.00, 'gcash', 'Pending', 'Pending', '0000-00-00 00:00:00', '2025-01-13 16:20:52', '2025-01-13 16:20:52'),
+(10, 14, 'seyan1', 'seanammiel@gmail.com', '3213123', 123.00, 'gcash', 'Pending', 'Pending', '0000-00-00 00:00:00', '2025-01-13 16:23:17', '2025-01-13 16:23:17'),
+(11, 15, 'seyan1', 'seanammiel@gmail.com', '123123123', 246.00, 'gcash', 'Pending', 'Pending', '0000-00-00 00:00:00', '2025-01-13 16:24:32', '2025-01-13 16:24:32');
 
 -- --------------------------------------------------------
 
@@ -1234,19 +1247,19 @@ ALTER TABLE `customer_messages`
 -- AUTO_INCREMENT for table `custom_order`
 --
 ALTER TABLE `custom_order`
-  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT for table `custom_orderitems`
 --
 ALTER TABLE `custom_orderitems`
-  MODIFY `orderitem_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `orderitem_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT for table `custom_payment`
 --
 ALTER TABLE `custom_payment`
-  MODIFY `cpayment_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `cpayment_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `email_verifications`
