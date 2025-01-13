@@ -1,5 +1,5 @@
 <?php
-require_once('header.php');
+require_once('conn.php');
 
 // Check if the customer is logged in or not
 if (!isset($_SESSION['customer'])) {
@@ -75,13 +75,48 @@ if (isset($_POST['form1'])) {
     }
 }
 ?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/dropdown.css">
+    <link rel="stylesheet" href="../css/navhead.css">
+    <link rel="stylesheet" href="../css/profileupd.css">
+    <title>Navbar Fix</title>
+</head>
+<body>
+<header>
+    <img src="../images/logo.png" alt="Logo" class="logos">
+    <nav class="navbar">
+        <a href="index.php">Home</a>
+        <a href="customer-profile-update.php">Update Profile</a>
+        <a href="customer-password-update.php">Update Password</a>
+        <a href="customer-order.php">Orders</a>
+        <a href="customize-view.php">Custom Orders</a>
+    </nav>
+    <div class="icons">
+    <a href="shopcart.php" class="fas fa-shopping-cart"></a>
+    <div class="user-dropdown">
+        <a href="#" class="fas fa-user" onclick="toggleDropdown()"></a>
+        <div class="dropdown-menu" id="userDropdown">
+            <?php if (isset($_SESSION['customer'])): ?>
+                <p>Welcome, <?php echo htmlspecialchars($_SESSION['customer']['cust_name']); ?></p>
+                <hr>
+                <a href="profile.php">Profile</a>
+                <a href="logout.php">Logout</a>
+            <?php else: ?>
+                <a href="login.php">Login</a>
+            <?php endif; ?>
+        </div>
+    </div>
+</div>
+</header>
 
 <div class="page">
     <div class="container">
         <div class="row">
-            <div class="col-md-12">
-                <?php require_once('customer-sidebar.php'); ?>
-            </div>
             <div class="col-md-12">
                 <div class="user-content">
                     <h3><?php echo "Update Profile"; ?></h3>
