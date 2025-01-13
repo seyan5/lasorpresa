@@ -4,11 +4,6 @@ session_start();
 include("../admin/inc/config.php");
 include("../admin/inc/functions.php");
 
-// Enable error reporting for debugging
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-
 // Check if the user is logged in
 if (!isset($_SESSION['customer'])) {
     header('Location: login.php');
@@ -19,12 +14,6 @@ if (!isset($_SESSION['customer'])) {
 $cust_email = $_SESSION['customer']['cust_email'] ?? null;
 $cust_id = $_SESSION['customer']['cust_id'] ?? null;
 
-// Debugging: Check session data and cust_id
-if (!$cust_id) {
-    file_put_contents('debug.log', "Error: Customer ID not found in session.\n", FILE_APPEND);
-    die("Error: Customer ID not found in session.");
-}
-file_put_contents('debug.log', "Session Data: " . print_r($_SESSION, true), FILE_APPEND);
 
 // Fetch user details
 try {
@@ -115,10 +104,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             ':payment_status' => $payment_status,
             ':shipping_status' => $shipping_status
         ]);
-
-        // Debugging: Log payment success
-        file_put_contents('debug.log', "Payment inserted: Method - $payment_method\n", FILE_APPEND);
-
         $pdo->commit();
         unset($_SESSION['cart']);
 

@@ -1,0 +1,53 @@
+/* Style the indicator list */
+ul.indicator {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+/* Style the filter items */
+ul.indicator li {
+    margin-right: 10px;
+}
+
+/* Style the active filter link */
+ul.indicator li.active a {
+    font-weight: bold;
+    color: #007BFF;
+}
+
+/* Style the pagination controls */
+ul.indicator li.next-page, ul.indicator li.prev-page {
+    margin-left: auto;  /* Push the next and prev buttons to the right */
+}
+
+/* Style the links */
+ul.indicator li a {
+    text-decoration: none;
+    color: #000;
+    padding: 5px 10px;
+    border-radius: 3px;
+    transition: background-color 0.3s;
+}
+
+ul.indicator li a:hover {
+    background-color: #f0f0f0;
+}
+
+/* Style for next and previous buttons */
+ul.indicator li.prev-page a, ul.indicator li.next-page a {
+    font-weight: bold;
+    color: #333;
+}
+
+/* Add spacing between the filter items and pagination */
+ul.indicator li.prev-page a {
+    margin-right: 20px;
+}
+
+ul.indicator li.next-page a {
+    margin-left: 20px;
+}

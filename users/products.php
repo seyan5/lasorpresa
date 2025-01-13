@@ -104,9 +104,36 @@ $result = $statement->fetchAll(PDO::FETCH_ASSOC);
     <?php
     // Ensure $result is defined and not empty
     if (!empty($result) && is_array($result)) {
-        foreach ($result as $row) {
+        $limit = 5;
+        $count = 0;
+        $page = isset($_GET['page']) ? $_GET['page'] : 1; // Track the page number
+
+        // Calculate the starting index for pagination
+        $start = ($page - 1) * $limit;
+
+        // Loop through the categories and show only the categories for the current page
+        $categoriesToShow = array_slice($result, $start, $limit);
+        
+        foreach ($categoriesToShow as $row) {
             echo '<li data-filter="' . htmlspecialchars($row['ecat_id']) . '">
                     <a href="#" onclick="filterProducts(\'' . htmlspecialchars($row['ecat_id']) . '\', this)">' . htmlspecialchars($row['ecat_name']) . '</a>
+                  </li>';
+            $count++;
+        }
+
+        // If there are more categories, add the "Next" button
+        if ($count == $limit && count($result) > $page * $limit) {
+            $nextPage = $page + 1;
+            echo '<li class="next-page">
+                    <a href="?page=' . $nextPage . '" onclick="loadMoreCategories()">&gt;</a>
+                  </li>';
+        }
+
+        // If not on the first page, add the "Previous" button
+        if ($page > 1) {
+            $prevPage = $page - 1;
+            echo '<li class="prev-page">
+                    <a href="?page=' . $prevPage . '" onclick="loadMoreCategories()">&lt;</a>
                   </li>';
         }
     } else {
@@ -115,6 +142,8 @@ $result = $statement->fetchAll(PDO::FETCH_ASSOC);
     }
     ?>
 </ul>
+
+
 <!-- Product Display Area -->
 <div class="products-container" id="productContainer">
     <!-- Products will be loaded here dynamically -->
@@ -157,18 +186,44 @@ $result = $statement->fetchAll(PDO::FETCH_ASSOC);
         element.parentElement.classList.add('active'); // Add active class to the clicked element
     }
 
-    // Fetch products using AJAX
-    const xhr = new XMLHttpRequest();
-    xhr.open('GET', url, true);
-    xhr.onload = function() {
-        if (xhr.status === 200) {
-            container.innerHTML = xhr.responseText;
-        } else {
+    // Fetch products using AJAX (using Fetch API)
+    fetch(url)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Error fetching products');
+            }
+            return response.text();
+        })
+        .then(data => {
+            container.innerHTML = data;
+        })
+        .catch(error => {
             container.innerHTML = "<p>Error loading products. Please try again.</p>";
-        }
-    };
-    xhr.send();
+            console.error('Error fetching products:', error);
+        });
 }
+
+// Handling the ">" arrow click to load more categories/products
+// Handling the ">" arrow click to load more categories/products
+function loadMoreProducts() {
+    const container = document.getElementById('productContainer');
+    container.innerHTML = "<p>Loading more products...</p>";
+    
+    // URL modification to load more products (make sure your backend is capable of this)
+    const url = `fetch-products.php?ecat_id=all&load_more=true`;
+    
+    fetch(url)
+        .then(response => response.text())
+        .then(data => {
+            container.innerHTML = data; // Display new products
+        })
+        .catch(error => {
+            container.innerHTML = "<p>Error loading more products. Please try again.</p>";
+            console.error('Error loading more products:', error);
+        });
+}
+
+
 
 // Load all products by default when the page loads
 window.onload = function() {
