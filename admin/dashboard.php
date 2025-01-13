@@ -97,11 +97,11 @@ try {
                     </a>
                 </li>
                 <li>
-                    <a href="#">
+                    <a href="sales-report.php">
                         <span class="icon">
-                            <ion-icon name="chatbubble-outline"></ion-icon>
+                            <ion-icon name="cash-outline"></ion-icon>
                         </span>
-                        <span class="title">Messages</span>
+                        <span class="title">Sales</span>
                     </a>
                 </li>
                 <li>
@@ -123,17 +123,9 @@ try {
                 <li>
                     <a href="settings.php">
                         <span class="icon">
-                            <ion-icon name="settings-outline"></ion-icon>
+                            <ion-icon name="albums-outline"></ion-icon>
                         </span>
-                        <span class="title">Settings</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="customer.php">
-                        <span class="icon">
-                            <ion-icon name="settings-outline"></ion-icon>
-                        </span>
-                        <span class="title">Registered Customer</span>
+                        <span class="title">Categories</span>
                     </a>
                 </li>
                 <li>
@@ -293,9 +285,4 @@ try {
     <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
 
 </body>
-
-<style>
-
-</style>
-
 </html>

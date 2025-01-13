@@ -1,0 +1,39 @@
+Login session set: Array
+(
+    [customer] => Array
+        (
+            [cust_id] => 14
+            [cust_name] => xofahon
+            [cust_email] => xofahon594@pariag.com
+            [cust_phone] => 09214991751
+            [cust_address] => Blk 31 Lt 2 Lhinnete Homea
+            [cust_city] => Cavite
+            [cust_zip] => 4311
+        )
+
+    [_csrf] => 8f1f221e5f6fee5834434252920e6a8d
+    [customization] => Array
+        (
+            [0] => Array
+                (
+                    [flower_type] => 2
+                    [num_flowers] => 1
+                    [container_type] => 1
+                    [container_color] => 1
+                )
+
+        )
+
+    [user] => Array
+        (
+            [id] => 1
+            [full_name] => asdasd
+            [email] => admin@mail.com
+            [phone] => 7777777777
+            [password] => 202cb962ac59075b964b07152d234b70
+            [photo] => user-1.png
+            [role] => Super Admin
+            [status] => Active
+        )
+
+)
