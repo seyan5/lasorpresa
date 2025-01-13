@@ -1189,3 +1189,30 @@ Session Data: Array
 
 )
 Payment inserted: Method - cop
+Login session set: Array
+(
+    [_csrf] => 50b173e3d6b2375e6bf3edd11c2075b5
+    [customer] => Array
+        (
+            [cust_id] => 13
+            [cust_name] => seyan1
+            [cust_email] => seanammiel@gmail.com
+            [cust_phone] => 0956193051213
+            [cust_address] => Brgy Tapia General Trias Cavite
+            [cust_city] => street
+            [cust_zip] => 3123
+        )
+
+    [customization] => Array
+        (
+            [0] => Array
+                (
+                    [flower_type] => 2
+                    [num_flowers] => 1
+                    [container_type] => 1
+                    [container_color] => 1
+                )
+
+        )
+
+)
