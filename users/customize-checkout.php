@@ -98,6 +98,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     ]);
 
     echo "<script>alert('Payment successful!');</script>";
+    echo "<script>window.location.href = 'customization.php';</script>";
     exit;
 }
 ?>

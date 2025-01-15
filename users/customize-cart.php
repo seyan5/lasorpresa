@@ -80,14 +80,14 @@ if ($flower_counts[4] > 0) { // Lilac
 }
 
 // Debugging: echo the preview_key and path
-echo "Preview key: " . htmlspecialchars($preview_key) . "<br>";
+// echo "Preview key: " . htmlspecialchars($preview_key) . "<br>";
 
 // Check if a preview image for this combination exists
 $preview_image_path = "../images/previews/" . $preview_key . ".jpg";
 
 // Debugging: echo the generated path
-echo "Preview image path: " . htmlspecialchars($preview_image_path) . "<br>";
-echo "File exists check: " . (file_exists($preview_image_path) ? "Yes" : "No") . "<br>";
+// echo "Preview image path: " . htmlspecialchars($preview_image_path) . "<br>";
+// echo "File exists check: " . (file_exists($preview_image_path) ? "Yes" : "No") . "<br>";
 
 // If the preview image exists, set it, otherwise use the default
 if (file_exists($preview_image_path)) {
