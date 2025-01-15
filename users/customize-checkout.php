@@ -1,7 +1,7 @@
 <?php
 require("conn.php");
 
-// Ensure user is logged in
+
 if (!isset($_SESSION['customer']['cust_id'])) {
     echo "You need to log in to proceed to checkout.";
     exit;
@@ -18,29 +18,13 @@ if (!$customer) {
     exit;
 }
 
-// Fetch customization session data
-if (!isset($_SESSION['customization'])) {
-    echo "No customization found. Please go back and customize your arrangement.";
-    exit;
-}
-$customization = $_SESSION['customization'];
-
-// Calculate total price
-$total_price = 0;
-foreach ($customization as $item) {
-    $stmt = $pdo->prepare("SELECT price FROM flowers WHERE id = :flower_id");
-    $stmt->execute(['flower_id' => $item['flower_type']]);
-    $flower = $stmt->fetch(PDO::FETCH_ASSOC);
-    $flower_price = $flower['price'] ?? 0;
-    $total_price += ($flower_price * $item['num_flowers']);
-}
+$total_price = $_SESSION['total_price'] ?? 0; // Use the session total price
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $payment_method = $_POST['payment_method'];
     $reference_number = $_POST['reference_number'] ?? null;
     $amount_paid = $_POST['amount_paid'] ?? $total_price;
 
-    // Step 1: Insert into `custom_order` table
     $stmt = $pdo->prepare("INSERT INTO custom_order (cust_id, customer_name, customer_email, shipping_address, total_price, order_date) VALUES (:cust_id, :customer_name, :customer_email, :shipping_address, :total_price, NOW())");
     $stmt->execute([
         'cust_id' => $customer_id,
@@ -49,6 +33,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'shipping_address' => $customer['cust_address'],
         'total_price' => $total_price,
     ]);
+
 
     // Step 2: Get the last inserted `order_id`
     $order_id = $pdo->lastInsertId();
@@ -78,6 +63,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     
         // Calculate total price for the item
         $total_price_item = ($flower_price * $item['num_flowers']) + $container_price + $color_price;
+        $_SESSION['total_price'] = $total_price;
     
         // Insert into `custom_orderitems`
         $stmt = $pdo->prepare("INSERT INTO custom_orderitems (order_id, flower_type, num_flowers, container_type, container_color, flower_price, container_price, color_price, total_price, remarks) VALUES (:order_id, :flower_type, :num_flowers, :container_type, :container_color, :flower_price, :container_price, :color_price, :total_price, :remarks)");
