@@ -12,31 +12,51 @@ if (!$cust_id) {
   exit;
 }
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_review'])) {
-  try {
-    $order_id = $_POST['order_id'];
-    $product_id = $_POST['product_id'];
-    $review = $_POST['review'] ?? null;
-    $rating = $_POST['rating'] ?? null;
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+  $action = $_POST['action'] ?? null;
+  $order_id = $_POST['order_id'] ?? null;
+  $product_id = $_POST['product_id'] ?? null;
+  $review = $_POST['review'] ?? null;
+  $rating = $_POST['rating'] ?? null;
 
-    // If review and rating are empty, don't insert into the database
-    if (!empty($review) && !empty($rating)) {
-      // Insert the review into the database
-      $stmt = $pdo->prepare("INSERT INTO reviews (order_id, product_id, review, rating, customer_id) VALUES (:order_id, :product_id, :review, :rating, :customer_id)");
+  if ($action === 'add_or_update_review') {
+    try {
+      // Check if a review already exists
+      $stmt = $pdo->prepare("SELECT review_id FROM reviews WHERE order_id = :order_id AND product_id = :product_id AND customer_id = :customer_id");
       $stmt->execute([
         ':order_id' => $order_id,
         ':product_id' => $product_id,
-        ':review' => $review,
-        ':rating' => $rating,
-        ':customer_id' => $cust_id // Insert the logged-in customer's ID
+        ':customer_id' => $cust_id
       ]);
-    }
+      
+      $existing_review = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    echo json_encode(['success' => true, 'message' => 'Review submitted successfully']);
-  } catch (Exception $e) {
-    echo json_encode(['success' => false, 'message' => $e->getMessage()]);
+      if ($existing_review) {
+        // Update the existing review
+        $stmt = $pdo->prepare("UPDATE reviews SET review = :review, rating = :rating WHERE review_id = :review_id");
+        $stmt->execute([
+          ':review' => $review,
+          ':rating' => $rating,
+          ':review_id' => $existing_review['review_id']
+        ]);
+      } else {
+        // Insert new review
+        $stmt = $pdo->prepare("INSERT INTO reviews (order_id, product_id, review, rating, customer_id) VALUES (:order_id, :product_id, :review, :rating, :customer_id)");
+        $stmt->execute([
+          ':order_id' => $order_id,
+          ':product_id' => $product_id,
+          ':review' => $review,
+          ':rating' => $rating,
+          ':customer_id' => $cust_id
+        ]);
+      }
+
+      echo json_encode(['success' => true, 'message' => 'Review submitted or updated successfully']);
+    } catch (Exception $e) {
+      echo json_encode(['success' => false, 'message' => $e->getMessage()]);
+    }
+    exit;
   }
-  exit;
 }
 ?>
 
@@ -209,50 +229,54 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_review'])) {
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
   <script>
-    // Handle opening the review modal with the correct order and product ID
-    const reviewModal = document.getElementById('reviewModal');
-    reviewModal.addEventListener('show.bs.modal', function(event) {
-      const button = event.relatedTarget; 
-      const orderId = button.getAttribute('data-order-id');
-      const productId = button.getAttribute('data-product-id');
+    // Load existing review into the modal for editing
+reviewModal.addEventListener('show.bs.modal', function(event) {
+  const button = event.relatedTarget;
+  const orderId = button.getAttribute('data-order-id');
+  const productId = button.getAttribute('data-product-id');
 
-      const orderInput = document.getElementById('order-id');
-      const productInput = document.getElementById('product-id');
+  document.getElementById('order-id').value = orderId;
+  document.getElementById('product-id').value = productId;
 
-      orderInput.value = orderId;
-      productInput.value = productId;
-    });
+  // Fetch existing review for the order-product combination
+  fetch(`get_review.php?order_id=${orderId}&product_id=${productId}`)
+    .then(response => response.json())
+    .then(data => {
+      document.getElementById('review').value = data.review || '';
+      document.getElementById('rating').value = data.rating || '';
+    })
+    .catch(error => console.error('Error fetching review:', error));
+});
 
-    // Handle the review form submission
-    document.getElementById('reviewForm').addEventListener('submit', function(e) {
-      e.preventDefault();
+// Handle review form submission for add/update
+document.getElementById('reviewForm').addEventListener('submit', function(e) {
+  e.preventDefault();
 
-      const orderId = document.getElementById('order-id').value;
-      const productId = document.getElementById('product-id').value;
-      const review = document.getElementById('review').value;
-      const rating = document.getElementById('rating').value;
+  const orderId = document.getElementById('order-id').value;
+  const productId = document.getElementById('product-id').value;
+  const review = document.getElementById('review').value;
+  const rating = document.getElementById('rating').value;
 
-      // Send the review data to the server
-      fetch('', {
-        method: 'POST',
-        body: new URLSearchParams({
-          add_review: 'true',
-          order_id: orderId,
-          product_id: productId,
-          review: review,
-          rating: rating
-        }),
-      })
-      .then(response => response.json())
-      .then(data => {
-        if (data.success) {
-          alert('Review submitted successfully');
-          window.location.reload(); // Reload to show updated data
-        } else {
-          alert('Error: ' + data.message);
-        }
-      });
-    });
+  fetch('', {
+    method: 'POST',
+    body: new URLSearchParams({
+      action: 'add_or_update_review',
+      order_id: orderId,
+      product_id: productId,
+      review: review,
+      rating: rating
+    }),
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.success) {
+      alert('Review updated successfully');
+      window.location.reload();
+    } else {
+      alert('Error: ' + data.message);
+    }
+  });
+});
 
     function toggleDropdown() {
         const dropdown = document.getElementById('userDropdown');
