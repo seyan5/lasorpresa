@@ -68,7 +68,7 @@ foreach ($salesData as $data) {
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>La Sorpresa Admin</title>
-    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/style.css?">
     
 </head>
 <body>
@@ -221,7 +221,7 @@ foreach ($salesData as $data) {
 
             <div class="salesChart">
             <h2>Sales Overview</h2>
-            <canvas id="salesChart" width="400" height="200"></canvas>
+            <canvas id="salesChart" width="300" height="100"></canvas>
         </div>
 
             <!-- ================ Order Details List ================= -->
@@ -261,91 +261,6 @@ foreach ($salesData as $data) {
         </table>
     </div>
 </div>
-
-                <!-- ================= New Customers ================ -->
-                <div class="recentCustomers">
-                    <div class="cardHeader">
-                        <h2>Recent Customer</h2>
-                    </div>
-
-                    <table>
-                        <tr>
-                            <td width="60px">
-                                <div class="imgBx"><img src="assets/imgs/customer02.jpg" alt=""></div>
-                            </td>
-                            <td>
-                                <h4>David <br> <span>Italy</span></h4>
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td width="60px">
-                                <div class="imgBx"><img src="assets/imgs/customer01.jpg" alt=""></div>
-                            </td>
-                            <td>
-                                <h4>Amit <br> <span>India</span></h4>
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td width="60px">
-                                <div class="imgBx"><img src="assets/imgs/customer02.jpg" alt=""></div>
-                            </td>
-                            <td>
-                                <h4>David <br> <span>Italy</span></h4>
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td width="60px">
-                                <div class="imgBx"><img src="assets/imgs/customer01.jpg" alt=""></div>
-                            </td>
-                            <td>
-                                <h4>Amit <br> <span>India</span></h4>
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td width="60px">
-                                <div class="imgBx"><img src="assets/imgs/customer02.jpg" alt=""></div>
-                            </td>
-                            <td>
-                                <h4>David <br> <span>Italy</span></h4>
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td width="60px">
-                                <div class="imgBx"><img src="assets/imgs/customer01.jpg" alt=""></div>
-                            </td>
-                            <td>
-                                <h4>Amit <br> <span>India</span></h4>
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td width="60px">
-                                <div class="imgBx"><img src="assets/imgs/customer01.jpg" alt=""></div>
-                            </td>
-                            <td>
-                                <h4>David <br> <span>Italy</span></h4>
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td width="60px">
-                                <div class="imgBx"><img src="assets/imgs/customer02.jpg" alt=""></div>
-                            </td>
-                            <td>
-                                <h4>Amit <br> <span>India</span></h4>
-                            </td>
-                        </tr>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <!-- =========== Scripts =========  -->
     <script src="assets/js/main.js"></script>
 

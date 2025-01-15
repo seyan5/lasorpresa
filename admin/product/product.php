@@ -11,7 +11,9 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- ======= Styles ====== -->
-    <link rel="stylesheet" href="css/product.css">
+    <link rel="stylesheet" href="../../css/products.css?">
+    <!-- Include Select2 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <link rel="stylesheet" href="../../css/animations.css">
@@ -30,6 +32,8 @@
         .sub-table {
             animation: transitionIn-Y-bottom 0.5s;
         }
+        
+
     </style>
 </head>
 
@@ -105,15 +109,6 @@
             </ul>
         </div>
 
-        <section class="content-header">
-            <div class="content-header-left">
-                <h1>View Products</h1>
-            </div>
-            <div class="content-header-right">
-                <a href="product-add.php" class="btn btn-primary btn-sm">Add Product</a>
-            </div>
-        </section>
-
         <div class="main">
             <div class="topbar">
                 <div class="toggle">
@@ -132,7 +127,6 @@
                 </div>
             </div>
 
-            <!-- ======================= Cards ================== -->
             <tr>
                 <td colspan="4">
                 <div class="abc">
@@ -193,6 +187,11 @@
         </tbody>
     </table>
 </div>
+<section class="content-header">
+            <div class="content-header-right">
+                <a href="product-add.php" class="btn btn-primary btn-sm">Add Product</a>
+            </div>
+        </section>
         </div>
     </div>
     </div>
@@ -219,3 +218,4 @@
             </div>
         </div>
     </div>
+

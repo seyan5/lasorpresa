@@ -309,6 +309,10 @@ body {
   border-radius: 6px;
 }
 
+.recentOrders{
+  width: 150%;
+}
+
 .details table {
   width: 100%;
   border-collapse: collapse;
