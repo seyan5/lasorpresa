@@ -14,7 +14,7 @@ if (isset($_POST['cust_id']) && isset($_POST['status'])) {
 
     if ($stmt->execute()) {
         // Redirect back to the customer management page
-        header("Location: customer.php");
+        header("Location: users.php");
         exit;
     } else {
         echo "Error updating status.";
