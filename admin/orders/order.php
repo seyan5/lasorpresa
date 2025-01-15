@@ -167,63 +167,85 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_status'])) {
 
   <script>
     function updateOrderStatus(orderId) {
-      const paymentStatus = document.getElementById(`payment-status-${orderId}`).value;
-      const shippingStatus = document.getElementById(`shipping-status-${orderId}`).value;
+  const paymentStatus = document.getElementById(`payment-status-${orderId}`).value;
+  const shippingStatus = document.getElementById(`shipping-status-${orderId}`).value;
 
-      fetch('order-change-status.php', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        body: new URLSearchParams({
-          order_id: orderId,
-          payment_status: paymentStatus,
-          shipping_status: shippingStatus,
-        }),
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          if (data.success) {
-            alert(data.message);
-            location.reload();
-          } else {
-            alert('Error: ' + data.message);
-          }
-        })
-        .catch((error) => {
-          console.error('Error:', error);
-          alert('An unexpected error occurred.');
-        });
-    }
-
-    function deleteOrder(orderId) {
-      if (confirm('Are you sure you want to delete this order?')) {
-        fetch('order-delete.php', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-          },
-          body: new URLSearchParams({
-            order_id: orderId,
-          }),
-        })
-          .then((response) => response.json())
-          .then((data) => {
-            if (data.success) {
-              alert(data.message);
-              // Remove the row from the table on success
-              const row = document.querySelector(`tr[data-order-id="${orderId}"]`);
-              if (row) row.remove();
-            } else {
-              alert('Error: ' + data.message);
-            }
-          })
-          .catch((error) => {
-            console.error('Error:', error);
-            alert('An unexpected error occurred.');
-          });
+  // Update Payment Status
+  fetch('order-change-status.php', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    body: new URLSearchParams({
+      order_id: orderId,
+      status_column: 'payment_status',
+      new_status: paymentStatus,
+    }),
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      if (data.success) {
+        alert(data.message);
+      } else {
+        alert('Error: ' + data.message);
       }
-    }
+    })
+    .catch((error) => console.error('Error:', error));
+
+  // Update Shipping Status
+  fetch('order-change-status.php', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    body: new URLSearchParams({
+      order_id: orderId,
+      status_column: 'shipping_status',
+      new_status: shippingStatus,
+    }),
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      if (data.success) {
+        alert(data.message);
+        location.reload();
+      } else {
+        alert('Error: ' + data.message);
+      }
+    })
+    .catch((error) => console.error('Error:', error));
+}
+
+function deleteOrder(orderId) {
+  if (confirm("Are you sure you want to delete this order?")) {
+    fetch("order-delete.php", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      body: new URLSearchParams({
+        order_id: orderId,
+      }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.success) {
+          alert(data.message);
+          // Remove the row from the table
+          const row = document.querySelector(`tr[data-order-id="${orderId}"]`);
+          if (row) row.remove();
+        } else {
+          alert("Error: " + data.message);
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        alert("An unexpected error occurred.");
+      });
+  }
+}
+
+
 
   </script>
 </body>
