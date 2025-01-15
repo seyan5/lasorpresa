@@ -121,7 +121,7 @@ try {
                     </a>
                 </li>
                 <li>
-                    <a href="product/flower.php">
+                    <a href="product/flowers.php">
                         <span class="icon">
                             <ion-icon name="flower-outline"></ion-icon>
                         </span>
