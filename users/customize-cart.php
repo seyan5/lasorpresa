@@ -7,57 +7,60 @@ if (!isset($_SESSION['customization'])) {
 }
 
 $customization = $_SESSION['customization'];
+
+// Group items by container type, color, and remarks
+$grouped_customization = [];
+$total_price = 0; // Initialize total price
+foreach ($customization as $item) {
+    $key = $item['container_type'] . '-' . $item['container_color'] . '-' . $item['remarks'];
+    if (!isset($grouped_customization[$key])) {
+        $grouped_customization[$key] = [
+            'container_type' => $item['container_type'],
+            'container_color' => $item['container_color'],
+            'remarks' => $item['remarks'] ?? 'No remarks provided',
+            'flowers' => []
+        ];
+    }
+    $grouped_customization[$key]['flowers'][] = $item;
+
+    // Calculate the total price for this item
+    $stmt = $pdo->prepare("SELECT price FROM flowers WHERE id = :flower_id");
+    $stmt->execute(['flower_id' => $item['flower_type']]);
+    $flower = $stmt->fetch(PDO::FETCH_ASSOC);
+    $flower_price = $flower['price'] ?? 0;
+
+    $stmt = $pdo->prepare("SELECT price FROM container WHERE container_id = :container_id");
+    $stmt->execute(['container_id' => $item['container_type']]);
+    $container = $stmt->fetch(PDO::FETCH_ASSOC);
+    $container_price = $container['price'] ?? 0;
+
+    $total_price += ($flower_price * $item['num_flowers']) + $container_price;
+}
+
+// Save total price in session for use in checkout
+$_SESSION['total_price'] = $total_price;
 ?>
 
 <h3>Your Floral Arrangement Customization</h3>
 
 <div class="customization-summary">
-    <?php
-    $total_price = 0; // Initialize total price for display
-    foreach ($customization as $index => $item):
-        // Fetch flower details using flower_type ID
-        $stmt = $pdo->prepare("SELECT name, price FROM flowers WHERE id = :flower_id");
-        $stmt->execute(['flower_id' => $item['flower_type']]);
-        $flower = $stmt->fetch(PDO::FETCH_ASSOC);
-        if ($flower) {
-            $flower_name = $flower['name'];
-            $flower_price = $flower['price'];
-        } else {
-            $flower_name = "Unknown Flower"; // Default value
-            $flower_price = 0; // Default price
-        }
-
-        // Fetch container details using container_type ID
+    <?php foreach ($grouped_customization as $key => $group): ?>
+        <!-- Fetch container details -->
+        <?php
         $stmt = $pdo->prepare("SELECT container_name, price FROM container WHERE container_id = :container_id");
-        $stmt->execute(['container_id' => $item['container_type']]);
+        $stmt->execute(['container_id' => $group['container_type']]);
         $container = $stmt->fetch(PDO::FETCH_ASSOC);
-        if ($container) {
-            $container_name = $container['container_name'];
-            $container_price = $container['price'];
-        } else {
-            $container_name = "Unknown Container"; // Default value
-            $container_price = 0; // Default price
-        }
+        $container_name = $container['container_name'] ?? "Unknown Container";
+        $container_price = $container['price'] ?? 0;
 
-        // Fetch color details using container_color ID
+        // Fetch color details
         $stmt = $pdo->prepare("SELECT color_name FROM color WHERE color_id = :color_id");
-        $stmt->execute(['color_id' => $item['container_color']]);
+        $stmt->execute(['color_id' => $group['container_color']]);
         $color = $stmt->fetch(PDO::FETCH_ASSOC);
-        if ($color) {
-            $color_name = $color['color_name'];
-            $color_price = 0; // No extra cost for color
-        } else {
-            $color_name = "Unknown Color"; // Default value
-            $color_price = 0; // No extra cost
-        }
-        
-        $remarks = isset($item['remarks']) ? htmlspecialchars($item['remarks']) : 'No remarks provided';
+        $color_name = $color['color_name'] ?? "Unknown Color";
 
-        // Calculate total price for this flower set
-        $item_total_price = ($flower_price * $item['num_flowers']) + $container_price + $color_price;
-        $total_price += $item_total_price;
-
-        // Preview images array
+        // Determine the preview image based on the first flower in the group
+        $first_flower = $group['flowers'][0];
         $preview_images = [
             2 => [ // Flower type 2 (e.g., Rose)
                 1 => [
@@ -92,53 +95,55 @@ $customization = $_SESSION['customization'];
                     2 => "../images/previews/tulip_red_wrapper3.jpg",
                     4 => "../images/previews/tulip_red_vase3.jpg",
                 ]
-            ]
+             ],
+            
         ];
-
-        // Determine the preview image based on customization
-        $preview_image = "../images/previews/default.jpg"; // Default preview
-        if (isset($preview_images[$item['flower_type']][$item['num_flowers']][$item['container_type']])) {
-            $preview_image = $preview_images[$item['flower_type']][$item['num_flowers']][$item['container_type']];
+        $preview_image = "../images/previews/default.jpg";
+        if (isset($preview_images[$first_flower['flower_type']][$first_flower['num_flowers']][$group['container_type']])) {
+            $preview_image = $preview_images[$first_flower['flower_type']][$first_flower['num_flowers']][$group['container_type']];
         }
         ?>
+
         <div class="customization-item">
-            <h4>Flower Set <?php echo $index + 1; ?>:</h4>
-            <img src="<?php echo htmlspecialchars($preview_image); ?>" alt="Customization Preview" class="preview-img"
-                style="width: 500px; height: auto;">
-            <p><strong>Flower Type:</strong> <?php echo htmlspecialchars($flower_name); ?>
-                ($<?php echo number_format($flower_price, 2); ?> per flower)</p>
-            <p><strong>Number of Flowers:</strong> <?php echo htmlspecialchars($item['num_flowers']); ?></p>
-            <p><strong>Container Type:</strong> <?php echo htmlspecialchars($container_name); ?>
-                ($<?php echo number_format($container_price, 2); ?>)</p>
-            <p><strong>Container Color:</strong> <?php echo htmlspecialchars($color_name); ?> (No extra cost)</p>
-            <p><strong>Remarks:</strong> <?php echo $remarks; ?></p>
-            <p><strong>Item Total Price:</strong> $<?php echo number_format($item_total_price, 2); ?></p>
+            <div style="display: flex; align-items: center; gap: 20px;">
+                <img src="<?php echo htmlspecialchars($preview_image); ?>" alt="Customization Preview" style="width: 300px; height: auto;">
+                <div>
+                    <p><strong>Container Type:</strong> <?php echo htmlspecialchars($container_name); ?> ($<?php echo number_format($container_price, 2); ?>)</p>
+                    <p><strong>Container Color:</strong> <?php echo htmlspecialchars($color_name); ?></p>
+                    <p><strong>Remarks:</strong> <?php echo htmlspecialchars($group['remarks']); ?></p>
+                    <h5>Flowers:</h5>
+                    <ul>
+                        <?php foreach ($group['flowers'] as $flower_item):
+                            $stmt = $pdo->prepare("SELECT name, price FROM flowers WHERE id = :flower_id");
+                            $stmt->execute(['flower_id' => $flower_item['flower_type']]);
+                            $flower = $stmt->fetch(PDO::FETCH_ASSOC);
+                            $flower_name = $flower['name'] ?? "Unknown Flower";
+                            $flower_price = $flower['price'] ?? 0;
+
+                            $flower_total_price = $flower_price * $flower_item['num_flowers'];
+                            ?>
+                            <li>
+                                <?php echo htmlspecialchars($flower_name); ?> 
+                                ($<?php echo number_format($flower_price, 2); ?> per flower) - 
+                                Quantity: <?php echo htmlspecialchars($flower_item['num_flowers']); ?> 
+                                (<strong>Total:</strong> $<?php echo number_format($flower_total_price, 2); ?>)
+                            </li>
+                        <?php endforeach; ?>
+                    </ul>
+                </div>
+            </div>
         </div>
         <hr>
     <?php endforeach; ?>
 </div>
 
-<!-- Total Price -->
-<p><strong>Total Price:</strong> $<?php echo number_format($total_price, 2); ?></p>
+<p><strong>Total Price:</strong> ₱<?php echo number_format($total_price, 2); ?></p>
 
 <!-- Checkout Button -->
-<button class="customize-checkout" onclick="checkout()">Checkout &gt;</button>
+<button class="customize-checkout btn btn-primary" onclick="proceedToCheckout()">Checkout &gt;</button>
 
 <script>
-    // Check if the user is logged in
-    const isLoggedIn = <?php echo isset($_SESSION['customer']['cust_id']) ? 'true' : 'false'; ?>;
-
-    // Handle checkout action
-    function checkout() {
-        console.log("Checkout function triggered");
-        if (!isLoggedIn) {
-            console.log("User not logged in");
-            if (confirm("You need to log in to proceed to checkout. Do you want to log in now?")) {
-                window.location.href = "login.php"; // Redirect to login page
-            }
-        } else {
-            console.log("User logged in");
-            window.location.href = "customize-checkout.php"; // Redirect to the checkout page
-        }
+    function proceedToCheckout() {
+        window.location.href = "customize-checkout.php";
     }
 </script>
