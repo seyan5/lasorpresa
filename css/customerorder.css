@@ -20,21 +20,6 @@ html{
     overflow-x: hidden;
 }
 
-
-header{
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    background: #fff;
-    padding: 2rem 9%;
-    display: flex;
-    align-items: center; 
-    justify-content: space-between; 
-    z-index: 1000;
-    box-shadow: 0 .5rem 1rem rgba(0, 0, 0, .1);    
-}
-
 header{
     position: fixed;
     top: 0;
@@ -75,12 +60,17 @@ header .navbar a:hover{
     color: var(--pink);
 }
 
-header .icons a{
+header .icons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 6rem; /* Ensures no spacing between icons */
+ }
+ 
+ header .icons a {
     font-size: 2.5rem;
     color: #333;
-    margin-right: 5rem;
-}
-
+ }
 header #toggler{
     display: none;
 }
@@ -390,15 +380,25 @@ h1 {
     margin-bottom: 20px;
 }
 
-/* Table Styles */
 table {
-    width: 150%;
+    width: 100%; /* Makes the table fill the container's width */
     border-collapse: collapse;
     margin-top: 20px;
-    border-radius: 12px;  /* Added border-radius to the table */
-    overflow: hidden;  /* Prevents border-radius clipping */
-    font-size: 16px;  /* Fixed font size for the table */
+    border-radius: 12px; /* Smooth table corners */
+    overflow: hidden; /* Prevents border-radius clipping */
+    font-size: 16px; /* Sets consistent font size for the table */
 }
+
+.table-container {
+    max-height: 400px; /* Set a height for the scrollable area */
+    width: 180%; /* Use a percentage to make the container responsive */
+    max-width: 2000px; /* Maximum width to limit container expansion */
+    overflow-y: auto; /* Enable vertical scrolling only */
+    border: 1px solid #ddd; /* Optional: Add a border around the container */
+    border-radius: 8px; /* Match table’s border-radius for consistency */
+}
+
+
 
 strong {
     font-family: Verdana, Geneva, Tahoma, sans-serif;
