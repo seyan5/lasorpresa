@@ -73,7 +73,7 @@ try {
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>La Sorpresa Admin</title>
-    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/style.css?">
     
 </head>
 <body>
@@ -233,7 +233,10 @@ try {
                     <ion-icon name="cash-outline"></ion-icon>
                 </div>
             </div>
-
+            <div class="salesChart">
+            <h2>Sales Overview</h2>
+            <canvas id="salesChart" width="300" height="100"></canvas>
+        </div>
             <div class="card">
                 <div>
                     <div class="numbers"><?= number_format($shippingPending) ?></div>
@@ -287,7 +290,6 @@ try {
         </table>
     <?php } ?>
 </div>
-
                 <!-- ================= New Customers ================ -->
                 <div class="recentCustomers">
                     <div class="cardHeader">
@@ -314,10 +316,6 @@ try {
             </div>
         </div>
     </div>
-
-    
-
-
 
     <!-- =========== Scripts =========  -->
     <script src="assets/js/main.js"></script>

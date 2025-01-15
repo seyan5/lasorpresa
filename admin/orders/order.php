@@ -51,14 +51,41 @@ $totalPages = ceil($totalOrders / $perPage);
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Order Dashboard</title>
+  <link rel="stylesheet" href="order.css?v.1.0">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
   <style>
-    .form-select {
-      width: auto;
+    .action-btn {
+      margin-top: 10px;
+    }
+
+    .completed {
+      background-color: #d4edda;
+    }
+
+    .pending {
+      background-color: #ffeeba;
     }
   </style>
 </head>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Order Dashboard</title>
+  <link rel="stylesheet" href="order.css">
+</head>
+  <div class="header">
+            <a href="../dashboard.php" class="back-link">
+                <span class="back-arrow">&lt;</span> Back to Admin Dashboard
+            </a>
+  </div>
+<body>
+  
+<h1>Order Dashboard</h1>
+  <div class="container">  
+    <table>
 <body>
   <div class="container my-4">
     <h1 class="text-center">Order Dashboard</h1>
@@ -80,24 +107,61 @@ $totalPages = ceil($totalOrders / $perPage);
         </tr>
       </thead>
       <tbody>
+        <?php
+        // Query to join the relevant tables
+        $stmt = $pdo->query("SELECT 
+                            c.cust_id, 
+                            c.cust_name, 
+                            c.cust_email, 
+                            p.name AS product_name, 
+                            oi.quantity, 
+                            p.current_price AS unit_price, 
+                            pay.payment_method, 
+                            pay.payment_id, 
+                            pay.created_at AS payment_date, 
+                            pay.amount_paid, 
+                            pay.shipping_status, 
+                            pay.payment_status, 
+                            o.order_id
+                        FROM 
+                            customer c
+                        JOIN orders o ON c.cust_id = o.customer_id
+                        JOIN order_items oi ON o.order_id = oi.order_id
+                        JOIN product p ON oi.product_id = p.p_id
+                        JOIN payment pay ON o.order_id = pay.order_id");
+
+        // Fetch all orders
+        $orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        foreach ($orders as $index => $order) {
+          ?>
         <?php foreach ($orders as $index => $order): ?>
           <tr>
             <td><?= $index + 1 ?></td>
             <td>
-              <strong>Id:</strong> <?= $order['cust_id'] ?><br>
-              <strong>Name:</strong> <?= htmlspecialchars($order['cust_name']) ?><br>
-              <strong>Email:</strong> <?= htmlspecialchars($order['cust_email']) ?>
+              <div class="customer-details">
+                <strong>Id:</strong> <?= $order['cust_id'] ?><br>
+                <strong>Name:</strong> <?= htmlspecialchars($order['cust_name']) ?><br>
+                <strong>Email:</strong> <?= htmlspecialchars($order['cust_email']) ?>
+              </div>
             </td>
             <td>
+              <div class="product-details">
+                <strong>Product:</strong> <?= htmlspecialchars($order['product_name']) ?><br>
+                <strong>Quantity:</strong> <?= $order['quantity'] ?><br>
+                <strong>Unit Price:</strong> $<?= number_format($order['unit_price'], 2) ?>
+              </div>
               <strong>Products:</strong> <?= htmlspecialchars($order['product_names']) ?><br>
               <strong>Quantities:</strong> <?= htmlspecialchars($order['quantities']) ?><br>
               <strong>Unit Prices:</strong> <?= htmlspecialchars($order['unit_prices']) ?><br>
               <strong>Total Price:</strong> $<?= number_format(array_sum(array_map(function($quantity, $price) { return $quantity * $price; }, explode(',', $order['quantities']), explode(',', $order['unit_prices']))), 2) ?>
             </td>
             <td>
-              <strong>Payment Method:</strong> <?= $order['payment_method'] ?><br>
-              <strong>Payment Id:</strong> <?= $order['payment_id'] ?><br>
-              <strong>Date:</strong> <?= $order['payment_date'] ?>
+              <div class="payment-details">
+                <strong>Payment Method:</strong> <?= $order['payment_method'] ?><br>
+                <strong>Payment Id:</strong> <?= $order['payment_id'] ?><br>
+                <strong>Date:</strong> <?= $order['payment_date'] ?>
+              </div>
             </td>
             <td>$<?= number_format($order['amount_paid'], 2) ?></td>
             <td>
@@ -111,13 +175,12 @@ $totalPages = ceil($totalOrders / $perPage);
               <select class="form-select" id="shipping-status-<?= $order['order_id'] ?>">
                 <option <?= $order['shipping_status'] === 'pending' ? 'selected' : '' ?> value="pending">Pending</option>
                 <option <?= $order['shipping_status'] === 'shipped' ? 'selected' : '' ?> value="shipped">Shipped</option>
-
+                <option <?= $order['shipping_status'] === 'delivered' ? 'selected' : '' ?> value="delivered">Delivered</option>
                 <option <?= $order['shipping_status'] === 'delivered' ? 'selected' : '' ?> value="delivered">Delivered
                 <option <?= $order['shipping_status'] === 'readyforpickup' ? 'selected' : '' ?> value="readyforpickup">
                   Ready for Pickup
                 </option>
                 </option>
-
               </select>
             </td>
             <td>
