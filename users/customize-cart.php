@@ -59,49 +59,43 @@ $_SESSION['total_price'] = $total_price;
         $color = $stmt->fetch(PDO::FETCH_ASSOC);
         $color_name = $color['color_name'] ?? "Unknown Color";
 
-        // Determine the preview image based on the first flower in the group
-        $first_flower = $group['flowers'][0];
-        $preview_images = [
-            2 => [ // Flower type 2 (e.g., Rose)
-                1 => [
-                    1 => "../images/previews/rose_red_basket.jpg",
-                    2 => "../images/previews/rose_red_wrapper.jpg",
-                    4 => "../images/previews/rose_red_vase.jpg",
-                ],
-                2 => [
-                    1 => "../images/previews/rose_red_basket2.jpg",
-                    2 => "../images/previews/rose_red_wrapper2.jpg",
-                    4 => "../images/previews/rose_red_vase2.jpg",
-                ],
-                3 => [
-                    1 => "../images/previews/rose_red_basket3.jpg",
-                    2 => "../images/previews/rose_red_wrapper3.jpg",
-                    4 => "../images/previews/rose_red_vase3.jpg",
-                ]
-            ],
-            3 => [ // Flower type 3 (e.g., Tulip)
-                1 => [
-                    1 => "../images/previews/tulip_red_basket.jpg",
-                    2 => "../images/previews/tulip_red_wrapper.jpg",
-                    4 => "../images/previews/tulip_red_vase.jpg",
-                ],
-                2 => [
-                    1 => "../images/previews/tulip_red_basket2.jpg",
-                    2 => "../images/previews/tulip_red_wrapper2.jpg",
-                    4 => "../images/previews/tulip_red_vase2.jpg",
-                ],
-                3 => [
-                    1 => "../images/previews/tulip_red_basket3.jpg",
-                    2 => "../images/previews/tulip_red_wrapper3.jpg",
-                    4 => "../images/previews/tulip_red_vase3.jpg",
-                ]
-             ],
-            
-        ];
-        $preview_image = "../images/previews/default.jpg";
-        if (isset($preview_images[$first_flower['flower_type']][$first_flower['num_flowers']][$group['container_type']])) {
-            $preview_image = $preview_images[$first_flower['flower_type']][$first_flower['num_flowers']][$group['container_type']];
-        }
+       // Determine the preview image based on flower types and their quantities
+$flower_counts = [2 => 0, 3 => 0, 4 => 0]; // Rose (2), Tulip (3), Lilac (4) counts
+foreach ($group['flowers'] as $flower_item) {
+    $flower_counts[$flower_item['flower_type']] += $flower_item['num_flowers'];
+}
+
+// Initialize preview_key as default
+$preview_key = "default"; // Start with a default key
+
+// Check which flower types are selected and update preview_key accordingly
+if ($flower_counts[2] > 0) { // Rose
+    $preview_key = "Rose" . $flower_counts[2]; // Example: Rose1, Rose2, etc.
+}
+if ($flower_counts[3] > 0) { // Tulip
+    $preview_key .= "_Tulip" . $flower_counts[3]; // Example: _Tulip1, _Tulip2, etc.
+}
+if ($flower_counts[4] > 0) { // Lilac
+    $preview_key .= "_Lilac" . $flower_counts[4]; // Example: _Lilac1, _Lilac2, etc.
+}
+
+// Debugging: echo the preview_key and path
+echo "Preview key: " . htmlspecialchars($preview_key) . "<br>";
+
+// Check if a preview image for this combination exists
+$preview_image_path = "../images/previews/" . $preview_key . ".jpg";
+
+// Debugging: echo the generated path
+echo "Preview image path: " . htmlspecialchars($preview_image_path) . "<br>";
+echo "File exists check: " . (file_exists($preview_image_path) ? "Yes" : "No") . "<br>";
+
+// If the preview image exists, set it, otherwise use the default
+if (file_exists($preview_image_path)) {
+    $preview_image = $preview_image_path;
+} else {
+    $preview_image = "../images/previews/default.jpg"; // Fallback to default
+}
+
         ?>
 
         <div class="customization-item">
@@ -136,6 +130,7 @@ $_SESSION['total_price'] = $total_price;
         <hr>
     <?php endforeach; ?>
 </div>
+
 
 <p><strong>Total Price:</strong> ₱<?php echo number_format($total_price, 2); ?></p>
 
