@@ -596,7 +596,6 @@ if ($result->num_rows > 0) {
                                             <input type="text" name="cust_zip" class="input-text" placeholder="ZIP" value="' . $cust_zip . '" required><br>
                                         </td>
                                     </tr>                                    
-                                    <tr>
 
                                     <tr>
                                         <td class="label-td" colspan="2">
