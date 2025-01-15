@@ -62,6 +62,10 @@ $totalPages = ceil($totalOrders / $perPage);
 <body>
   <div class="container my-4">
     <h1 class="text-center">Order Dashboard</h1>
+     <!-- Back Button -->
+     <div class="d-flex justify-content-start mb-3">
+            <a href="../dashboard.php" class="btn btn-secondary">Back to Dashboard</a>
+        </div>
     <table class="table table-bordered table-hover">
       <thead class="table-dark">
         <tr>

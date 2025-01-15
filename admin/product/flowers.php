@@ -19,6 +19,8 @@ $i = 1;  // Initialize $i for product numbering
     <link rel="stylesheet" href="css/product.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
     <link rel="stylesheet" href="../../css/animations.css">  
     <link rel="stylesheet" href="../../css/admin1.css">  
     <link rel="stylesheet" href="../../css/admin2.css">
@@ -28,7 +30,7 @@ $i = 1;  // Initialize $i for product numbering
 <body>
     <!-- =============== Navigation ================ -->
     <div class="container">
-        <div class="navigation">
+    <div class="navigation">
             <ul>
                 <li>
                     <a href="#">
@@ -47,7 +49,7 @@ $i = 1;  // Initialize $i for product numbering
                     </a>
                 </li>
                 <li>
-                    <a href="users.php">
+                    <a href="../users.php">
                         <span class="icon">
                             <ion-icon name="people-outline"></ion-icon>
                         </span>
@@ -55,15 +57,15 @@ $i = 1;  // Initialize $i for product numbering
                     </a>
                 </li>
                 <li>
-                    <a href="#">
+                    <a href="../sales-report.php">
                         <span class="icon">
-                            <ion-icon name="chatbubble-outline"></ion-icon>
+                            <ion-icon name="cash-outline"></ion-icon>
                         </span>
-                        <span class="title">Messages</span>
+                        <span class="title">Sales</span>
                     </a>
                 </li>
                 <li>
-                    <a href="product/product-add.php">
+                    <a href="product.php">
                         <span class="icon">
                             <ion-icon name="cube-outline"></ion-icon>
                         </span>
@@ -71,7 +73,15 @@ $i = 1;  // Initialize $i for product numbering
                     </a>
                 </li>
                 <li>
-                    <a href="#">
+                    <a href="flowers.php">
+                        <span class="icon">
+                            <ion-icon name="flower-outline"></ion-icon>
+                        </span>
+                        <span class="title">Manage Flowers</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="../orders/order.php">
                         <span class="icon">
                             <ion-icon name="cart-outline"></ion-icon>
                         </span>
@@ -79,15 +89,15 @@ $i = 1;  // Initialize $i for product numbering
                     </a>
                 </li>
                 <li>
-                    <a href="settings.php">
+                    <a href="../settings.php">
                         <span class="icon">
-                            <ion-icon name="settings-outline"></ion-icon>
+                            <ion-icon name="albums-outline"></ion-icon>
                         </span>
-                        <span class="title">Settings</span>
+                        <span class="title">Categories</span>
                     </a>
                 </li>
                 <li>
-                    <a href="logout.php">
+                    <a href="../logout.php">
                         <span class="icon">
                             <ion-icon name="log-out-outline"></ion-icon>
                         </span>
@@ -134,7 +144,7 @@ $i = 1;  // Initialize $i for product numbering
                             <th class="table-headin">Photo</th>
                             <th class="table-headin">Product Name</th>
                             <th class="table-headin">(C) Price</th>
-                            <th class="table-headin">Quantity</th>
+                            <!-- <th class="table-headin">Quantity</th> -->
                             <th class="table-headin">Actions</th>
                         </tr>
                     </thead>
@@ -147,7 +157,7 @@ $i = 1;  // Initialize $i for product numbering
                                 </td>
                                 <td><?php echo htmlspecialchars($flower['name']); ?></td>
                                 <td>$<?php echo number_format($flower['price'], 2); ?></td>
-                                <td><?php echo htmlspecialchars($flower['quantity']); ?></td>
+                                <!-- <td><?php echo htmlspecialchars($flower['quantity']); ?></td> -->
                                 <td>										
                                     <button type="button" class="btn btn-primary btn-xs" data-toggle="modal" data-target="#editFlowerModal" 
                                         data-id="<?php echo $flower['id']; ?>" 

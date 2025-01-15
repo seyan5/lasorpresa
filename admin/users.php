@@ -113,6 +113,7 @@ if ($result->num_rows > 0) {
 <body>
     <!-- =============== Navigation ================ -->
     <div class="container">
+    <div class="container">
         <div class="navigation">
             <ul>
                 <li>
@@ -123,7 +124,6 @@ if ($result->num_rows > 0) {
                         <span class="title"></span>
                     </a>
                 </li>
-
                 <li>
                     <a href="dashboard.php">
                         <span class="icon">
@@ -132,7 +132,6 @@ if ($result->num_rows > 0) {
                         <span class="title">Dashboard</span>
                     </a>
                 </li>
-
                 <li>
                     <a href="users.php">
                         <span class="icon">
@@ -141,7 +140,6 @@ if ($result->num_rows > 0) {
                         <span class="title">Users</span>
                     </a>
                 </li>
-
                 <li>
                     <a href="sales-report.php">
                         <span class="icon">
@@ -150,7 +148,6 @@ if ($result->num_rows > 0) {
                         <span class="title">Sales</span>
                     </a>
                 </li>
-
                 <li>
                     <a href="product/product.php">
                         <span class="icon">
@@ -159,25 +156,30 @@ if ($result->num_rows > 0) {
                         <span class="title">Manage Products</span>
                     </a>
                 </li>
-
                 <li>
-                    <a href="#">
+                    <a href="product/flowers.php">
+                        <span class="icon">
+                            <ion-icon name="flower-outline"></ion-icon>
+                        </span>
+                        <span class="title">Manage Flowers</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="orders/order.php">
                         <span class="icon">
                             <ion-icon name="cart-outline"></ion-icon>
                         </span>
                         <span class="title">Manage Orders</span>
                     </a>
                 </li>
-
                 <li>
                     <a href="settings.php">
                         <span class="icon">
-                            <ion-icon name="settings-outline"></ion-icon>
+                            <ion-icon name="albums-outline"></ion-icon>
                         </span>
-                        <span class="title">Settings</span>
+                        <span class="title">Categories</span>
                     </a>
                 </li>
-
                 <li>
                     <a href="logout.php">
                         <span class="icon">
