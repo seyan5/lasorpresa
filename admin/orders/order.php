@@ -107,7 +107,13 @@ $totalPages = ceil($totalOrders / $perPage);
               <select class="form-select" id="shipping-status-<?= $order['order_id'] ?>">
                 <option <?= $order['shipping_status'] === 'pending' ? 'selected' : '' ?> value="pending">Pending</option>
                 <option <?= $order['shipping_status'] === 'shipped' ? 'selected' : '' ?> value="shipped">Shipped</option>
-                <option <?= $order['shipping_status'] === 'delivered' ? 'selected' : '' ?> value="delivered">Delivered</option>
+
+                <option <?= $order['shipping_status'] === 'delivered' ? 'selected' : '' ?> value="delivered">Delivered
+                <option <?= $order['shipping_status'] === 'readyforpickup' ? 'selected' : '' ?> value="readyforpickup">
+                  Ready for Pickup
+                </option>
+                </option>
+
               </select>
             </td>
             <td>
