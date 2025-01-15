@@ -4,7 +4,7 @@ require_once('conn.php'); // Include DB connection or additional setup
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Validate required POST data
-    if (!isset($_POST['container_type'], $_POST['container_color'], $_POST['flower_type'], $_POST['num_flowers'])) {
+    if (!isset($_POST['container_type'], $_POST['container_color'], $_POST['flower_type'], $_POST['num_flowers'], $_POST['remarks'])) {
         echo "Incomplete customization data. Please go back and try again.";
         exit;
     }
@@ -14,6 +14,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $container_color = htmlspecialchars($_POST['container_color']);
     $flower_types = $_POST['flower_type'];
     $num_flowers = $_POST['num_flowers'];
+    $remarks = htmlspecialchars($_POST['remarks']);
 
     // Ensure inputs are arrays and match in count
     if (!is_array($flower_types) || !is_array($num_flowers) || count($flower_types) !== count($num_flowers)) {
@@ -28,7 +29,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             'flower_type' => htmlspecialchars($flower_type),
             'num_flowers' => (int) $num_flowers[$index],
             'container_type' => $container_type,
-            'container_color' => $container_color
+            'container_color' => $container_color,
+            'remarks' => $remarks // Include remarks in customization details
         ];
     }
 
