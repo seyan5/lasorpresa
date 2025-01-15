@@ -44,6 +44,10 @@ $orders = $query->fetchAll(PDO::FETCH_ASSOC);
 <body>
     <div class="container mt-5">
         <h3 class="text-center">Order Dashboard</h3>
+        <!-- Back Button -->
+        <div class="d-flex justify-content-start mb-3">
+            <a href="../dashboard.php" class="btn btn-secondary">Back to Dashboard</a>
+        </div>
         <table class="table table-bordered table-striped">
             <thead>
                 <tr>
