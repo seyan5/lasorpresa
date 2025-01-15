@@ -171,6 +171,11 @@ $productTypes = $productTypesStmt->fetchAll(PDO::FETCH_ASSOC);
 <body>
     <div class="container mt-5">
         <h1 class="text-center">Sales Report</h1>
+
+         <!-- Back Button -->
+         <div class="d-flex justify-content-start mb-3">
+            <a href="dashboard.php" class="btn btn-secondary">Back to Dashboard</a>
+        </div>
         
         <div class="d-flex justify-content-end mb-3">
             <a href="sales-report.php?filter=daily" class="btn btn-primary mx-1">Daily</a>

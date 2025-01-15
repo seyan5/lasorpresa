@@ -121,6 +121,14 @@ try {
                     </a>
                 </li>
                 <li>
+                    <a href="product/flowers.php">
+                        <span class="icon">
+                            <ion-icon name="flower-outline"></ion-icon>
+                        </span>
+                        <span class="title">Manage Flowers</span>
+                    </a>
+                </li>
+                <li>
                     <a href="orders/order.php">
                         <span class="icon">
                             <ion-icon name="cart-outline"></ion-icon>
