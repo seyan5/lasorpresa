@@ -29,6 +29,12 @@ $totalSalesAmount = $totalSalesAmountQuery->fetch(PDO::FETCH_ASSOC)['total_sales
 // Provide a default value of 0 if the total sales amount is null
 $totalSalesAmount = $totalSalesAmount ? $totalSalesAmount : 0;
 
+$paymentPendingQuery = $pdo->query("SELECT COUNT(order_id) AS payment_pending FROM payment WHERE payment_status = 'pending'");
+$paymentPending = $paymentPendingQuery->fetch(PDO::FETCH_ASSOC)['payment_pending'];
+
+$shippingPendingQuery = $pdo->query("SELECT COUNT(order_id) AS shipping_pending FROM payment WHERE shipping_status = 'pending'");
+$shippingPending = $shippingPendingQuery->fetch(PDO::FETCH_ASSOC)['shipping_pending'];
+
 try {
     // Fetch recent orders from the payment table
     $recentOrdersQuery = $pdo->query("
@@ -53,18 +59,6 @@ try {
     echo "Error fetching recent orders: " . $e->getMessage();
 }
 
-
-try {
-    $recentReviewsQuery = $pdo->query("SELECT r.review, r.created_at, name AS product_name, c.cust_name 
-                                      FROM reviews r
-                                      JOIN product p ON r.product_id = p.p_id
-                                      JOIN customer c ON r.customer_id = c.cust_id
-                                      ORDER BY r.created_at DESC
-                                      LIMIT 8");
-    $recentReviews = $recentReviewsQuery->fetchAll(PDO::FETCH_ASSOC);
-} catch (Exception $e) {
-    echo "Error fetching recent reviews: " . $e->getMessage();
-}
 
 
 
@@ -197,50 +191,72 @@ try {
                 </div>
 
                 <div class="card">
-                <a href="product/product.php" style="text-decoration: none; color: inherit;">
-                    <div>
-                        <div class="numbers"><?= number_format($listedProducts) ?></div>
-                        <div class="cardName">Listed Products</div>
-                    </div>
+                    <a href="product/product.php" style="text-decoration: none; color: inherit;">
+                        <div>
+                            <div class="numbers"><?= number_format($listedProducts) ?></div>
+                            <div class="cardName">Listed Products</div>
+                        </div>
 
-                    <div class="iconBx">
-                        <ion-icon name="cube-outline"></ion-icon>
-                    </div>
-</a>
+                        <div class="iconBx">
+                            <ion-icon name="cube-outline"></ion-icon>
+                        </div>
+                    </a>
                 </div>
 
                 <div class="card">
-    <a href="sales-report.php" style="text-decoration: none; color: inherit;">
-        <div>
-            <div class="numbers">P<?= number_format($totalSalesAmount, 2) ?></div>
-            <div class="cardName">Total Sales</div>
-        </div>
-        <div class="iconBx">
-            <ion-icon name="cash-outline"></ion-icon>
-        </div>
-    </a>
+                    <a href="sales-report.php" style="text-decoration: none; color: inherit;">
+                        <div>
+                            <div class="numbers">P<?= number_format($totalSalesAmount, 2) ?></div>
+                            <div class="cardName">Total Sales</div>
+                        </div>
+                        <div class="iconBx">
+                            <ion-icon name="cash-outline"></ion-icon>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="card">
+                <div>
+                    <div class="numbers"><?= number_format($paymentPending) ?></div>
+                    <div class="cardName">Payment Pending</div>
+                </div>
+
+                <div class="iconBx">
+                    <ion-icon name="cash-outline"></ion-icon>
+                </div>
+            </div>
+
+            <div class="card">
+                <div>
+                    <div class="numbers"><?= number_format($shippingPending) ?></div>
+                    <div class="cardName">Shipping Pending</div>
+                </div>
+
+                <div class="iconBx">
+                    <ion-icon name="cart-outline"></ion-icon>
+                </div>
+            </div>
 </div>
-   
 
            
 
             <!-- ================ Order Details List ================= -->
             <div class="recentOrders">
-    <div class="cardHeader">
+    <div class="cardHeader d-flex justify-content-between align-items-center">
         <h2>Recent Orders</h2>
-        <a href="orders/order.php" class="btn">View All</a>
+        <a href="orders/order.php" class="btn btn-primary">View All</a>
     </div>
 
     <?php if (empty($recentOrders)) { ?>
-        <p>No orders found.</p>
+        <p class="text-center">No orders found.</p>
     <?php } else { ?>
-        <table>
-            <thead>
+        <table class="table table-striped table-bordered">
+            <thead class="thead-dark">
                 <tr>
-                    <td>Name</td>
-                    <td>Price</td>
-                    <td>Payment</td>
-                    <td>Status</td>
+                    <th>Name</th>
+                    <th>Price</th>
+                    <th>Payment Status</th>
+                    <th>Shipping Status</th>
                 </tr>
             </thead>
             <tbody>
@@ -291,36 +307,9 @@ try {
         </div>
     </div>
 
-    <div class="recentReviews">
-                <div class="cardHeader">
-                    <h2>Recent Reviews</h2>
-                </div>
+    
 
-                <?php if (empty($recentReviews)) { ?>
-                    <p>No reviews found.</p>
-                <?php } else { ?>
-                    <table>
-                        <thead>
-                            <tr>
-                                <td>Product</td>
-                                <td>Review</td>
-                                <td>Customer</td>
-                                <td>Date</td>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php foreach ($recentReviews as $review) { ?>
-                                <tr>
-                                    <td><?= htmlspecialchars($review['product_name']) ?></td>
-                                    <td><?= htmlspecialchars($review['review']) ?></td>
-                                    <td><?= htmlspecialchars($review['cust_name']) ?></td>
-                                    <td><?= date('M d, Y', strtotime($review['created_at'])) ?></td>
-                                </tr>
-                            <?php } ?>
-                        </tbody>
-                    </table>
-                <?php } ?>
-            </div>
+
 
     <!-- =========== Scripts =========  -->
     <script src="assets/js/main.js"></script>
@@ -330,4 +319,62 @@ try {
     <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
 
 </body>
+
+<style>
+    .recentOrders {
+        margin-top: 20px;
+    }
+
+    .cardHeader {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+    }
+
+    .btn {
+        font-size: 14px;
+        padding: 8px 16px;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    table th, table td {
+        padding: 10px;
+        text-align: left;
+    }
+
+    table th {
+        background-color: #f8f9fa;
+    }
+
+    .status {
+        padding: 5px 10px;
+        border-radius: 3px;
+        font-weight: bold;
+    }
+
+    .status.delivered {
+        background-color: #28a745;
+        color: white;
+    }
+
+    .status.pending {
+        background-color: #ffc107;
+        color: white;
+    }
+
+    .status.inProgress {
+        background-color: #007bff;
+        color: white;
+    }
+
+    .status.return {
+        background-color: #dc3545;
+        color: white;
+    }
+</style>
 </html>

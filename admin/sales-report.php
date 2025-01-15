@@ -25,6 +25,18 @@ switch ($dateFilter) {
         $interval = "1"; // No filter, show all
 }
 
+$monthCondition = '';
+$yearCondition = '';
+
+// Check if month and year filters are set
+if (isset($_GET['month']) && $_GET['month'] !== 'all') {
+    $monthCondition = "AND MONTH(pay.created_at) = :month";
+}
+
+if (isset($_GET['year']) && $_GET['year'] !== 'all') {
+    $yearCondition = "AND YEAR(pay.created_at) = :year";
+}
+
 // Added condition to filter by product type
 if ($productTypeFilter !== 'all') {
     $productTypeCondition = " AND ec.ecat_id = :product_type";
@@ -33,7 +45,7 @@ if ($productTypeFilter !== 'all') {
 }
 
 try {
-    // Modify the query to account for the product type filter
+    // Modify the query to account for the month, year, and product type filter
     $stmt = $pdo->prepare("
         SELECT 
             p.name AS product_name, 
@@ -48,14 +60,22 @@ try {
         JOIN order_items oi ON o.order_id = oi.order_id
         JOIN product p ON oi.product_id = p.p_id
         JOIN end_category ec ON p.ecat_id = ec.ecat_id
-        WHERE $interval $productTypeCondition
+        WHERE $interval $productTypeCondition $monthCondition $yearCondition
         ORDER BY pay.created_at DESC
         LIMIT :limit OFFSET :offset
     ");
     $stmt->bindParam(':limit', $perPage, PDO::PARAM_INT);
     $stmt->bindParam(':offset', $offset, PDO::PARAM_INT);
     
-    // Bind the product type if it's set
+    // Bind parameters for month, year, and product type if set
+    if (isset($_GET['month']) && $_GET['month'] !== 'all') {
+        $stmt->bindParam(':month', $_GET['month'], PDO::PARAM_INT);
+    }
+
+    if (isset($_GET['year']) && $_GET['year'] !== 'all') {
+        $stmt->bindParam(':year', $_GET['year'], PDO::PARAM_INT);
+    }
+
     if ($productTypeFilter !== 'all') {
         $stmt->bindParam(':product_type', $productTypeFilter, PDO::PARAM_INT);
     }
@@ -64,9 +84,17 @@ try {
     $sales = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     // Count total records to calculate pages
-    $countStmt = $pdo->prepare("SELECT COUNT(*) FROM payment pay JOIN orders o ON pay.order_id = o.order_id JOIN order_items oi ON o.order_id = oi.order_id JOIN product p ON oi.product_id = p.p_id JOIN end_category ec ON p.ecat_id = ec.ecat_id WHERE $interval $productTypeCondition");
+    $countStmt = $pdo->prepare("SELECT COUNT(*) FROM payment pay JOIN orders o ON pay.order_id = o.order_id JOIN order_items oi ON o.order_id = oi.order_id JOIN product p ON oi.product_id = p.p_id JOIN end_category ec ON p.ecat_id = ec.ecat_id WHERE $interval $productTypeCondition $monthCondition $yearCondition");
     
     // Bind the product type for the count query
+    if (isset($_GET['month']) && $_GET['month'] !== 'all') {
+        $countStmt->bindParam(':month', $_GET['month'], PDO::PARAM_INT);
+    }
+
+    if (isset($_GET['year']) && $_GET['year'] !== 'all') {
+        $countStmt->bindParam(':year', $_GET['year'], PDO::PARAM_INT);
+    }
+
     if ($productTypeFilter !== 'all') {
         $countStmt->bindParam(':product_type', $productTypeFilter, PDO::PARAM_INT);
     }
@@ -86,9 +114,17 @@ try {
         JOIN order_items oi ON o.order_id = oi.order_id
         JOIN product p ON oi.product_id = p.p_id
         JOIN end_category ec ON p.ecat_id = ec.ecat_id
-        WHERE $interval
+        WHERE $interval $monthCondition $yearCondition
         GROUP BY ec.ecat_id
     ");
+    if (isset($_GET['month']) && $_GET['month'] !== 'all') {
+        $totalSalesStmt->bindParam(':month', $_GET['month'], PDO::PARAM_INT);
+    }
+
+    if (isset($_GET['year']) && $_GET['year'] !== 'all') {
+        $totalSalesStmt->bindParam(':year', $_GET['year'], PDO::PARAM_INT);
+    }
+
     $totalSalesStmt->execute();
     $totalSalesData = $totalSalesStmt->fetchAll(PDO::FETCH_ASSOC);
 
@@ -101,8 +137,16 @@ try {
         JOIN orders o ON pay.order_id = o.order_id
         JOIN order_items oi ON o.order_id = oi.order_id
         JOIN product p ON oi.product_id = p.p_id
-        WHERE $interval
+        WHERE $interval $monthCondition $yearCondition
     ");
+    if (isset($_GET['month']) && $_GET['month'] !== 'all') {
+        $overallTotalStmt->bindParam(':month', $_GET['month'], PDO::PARAM_INT);
+    }
+
+    if (isset($_GET['year']) && $_GET['year'] !== 'all') {
+        $overallTotalStmt->bindParam(':year', $_GET['year'], PDO::PARAM_INT);
+    }
+
     $overallTotalStmt->execute();
     $overallTotalData = $overallTotalStmt->fetch(PDO::FETCH_ASSOC);
 
@@ -135,15 +179,46 @@ $productTypes = $productTypesStmt->fetchAll(PDO::FETCH_ASSOC);
             <a href="sales-report.php?filter=all" class="btn btn-secondary mx-1">All</a>
         </div>
         
-        <!-- Filter by product type -->
+        <!-- Filter by month, year, and product type -->
         <div class="d-flex justify-content-end mb-3">
             <form action="sales-report.php" method="GET">
                 <input type="hidden" name="filter" value="<?= $dateFilter ?>">
+                
+                <!-- Month Dropdown -->
+                <select name="month" class="form-select" onchange="this.form.submit()">
+                    <option value="all" <?= !isset($_GET['month']) || $_GET['month'] === 'all' ? 'selected' : '' ?>>All Months</option>
+                    <option value="1" <?= isset($_GET['month']) && $_GET['month'] === '1' ? 'selected' : '' ?>>January</option>
+                    <option value="2" <?= isset($_GET['month']) && $_GET['month'] === '2' ? 'selected' : '' ?>>February</option>
+                    <option value="3" <?= isset($_GET['month']) && $_GET['month'] === '3' ? 'selected' : '' ?>>March</option>
+                    <option value="4" <?= isset($_GET['month']) && $_GET['month'] === '4' ? 'selected' : '' ?>>April</option>
+                    <option value="5" <?= isset($_GET['month']) && $_GET['month'] === '5' ? 'selected' : '' ?>>May</option>
+                    <option value="6" <?= isset($_GET['month']) && $_GET['month'] === '6' ? 'selected' : '' ?>>June</option>
+                    <option value="7" <?= isset($_GET['month']) && $_GET['month'] === '7' ? 'selected' : '' ?>>July</option>
+                    <option value="8" <?= isset($_GET['month']) && $_GET['month'] === '8' ? 'selected' : '' ?>>August</option>
+                    <option value="9" <?= isset($_GET['month']) && $_GET['month'] === '9' ? 'selected' : '' ?>>September</option>
+                    <option value="10" <?= isset($_GET['month']) && $_GET['month'] === '10' ? 'selected' : '' ?>>October</option>
+                    <option value="11" <?= isset($_GET['month']) && $_GET['month'] === '11' ? 'selected' : '' ?>>November</option>
+                    <option value="12" <?= isset($_GET['month']) && $_GET['month'] === '12' ? 'selected' : '' ?>>December</option>
+                </select>
+                
+                <!-- Year Dropdown -->
+                <select name="year" class="form-select" onchange="this.form.submit()">
+                    <option value="all" <?= !isset($_GET['year']) || $_GET['year'] === 'all' ? 'selected' : '' ?>>All Years</option>
+                    <?php
+                    // Get the current year and create options for the last 5 years
+                    $currentYear = date('Y');
+                    for ($i = $currentYear; $i >= $currentYear - 5; $i--) {
+                        echo '<option value="' . $i . '" ' . (isset($_GET['year']) && $_GET['year'] == $i ? 'selected' : '') . '>' . $i . '</option>';
+                    }
+                    ?>
+                </select>
+                
+                <!-- Product Type Dropdown -->
                 <select name="product_type" class="form-select" onchange="this.form.submit()">
                     <option value="all" <?= $productTypeFilter === 'all' ? 'selected' : '' ?>>All Product Types</option>
-                    <?php foreach ($productTypes as $type) { ?>
-                        <option value="<?= $type['ecat_id'] ?>" <?= $productTypeFilter == $type['ecat_id'] ? 'selected' : '' ?>>
-                            <?= htmlspecialchars($type['ecat_name']) ?>
+                    <?php foreach ($productTypes as $productType) { ?>
+                        <option value="<?= $productType['ecat_id'] ?>" <?= $productTypeFilter == $productType['ecat_id'] ? 'selected' : '' ?>>
+                            <?= htmlspecialchars($productType['ecat_name']) ?>
                         </option>
                     <?php } ?>
                 </select>
@@ -200,18 +275,15 @@ $productTypes = $productTypesStmt->fetchAll(PDO::FETCH_ASSOC);
             </div>
             <div class="card-body">
                 <?php foreach ($totalSalesData as $data) { ?>
-                    <p><?= htmlspecialchars($data['product_type']) ?>: </p>
-                    <ul>
-                        <li>Total Quantity Sold: <?= $data['total_quantity'] ?></li>
-                        <li>Total Sales: P<?= number_format($data['total_sales'], 2) ?></li>
-                    </ul>
+                    <p><strong><?= $data['product_type'] ?>:</strong> <?= $data['total_quantity'] ?> items sold, P<?= number_format($data['total_sales'], 2) ?></p>
                 <?php } ?>
             </div>
         </div>
 
+        <!-- Pagination -->
         <div class="d-flex justify-content-between">
-            <a href="sales-report.php?filter=<?= $dateFilter ?>&page=<?= max(1, $page - 1) ?>&product_type=<?= $productTypeFilter ?>" class="btn btn-secondary">Previous</a>
-            <a href="sales-report.php?filter=<?= $dateFilter ?>&page=<?= min($totalPages, $page + 1) ?>&product_type=<?= $productTypeFilter ?>" class="btn btn-secondary">Next</a>
+            <a href="sales-report.php?filter=<?= $dateFilter ?>&page=<?= max(1, $page - 1) ?>&product_type=<?= $productTypeFilter ?>&month=<?= isset($_GET['month']) ? $_GET['month'] : 'all' ?>&year=<?= isset($_GET['year']) ? $_GET['year'] : 'all' ?>" class="btn btn-secondary">Previous</a>
+            <a href="sales-report.php?filter=<?= $dateFilter ?>&page=<?= min($totalPages, $page + 1) ?>&product_type=<?= $productTypeFilter ?>&month=<?= isset($_GET['month']) ? $_GET['month'] : 'all' ?>&year=<?= isset($_GET['year']) ? $_GET['year'] : 'all' ?>" class="btn btn-secondary">Next</a>
         </div>
     </div>
 </body>

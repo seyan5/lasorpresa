@@ -80,7 +80,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_review'])) {
 <div class="container1">
   <div class="col-md-12"> 
     <div class="container my-4">
-      <h1 class="text-center">Order Dashboard</h1>
+      <h1 class="text-center">My Orders</h1>
       <table class="table table-bordered table-hover">
         <thead class="table-dark">
           <tr>
