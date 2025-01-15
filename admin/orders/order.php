@@ -97,25 +97,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_status'])) {
         <?php
         // Query to join the relevant tables
         $stmt = $pdo->query("SELECT 
-                            c.cust_id, 
-                            c.cust_name, 
-                            c.cust_email, 
-                            p.name AS product_name, 
-                            oi.quantity, 
-                            p.current_price AS unit_price, 
-                            pay.payment_method, 
-                            pay.payment_id, 
-                            pay.created_at AS payment_date, 
-                            pay.amount_paid, 
-                            pay.shipping_status, 
-                            pay.payment_status, 
-                            o.order_id
-                        FROM 
-                            customer c
-                        JOIN orders o ON c.cust_id = o.customer_id
-                        JOIN order_items oi ON o.order_id = oi.order_id
-                        JOIN product p ON oi.product_id = p.p_id
-                        JOIN payment pay ON o.order_id = pay.order_id");
+        c.cust_id, 
+        c.cust_name, 
+        c.cust_email, 
+        p.name AS product_name, 
+        oi.quantity, 
+        p.current_price AS unit_price, 
+        pay.payment_method, 
+        pay.payment_id, 
+        pay.created_at AS payment_date, 
+        pay.amount_paid, 
+        pay.shipping_status, 
+        pay.payment_status, 
+        o.order_id
+    FROM 
+        customer c
+    JOIN orders o ON c.cust_id = o.customer_id
+    JOIN order_items oi ON o.order_id = oi.order_id
+    JOIN product p ON oi.product_id = p.p_id
+    JOIN payment pay ON o.order_id = pay.order_id
+    ORDER BY pay.created_at DESC");
 
         // Fetch all orders
         $orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
