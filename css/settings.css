@@ -1,0 +1,188 @@
+body, html {
+    height: 100%;  /* Ensure the body takes the full height of the viewport */
+    margin: 0;
+    display: flex;  /* Enables flexbox */
+    justify-content: center;  /* Centers horizontally */
+    align-items: center;  /* Centers vertically */
+    background-color: #e9e9e9;  /* Optional: Set a background color */
+}
+
+.box h1 {
+    text-align: center;  /* Centers the heading text horizontally */
+    font-size: 2.5rem;  /* Adjust the font size */
+    color: #333;  /* Set a color for the heading */
+    margin-bottom: 20px;  /* Adds space between the heading and the table */
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-weight: bold;
+}
+
+/* Style the table */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+}
+
+.table-container {
+    max-height: 300px; /* Limit the height of the table area */
+    overflow-y: auto; /* Add vertical scroll when content overflows */
+    border: 1px solid #ddd; /* Optional: Add border for better visibility */
+    border-radius: 8px; /* Optional: Smooth corners */
+    margin: 20px 0; /* Optional: Add spacing */
+    padding: 10px; /* Optional: Padding around the table */
+}
+
+table th {
+    text-align: center;  /* Centers the text in the table header */
+    padding: 12px;  /* Adds padding to the header cells */
+    background-color: #dd91ad;  /* Optional: Background color for header */
+    color: white;  /* Optional: Text color */
+}
+
+
+table th:first-child {
+    width: 10%;  /* Optional: Adjust the width of the first column */
+}
+
+table th:nth-child(2) {
+    width: 50%;  /* Optional: Adjust the width of the second column */
+}
+
+table th:last-child {
+    width: 40%;  /* Optional: Adjust the width of the third column */
+}
+
+table tbody {
+    background-color: #f9f9f9;
+}
+
+/* Style table rows */
+tbody tr {
+    border-bottom: 1px solid #ddd;
+}
+
+/* Style each table cell */
+tbody td {
+    padding: 12px;
+    text-align: left;
+}
+
+/* Style the links inside the table */
+tbody a {
+    color: #3498db;
+    text-decoration: none;
+    font-weight: bold;
+    display: block;
+}
+
+/* On hover, change the link color */
+tbody a:hover {
+    color: #1d72b8;
+}
+
+/* Add a hover effect to the row */
+tbody tr:hover {
+    background-color: #f1f1f1;
+}
+
+/* Container for the horizontal layout */
+.horizontal-table {
+    display: flex;
+    flex-wrap: wrap; /* Allows items to wrap on smaller screens */
+    justify-content: space-evenly; /* Distribute items evenly */
+    align-items: center;  /* Centers items vertically */
+    padding: 10px;
+    background-color: #f9f9f9; /* Background color for the container */
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    margin-top: -15rem; /* Move the container up */
+    width: 100%;  /* Ensure it takes up the full width */
+}
+
+/* Style the links */
+.horizontal-table a {
+    display: block;
+    padding: 12px 20px;
+    margin: 5px;
+    text-align: center;
+    background-color: #dd91ad;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+/* Hover effect */
+.horizontal-table a:hover {
+    background-color: #f75dd0;
+    transform: scale(1.05); /* Slightly enlarge the link */
+}
+
+.box {
+    background-color: #fff;
+    border: 1px solid #ccc;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    margin: 20px auto;  /* Centers the box horizontally */
+    margin-top: -50px; /* Moves the box upwards */
+    padding: 20px;
+    width: 200%;  /* Adjust the width (you can set a specific pixel value if preferred) */
+    max-width: 1200px; /* Optional: Set a maximum width to prevent it from getting too wide */
+    box-sizing: border-box; /* Ensures padding doesn't affect the width */
+    border-radius: 20px;
+}
+
+
+
+.modal-dialog {
+    position: relative;
+    margin: 10% auto;
+    background-color: white;
+    width: 50%;
+    padding: 20px;
+    border-radius: 4px;
+}
+
+.modal-header {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.modal-body p {
+    font-size: 14px;
+}
+
+.modal-footer {
+    display: flex;
+    justify-content: space-between;
+}
+
+.close {
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.btn-ok {
+    background-color: #dc3545;
+    color: white;
+    padding: 8px 16px;
+    font-size: 14px;
+    border: none;
+    border-radius: 4px;
+
+}
+
+.btn-ok:hover {
+    background-color: #c82333;
+}
+
+
+
+/* Responsive design for smaller screens */
+@media screen and (max-width: 768px) {
+    .horizontal-table {
+        flex-direction: column; /* Stack links vertically on small screens */
+        align-items: center;
+    }
+}
