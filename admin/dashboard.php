@@ -125,7 +125,7 @@ try {
                         <span class="icon">
                             <ion-icon name="flower-outline"></ion-icon>
                         </span>
-                        <span class="title">Manage Products</span>
+                        <span class="title">Manage Flowers</span>
                     </a>
                 </li>
                 <li>
