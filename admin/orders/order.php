@@ -67,8 +67,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_status'])) {
   <link rel="stylesheet" href="order.css">
 </head>
 <div class="header">
-            <a href="admin/dashbnoard.php" class="back-link">
-                <span class="back-arrow">&lt;</span> Back to Cart
+            <a href="../dashboard.php" class="back-link">
+                <span class="back-arrow">&lt;</span> Back to Admin Dashboard
             </a>
   </div>
 <body>
