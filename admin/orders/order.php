@@ -41,8 +41,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_status'])) {
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Order Dashboard</title>
   <link rel="stylesheet" href="order.css?v.1.0">
-
-
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <style>
     .action-btn {
@@ -68,9 +66,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_status'])) {
   <title>Order Dashboard</title>
   <link rel="stylesheet" href="order.css">
 </head>
-  <div class="header">
-            <a href="../dashboard.php" class="back-link">
-                <span class="back-arrow">&lt;</span> Back to Admin Dashboard
+<div class="header">
+            <a href="admin/dashbnoard.php" class="back-link">
+                <span class="back-arrow">&lt;</span> Back to Cart
             </a>
   </div>
 <body>
