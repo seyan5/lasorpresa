@@ -165,10 +165,14 @@ include("../admin/inc/CSRF_Protect.php");
             <!--<a href="#" class="btn">Shop now!</a>-->
             <div class="circle"></div>
         </div>
+        
         <div class="search-container">
-            <input type="text" placeholder="What are you looking for?" class="search-input">
-            <button class="search-button"><i class="fas fa-search"></i></button>
-        </div>
+    <input type="text" id="search-input" placeholder="What are you looking for?" class="search-input">
+    <button class="search-button"><i class="fas fa-search"></i></button>
+    <div id="search-results"></div>
+</div>
+ <!-- Where the results will be shown -->
+
     </section>
 
 
@@ -436,6 +440,34 @@ include("../admin/inc/CSRF_Protect.php");
         };
         new Notification(`Product ${paymentId} Update`, options);
     }
+</script>
+
+
+<script>
+    // Get the search input field and the results container
+    const searchInput = document.getElementById('search-input');
+    const searchResults = document.getElementById('search-results');
+
+    // Add event listener to search input
+    searchInput.addEventListener('input', function() {
+        const query = searchInput.value.trim();
+
+        if (query.length > 0) {
+            // Create a new AJAX request
+            const xhr = new XMLHttpRequest();
+            xhr.open('GET', 'search.php?search=' + encodeURIComponent(query), true);
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    // Display the search results inside the search-results div
+                    searchResults.innerHTML = xhr.responseText;
+                }
+            };
+            xhr.send();
+        } else {
+            // Clear the search results when input is empty
+            searchResults.innerHTML = '';
+        }
+    });
 </script>
 
 <style>

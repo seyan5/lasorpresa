@@ -42,6 +42,14 @@
                 <li><a href="../users.php">
                         <span class="icon"><ion-icon name="people-outline"></ion-icon></span>
                         <span class="title">Users</span></a></li>
+                        <li>
+                    <a href="sales-report.php">
+                        <span class="icon">
+                            <ion-icon name="cash-outline"></ion-icon>
+                        </span>
+                        <span class="title">Sales</span>
+                    </a>
+                </li>
                 <li><a href="product.php">
                         <span class="icon"><ion-icon name="cube-outline"></ion-icon></span>
                         <span class="title">Manage Products</span></a></li>
@@ -49,8 +57,8 @@
                         <span class="icon"><ion-icon name="cart-outline"></ion-icon></span>
                         <span class="title">Manage Orders</span></a></li>
                 <li><a href="../settings.php">
-                        <span class="icon"><ion-icon name="settings-outline"></ion-icon></span>
-                        <span class="title">Settings</span></a></li>
+                        <span class="icon"><ion-icon name="albums-outline"></ion-icon></ion-icon></span>
+                        <span class="title">Categories</span></a></li>
                 <li><a href="../logout.php">
                         <span class="icon"><ion-icon name="log-out-outline"></ion-icon></span>
                         <span class="title">Sign Out</span></a></li>

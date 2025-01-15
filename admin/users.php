@@ -143,11 +143,11 @@ if ($result->num_rows > 0) {
                 </li>
 
                 <li>
-                    <a href="#">
+                    <a href="sales-report.php">
                         <span class="icon">
-                            <ion-icon name="chatbubble-outline"></ion-icon>
+                            <ion-icon name="cash-outline"></ion-icon>
                         </span>
-                        <span class="title">Messages</span>
+                        <span class="title">Sales</span>
                     </a>
                 </li>
 
