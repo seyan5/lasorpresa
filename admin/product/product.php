@@ -196,73 +196,11 @@
                 <a href="product-add.php" class="btn btn-primary btn-sm">Add Product</a>
             </div>
         </section>
-            <div class="abc">
-                <table width="100%" class="sub-table" border="0">
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>Photo</th>
-                            <th>Product Name</th>
-                            <th id="oldPriceHeader" style="cursor: pointer;">Old Price <ion-icon name="swap-vertical-outline"></ion-icon></th>
-                            <th id="currentPriceHeader" style="cursor: pointer;">Current Price <ion-icon name="swap-vertical-outline"></ion-icon></th>
-                            <th id="quantityHeader" style="cursor: pointer;">Quantity <ion-icon name="swap-vertical-outline"></ion-icon></th>
-                            <th>Featured?</th>
-                            <th>Active?</th>
-                            <th>Category</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php
-                        $i = 0;
-                        $lowStockProducts = [];
-                        $statement = $pdo->prepare("
-                            SELECT t1.p_id, t1.name, t1.old_price, t1.current_price, t1.quantity, t1.featured_photo,
-                            t1.is_featured, t1.is_active, t1.ecat_id, 
-                            IFNULL(t2.ecat_name, 'No Category') AS ecat_name,
-                            IFNULL(t3.mcat_name, 'No Category') AS mcat_name,
-                            IFNULL(t4.tcat_name, 'No Category') AS tcat_name
-                            FROM product t1
-                            LEFT JOIN end_category t2 ON t1.ecat_id = t2.ecat_id
-                            LEFT JOIN mid_category t3 ON t2.mcat_id = t3.mcat_id
-                            LEFT JOIN top_category t4 ON t3.tcat_id = t4.tcat_id
-                            ORDER BY t1.p_id DESC
-                        ");
-                        $statement->execute();
-                        $result = $statement->fetchAll(PDO::FETCH_ASSOC);
-
-                        foreach ($result as $row) {
-                            $i++;
-                            if ($row['quantity'] <= 10) {
-                                $lowStockProducts[] = [
-                                    'name' => $row['name'],
-                                    'quantity' => $row['quantity']
-                                ];
-                            }
-                        ?>
-                            <tr>
-                                <td><?php echo $i; ?></td>
-                                <td><img src="../uploads/<?php echo $row['featured_photo']; ?>" alt="<?php echo $row['name']; ?>" style="width:80px;"></td>
-                                <td><?php echo $row['name']; ?></td>
-                                <td>$<?php echo $row['old_price']; ?></td>
-                                <td>$<?php echo $row['current_price']; ?></td>
-                                <td style="color: <?php echo ($row['quantity'] <= 10) ? 'red' : 'black'; ?>;">
-                                <?php echo $row['quantity']; ?>
-                                </td>
-                                <td><?php echo ($row['is_featured'] == 1) ? '<span style="color:green;">Yes</span>' : '<span style="color:red;">No</span>'; ?></td>
-                                <td><?php echo ($row['is_active'] == 1) ? '<span style="color:green;">Yes</span>' : '<span style="color:red;">No</span>'; ?></td>
-                                <td><?php echo $row['tcat_name']; ?><br><?php echo $row['mcat_name']; ?><br><?php echo $row['ecat_name']; ?></td>
-                                <td>
-                                    <a href="product-edit.php?id=<?php echo $row['p_id']; ?>" class="btn btn-primary btn-xs">Edit</a>
-                                    <a href="#" class="btn btn-danger btn-xs" data-href="product-delete.php?id=<?php echo $row['p_id']; ?>" data-toggle="modal" data-target="#confirm-delete">Delete</a>
-                                </td>
-                            </tr>
-                        <?php } ?>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
+        </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
 
     <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>

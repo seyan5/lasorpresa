@@ -5,48 +5,37 @@ include("../inc/config.php");
 include("../inc/functions.php");
 include("../inc/CSRF_Protect.php");
 
-$page = isset($_GET['page']) ? (int)$_GET['page'] : 1; // Get current page, default to 1
-$perPage = 10; // Set the number of orders per page
-$offset = ($page - 1) * $perPage; // Calculate the offset
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_status'])) {
+  try {
+    $order_id = $_POST['order_id'];
+    $status_column = $_POST['status_column']; // Either 'payment_status' or 'shipping_status'
+    $new_status = $_POST['new_status'];
 
-// Query to fetch orders and payment info, joining on order_id
-$stmt = $pdo->prepare("SELECT 
-                            c.cust_id, 
-                            c.cust_name, 
-                            c.cust_email, 
-                            oi.order_id, 
-                            GROUP_CONCAT(p.name ORDER BY oi.product_id) AS product_names, 
-                            GROUP_CONCAT(oi.quantity ORDER BY oi.product_id) AS quantities, 
-                            GROUP_CONCAT(p.current_price ORDER BY oi.product_id) AS unit_prices, 
-                            pay.payment_method, 
-                            pay.payment_id, 
-                            pay.created_at AS payment_date, 
-                            pay.amount_paid, 
-                            pay.shipping_status, 
-                            pay.payment_status
-                        FROM 
-                            customer c
-                        JOIN orders o ON c.cust_id = o.customer_id
-                        JOIN order_items oi ON o.order_id = oi.order_id
-                        JOIN product p ON oi.product_id = p.p_id
-                        JOIN payment pay ON o.order_id = pay.order_id
-                        GROUP BY o.order_id
-                        ORDER BY o.order_id DESC
-                        LIMIT :limit OFFSET :offset");
-$stmt->bindParam(':limit', $perPage, PDO::PARAM_INT);
-$stmt->bindParam(':offset', $offset, PDO::PARAM_INT);
-$stmt->execute();
+    // Validate inputs
+    if (!in_array($status_column, ['payment_status', 'shipping_status'])) {
+      throw new Exception("Invalid status column");
+    }
 
-$orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    // Update the database
+    $stmt = $pdo->prepare("UPDATE payment SET $status_column = :new_status WHERE order_id = :order_id");
+    $stmt->execute([
+      ':new_status' => $new_status,
+      ':order_id' => $order_id
+    ]);
 
-// Get total orders count to calculate pages
-$totalOrdersStmt = $pdo->query("SELECT COUNT(DISTINCT o.order_id) FROM orders o");
-$totalOrders = $totalOrdersStmt->fetchColumn();
-$totalPages = ceil($totalOrders / $perPage);
+    echo json_encode(['success' => true, 'message' => 'Status updated successfully']);
+  } catch (Exception $e) {
+    echo json_encode(['success' => false, 'message' => $e->getMessage()]);
+  }
+  exit;
+}
+
+
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -70,6 +59,7 @@ $totalPages = ceil($totalOrders / $perPage);
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -86,14 +76,6 @@ $totalPages = ceil($totalOrders / $perPage);
 <h1>Order Dashboard</h1>
   <div class="container">  
     <table>
-<body>
-  <div class="container my-4">
-    <h1 class="text-center">Order Dashboard</h1>
-     <!-- Back Button -->
-     <div class="d-flex justify-content-start mb-3">
-            <a href="../dashboard.php" class="btn btn-secondary">Back to Dashboard</a>
-        </div>
-    <table class="table table-bordered table-hover">
       <thead class="table-dark">
         <tr>
           <th>#</th>
@@ -135,7 +117,6 @@ $totalPages = ceil($totalOrders / $perPage);
 
         foreach ($orders as $index => $order) {
           ?>
-        <?php foreach ($orders as $index => $order): ?>
           <tr>
             <td><?= $index + 1 ?></td>
             <td>
@@ -151,10 +132,6 @@ $totalPages = ceil($totalOrders / $perPage);
                 <strong>Quantity:</strong> <?= $order['quantity'] ?><br>
                 <strong>Unit Price:</strong> $<?= number_format($order['unit_price'], 2) ?>
               </div>
-              <strong>Products:</strong> <?= htmlspecialchars($order['product_names']) ?><br>
-              <strong>Quantities:</strong> <?= htmlspecialchars($order['quantities']) ?><br>
-              <strong>Unit Prices:</strong> <?= htmlspecialchars($order['unit_prices']) ?><br>
-              <strong>Total Price:</strong> $<?= number_format(array_sum(array_map(function($quantity, $price) { return $quantity * $price; }, explode(',', $order['quantities']), explode(',', $order['unit_prices']))), 2) ?>
             </td>
             <td>
               <div class="payment-details">
@@ -176,11 +153,6 @@ $totalPages = ceil($totalOrders / $perPage);
                 <option <?= $order['shipping_status'] === 'pending' ? 'selected' : '' ?> value="pending">Pending</option>
                 <option <?= $order['shipping_status'] === 'shipped' ? 'selected' : '' ?> value="shipped">Shipped</option>
                 <option <?= $order['shipping_status'] === 'delivered' ? 'selected' : '' ?> value="delivered">Delivered</option>
-                <option <?= $order['shipping_status'] === 'delivered' ? 'selected' : '' ?> value="delivered">Delivered
-                <option <?= $order['shipping_status'] === 'readyforpickup' ? 'selected' : '' ?> value="readyforpickup">
-                  Ready for Pickup
-                </option>
-                </option>
               </select>
             </td>
             <td>
@@ -188,89 +160,72 @@ $totalPages = ceil($totalOrders / $perPage);
               <button class="btn btn-danger" onclick="deleteOrder(<?= $order['order_id'] ?>)">Delete</button>
             </td>
           </tr>
-        <?php endforeach; ?>
+        <?php } ?>
       </tbody>
     </table>
-
-    <!-- Pagination controls -->
-    <div class="d-flex justify-content-between">
-      <div>
-        <?php if ($page > 1): ?>
-          <a href="?page=<?= $page - 1 ?>" class="btn btn-secondary">Previous</a>
-        <?php endif; ?>
-      </div>
-      <div>
-        <?php if ($page < $totalPages): ?>
-          <a href="?page=<?= $page + 1 ?>" class="btn btn-secondary">Next</a>
-        <?php endif; ?>
-      </div>
-    </div>
   </div>
-</body>
 
-<script>
-  function updateOrderStatus(orderId) {
-    // Ask for confirmation before updating the status
-    if (!confirm("Are you sure you want to update the order status?")) {
-      return; // If user cancels, stop further execution
+  <script>
+    function updateOrderStatus(orderId) {
+      const paymentStatus = document.getElementById(`payment-status-${orderId}`).value;
+      const shippingStatus = document.getElementById(`shipping-status-${orderId}`).value;
+
+      fetch('order-change-status.php', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: new URLSearchParams({
+          order_id: orderId,
+          payment_status: paymentStatus,
+          shipping_status: shippingStatus,
+        }),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.success) {
+            alert(data.message);
+            location.reload();
+          } else {
+            alert('Error: ' + data.message);
+          }
+        })
+        .catch((error) => {
+          console.error('Error:', error);
+          alert('An unexpected error occurred.');
+        });
     }
 
-    const paymentStatus = document.getElementById(`payment-status-${orderId}`).value;
-    const shippingStatus = document.getElementById(`shipping-status-${orderId}`).value;
-
-    // Update Payment Status
-    fetch('order-change-status.php', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-      },
-      body: new URLSearchParams({
-        order_id: orderId,
-        status_column: 'payment_status',
-        new_status: paymentStatus,
-      }),
-    })
-    .then((response) => response.json())
-    .then((data) => {
-      if (data.success) {
-        alert(data.message);
-        // Reload the page to reflect updated status
-        location.reload();
-      } else {
-        alert('Error: ' + data.message);
+    function deleteOrder(orderId) {
+      if (confirm('Are you sure you want to delete this order?')) {
+        fetch('order-delete.php', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+          },
+          body: new URLSearchParams({
+            order_id: orderId,
+          }),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.success) {
+              alert(data.message);
+              // Remove the row from the table on success
+              const row = document.querySelector(`tr[data-order-id="${orderId}"]`);
+              if (row) row.remove();
+            } else {
+              alert('Error: ' + data.message);
+            }
+          })
+          .catch((error) => {
+            console.error('Error:', error);
+            alert('An unexpected error occurred.');
+          });
       }
-    })
-    .catch((error) => {
-      console.error('Error:', error);
-      alert('An unexpected error occurred.');
-    });
+    }
 
-    // Update Shipping Status
-    fetch('order-change-status.php', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-      },
-      body: new URLSearchParams({
-        order_id: orderId,
-        status_column: 'shipping_status',
-        new_status: shippingStatus,
-      }),
-    })
-    .then((response) => response.json())
-    .then((data) => {
-      if (data.success) {
-        alert(data.message);
-        // Reload the page to reflect updated status
-        location.reload();
-      } else {
-        alert('Error: ' + data.message);
-      }
-    })
-    .catch((error) => {
-      console.error('Error:', error);
-      alert('An unexpected error occurred.');
-    });
-  }
-</script>
+  </script>
+</body>
+
 </html>
