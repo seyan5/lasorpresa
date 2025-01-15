@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 13, 2025 at 05:25 PM
+-- Generation Time: Jan 15, 2025 at 10:59 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -176,7 +176,17 @@ INSERT INTO `custom_order` (`order_id`, `cust_id`, `customer_name`, `customer_em
 (12, 13, 'seyan1', 'seanammiel@gmail.com', 'Brgy Tapia General Trias Cavite', 123.00, '2025-01-13 16:18:28'),
 (13, 13, 'seyan1', 'seanammiel@gmail.com', 'Brgy Tapia General Trias Cavite', 123.00, '2025-01-13 16:20:52'),
 (14, 13, 'seyan1', 'seanammiel@gmail.com', 'Brgy Tapia General Trias Cavite', 123.00, '2025-01-13 16:23:17'),
-(15, 13, 'seyan1', 'seanammiel@gmail.com', 'Brgy Tapia General Trias Cavite', 246.00, '2025-01-13 16:24:32');
+(15, 13, 'seyan1', 'seanammiel@gmail.com', 'Brgy Tapia General Trias Cavite', 246.00, '2025-01-13 16:24:32'),
+(16, 13, 'seyan1', 'seanammiel@gmail.com', 'Brgy Tapia General Trias Cavite', 148.00, '2025-01-15 09:16:48'),
+(17, 13, 'seyan1', 'seanammiel@gmail.com', 'Brgy Tapia General Trias Cavite', 123.00, '2025-01-15 09:25:35'),
+(18, 13, 'seyan1', 'seanammiel@gmail.com', 'Brgy Tapia General Trias Cavite', 123.00, '2025-01-15 09:26:18'),
+(19, 13, 'seyan1', 'seanammiel@gmail.com', 'Brgy Tapia General Trias Cavite', 123.00, '2025-01-15 09:26:22'),
+(20, 13, 'seyan1', 'seanammiel@gmail.com', 'Brgy Tapia General Trias Cavite', 123.00, '2025-01-15 09:26:34'),
+(21, 13, 'seyan1', 'seanammiel@gmail.com', 'Brgy Tapia General Trias Cavite', 123.00, '2025-01-15 09:28:02'),
+(22, 13, 'seyan1', 'seanammiel@gmail.com', 'Brgy Tapia General Trias Cavite', 123.00, '2025-01-15 09:29:48'),
+(23, 13, 'seyan1', 'seanammiel@gmail.com', 'Brgy Tapia General Trias Cavite', 25.00, '2025-01-15 09:30:27'),
+(24, 13, 'seyan1', 'seanammiel@gmail.com', 'Brgy Tapia General Trias Cavite', 123.00, '2025-01-15 09:54:49'),
+(25, 13, 'seyan1', 'seanammiel@gmail.com', 'Brgy Tapia General Trias Cavite', 123.00, '2025-01-15 09:57:26');
 
 -- --------------------------------------------------------
 
@@ -194,6 +204,7 @@ CREATE TABLE `custom_orderitems` (
   `flower_price` decimal(10,2) NOT NULL,
   `container_price` decimal(10,2) NOT NULL,
   `color_price` decimal(10,2) NOT NULL,
+  `remarks` varchar(100) NOT NULL,
   `total_price` decimal(10,2) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -201,16 +212,22 @@ CREATE TABLE `custom_orderitems` (
 -- Dumping data for table `custom_orderitems`
 --
 
-INSERT INTO `custom_orderitems` (`orderitem_id`, `order_id`, `flower_type`, `num_flowers`, `container_type`, `container_color`, `flower_price`, `container_price`, `color_price`, `total_price`) VALUES
-(4, 3, 'Tulip', 1, 'Basket', 'Red', 25.00, 100.00, 0.00, 125.00),
-(5, 4, 'Tulip', 5, 'Plastic Wrap', 'Yellow', 25.00, 50.00, 0.00, 175.00),
-(6, 4, 'Rosas', 3, 'Plastic Wrap', 'Yellow', 123.00, 50.00, 0.00, 419.00),
-(7, 4, 'Lilac', 1, 'Plastic Wrap', 'Yellow', 25.00, 50.00, 0.00, 75.00),
-(8, 5, 'Tulip', 1, 'Plastic Wrap', 'Blue', 25.00, 50.00, 0.00, 75.00),
-(9, 5, 'Tulip', 5, 'Plastic Wrap', 'Blue', 25.00, 50.00, 0.00, 175.00),
-(10, 5, 'Lilac', 3, 'Plastic Wrap', 'Blue', 25.00, 50.00, 0.00, 125.00),
-(13, 14, 'Rosas', 1, 'Basket', 'Red', 123.00, 100.00, 0.00, 223.00),
-(14, 15, 'Rosas', 2, 'Paper Wrap', 'Blue', 123.00, 50.00, 0.00, 296.00);
+INSERT INTO `custom_orderitems` (`orderitem_id`, `order_id`, `flower_type`, `num_flowers`, `container_type`, `container_color`, `flower_price`, `container_price`, `color_price`, `remarks`, `total_price`) VALUES
+(4, 3, 'Tulip', 1, 'Basket', 'Red', 25.00, 100.00, 0.00, '', 125.00),
+(5, 4, 'Tulip', 5, 'Plastic Wrap', 'Yellow', 25.00, 50.00, 0.00, '', 175.00),
+(6, 4, 'Rosas', 3, 'Plastic Wrap', 'Yellow', 123.00, 50.00, 0.00, '', 419.00),
+(7, 4, 'Lilac', 1, 'Plastic Wrap', 'Yellow', 25.00, 50.00, 0.00, '', 75.00),
+(8, 5, 'Tulip', 1, 'Plastic Wrap', 'Blue', 25.00, 50.00, 0.00, '', 75.00),
+(9, 5, 'Tulip', 5, 'Plastic Wrap', 'Blue', 25.00, 50.00, 0.00, '', 175.00),
+(10, 5, 'Lilac', 3, 'Plastic Wrap', 'Blue', 25.00, 50.00, 0.00, '', 125.00),
+(13, 14, 'Rosas', 1, 'Basket', 'Red', 123.00, 100.00, 0.00, '', 223.00),
+(14, 15, 'Rosas', 2, 'Paper Wrap', 'Blue', 123.00, 50.00, 0.00, '', 296.00),
+(15, 16, 'Tulip', 1, 'Basket', 'Blue', 25.00, 100.00, 0.00, '', 125.00),
+(16, 16, 'Rosas', 1, 'Basket', 'Blue', 123.00, 100.00, 0.00, '', 223.00),
+(17, 22, 'Rosas', 1, 'Basket', 'Red', 123.00, 100.00, 0.00, '', 223.00),
+(18, 23, 'Tulip', 1, 'Basket', 'Red', 25.00, 100.00, 0.00, '', 125.00),
+(19, 24, 'Rosas', 1, 'Basket', 'Red', 123.00, 100.00, 0.00, 'asdasd', 223.00),
+(20, 25, 'Rosas', 1, 'Basket', 'Red', 123.00, 100.00, 0.00, 'asdasdasdasdasd', 223.00);
 
 -- --------------------------------------------------------
 
@@ -246,7 +263,12 @@ INSERT INTO `custom_payment` (`cpayment_id`, `order_id`, `customer_name`, `custo
 (8, 12, 'seyan1', 'seanammiel@gmail.com', '3213123', 123.00, 'gcash', 'Pending', 'Pending', '0000-00-00 00:00:00', '2025-01-13 16:18:28', '2025-01-13 16:18:28'),
 (9, 13, 'seyan1', 'seanammiel@gmail.com', '3213123', 123.00, 'gcash', 'Pending', 'Pending', '0000-00-00 00:00:00', '2025-01-13 16:20:52', '2025-01-13 16:20:52'),
 (10, 14, 'seyan1', 'seanammiel@gmail.com', '3213123', 123.00, 'gcash', 'Pending', 'Pending', '0000-00-00 00:00:00', '2025-01-13 16:23:17', '2025-01-13 16:23:17'),
-(11, 15, 'seyan1', 'seanammiel@gmail.com', '123123123', 246.00, 'gcash', 'Pending', 'Pending', '0000-00-00 00:00:00', '2025-01-13 16:24:32', '2025-01-13 16:24:32');
+(11, 15, 'seyan1', 'seanammiel@gmail.com', '123123123', 246.00, 'gcash', 'Pending', 'Pending', '0000-00-00 00:00:00', '2025-01-13 16:24:32', '2025-01-13 16:24:32'),
+(12, 16, 'seyan1', 'seanammiel@gmail.com', '', 148.00, 'cop', 'Pending', 'Pending', '0000-00-00 00:00:00', '2025-01-15 09:16:48', '2025-01-15 09:16:48'),
+(13, 22, 'seyan1', 'seanammiel@gmail.com', '', 123.00, 'cop', 'Pending', 'Pending', '0000-00-00 00:00:00', '2025-01-15 09:29:48', '2025-01-15 09:29:48'),
+(14, 23, 'seyan1', 'seanammiel@gmail.com', '', 25.00, 'cop', 'Pending', 'Pending', '0000-00-00 00:00:00', '2025-01-15 09:30:27', '2025-01-15 09:30:27'),
+(15, 24, 'seyan1', 'seanammiel@gmail.com', '', 123.00, 'cop', 'Pending', 'Pending', '0000-00-00 00:00:00', '2025-01-15 09:54:49', '2025-01-15 09:54:49'),
+(16, 25, 'seyan1', 'seanammiel@gmail.com', '123123', 123.00, 'gcash', 'Pending', 'Pending', '0000-00-00 00:00:00', '2025-01-15 09:57:26', '2025-01-15 09:57:26');
 
 -- --------------------------------------------------------
 
@@ -469,7 +491,7 @@ CREATE TABLE `payment` (
   `amount_paid` decimal(10,2) NOT NULL,
   `payment_method` enum('gcash','cop') NOT NULL,
   `payment_status` enum('pending','paid','failed') DEFAULT 'pending',
-  `shipping_status` enum('pending','shipped','delivered') DEFAULT 'pending',
+  `shipping_status` enum('pending','shipped','delivered','readyforpickup') DEFAULT 'pending',
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -523,13 +545,13 @@ INSERT INTO `payment` (`payment_id`, `cust_id`, `order_id`, `cust_name`, `cust_e
 (42, 13, 33, 'seyan1', 'seanammiel@gmail.com', '123', 123123.00, 'gcash', 'paid', 'pending', '2025-01-11 02:21:35', '2025-01-11 02:21:35'),
 (43, 13, 36, 'seyan1', 'seanammiel@gmail.com', '7667666', 766.00, 'gcash', 'paid', 'pending', '2025-01-11 06:36:32', '2025-01-11 06:36:32'),
 (44, 13, 37, 'seyan1', 'seanammiel@gmail.com', '123', 123333.00, 'gcash', 'paid', 'pending', '2025-01-11 07:20:43', '2025-01-11 07:20:43'),
-(45, 13, 38, 'seyan1', 'seanammiel@gmail.com', '123', 450.00, 'gcash', 'paid', 'pending', '2025-01-12 05:56:49', '2025-01-12 05:56:49'),
+(45, 13, 38, 'seyan1', 'seanammiel@gmail.com', '123', 450.00, 'gcash', 'paid', 'readyforpickup', '2025-01-12 05:56:49', '2025-01-14 11:40:37'),
 (46, 13, 50, 'seyan1', 'seanammiel@gmail.com', '0', 72.00, '', 'pending', 'pending', '2025-01-13 12:48:47', '2025-01-13 12:48:47'),
 (47, 13, 51, 'seyan1', 'seanammiel@gmail.com', '0', 120.00, '', 'pending', 'pending', '2025-01-13 12:50:43', '2025-01-13 12:50:43'),
 (48, 13, 52, 'seyan1', 'seanammiel@gmail.com', '213', 123.00, 'gcash', 'paid', 'pending', '2025-01-13 12:53:40', '2025-01-13 12:53:40'),
 (49, 13, 53, 'seyan1', 'seanammiel@gmail.com', '0', 12.00, '', 'pending', 'pending', '2025-01-13 12:53:51', '2025-01-13 12:53:51'),
-(50, 13, 54, 'seyan1', 'seanammiel@gmail.com', '0', 13.00, '', 'pending', 'pending', '2025-01-13 12:57:05', '2025-01-13 12:57:05'),
-(51, 13, 55, 'seyan1', 'seanammiel@gmail.com', '0', 4.00, 'cop', 'pending', 'pending', '2025-01-13 12:58:17', '2025-01-13 12:58:17'),
+(50, 13, 54, 'seyan1', 'seanammiel@gmail.com', '0', 13.00, '', 'pending', '', '2025-01-13 12:57:05', '2025-01-14 11:35:55'),
+(51, 13, 55, 'seyan1', 'seanammiel@gmail.com', '0', 4.00, 'cop', 'paid', 'pending', '2025-01-13 12:58:17', '2025-01-14 11:35:41'),
 (52, 13, 56, 'seyan1', 'seanammiel@gmail.com', '0', 12.00, 'cop', 'pending', 'pending', '2025-01-13 12:58:50', '2025-01-13 12:58:50'),
 (53, 13, 57, 'seyan1', 'seanammiel@gmail.com', '0', 12.00, 'cop', 'pending', 'pending', '2025-01-13 12:59:01', '2025-01-13 12:59:01'),
 (54, 13, 58, 'seyan1', 'seanammiel@gmail.com', '0', 4000.00, 'cop', 'pending', 'pending', '2025-01-13 13:00:29', '2025-01-13 13:00:29'),
@@ -1247,19 +1269,19 @@ ALTER TABLE `customer_messages`
 -- AUTO_INCREMENT for table `custom_order`
 --
 ALTER TABLE `custom_order`
-  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 
 --
 -- AUTO_INCREMENT for table `custom_orderitems`
 --
 ALTER TABLE `custom_orderitems`
-  MODIFY `orderitem_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `orderitem_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- AUTO_INCREMENT for table `custom_payment`
 --
 ALTER TABLE `custom_payment`
-  MODIFY `cpayment_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `cpayment_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT for table `email_verifications`

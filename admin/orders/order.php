@@ -149,6 +149,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_status'])) {
                 <option <?= $order['shipping_status'] === 'pending' ? 'selected' : '' ?> value="pending">Pending</option>
                 <option <?= $order['shipping_status'] === 'shipped' ? 'selected' : '' ?> value="shipped">Shipped</option>
                 <option <?= $order['shipping_status'] === 'delivered' ? 'selected' : '' ?> value="delivered">Delivered
+                <option <?= $order['shipping_status'] === 'readyforpickup' ? 'selected' : '' ?> value="readyforpickup">
+                  Ready for Pickup
+                </option>
                 </option>
               </select>
             </td>

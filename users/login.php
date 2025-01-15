@@ -31,9 +31,6 @@ if (isset($_POST['login'])) {
                         'cust_zip'   => $user['cust_zip'],
                     ];
 
-                    // Debugging: Log session data after login
-                    file_put_contents('debug.log', "Login session set: " . print_r($_SESSION, true), FILE_APPEND);
-
                     // Redirect to the home page or dashboard
                     header("Location: index.php");
                     exit;
