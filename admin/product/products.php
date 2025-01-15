@@ -1,4 +1,4 @@
-<?php require("header.php") ?>
+<?php require("../header.php") ?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -7,8 +7,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>La Sorpresa Admin</title>
-    <link rel="stylesheet" href="../css/settings.css?">
-    <link rel="stylesheet" href="../css/products.css">
+    <link rel="stylesheet" href="../../css/settings.css?">
+    <link rel="stylesheet" href="../../css/products.css">
     
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
