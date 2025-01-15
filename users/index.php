@@ -79,6 +79,7 @@ include("../admin/inc/CSRF_Protect.php");
 
          
         <!-- Notification Dropdown -->
+<!-- Notification Dropdown -->
 <div class="notification-dropdown">
     <a href="#" class="fas fa-bell" onclick="toggleNotificationDropdown()"></a>
     <div class="dropdown-menu" id="notificationDropdown">
@@ -111,17 +112,18 @@ include("../admin/inc/CSRF_Protect.php");
                 $shippingStatus = ($payment['shipping_status'] == 'pending') ? 'Shipping Pending' : ($payment['shipping_status'] == 'shipped' ? 'Shipped' : 'Delivered');
                 ?>
                 <li class="dropdown-item d-flex align-items-center">
-    <i class="fa fa-credit-card me-2 <?php echo $payment['payment_status'] == 'pending' ? 'bg-warning' : 'bg-success'; ?>" style="padding: 5px; border-radius: 50%;"></i>
-    <div>
-        <a href="order-details.php?order_id=<?php echo $payment['order_id']; ?>&product_id=<?php echo $payment['product_id']; ?>" style="text-decoration: none;">
-            <strong>Product: <?php echo $payment['name']; ?></strong>
-            <div class="text-muted small"><?php echo $paymentStatus; ?></div>
-            <div class="text-muted small"><?php echo $shippingStatus; ?></div>
-        </a>
-    </div>
-</li>
-
+                    <i class="fa fa-credit-card me-2 <?php echo $payment['payment_status'] == 'pending' ? 'bg-warning' : 'bg-success'; ?>" style="padding: 5px; border-radius: 50%;"></i>
+                    <div>
+                        <a href="order-details.php?order_id=<?php echo $payment['order_id']; ?>&product_id=<?php echo $payment['product_id']; ?>" style="text-decoration: none;">
+                            <strong>Product: <?php echo $payment['name']; ?></strong>
+                            <div class="text-muted small"><?php echo $paymentStatus; ?></div>
+                            <div class="text-muted small"><?php echo $shippingStatus; ?></div>
+                        </a>
+                    </div>
+                </li>
             <?php endforeach; ?>
+            <hr>
+            <a href="notifications.php" class="btn btn-link">View All</a>
         <?php else: ?>
             <li>
                 <span class="dropdown-item text-center text-muted">No new notifications</span>
@@ -136,6 +138,7 @@ include("../admin/inc/CSRF_Protect.php");
         <?php } ?>
     </div>
 </div>
+
 
 
         </div>
