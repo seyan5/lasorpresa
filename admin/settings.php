@@ -111,6 +111,14 @@ if (isset($_POST['form1'])) {
                         <span class="title">Manage Orders</span>
                     </a>
                 </li>
+                <li>
+                    <a href="customize/customize-order.php">
+                        <span class="icon">
+                        <ion-icon name="color-wand-outline"></ion-icon>
+                        </span>
+                        <span class="title"> Customize Orders</span>
+                    </a>
+                </li>
 
                 <li>
                     <a href="#">
