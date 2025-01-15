@@ -24,7 +24,8 @@ $query = $pdo->prepare(
     FROM custom_order co
     LEFT JOIN custom_orderitems coi ON co.order_id = coi.order_id
     LEFT JOIN custom_payment cp ON co.order_id = cp.order_id
-    GROUP BY co.order_id, coi.container_type, coi.container_color, coi.remarks, cp.payment_method, cp.amount_paid, cp.payment_status, cp.shipping_status"
+    GROUP BY co.order_id, coi.container_type, coi.container_color, coi.remarks, cp.payment_method, cp.amount_paid, cp.payment_status, cp.shipping_status
+    ORDER BY co.order_id DESC" // Add this line to order by order_id in descending order
 );
 
 $query->execute();
