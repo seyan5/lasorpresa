@@ -37,3 +37,129 @@ Login session set: Array
         )
 
 )
+Login session set: Array
+(
+    [_csrf] => d7f05f490b62bae47c19545c06415b27
+    [cart] => Array
+        (
+            [30] => Array
+                (
+                    [name] => test
+                    [price] => 25
+                    [quantity] => 1
+                    [image] => product-featured-30.jpg
+                )
+
+        )
+
+    [customer] => Array
+        (
+            [cust_id] => 14
+            [cust_name] => xofahon
+            [cust_email] => xofahon594@pariag.com
+            [cust_phone] => 09214991751
+            [cust_address] => Blk 31 Lt 2 Lhinnete Homea
+            [cust_city] => Cavite
+            [cust_zip] => 4311
+        )
+
+)
+Login session set: Array
+(
+    [_csrf] => 8d29a285ccdc43c57c7c585c5cd5031d
+    [customer] => Array
+        (
+            [cust_id] => 13
+            [cust_name] => seyan1
+            [cust_email] => seanammiel@gmail.com
+            [cust_phone] => 0956193051213
+            [cust_address] => pogi
+            [cust_city] => street
+            [cust_zip] => 3123
+        )
+
+)
+Login session set: Array
+(
+    [customer] => Array
+        (
+            [cust_id] => 14
+            [cust_name] => xofahon
+            [cust_email] => xofahon594@pariag.com
+            [cust_phone] => 09214991751
+            [cust_address] => Blk 31 Lt 2 Lhinnete Homea
+            [cust_city] => Cavite
+            [cust_zip] => 4311
+        )
+
+)
+Login session set: Array
+(
+    [customer] => Array
+        (
+            [cust_id] => 14
+            [cust_name] => xofahon
+            [cust_email] => xofahon594@pariag.com
+            [cust_phone] => 09214991751
+            [cust_address] => Blk 31 Lt 2 Lhinnete Homea
+            [cust_city] => Cavite
+            [cust_zip] => 4311
+        )
+
+)
+Login session set: Array
+(
+    [customer] => Array
+        (
+            [cust_id] => 14
+            [cust_name] => xofahon
+            [cust_email] => xofahon594@pariag.com
+            [cust_phone] => 09214991751
+            [cust_address] => Blk 31 Lt 2 Lhinnete Homea
+            [cust_city] => Cavite
+            [cust_zip] => 4311
+        )
+
+)
+Login session set: Array
+(
+    [customer] => Array
+        (
+            [cust_id] => 13
+            [cust_name] => seyan1
+            [cust_email] => seanammiel@gmail.com
+            [cust_phone] => 0956193051213
+            [cust_address] => pogi
+            [cust_city] => street
+            [cust_zip] => 3123
+        )
+
+)
+Login session set: Array
+(
+    [customer] => Array
+        (
+            [cust_id] => 14
+            [cust_name] => xofahon
+            [cust_email] => xofahon594@pariag.com
+            [cust_phone] => 09214991751
+            [cust_address] => Blk 31 Lt 2 Lhinnete Homea
+            [cust_city] => Cavite
+            [cust_zip] => 4311
+        )
+
+)
+Login session set: Array
+(
+    [customer] => Array
+        (
+            [cust_id] => 14
+            [cust_name] => xofahon
+            [cust_email] => xofahon594@pariag.com
+            [cust_phone] => 09214991751
+            [cust_address] => Blk 31 Lt 2 Lhinnete Homea
+            [cust_city] => Cavite
+            [cust_zip] => 4311
+        )
+
+)

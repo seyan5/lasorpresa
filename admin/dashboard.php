@@ -54,6 +54,20 @@ try {
 }
 
 
+try {
+    $recentReviewsQuery = $pdo->query("SELECT r.review, r.created_at, name AS product_name, c.cust_name 
+                                      FROM reviews r
+                                      JOIN product p ON r.product_id = p.p_id
+                                      JOIN customer c ON r.customer_id = c.cust_id
+                                      ORDER BY r.created_at DESC
+                                      LIMIT 8");
+    $recentReviews = $recentReviewsQuery->fetchAll(PDO::FETCH_ASSOC);
+} catch (Exception $e) {
+    echo "Error fetching recent reviews: " . $e->getMessage();
+}
+
+
+
 
 
 ?>
@@ -276,6 +290,37 @@ try {
             </div>
         </div>
     </div>
+
+    <div class="recentReviews">
+                <div class="cardHeader">
+                    <h2>Recent Reviews</h2>
+                </div>
+
+                <?php if (empty($recentReviews)) { ?>
+                    <p>No reviews found.</p>
+                <?php } else { ?>
+                    <table>
+                        <thead>
+                            <tr>
+                                <td>Product</td>
+                                <td>Review</td>
+                                <td>Customer</td>
+                                <td>Date</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($recentReviews as $review) { ?>
+                                <tr>
+                                    <td><?= htmlspecialchars($review['product_name']) ?></td>
+                                    <td><?= htmlspecialchars($review['review']) ?></td>
+                                    <td><?= htmlspecialchars($review['cust_name']) ?></td>
+                                    <td><?= date('M d, Y', strtotime($review['created_at'])) ?></td>
+                                </tr>
+                            <?php } ?>
+                        </tbody>
+                    </table>
+                <?php } ?>
+            </div>
 
     <!-- =========== Scripts =========  -->
     <script src="assets/js/main.js"></script>
