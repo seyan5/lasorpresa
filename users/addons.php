@@ -41,7 +41,7 @@ include("../admin/inc/CSRF_Protect.php");
                     <a href="addons.php">Addons</a>
                 </div>
         </div>
-        <a href="#review">Review</a>
+        <a href="review.php">Review</a>
         <a href="#contacts">Contacts</a>
         <a href="customization.php">Customize</a>
 

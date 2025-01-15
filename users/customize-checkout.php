@@ -80,7 +80,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $total_price_item = ($flower_price * $item['num_flowers']) + $container_price + $color_price;
     
         // Insert into `custom_orderitems`
-        $stmt = $pdo->prepare("INSERT INTO custom_orderitems (order_id, flower_type, num_flowers, container_type, container_color, flower_price, container_price, color_price, total_price) VALUES (:order_id, :flower_type, :num_flowers, :container_type, :container_color, :flower_price, :container_price, :color_price, :total_price)");
+        $stmt = $pdo->prepare("INSERT INTO custom_orderitems (order_id, flower_type, num_flowers, container_type, container_color, flower_price, container_price, color_price, total_price, remarks) VALUES (:order_id, :flower_type, :num_flowers, :container_type, :container_color, :flower_price, :container_price, :color_price, :total_price, :remarks)");
         $stmt->execute([
             'order_id' => $order_id,
             'flower_type' => $flower_name, // Insert name instead of ID
@@ -91,6 +91,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'container_price' => $container_price,
             'color_price' => $color_price,
             'total_price' => $total_price_item,
+            'remarks' => $item['remarks'], // Add remarks to database insertion
         ]);
     }
     

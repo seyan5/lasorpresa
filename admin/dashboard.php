@@ -6,6 +6,14 @@ include("inc/config.php");
 include("inc/functions.php");
 include("inc/CSRF_Protect.php");
 
+// Query to fetch recent customers, ordered by the registration date
+try {
+    $recentCustomersQuery = $pdo->query("SELECT * FROM customer ORDER BY cust_datetime DESC LIMIT 8");
+    $recentCustomers = $recentCustomersQuery->fetchAll(PDO::FETCH_ASSOC);
+} catch (Exception $e) {
+    echo "Error fetching recent customers: " . $e->getMessage();
+}
+
 $totalUsersQuery = $pdo->query("SELECT COUNT(cust_id) AS total_users FROM customer");
 $totalUsers = $totalUsersQuery->fetch(PDO::FETCH_ASSOC)['total_users'];
 
@@ -17,6 +25,15 @@ $listedProducts = $listedProductsQuery->fetch(PDO::FETCH_ASSOC)['listed_products
 
 $totalSalesAmountQuery = $pdo->query("SELECT SUM(amount_paid) AS total_sales_amount FROM payment");
 $totalSalesAmount = $totalSalesAmountQuery->fetch(PDO::FETCH_ASSOC)['total_sales_amount'];
+
+// Provide a default value of 0 if the total sales amount is null
+$totalSalesAmount = $totalSalesAmount ? $totalSalesAmount : 0;
+
+$paymentPendingQuery = $pdo->query("SELECT COUNT(order_id) AS payment_pending FROM payment WHERE payment_status = 'pending'");
+$paymentPending = $paymentPendingQuery->fetch(PDO::FETCH_ASSOC)['payment_pending'];
+
+$shippingPendingQuery = $pdo->query("SELECT COUNT(order_id) AS shipping_pending FROM payment WHERE shipping_status = 'pending'");
+$shippingPending = $shippingPendingQuery->fetch(PDO::FETCH_ASSOC)['shipping_pending'];
 
 try {
     // Fetch recent orders from the payment table
@@ -42,21 +59,9 @@ try {
     echo "Error fetching recent orders: " . $e->getMessage();
 }
 
-$salesDataQuery = $pdo->query("
-    SELECT DATE(pay.created_at) AS sale_date, SUM(amount_paid) AS daily_sales 
-    FROM payment pay
-    WHERE pay.created_at >= CURDATE() - INTERVAL 7 DAY
-    GROUP BY sale_date
-    ORDER BY sale_date ASC
-");
-$salesData = $salesDataQuery->fetchAll(PDO::FETCH_ASSOC);
-$salesDates = [];
-$salesAmounts = [];
 
-foreach ($salesData as $data) {
-    $salesDates[] = $data['sale_date'];
-    $salesAmounts[] = (float) $data['daily_sales'];
-}
+
+
 
 
 ?>
@@ -100,11 +105,11 @@ foreach ($salesData as $data) {
                     </a>
                 </li>
                 <li>
-                    <a href="#">
+                    <a href="sales-report.php">
                         <span class="icon">
-                            <ion-icon name="chatbubble-outline"></ion-icon>
+                            <ion-icon name="cash-outline"></ion-icon>
                         </span>
-                        <span class="title">Messages</span>
+                        <span class="title">Sales</span>
                     </a>
                 </li>
                 <li>
@@ -113,6 +118,14 @@ foreach ($salesData as $data) {
                             <ion-icon name="cube-outline"></ion-icon>
                         </span>
                         <span class="title">Manage Products</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="product/flowers.php">
+                        <span class="icon">
+                            <ion-icon name="flower-outline"></ion-icon>
+                        </span>
+                        <span class="title">Manage Flowers</span>
                     </a>
                 </li>
                 <li>
@@ -126,17 +139,9 @@ foreach ($salesData as $data) {
                 <li>
                     <a href="settings.php">
                         <span class="icon">
-                            <ion-icon name="settings-outline"></ion-icon>
+                            <ion-icon name="albums-outline"></ion-icon>
                         </span>
-                        <span class="title">Settings</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="customer.php">
-                        <span class="icon">
-                            <ion-icon name="settings-outline"></ion-icon>
-                        </span>
-                        <span class="title">Registered Customer</span>
+                        <span class="title">Categories</span>
                     </a>
                 </li>
                 <li>
@@ -194,51 +199,75 @@ foreach ($salesData as $data) {
                 </div>
 
                 <div class="card">
-                <a href="product/product.php" style="text-decoration: none; color: inherit;">
-                    <div>
-                        <div class="numbers"><?= number_format($listedProducts) ?></div>
-                        <div class="cardName">Listed Products</div>
-                    </div>
+                    <a href="product/product.php" style="text-decoration: none; color: inherit;">
+                        <div>
+                            <div class="numbers"><?= number_format($listedProducts) ?></div>
+                            <div class="cardName">Listed Products</div>
+                        </div>
 
-                    <div class="iconBx">
-                        <ion-icon name="cube-outline"></ion-icon>
-                    </div>
-</a>
+                        <div class="iconBx">
+                            <ion-icon name="cube-outline"></ion-icon>
+                        </div>
+                    </a>
                 </div>
 
                 <div class="card">
-    <a href="sales-report.php" style="text-decoration: none; color: inherit;">
-        <div>
-            <div class="numbers">P<?= number_format($totalSalesAmount, 2) ?></div>
-            <div class="cardName">Total Sales</div>
-        </div>
-        <div class="iconBx">
-            <ion-icon name="cash-outline"></ion-icon>
-        </div>
-    </a>
-</div>
-            </div>
+                    <a href="sales-report.php" style="text-decoration: none; color: inherit;">
+                        <div>
+                            <div class="numbers">P<?= number_format($totalSalesAmount, 2) ?></div>
+                            <div class="cardName">Total Sales</div>
+                        </div>
+                        <div class="iconBx">
+                            <ion-icon name="cash-outline"></ion-icon>
+                        </div>
+                    </a>
+                </div>
 
+                <div class="card">
+                <div>
+                    <div class="numbers"><?= number_format($paymentPending) ?></div>
+                    <div class="cardName">Payment Pending</div>
+                </div>
+
+                <div class="iconBx">
+                    <ion-icon name="cash-outline"></ion-icon>
+                </div>
+            </div>
             <div class="salesChart">
             <h2>Sales Overview</h2>
             <canvas id="salesChart" width="300" height="100"></canvas>
         </div>
+            <div class="card">
+                <div>
+                    <div class="numbers"><?= number_format($shippingPending) ?></div>
+                    <div class="cardName">Shipping Pending</div>
+                </div>
+
+                <div class="iconBx">
+                    <ion-icon name="cart-outline"></ion-icon>
+                </div>
+            </div>
+</div>
+
+           
 
             <!-- ================ Order Details List ================= -->
-            <div class="details">
-    <div class="recentOrders">
-        <div class="cardHeader">
-            <h2>Recent Orders</h2>
-            <a href="orders/order.php" class="btn">View All</a>
-        </div>
+            <div class="recentOrders">
+    <div class="cardHeader d-flex justify-content-between align-items-center">
+        <h2>Recent Orders</h2>
+        <a href="orders/order.php" class="btn btn-primary">View All</a>
+    </div>
 
-        <table>
-            <thead>
+    <?php if (empty($recentOrders)) { ?>
+        <p class="text-center">No orders found.</p>
+    <?php } else { ?>
+        <table class="table table-striped table-bordered">
+            <thead class="thead-dark">
                 <tr>
-                    <td>Name</td>
-                    <td>Price</td>
-                    <td>Payment</td>
-                    <td>Status</td>
+                    <th>Name</th>
+                    <th>Price</th>
+                    <th>Payment Status</th>
+                    <th>Shipping Status</th>
                 </tr>
             </thead>
             <tbody>
@@ -259,47 +288,99 @@ foreach ($salesData as $data) {
                 <?php } ?>
             </tbody>
         </table>
-    </div>
+    <?php } ?>
 </div>
+                <!-- ================= New Customers ================ -->
+                <div class="recentCustomers">
+                    <div class="cardHeader">
+                        <h2>Recent Customer</h2>
+                    </div>
+
+                    <table>
+                    <?php foreach ($recentCustomers as $customer) { ?>
+                        <tr>
+                            <td width="60px">
+                                <div class="imgBx">
+                                    
+                                </div>
+                            </td>
+                            <td>
+                                <h4><?= htmlspecialchars($customer['cust_name']) ?><br>
+                                    <span><?= htmlspecialchars($customer['cust_city']) ?></span>
+                                </h4>
+                            </td>
+                        </tr>
+                    <?php } ?>
+                </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- =========== Scripts =========  -->
     <script src="assets/js/main.js"></script>
 
     <!-- ====== ionicons ======= -->
     <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-    <!-- Sales Chart JavaScript -->
-    <script>
-        var ctx = document.getElementById('salesChart').getContext('2d');
-        var salesChart = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: <?php echo json_encode($salesDates); ?>,
-                datasets: [{
-                    label: 'Sales Amount ($)',
-                    data: <?php echo json_encode($salesAmounts); ?>,
-                    borderColor: 'rgba(75, 192, 192, 1)',
-                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                    fill: false,
-                    tension: 0.1
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    title: {
-                        display: true,
-                        text: 'Sales Overview (Last 7 Days)'
-                    }
-                }
-            }
-        });
-    </script>
 </body>
 
 <style>
+    .recentOrders {
+        margin-top: 20px;
+    }
 
+    .cardHeader {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+    }
+
+    .btn {
+        font-size: 14px;
+        padding: 8px 16px;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    table th, table td {
+        padding: 10px;
+        text-align: left;
+    }
+
+    table th {
+        background-color: #f8f9fa;
+    }
+
+    .status {
+        padding: 5px 10px;
+        border-radius: 3px;
+        font-weight: bold;
+    }
+
+    .status.delivered {
+        background-color: #28a745;
+        color: white;
+    }
+
+    .status.pending {
+        background-color: #ffc107;
+        color: white;
+    }
+
+    .status.inProgress {
+        background-color: #007bff;
+        color: white;
+    }
+
+    .status.return {
+        background-color: #dc3545;
+        color: white;
+    }
 </style>
-
 </html>

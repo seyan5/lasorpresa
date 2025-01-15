@@ -50,6 +50,8 @@ $customization = $_SESSION['customization'];
             $color_name = "Unknown Color"; // Default value
             $color_price = 0; // No extra cost
         }
+        
+        $remarks = isset($item['remarks']) ? htmlspecialchars($item['remarks']) : 'No remarks provided';
 
         // Calculate total price for this flower set
         $item_total_price = ($flower_price * $item['num_flowers']) + $container_price + $color_price;
@@ -109,6 +111,7 @@ $customization = $_SESSION['customization'];
             <p><strong>Container Type:</strong> <?php echo htmlspecialchars($container_name); ?>
                 ($<?php echo number_format($container_price, 2); ?>)</p>
             <p><strong>Container Color:</strong> <?php echo htmlspecialchars($color_name); ?> (No extra cost)</p>
+            <p><strong>Remarks:</strong> <?php echo $remarks; ?></p>
             <p><strong>Item Total Price:</strong> $<?php echo number_format($item_total_price, 2); ?></p>
         </div>
         <hr>
