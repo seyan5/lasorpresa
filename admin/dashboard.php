@@ -6,6 +6,14 @@ include("inc/config.php");
 include("inc/functions.php");
 include("inc/CSRF_Protect.php");
 
+// Query to fetch recent customers, ordered by the registration date
+try {
+    $recentCustomersQuery = $pdo->query("SELECT * FROM customer ORDER BY cust_datetime DESC LIMIT 8");
+    $recentCustomers = $recentCustomersQuery->fetchAll(PDO::FETCH_ASSOC);
+} catch (Exception $e) {
+    echo "Error fetching recent customers: " . $e->getMessage();
+}
+
 $totalUsersQuery = $pdo->query("SELECT COUNT(cust_id) AS total_users FROM customer");
 $totalUsers = $totalUsersQuery->fetch(PDO::FETCH_ASSOC)['total_users'];
 
@@ -17,6 +25,9 @@ $listedProducts = $listedProductsQuery->fetch(PDO::FETCH_ASSOC)['listed_products
 
 $totalSalesAmountQuery = $pdo->query("SELECT SUM(amount_paid) AS total_sales_amount FROM payment");
 $totalSalesAmount = $totalSalesAmountQuery->fetch(PDO::FETCH_ASSOC)['total_sales_amount'];
+
+// Provide a default value of 0 if the total sales amount is null
+$totalSalesAmount = $totalSalesAmount ? $totalSalesAmount : 0;
 
 try {
     // Fetch recent orders from the payment table
@@ -42,21 +53,21 @@ try {
     echo "Error fetching recent orders: " . $e->getMessage();
 }
 
-$salesDataQuery = $pdo->query("
-    SELECT DATE(pay.created_at) AS sale_date, SUM(amount_paid) AS daily_sales 
-    FROM payment pay
-    WHERE pay.created_at >= CURDATE() - INTERVAL 7 DAY
-    GROUP BY sale_date
-    ORDER BY sale_date ASC
-");
-$salesData = $salesDataQuery->fetchAll(PDO::FETCH_ASSOC);
-$salesDates = [];
-$salesAmounts = [];
 
-foreach ($salesData as $data) {
-    $salesDates[] = $data['sale_date'];
-    $salesAmounts[] = (float) $data['daily_sales'];
+try {
+    $recentReviewsQuery = $pdo->query("SELECT r.review, r.created_at, name AS product_name, c.cust_name 
+                                      FROM reviews r
+                                      JOIN product p ON r.product_id = p.p_id
+                                      JOIN customer c ON r.customer_id = c.cust_id
+                                      ORDER BY r.created_at DESC
+                                      LIMIT 8");
+    $recentReviews = $recentReviewsQuery->fetchAll(PDO::FETCH_ASSOC);
+} catch (Exception $e) {
+    echo "Error fetching recent reviews: " . $e->getMessage();
 }
+
+
+
 
 
 ?>
@@ -100,11 +111,11 @@ foreach ($salesData as $data) {
                     </a>
                 </li>
                 <li>
-                    <a href="#">
+                    <a href="sales-report.php">
                         <span class="icon">
-                            <ion-icon name="chatbubble-outline"></ion-icon>
+                            <ion-icon name="cash-outline"></ion-icon>
                         </span>
-                        <span class="title">Messages</span>
+                        <span class="title">Sales</span>
                     </a>
                 </li>
                 <li>
@@ -126,17 +137,9 @@ foreach ($salesData as $data) {
                 <li>
                     <a href="settings.php">
                         <span class="icon">
-                            <ion-icon name="settings-outline"></ion-icon>
+                            <ion-icon name="albums-outline"></ion-icon>
                         </span>
-                        <span class="title">Settings</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="customer.php">
-                        <span class="icon">
-                            <ion-icon name="settings-outline"></ion-icon>
-                        </span>
-                        <span class="title">Registered Customer</span>
+                        <span class="title">Categories</span>
                     </a>
                 </li>
                 <li>
@@ -217,21 +220,20 @@ foreach ($salesData as $data) {
         </div>
     </a>
 </div>
-            </div>
+   
 
-            <div class="salesChart">
-            <h2>Sales Overview</h2>
-            <canvas id="salesChart" width="400" height="200"></canvas>
-        </div>
+           
 
             <!-- ================ Order Details List ================= -->
-            <div class="details">
-    <div class="recentOrders">
-        <div class="cardHeader">
-            <h2>Recent Orders</h2>
-            <a href="orders/order.php" class="btn">View All</a>
-        </div>
+            <div class="recentOrders">
+    <div class="cardHeader">
+        <h2>Recent Orders</h2>
+        <a href="orders/order.php" class="btn">View All</a>
+    </div>
 
+    <?php if (empty($recentOrders)) { ?>
+        <p>No orders found.</p>
+    <?php } else { ?>
         <table>
             <thead>
                 <tr>
@@ -259,7 +261,7 @@ foreach ($salesData as $data) {
                 <?php } ?>
             </tbody>
         </table>
-    </div>
+    <?php } ?>
 </div>
 
                 <!-- ================= New Customers ================ -->
@@ -269,82 +271,56 @@ foreach ($salesData as $data) {
                     </div>
 
                     <table>
+                    <?php foreach ($recentCustomers as $customer) { ?>
                         <tr>
                             <td width="60px">
-                                <div class="imgBx"><img src="assets/imgs/customer02.jpg" alt=""></div>
+                                <div class="imgBx">
+                                    
+                                </div>
                             </td>
                             <td>
-                                <h4>David <br> <span>Italy</span></h4>
+                                <h4><?= htmlspecialchars($customer['cust_name']) ?><br>
+                                    <span><?= htmlspecialchars($customer['cust_city']) ?></span>
+                                </h4>
                             </td>
                         </tr>
-
-                        <tr>
-                            <td width="60px">
-                                <div class="imgBx"><img src="assets/imgs/customer01.jpg" alt=""></div>
-                            </td>
-                            <td>
-                                <h4>Amit <br> <span>India</span></h4>
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td width="60px">
-                                <div class="imgBx"><img src="assets/imgs/customer02.jpg" alt=""></div>
-                            </td>
-                            <td>
-                                <h4>David <br> <span>Italy</span></h4>
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td width="60px">
-                                <div class="imgBx"><img src="assets/imgs/customer01.jpg" alt=""></div>
-                            </td>
-                            <td>
-                                <h4>Amit <br> <span>India</span></h4>
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td width="60px">
-                                <div class="imgBx"><img src="assets/imgs/customer02.jpg" alt=""></div>
-                            </td>
-                            <td>
-                                <h4>David <br> <span>Italy</span></h4>
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td width="60px">
-                                <div class="imgBx"><img src="assets/imgs/customer01.jpg" alt=""></div>
-                            </td>
-                            <td>
-                                <h4>Amit <br> <span>India</span></h4>
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td width="60px">
-                                <div class="imgBx"><img src="assets/imgs/customer01.jpg" alt=""></div>
-                            </td>
-                            <td>
-                                <h4>David <br> <span>Italy</span></h4>
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td width="60px">
-                                <div class="imgBx"><img src="assets/imgs/customer02.jpg" alt=""></div>
-                            </td>
-                            <td>
-                                <h4>Amit <br> <span>India</span></h4>
-                            </td>
-                        </tr>
-                    </table>
+                    <?php } ?>
+                </table>
                 </div>
             </div>
         </div>
     </div>
+
+    <div class="recentReviews">
+                <div class="cardHeader">
+                    <h2>Recent Reviews</h2>
+                </div>
+
+                <?php if (empty($recentReviews)) { ?>
+                    <p>No reviews found.</p>
+                <?php } else { ?>
+                    <table>
+                        <thead>
+                            <tr>
+                                <td>Product</td>
+                                <td>Review</td>
+                                <td>Customer</td>
+                                <td>Date</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($recentReviews as $review) { ?>
+                                <tr>
+                                    <td><?= htmlspecialchars($review['product_name']) ?></td>
+                                    <td><?= htmlspecialchars($review['review']) ?></td>
+                                    <td><?= htmlspecialchars($review['cust_name']) ?></td>
+                                    <td><?= date('M d, Y', strtotime($review['created_at'])) ?></td>
+                                </tr>
+                            <?php } ?>
+                        </tbody>
+                    </table>
+                <?php } ?>
+            </div>
 
     <!-- =========== Scripts =========  -->
     <script src="assets/js/main.js"></script>
@@ -352,39 +328,6 @@ foreach ($salesData as $data) {
     <!-- ====== ionicons ======= -->
     <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-    <!-- Sales Chart JavaScript -->
-    <script>
-        var ctx = document.getElementById('salesChart').getContext('2d');
-        var salesChart = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: <?php echo json_encode($salesDates); ?>,
-                datasets: [{
-                    label: 'Sales Amount ($)',
-                    data: <?php echo json_encode($salesAmounts); ?>,
-                    borderColor: 'rgba(75, 192, 192, 1)',
-                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                    fill: false,
-                    tension: 0.1
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    title: {
-                        display: true,
-                        text: 'Sales Overview (Last 7 Days)'
-                    }
-                }
-            }
-        });
-    </script>
 </body>
-
-<style>
-
-</style>
-
 </html>

@@ -56,6 +56,10 @@ include("../admin/inc/CSRF_Protect.php");
 
         </nav>
 
+        
+
+
+
         <div class="icons">
             <a href="shopcart.php" class="fas fa-shopping-cart"></a>
             <div class="user-dropdown">
@@ -72,6 +76,71 @@ include("../admin/inc/CSRF_Protect.php");
                 </div>
             </div>
         </div>
+
+         
+        <!-- Notification Dropdown -->
+<div class="notification-dropdown">
+    <a href="#" class="fas fa-bell" onclick="toggleNotificationDropdown()"></a>
+    <div class="dropdown-menu" id="notificationDropdown">
+        <?php 
+        // Check if a customer is logged in
+        if (isset($_SESSION['customer']) && isset($_SESSION['customer']['cust_id'])) {
+            $customerId = $_SESSION['customer']['cust_id']; // Get the logged-in customer's ID
+
+            // Fetch payments for the logged-in customer with the necessary conditions
+            $statement = $pdo->prepare("
+                SELECT p.*, oi.product_id, pr.name
+                FROM payment p
+                JOIN order_items oi ON p.order_id = oi.order_id
+                JOIN product pr ON oi.product_id = pr.p_id
+                WHERE p.cust_id = :cust_id
+                AND (p.payment_status = 'pending' OR p.shipping_status != 'delivered') 
+                ORDER BY p.created_at DESC
+            ");
+            $statement->execute(['cust_id' => $customerId]);
+            $payments = $statement->fetchAll(PDO::FETCH_ASSOC);
+
+            if (!empty($payments)): 
+        ?>
+            <p>Notifications</p>
+            <hr>
+            <?php foreach ($payments as $payment): ?>
+                <?php 
+                // Determine payment status message and shipping status message
+                $paymentStatus = ($payment['payment_status'] == 'pending') ? 'Payment Pending' : ($payment['payment_status'] == 'paid' ? 'Payment Confirmed' : 'Payment Failed');
+                $shippingStatus = ($payment['shipping_status'] == 'pending') ? 'Shipping Pending' : ($payment['shipping_status'] == 'shipped' ? 'Shipped' : 'Delivered');
+                ?>
+                <li class="dropdown-item d-flex align-items-center">
+    <i class="fa fa-credit-card me-2 <?php echo $payment['payment_status'] == 'pending' ? 'bg-warning' : 'bg-success'; ?>" style="padding: 5px; border-radius: 50%;"></i>
+    <div>
+        <a href="order-details.php?order_id=<?php echo $payment['order_id']; ?>&product_id=<?php echo $payment['product_id']; ?>" style="text-decoration: none;">
+            <strong>Product: <?php echo $payment['name']; ?></strong>
+            <div class="text-muted small"><?php echo $paymentStatus; ?></div>
+            <div class="text-muted small"><?php echo $shippingStatus; ?></div>
+        </a>
+    </div>
+</li>
+
+            <?php endforeach; ?>
+        <?php else: ?>
+            <li>
+                <span class="dropdown-item text-center text-muted">No new notifications</span>
+            </li>
+        <?php endif; ?>
+        <?php 
+        } else { 
+        ?>
+            <li>
+                <span class="dropdown-item text-center text-muted">No customer logged in</span>
+            </li>
+        <?php } ?>
+    </div>
+</div>
+
+
+        </div>
+    </div>
+</header>
 
     </header>
 
@@ -297,4 +366,112 @@ include("../admin/inc/CSRF_Protect.php");
     };
 </script>
 
+<script>
+    // Toggle the user dropdown when clicking the user icon
+    function toggleUserDropdown() {
+        const dropdown = document.getElementById('userDropdown');
+        dropdown.classList.toggle('show');
+    }
+
+    // Toggle the notifications dropdown when clicking the bell icon
+    function toggleNotificationDropdown() {
+        const notificationDropdown = document.getElementById('notificationDropdown');
+        notificationDropdown.classList.toggle('show');
+    }
+
+    // Close the dropdown if the user clicks outside of it
+    window.onclick = function (event) {
+        // Close user dropdown if clicked outside
+        if (!event.target.matches('.fa-user')) {
+            const dropdown = document.getElementById('userDropdown');
+            if (dropdown && dropdown.classList.contains('show')) {
+                dropdown.classList.remove('show');
+            }
+        }
+
+        // Close notifications dropdown if clicked outside
+        if (!event.target.matches('.fa-bell')) {
+            const notificationDropdown = document.getElementById('notificationDropdown');
+            if (notificationDropdown && notificationDropdown.classList.contains('show')) {
+                notificationDropdown.classList.remove('show');
+            }
+        }
+    };
+</script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        if ("Notification" in window) {
+            // Request permission if not already granted
+            if (Notification.permission !== "granted") {
+                Notification.requestPermission().then(permission => {
+                    if (permission !== "granted") {
+                        console.log("Notification permission denied.");
+                    }
+                });
+            }
+
+            // Show notifications for payment and shipping status
+            if (<?php echo count($payments); ?> > 0 && Notification.permission === "granted") {
+                <?php foreach ($payments as $payment): ?>
+                    // Check payment status and shipping status
+                    var paymentStatus = '<?php echo $payment['payment_status']; ?>';
+                    var shippingStatus = '<?php echo $payment['shipping_status']; ?>';
+                    var paymentId = '<?php echo $payment['name']; ?>';
+
+                    if (paymentStatus === 'pending' || shippingStatus !== 'delivered') {
+                        showPaymentShippingNotification(paymentId, paymentStatus, shippingStatus);
+                    }
+                <?php endforeach; ?>
+            }
+        }
+    });
+
+    // Function to show payment and shipping status notification
+    function showPaymentShippingNotification(paymentId, paymentStatus, shippingStatus) {
+        const options = {
+            body: `Payment Status: ${paymentStatus}, Shipping Status: ${shippingStatus}`,
+            icon: '../../images/logo.png',
+            tag: 'payment-shipping-notification'
+        };
+        new Notification(`Product ${paymentId} Update`, options);
+    }
+</script>
+
+<style>
+    /* Notification Dropdown */
+.notification-dropdown .dropdown-menu {
+    display: none;
+    position: absolute;
+    background-color: white;
+    border: 1px solid #ccc;
+    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+    padding: 10px;
+    z-index: 1;
+}
+
+.notification-dropdown .dropdown-menu.show {
+    display: block;
+}
+
+.notification-dropdown .dropdown-item {
+    display: flex;
+    align-items: center;
+}
+
+.notification-dropdown .badge {
+    margin-left: 5px;
+}
+
+.notification-dropdown i {
+    margin-right: 10px;
+    padding: 5px;
+    border-radius: 50%;
+}
+
+.notification-dropdown .text-muted {
+    font-size: 12px;
+}
+
+</style>
 </html>
