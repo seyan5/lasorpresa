@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 13, 2025 at 03:17 PM
+-- Generation Time: Jan 13, 2025 at 05:25 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -154,6 +154,7 @@ CREATE TABLE `customer_messages` (
 
 CREATE TABLE `custom_order` (
   `order_id` int(11) NOT NULL,
+  `cust_id` int(11) NOT NULL,
   `customer_name` varchar(255) NOT NULL,
   `customer_email` varchar(255) NOT NULL,
   `shipping_address` text NOT NULL,
@@ -165,10 +166,17 @@ CREATE TABLE `custom_order` (
 -- Dumping data for table `custom_order`
 --
 
-INSERT INTO `custom_order` (`order_id`, `customer_name`, `customer_email`, `shipping_address`, `total_price`, `order_date`) VALUES
-(3, 'Johnwayne', 'jw@gmail.com', 'Blk 31 Lt 2 Lhinnete Homea\r\nBiga Tanza Cavite', 125.00, '2025-01-09 15:00:42'),
-(4, 'Johnwayne', 'jw@gmail.com', 'Blk 31 Lt 2 Lhinnete Homea\r\nBiga Tanza Cavite', 669.00, '2025-01-09 15:07:26'),
-(5, 'seyan', 'seanammiel@gmail.com', 'pogi street', 375.00, '2025-01-10 15:46:05');
+INSERT INTO `custom_order` (`order_id`, `cust_id`, `customer_name`, `customer_email`, `shipping_address`, `total_price`, `order_date`) VALUES
+(6, 13, 'seyan1', 'seanammiel@gmail.com', 'Brgy Tapia General Trias Cavite', 123.00, '2025-01-13 15:48:24'),
+(7, 13, 'seyan1', 'seanammiel@gmail.com', 'Brgy Tapia General Trias Cavite', 123.00, '2025-01-13 15:49:02'),
+(8, 13, 'seyan1', 'seanammiel@gmail.com', 'Brgy Tapia General Trias Cavite', 123.00, '2025-01-13 15:54:04'),
+(9, 13, 'seyan1', 'seanammiel@gmail.com', 'Brgy Tapia General Trias Cavite', 123.00, '2025-01-13 15:54:08'),
+(10, 13, 'seyan1', 'seanammiel@gmail.com', 'Brgy Tapia General Trias Cavite', 123.00, '2025-01-13 16:03:55'),
+(11, 13, 'seyan1', 'seanammiel@gmail.com', 'Brgy Tapia General Trias Cavite', 123.00, '2025-01-13 16:17:26'),
+(12, 13, 'seyan1', 'seanammiel@gmail.com', 'Brgy Tapia General Trias Cavite', 123.00, '2025-01-13 16:18:28'),
+(13, 13, 'seyan1', 'seanammiel@gmail.com', 'Brgy Tapia General Trias Cavite', 123.00, '2025-01-13 16:20:52'),
+(14, 13, 'seyan1', 'seanammiel@gmail.com', 'Brgy Tapia General Trias Cavite', 123.00, '2025-01-13 16:23:17'),
+(15, 13, 'seyan1', 'seanammiel@gmail.com', 'Brgy Tapia General Trias Cavite', 246.00, '2025-01-13 16:24:32');
 
 -- --------------------------------------------------------
 
@@ -200,7 +208,9 @@ INSERT INTO `custom_orderitems` (`orderitem_id`, `order_id`, `flower_type`, `num
 (7, 4, 'Lilac', 1, 'Plastic Wrap', 'Yellow', 25.00, 50.00, 0.00, 75.00),
 (8, 5, 'Tulip', 1, 'Plastic Wrap', 'Blue', 25.00, 50.00, 0.00, 75.00),
 (9, 5, 'Tulip', 5, 'Plastic Wrap', 'Blue', 25.00, 50.00, 0.00, 175.00),
-(10, 5, 'Lilac', 3, 'Plastic Wrap', 'Blue', 25.00, 50.00, 0.00, 125.00);
+(10, 5, 'Lilac', 3, 'Plastic Wrap', 'Blue', 25.00, 50.00, 0.00, 125.00),
+(13, 14, 'Rosas', 1, 'Basket', 'Red', 123.00, 100.00, 0.00, 223.00),
+(14, 15, 'Rosas', 2, 'Paper Wrap', 'Blue', 123.00, 50.00, 0.00, 296.00);
 
 -- --------------------------------------------------------
 
@@ -215,13 +225,28 @@ CREATE TABLE `custom_payment` (
   `customer_email` varchar(255) NOT NULL,
   `reference_number` varchar(255) NOT NULL,
   `amount_paid` decimal(10,2) NOT NULL,
-  `payment_method` varchar(50) NOT NULL,
+  `payment_method` enum('gcash','cop','','') NOT NULL,
   `payment_status` enum('Pending','Paid','Failed') DEFAULT 'Pending',
   `shipping_status` enum('Pending','Shipped','Delivered','Cancelled') DEFAULT 'Pending',
   `order_date` datetime NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `custom_payment`
+--
+
+INSERT INTO `custom_payment` (`cpayment_id`, `order_id`, `customer_name`, `customer_email`, `reference_number`, `amount_paid`, `payment_method`, `payment_status`, `shipping_status`, `order_date`, `created_at`, `updated_at`) VALUES
+(3, 6, 'seyan1', 'seanammiel@gmail.com', '123', 123.00, 'gcash', 'Pending', 'Pending', '0000-00-00 00:00:00', '2025-01-13 15:48:24', '2025-01-13 15:48:24'),
+(4, 7, 'seyan1', 'seanammiel@gmail.com', '', 123.00, '', 'Pending', 'Pending', '0000-00-00 00:00:00', '2025-01-13 15:49:02', '2025-01-13 15:49:02'),
+(5, 8, 'seyan1', 'seanammiel@gmail.com', '', 123.00, '', 'Pending', 'Pending', '0000-00-00 00:00:00', '2025-01-13 15:54:04', '2025-01-13 15:54:04'),
+(6, 9, 'seyan1', 'seanammiel@gmail.com', '', 123.00, 'cop', 'Pending', 'Pending', '0000-00-00 00:00:00', '2025-01-13 15:54:08', '2025-01-13 15:54:08'),
+(7, 10, 'seyan1', 'seanammiel@gmail.com', '12335', 123.00, 'gcash', 'Pending', 'Pending', '0000-00-00 00:00:00', '2025-01-13 16:03:55', '2025-01-13 16:03:55'),
+(8, 12, 'seyan1', 'seanammiel@gmail.com', '3213123', 123.00, 'gcash', 'Pending', 'Pending', '0000-00-00 00:00:00', '2025-01-13 16:18:28', '2025-01-13 16:18:28'),
+(9, 13, 'seyan1', 'seanammiel@gmail.com', '3213123', 123.00, 'gcash', 'Pending', 'Pending', '0000-00-00 00:00:00', '2025-01-13 16:20:52', '2025-01-13 16:20:52'),
+(10, 14, 'seyan1', 'seanammiel@gmail.com', '3213123', 123.00, 'gcash', 'Pending', 'Pending', '0000-00-00 00:00:00', '2025-01-13 16:23:17', '2025-01-13 16:23:17'),
+(11, 15, 'seyan1', 'seanammiel@gmail.com', '123123123', 246.00, 'gcash', 'Pending', 'Pending', '0000-00-00 00:00:00', '2025-01-13 16:24:32', '2025-01-13 16:24:32');
 
 -- --------------------------------------------------------
 
@@ -390,7 +415,9 @@ INSERT INTO `orders` (`order_id`, `customer_id`, `full_name`, `address`, `city`,
 (56, 13, 'seyan1', 'Brgy Tapia General Trias Cavite', 'street', '3123', '0956193051213', 12.00, '2025-01-13 12:58:50'),
 (57, 13, 'seyan1', 'Brgy Tapia General Trias Cavite', 'street', '3123', '0956193051213', 12.00, '2025-01-13 12:59:01'),
 (58, 13, 'seyan1', 'Brgy Tapia General Trias Cavite', 'street', '3123', '0956193051213', 4000.00, '2025-01-13 13:00:29'),
-(59, 13, 'seyan1', 'Brgy Tapia General Trias Cavite', 'street', '3123', '0956193051213', 2000.00, '2025-01-13 13:01:16');
+(59, 13, 'seyan1', 'Brgy Tapia General Trias Cavite', 'street', '3123', '0956193051213', 2000.00, '2025-01-13 13:01:16'),
+(60, 13, 'seyan1', 'Brgy Tapia General Trias Cavite', 'street', '3123', '0956193051213', 12.00, '2025-01-13 14:19:39'),
+(61, 13, 'seyan1', 'Brgy Tapia General Trias Cavite', 'street', '3123', '0956193051213', 24.00, '2025-01-13 14:33:30');
 
 -- --------------------------------------------------------
 
@@ -422,7 +449,9 @@ INSERT INTO `order_items` (`order_item_id`, `order_id`, `product_id`, `quantity`
 (59, 56, 33, 1, 12.00),
 (60, 57, 33, 1, 12.00),
 (61, 58, 32, 1, 4000.00),
-(62, 59, 31, 1, 2000.00);
+(62, 59, 31, 1, 2000.00),
+(63, 60, 33, 1, 12.00),
+(64, 61, 33, 2, 12.00);
 
 -- --------------------------------------------------------
 
@@ -504,7 +533,9 @@ INSERT INTO `payment` (`payment_id`, `cust_id`, `order_id`, `cust_name`, `cust_e
 (52, 13, 56, 'seyan1', 'seanammiel@gmail.com', '0', 12.00, 'cop', 'pending', 'pending', '2025-01-13 12:58:50', '2025-01-13 12:58:50'),
 (53, 13, 57, 'seyan1', 'seanammiel@gmail.com', '0', 12.00, 'cop', 'pending', 'pending', '2025-01-13 12:59:01', '2025-01-13 12:59:01'),
 (54, 13, 58, 'seyan1', 'seanammiel@gmail.com', '0', 4000.00, 'cop', 'pending', 'pending', '2025-01-13 13:00:29', '2025-01-13 13:00:29'),
-(55, 13, 59, 'seyan1', 'seanammiel@gmail.com', '0', 2000.00, 'cop', 'pending', 'pending', '2025-01-13 13:01:16', '2025-01-13 13:01:16');
+(55, 13, 59, 'seyan1', 'seanammiel@gmail.com', '0', 2000.00, 'cop', 'pending', 'pending', '2025-01-13 13:01:16', '2025-01-13 13:01:16'),
+(56, 13, 60, 'seyan1', 'seanammiel@gmail.com', '0', 12.00, 'cop', 'pending', 'pending', '2025-01-13 14:19:39', '2025-01-13 14:19:39'),
+(57, 13, 61, 'seyan1', 'seanammiel@gmail.com', '0', 24.00, 'cop', 'pending', 'pending', '2025-01-13 14:33:30', '2025-01-13 14:33:30');
 
 -- --------------------------------------------------------
 
@@ -537,7 +568,7 @@ INSERT INTO `product` (`p_id`, `name`, `old_price`, `current_price`, `quantity`,
 (30, 'Pink Life Size Teddy Bear', '2000', '1500', 100, 'product-featured-30.jpg', 'Pink Life Size Teddy Bear', 'Pink Life Size Teddy Bear', 'Pink Life Size Teddy Bear', '', 'Pink Life Size Teddy Bear', 1, 1, 19),
 (31, 'Red Life Size Teddy Bear', '1', '2000', 1499, 'product-featured-31.jpg', 'Red Life Size Teddy Bear', 'Red Life Size Teddy Bear', 'Red Life Size Teddy Bear', '', 'Red Life Size Teddy Bear', 1, 1, 19),
 (32, 'Vday 10 Roses Boquet', '4500', '4000', 999, 'product-featured-32.jpg', 'Vday 10 Roses Boquet', 'Vday 10 Roses Boquet', 'Vday 10 Roses Boquet', '', 'Vday 10 Roses Boquet', 1, 1, 23),
-(33, 'Tulip1', '1', '12', 1, 'product-featured-33.jpg', '', '', '', '', '', 1, 1, 15),
+(33, 'Tulip1', '1', '12', 98, 'product-featured-33.jpg', '', '', '', '', '', 1, 1, 15),
 (34, 'Sunflower', '1', '13', 0, 'product-featured-34.jpg', '', '', '', '', '', 1, 1, 16),
 (35, 'Roseee', '1', '12', 0, 'product-featured-35.jpg', '', '', '', '', '', 1, 1, 14),
 (36, 'Rose3', '1', '120', 0, 'product-featured-36.jpg', '', '', '', '', '', 1, 1, 14),
@@ -570,13 +601,13 @@ INSERT INTO `product_color` (`id`, `color_id`, `p_id`) VALUES
 (14, 0, 6),
 (22, 1, 15),
 (34, 1, 32),
-(35, 1, 33),
 (36, 1, 34),
 (37, 2, 35),
 (38, 1, 36),
 (39, 2, 37),
 (43, 1, 31),
-(46, 4, 30);
+(46, 4, 30),
+(47, 1, 33);
 
 -- --------------------------------------------------------
 
@@ -1051,7 +1082,8 @@ ALTER TABLE `customer_messages`
 -- Indexes for table `custom_order`
 --
 ALTER TABLE `custom_order`
-  ADD PRIMARY KEY (`order_id`);
+  ADD PRIMARY KEY (`order_id`),
+  ADD KEY `fk_custom_order_customer` (`cust_id`);
 
 --
 -- Indexes for table `custom_orderitems`
@@ -1215,19 +1247,19 @@ ALTER TABLE `customer_messages`
 -- AUTO_INCREMENT for table `custom_order`
 --
 ALTER TABLE `custom_order`
-  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT for table `custom_orderitems`
 --
 ALTER TABLE `custom_orderitems`
-  MODIFY `orderitem_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `orderitem_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT for table `custom_payment`
 --
 ALTER TABLE `custom_payment`
-  MODIFY `cpayment_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `cpayment_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `email_verifications`
@@ -1257,19 +1289,19 @@ ALTER TABLE `mid_category`
 -- AUTO_INCREMENT for table `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=60;
+  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=62;
 
 --
 -- AUTO_INCREMENT for table `order_items`
 --
 ALTER TABLE `order_items`
-  MODIFY `order_item_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=63;
+  MODIFY `order_item_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=65;
 
 --
 -- AUTO_INCREMENT for table `payment`
 --
 ALTER TABLE `payment`
-  MODIFY `payment_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=56;
+  MODIFY `payment_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=58;
 
 --
 -- AUTO_INCREMENT for table `product`
@@ -1281,7 +1313,7 @@ ALTER TABLE `product`
 -- AUTO_INCREMENT for table `product_color`
 --
 ALTER TABLE `product_color`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=47;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=48;
 
 --
 -- AUTO_INCREMENT for table `product_photo`
@@ -1352,6 +1384,12 @@ ALTER TABLE `chat_messages`
 --
 ALTER TABLE `customer_messages`
   ADD CONSTRAINT `customer_messages_ibfk_1` FOREIGN KEY (`cust_id`) REFERENCES `customer` (`cust_id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `custom_order`
+--
+ALTER TABLE `custom_order`
+  ADD CONSTRAINT `fk_custom_order_customer` FOREIGN KEY (`cust_id`) REFERENCES `customer` (`cust_id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `custom_payment`
