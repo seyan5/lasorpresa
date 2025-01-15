@@ -241,34 +241,36 @@
 
         // Check if browser supports notifications
         document.addEventListener('DOMContentLoaded', function () {
-            if ("Notification" in window) {
-                // Request permission if not already granted
-                if (Notification.permission !== "granted") {
-                    Notification.requestPermission().then(permission => {
-                        if (permission !== "granted") {
-                            console.log("Notification permission denied.");
-                        }
-                    });
-                }
+    if ("Notification" in window) {
+        // Request notification permission if not granted
+        Notification.requestPermission().then(permission => {
+            if (permission === "granted" && lowStockProducts.length > 0) {
+                let index = 0;
 
-                // Show notifications for low stock products
-                if (lowStockProducts.length > 0 && Notification.permission === "granted") {
-                    lowStockProducts.forEach(product => {
+                // Show notifications at intervals (every 2 seconds)
+                const notificationInterval = setInterval(() => {
+                    if (index < lowStockProducts.length) {
+                        let product = lowStockProducts[index];
                         showLowStockNotification(product.name, product.quantity);
-                    });
-                }
+                        index++;
+                    } else {
+                        clearInterval(notificationInterval); // Stop interval when all products are notified
+                    }
+                }, 2000); // 2000 ms = 2 seconds
             }
         });
+    }
+});
 
-        // Function to show low stock notification
-        function showLowStockNotification(productName, quantity) {
-            const options = {
-                body: `Only ${quantity} units left for ${productName}. Restock soon!`,
-                icon: '../../images/logo.png',
-                tag: 'low-stock-notification'
-            };
-            new Notification(`Low Stock Alert: ${productName}`, options);
-        }
+// Function to show low stock notification
+function showLowStockNotification(productName, quantity) {
+    const options = {
+        body: `Only ${quantity} units left for ${productName}. Restock soon!`,
+        icon: '../../images/logo.png',
+        tag: `low-stock-${productName}` // Unique tag for each product
+    };
+    new Notification(`Low Stock Alert: ${productName}`, options);
+}
 
         document.getElementById('productSearch').addEventListener('keyup', function () {
             let searchValue = this.value.toLowerCase();
