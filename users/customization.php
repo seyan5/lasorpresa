@@ -104,7 +104,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                 <div class="form-group">
                                     <label for="num_flowers_<?php echo $index + 1; ?>">Number of Flowers:</label>
                                     <input type="number" id="num_flowers_<?php echo $index + 1; ?>" name="num_flowers[]"
-                                        class="form-control" min="1" max="100"
+                                        class="form-control" min="1" max="3"
                                         value="<?php echo isset($num_flowers[$index]) ? $num_flowers[$index] : 1; ?>"
                                         required>
                                 </div>
@@ -196,7 +196,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
             <div class="form-group">
                 <label for="num_flowers_${flowerCount}">Number of Flowers:</label>
-                <input type="number" id="num_flowers_${flowerCount}" name="num_flowers[]" class="form-control" min="1" max="100" value="1" required>
+                <input type="number" id="num_flowers_${flowerCount}" name="num_flowers[]" class="form-control" min="1" max="3" value="1" required>
             </div>
         `;
 
