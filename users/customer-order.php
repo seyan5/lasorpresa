@@ -231,7 +231,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <strong>Payment Id:</strong> <?= $order['payment_id'] ?><br>
                     <strong>Date:</strong> <?= $order['payment_date'] ?>
                   </td>
-                  <td>$<?= number_format($order['amount_paid'], 2) ?></td>
+                  <td>₱<?= number_format($order['amount_paid'], 2) ?></td>
                   <td>
                     <span class="badge <?= $order['payment_status'] === 'pending' ? 'bg-warning' : ($order['payment_status'] === 'paid' ? 'bg-success' : 'bg-danger') ?>">
                       <?= ucfirst($order['payment_status']) ?>
