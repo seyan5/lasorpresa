@@ -173,7 +173,7 @@ try {
         <p>No reviews available.</p>
     <?php endif; ?>
 </div>
-
+<?php include('../loading.php'); ?>
 
 </body>
 </html>

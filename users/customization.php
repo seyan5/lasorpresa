@@ -134,7 +134,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         </div>
     </div>
 </div>
-
+<?php include('../loading.php'); ?>
 <script>
     let flowerCount = 1; // Track the number of flower sections added
     const addFlowerBtn = document.getElementById('add-flower-btn');

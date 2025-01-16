@@ -29,7 +29,7 @@ include("../admin/inc/CSRF_Protect.php");
     <link rel="stylesheet" href="../css/main.css?v=1.1">
 </head>
 
-<body>
+<>
     <!-- header -->
 
     <header>
@@ -347,10 +347,11 @@ include("../admin/inc/CSRF_Protect.php");
             <p class="copyright">La Sorpresa by J & B © 2021</p>
         </footer>
     </div>
-
-
+    <?php include('../loading.php'); ?>
 </body>
 
+
+                
 <script>
     function toggleDropdown() {
         const dropdown = document.getElementById('userDropdown');

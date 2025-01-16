@@ -226,7 +226,7 @@ $result = $statement->fetchAll(PDO::FETCH_ASSOC);
    </ul>
 </section>
 
-
+<?php include('../loading.php'); ?>
 
 <script>
     function filterProducts(ecat_id, element) {

@@ -197,7 +197,7 @@ $result = $statement->fetchAll(PDO::FETCH_ASSOC);
         <li>Next Page</li>  
    </ul>
 </section>
-
+<?php include('../loading.php'); ?>
 
 <script>
 // Function to filter products by ecat_id
