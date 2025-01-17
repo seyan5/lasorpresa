@@ -67,7 +67,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
     <link rel="stylesheet" href="../css/dropdown.css">
-    <link rel="stylesheet" href="../css/customerorder.css">
+    <link rel="stylesheet" href="../css/customerorder.css?">
     <title>Navbar Fix</title>
 </head>
 <body>
@@ -81,114 +81,176 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <a href="customize-view.php">Custom Orders</a>
     </nav>
     <div class="icons">
-    <a href="shopcart.php" class="fas fa-shopping-cart"></a>
-    <div class="user-dropdown">
-        <a href="#" class="fas fa-user" onclick="toggleDropdown()"></a>
-        <div class="dropdown-menu" id="userDropdown">
-            <?php if (isset($_SESSION['customer'])): ?>
-                <p>Welcome, <?php echo htmlspecialchars($_SESSION['customer']['cust_name']); ?></p>
-                <hr>
-                <a href="profile.php">Profile</a>
-                <a href="logout.php">Logout</a>
-            <?php else: ?>
-                <a href="login.php">Login</a>
-            <?php endif; ?>
+            <a href="shopcart.php" class="fas fa-shopping-cart"></a>
+            <div class="user-dropdown">
+                <a href="#" class="fas fa-user" onclick="toggleDropdown()"></a>
+                <div class="dropdown-menu" id="userDropdown">
+                    <?php if (isset($_SESSION['customer'])): ?>
+                        <p>Welcome, <?php echo htmlspecialchars($_SESSION['customer']['cust_name']); ?></p>
+                        <hr>
+                        <a href="customer-profile-update.php">Profile</a>
+                        <a href="logout.php">Logout</a>
+                    <?php else: ?>
+                        <a href="login.php">Login</a>
+                    <?php endif; ?>
+                </div>
+            </div>
+            <div class="notification-dropdown">
+                <a href="#" class="fas fa-bell" onclick="toggleNotificationDropdown()"></a>
+                <div class="dropdown-menu" id="notificationDropdown">
+                    <?php 
+                    // Check if a customer is logged in
+                    if (isset($_SESSION['customer']) && isset($_SESSION['customer']['cust_id'])) {
+                        $customerId = $_SESSION['customer']['cust_id']; // Get the logged-in customer's ID
+
+                        // Fetch payments for the logged-in customer with the necessary conditions
+                        $statement = $pdo->prepare("
+                            SELECT p.*, oi.product_id, pr.name
+                            FROM payment p
+                            JOIN order_items oi ON p.order_id = oi.order_id
+                            JOIN product pr ON oi.product_id = pr.p_id
+                            WHERE p.cust_id = :cust_id
+                            AND (p.payment_status = 'pending' OR p.shipping_status != 'delivered') 
+                            ORDER BY p.created_at DESC
+                        ");
+                        $statement->execute(['cust_id' => $customerId]);
+                        $payments = $statement->fetchAll(PDO::FETCH_ASSOC);
+
+                        if (!empty($payments)): 
+                    ?>
+                        <p>Notifications</p>
+                        <hr>
+                        <?php foreach ($payments as $payment): ?>
+                            <?php 
+                            // Determine payment status message and shipping status message
+                            $paymentStatus = ($payment['payment_status'] == 'pending') ? 'Payment Pending' : ($payment['payment_status'] == 'paid' ? 'Payment Confirmed' : 'Payment Failed');
+                            $shippingStatus = ($payment['shipping_status'] == 'pending') ? 'Shipping Pending' : ($payment['shipping_status'] == 'shipped' ? 'Shipped' : 'Delivered');
+                            ?>
+                            <li class="dropdown-item d-flex align-items-center">
+                                <i class="fa fa-credit-card me-2 <?php echo $payment['payment_status'] == 'pending' ? 'bg-warning' : 'bg-success'; ?>" style="padding: 5px; border-radius: 50%;"></i>
+                                <div>
+                                    <a href="order-details.php?order_id=<?php echo $payment['order_id']; ?>&product_id=<?php echo $payment['product_id']; ?>" style="text-decoration: none;">
+                                        <strong>Product: <?php echo $payment['name']; ?></strong>
+                                        <div class="text-muted small"><?php echo $paymentStatus; ?></div>
+                                        <div class="text-muted small"><?php echo $shippingStatus; ?></div>
+                                    </a>
+                                </div>
+                            </li>
+                        <?php endforeach; ?>
+                        <hr>
+                        <a href="notifications.php" class="btn btn-link">View All</a>
+                    <?php else: ?>
+                        <li>
+                            <span class="dropdown-item text-center text-muted">No new notifications</span>
+                        </li>
+                    <?php endif; ?>
+                    <?php 
+                    } else { 
+                    ?>
+                        <li>
+                            <span class="dropdown-item text-center text-muted">No customer logged in</span>
+                        </li>
+                    <?php } ?>
+                </div>
+            </div>
         </div>
-    </div>
+</div>
 </div>
 </header>
 <div class="container1">
   <div class="col-md-12"> 
     <div class="container my-4">
       <h1 class="text-center">My Orders</h1>
-      <table class="table table-bordered table-hover">
-        <thead class="table-dark">
-          <tr>
-            <th>#</th>
-            <th>Customer</th>
-            <th>Product Details</th>
-            <th>Payment Information</th>
-            <th>Paid Amount</th>
-            <th>Payment Status</th>
-            <th>Shipping Status</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          <?php
-          // Query to join the relevant tables and filter by the logged-in customer's ID
-          $stmt = $pdo->prepare("
-                      SELECT 
-                          c.cust_id, 
-                          c.cust_name, 
-                          c.cust_email, 
-                          p.name AS product_name, 
-                          oi.quantity, 
-                          p.current_price AS unit_price, 
-                          pay.payment_method, 
-                          pay.payment_id, 
-                          pay.created_at AS payment_date, 
-                          pay.amount_paid, 
-                          pay.shipping_status, 
-                          pay.payment_status, 
-                          o.order_id, 
-                          p.p_id
-                      FROM 
-                          customer c
-                      JOIN orders o ON c.cust_id = o.customer_id
-                      JOIN order_items oi ON o.order_id = oi.order_id
-                      JOIN product p ON oi.product_id = p.p_id
-                      JOIN payment pay ON o.order_id = pay.order_id
-                      WHERE c.cust_id = :cust_id
-                  ");
+      <div class="table-container">
+        <table class="table table-bordered table-hover">
+          <thead class="table-dark">
+            <tr>
+              <th>#</th>
+              <th>Customer</th>
+              <th>Product Details</th>
+              <th>Payment Information</th>
+              <th>Paid Amount</th>
+              <th>Payment Status</th>
+              <th>Shipping Status</th>
+              <th >Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <?php
+            // Query to join the relevant tables and filter by the logged-in customer's ID
+            $stmt = $pdo->prepare("
+                        SELECT 
+                            c.cust_id, 
+                            c.cust_name, 
+                            c.cust_email, 
+                            p.name AS product_name, 
+                            oi.quantity, 
+                            p.current_price AS unit_price, 
+                            pay.payment_method, 
+                            pay.payment_id, 
+                            pay.created_at AS payment_date, 
+                            pay.amount_paid, 
+                            pay.shipping_status, 
+                            pay.payment_status, 
+                            o.order_id, 
+                            p.p_id
+                        FROM 
+                            customer c
+                        JOIN orders o ON c.cust_id = o.customer_id
+                        JOIN order_items oi ON o.order_id = oi.order_id
+                        JOIN product p ON oi.product_id = p.p_id
+                        JOIN payment pay ON o.order_id = pay.order_id
+                        WHERE c.cust_id = :cust_id
+                    ");
 
-          // Execute query
-          $stmt->execute([':cust_id' => $cust_id]);
+            // Execute query
+            $stmt->execute([':cust_id' => $cust_id]);
 
-          // Fetch orders
-          $orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            // Fetch orders
+            $orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-          if (empty($orders)) {
-            echo "<tr><td colspan='8' class='text-center'>No orders found</td></tr>";
-          } else {
-            foreach ($orders as $index => $order) {
-              ?>
-              <tr>
-                <td><?= $index + 1 ?></td>
-                <td>
-                  <strong>Id:</strong> <?= $order['cust_id'] ?><br>
-                  <strong>Name:</strong> <?= htmlspecialchars($order['cust_name']) ?><br>
-                  <strong>Email:</strong> <?= htmlspecialchars($order['cust_email']) ?>
-                </td>
-                <td>
-                  <strong>Product:</strong> <?= htmlspecialchars($order['product_name']) ?><br>
-                  <strong>Quantity:</strong> <?= $order['quantity'] ?><br>
-                  <strong>Unit Price:</strong> <?= $order['unit_price'] ?>
-                </td>
-                <td>
-                  <strong>Payment Method:</strong> <?= $order['payment_method'] ?><br>
-                  <strong>Payment Id:</strong> <?= $order['payment_id'] ?><br>
-                  <strong>Date:</strong> <?= $order['payment_date'] ?>
-                </td>
-                <td>$<?= number_format($order['amount_paid'], 2) ?></td>
-                <td>
-                  <span class="badge <?= $order['payment_status'] === 'pending' ? 'bg-warning' : ($order['payment_status'] === 'paid' ? 'bg-success' : 'bg-danger') ?>">
-                    <?= ucfirst($order['payment_status']) ?>
-                  </span>
-                </td>
-                <td>
-                  <span class="badge <?= $order['shipping_status'] === 'pending' ? 'bg-warning' : ($order['shipping_status'] === 'shipped' ? 'bg-info' : 'bg-success') ?>">
-                    <?= ucfirst($order['shipping_status']) ?>
-                  </span>
-                </td>
-                <td>
-                  <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#reviewModal" data-order-id="<?= $order['order_id'] ?>" data-product-id="<?= $order['p_id'] ?>">Add Review</button>
-                </td>
-              </tr>
-            <?php }
-          } ?>
-        </tbody>
-      </table>
+            if (empty($orders)) {
+              echo "<tr><td colspan='8' class='text-center'>No orders found</td></tr>";
+            } else {
+              foreach ($orders as $index => $order) {
+                ?>
+                <tr>
+                  <td><?= $index + 1 ?></td>
+                  <td>
+                    <strong>Id:</strong> <?= $order['cust_id'] ?><br>
+                    <strong>Name:</strong> <?= htmlspecialchars($order['cust_name']) ?><br>
+                    <strong>Email:</strong> <?= htmlspecialchars($order['cust_email']) ?>
+                  </td>
+                  <td>
+                    <strong>Product:</strong> <?= htmlspecialchars($order['product_name']) ?><br>
+                    <strong>Quantity:</strong> <?= $order['quantity'] ?><br>
+                    <strong>Unit Price:</strong> <?= $order['unit_price'] ?>
+                  </td>
+                  <td>
+                    <strong>Payment Method:</strong> <?= $order['payment_method'] ?><br>
+                    <strong>Payment Id:</strong> <?= $order['payment_id'] ?><br>
+                    <strong>Date:</strong> <?= $order['payment_date'] ?>
+                  </td>
+                  <td>₱<?= number_format($order['amount_paid'], 2) ?></td>
+                  <td>
+                    <span class="badge <?= $order['payment_status'] === 'pending' ? 'bg-warning' : ($order['payment_status'] === 'paid' ? 'bg-success' : 'bg-danger') ?>">
+                      <?= ucfirst($order['payment_status']) ?>
+                    </span>
+                  </td>
+                  <td>
+                    <span class="badge <?= $order['shipping_status'] === 'pending' ? 'bg-warning' : ($order['shipping_status'] === 'shipped' ? 'bg-info' : 'bg-success') ?>">
+                      <?= ucfirst($order['shipping_status']) ?>
+                    </span>
+                  </td>
+                  <td>
+                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#reviewModal" data-order-id="<?= $order['order_id'] ?>" data-product-id="<?= $order['p_id'] ?>">Add Review</button>
+                  </td>
+                </tr>
+              <?php }
+            } ?>
+          </tbody>
+        </table>
+      </div>
     </div>
 
     <!-- Modal for Adding Review -->

@@ -60,10 +60,16 @@ header .navbar a:hover{
     color: var(--pink);
 }
 
-header .icons a{
-    font-size: 2.5rem;
-    color: #333;
-    margin-right: 5rem;
+header .icons {
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   gap: 6rem; /* Ensures no spacing between icons */
+}
+
+header .icons a {
+   font-size: 2.5rem;
+   color: #333;
 }
 
 header #toggler{
