@@ -60,15 +60,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         <h4>Container Customization</h4>
                         <div class="form-group">
                             <label for="container_type">Choose Container Type:</label>
-                            <select id="container_type" name="container_type" class="form-control" required>
-                                <?php foreach ($container_types as $container): ?>
-                                    <option value="<?= $container['container_id'] ?>"
-                                            data-image="../admin/uploads/<?= htmlspecialchars($container['container_image']) ?>"
-                                            <?= ($container_type == $container['container_id']) ? 'selected' : ''; ?>>
-                                        <?= htmlspecialchars($container['container_name']) ?>
-                                    </option>
-                                <?php endforeach; ?>
-                            </select>
+                            <!-- Container Dropdown -->
+<select id="container_type" name="container_type" class="form-control" required>
+    <?php foreach ($container_types as $container): ?>
+        <option value="<?= $container['container_id'] ?>"
+                data-image="../admin/uploads/<?= htmlspecialchars($container['container_image']) ?>"
+                data-price="<?= $container['price'] ?>">
+            <?= htmlspecialchars($container['container_name']) ?> (<?= '$' . number_format($container['price'], 2) ?>)
+        </option>
+    <?php endforeach; ?>
+</select>
                         </div>
 
                         <div class="form-group">
