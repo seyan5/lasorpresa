@@ -9,12 +9,14 @@
     <title>La Sorpresa Admin</title>
     <link rel="stylesheet" href="../../css/settings.css?v.1.0">
     <link rel="stylesheet" href="../../css/products.css">
+    <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
     
 </head>
 <body>
     <div class="container">
         <div class="navigation">
-            <ul>
+        <ul>
                 <li>
                     <a href="#">
                         <div class="logo-container">
@@ -23,7 +25,6 @@
                         <span class="title"></span>
                     </a>
                 </li>
-
                 <li>
                     <a href="../dashboard.php">
                         <span class="icon">
@@ -32,7 +33,6 @@
                         <span class="title">Dashboard</span>
                     </a>
                 </li>
-
                 <li>
                     <a href="../users.php">
                         <span class="icon">
@@ -41,45 +41,56 @@
                         <span class="title">Users</span>
                     </a>
                 </li>
-
                 <li>
-                    <a href="#">
+                    <a href="../sales-report.php">
                         <span class="icon">
-                            <ion-icon name="chatbubble-outline"></ion-icon>
+                            <ion-icon name="cash-outline"></ion-icon>
                         </span>
-                        <span class="title">Messages</span>
+                        <span class="title">Sales</span>
                     </a>
                 </li>
-
                 <li>
-                    <a href="product/product.php">
+                    <a href="../product/product.php">
                         <span class="icon">
                             <ion-icon name="cube-outline"></ion-icon>
                         </span>
                         <span class="title">Manage Products</span>
                     </a>
                 </li>
-
                 <li>
-                    <a href="#">
+                    <a href="../product/flowers.php">
+                        <span class="icon">
+                            <ion-icon name="flower-outline"></ion-icon>
+                        </span>
+                        <span class="title">Manage Flowers</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="../orders/order.php">
                         <span class="icon">
                             <ion-icon name="cart-outline"></ion-icon>
                         </span>
                         <span class="title">Manage Orders</span>
                     </a>
                 </li>
-
                 <li>
-                    <a href="#">
+                    <a href="../customize/customize-order.php">
                         <span class="icon">
-                            <ion-icon name="settings-outline"></ion-icon>
+                        <ion-icon name="color-wand-outline"></ion-icon>
                         </span>
-                        <span class="title">Settings</span>
+                        <span class="title"> Customize Orders</span>
                     </a>
                 </li>
-
                 <li>
-                    <a href="../index.php">
+                    <a href="settings.php">
+                        <span class="icon">
+                            <ion-icon name="albums-outline"></ion-icon>
+                        </span>
+                        <span class="title">Categories</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="../logout.php">
                         <span class="icon">
                             <ion-icon name="log-out-outline"></ion-icon>
                         </span>
