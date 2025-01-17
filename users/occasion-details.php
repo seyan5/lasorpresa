@@ -68,13 +68,13 @@ $product_quantity = $product['quantity']; // Get product quantity
                     <img src="../admin/uploads/<?php echo htmlspecialchars($product['featured_photo']); ?>"
                         alt="Cart Item">
                     <h4><?php echo htmlspecialchars($product['name']); ?></h4>
-                    <div class="price">$<?php echo number_format($product['current_price'], 2); ?></div>
+                    <div class="price">₱<?php echo number_format($product['current_price'], 2); ?></div>
                 </div>
 
 
                 <div class="total">
                     <span>Subtotal:</span>
-                    <span>$<?php echo number_format($product['current_price'], 2); ?></span>
+                    <span>₱<?php echo number_format($product['current_price'], 2); ?></span>
                 </div>
 
 

@@ -17,7 +17,7 @@ include("../admin/inc/CSRF_Protect.php");
     <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
 
     <!-- css -->
-     <link rel="stylesheet" href="../css/navhead.css"> 
+     <link rel="stylesheet" href="../css/navhead.css?"> 
 </head>
 
 <body>
@@ -48,20 +48,80 @@ include("../admin/inc/CSRF_Protect.php");
     </nav>
      
     <div class="icons">
-    <a href="shopcart.php" class="fas fa-shopping-cart"></a>
-    <div class="user-dropdown">
-        <a href="#" class="fas fa-user" onclick="toggleDropdown()"></a>
-        <div class="dropdown-menu" id="userDropdown">
-            <?php if (isset($_SESSION['customer'])): ?>
-                <p>Welcome, <?php echo htmlspecialchars($_SESSION['customer']['cust_name']); ?></p>
-                <hr>
-                <a href="profile.php">Profile</a>
-                <a href="logout.php">Logout</a>
-            <?php else: ?>
-                <a href="login.php">Login</a>
-            <?php endif; ?>
+            <a href="shopcart.php" class="fas fa-shopping-cart"></a>
+            <div class="user-dropdown">
+                <a href="#" class="fas fa-user" onclick="toggleDropdown()"></a>
+                <div class="dropdown-menu" id="userDropdown">
+                    <?php if (isset($_SESSION['customer'])): ?>
+                        <p>Welcome, <?php echo htmlspecialchars($_SESSION['customer']['cust_name']); ?></p>
+                        <hr>
+                        <a href="customer-profile-update.php">Profile</a>
+                        <a href="logout.php">Logout</a>
+                    <?php else: ?>
+                        <a href="login.php">Login</a>
+                    <?php endif; ?>
+                </div>
+            </div>
+            <div class="notification-dropdown">
+                <a href="#" class="fas fa-bell" onclick="toggleNotificationDropdown()"></a>
+                <div class="dropdown-menu" id="notificationDropdown">
+                    <?php 
+                    // Check if a customer is logged in
+                    if (isset($_SESSION['customer']) && isset($_SESSION['customer']['cust_id'])) {
+                        $customerId = $_SESSION['customer']['cust_id']; // Get the logged-in customer's ID
+
+                        // Fetch payments for the logged-in customer with the necessary conditions
+                        $statement = $pdo->prepare("
+                            SELECT p.*, oi.product_id, pr.name
+                            FROM payment p
+                            JOIN order_items oi ON p.order_id = oi.order_id
+                            JOIN product pr ON oi.product_id = pr.p_id
+                            WHERE p.cust_id = :cust_id
+                            AND (p.payment_status = 'pending' OR p.shipping_status != 'delivered') 
+                            ORDER BY p.created_at DESC
+                        ");
+                        $statement->execute(['cust_id' => $customerId]);
+                        $payments = $statement->fetchAll(PDO::FETCH_ASSOC);
+
+                        if (!empty($payments)): 
+                    ?>
+                        <p>Notifications</p>
+                        <hr>
+                        <?php foreach ($payments as $payment): ?>
+                            <?php 
+                            // Determine payment status message and shipping status message
+                            $paymentStatus = ($payment['payment_status'] == 'pending') ? 'Payment Pending' : ($payment['payment_status'] == 'paid' ? 'Payment Confirmed' : 'Payment Failed');
+                            $shippingStatus = ($payment['shipping_status'] == 'pending') ? 'Shipping Pending' : ($payment['shipping_status'] == 'shipped' ? 'Shipped' : 'Delivered');
+                            ?>
+                            <li class="dropdown-item d-flex align-items-center">
+                                <i class="fa fa-credit-card me-2 <?php echo $payment['payment_status'] == 'pending' ? 'bg-warning' : 'bg-success'; ?>" style="padding: 5px; border-radius: 50%;"></i>
+                                <div>
+                                    <a href="order-details.php?order_id=<?php echo $payment['order_id']; ?>&product_id=<?php echo $payment['product_id']; ?>" style="text-decoration: none;">
+                                        <strong>Product: <?php echo $payment['name']; ?></strong>
+                                        <div class="text-muted small"><?php echo $paymentStatus; ?></div>
+                                        <div class="text-muted small"><?php echo $shippingStatus; ?></div>
+                                    </a>
+                                </div>
+                            </li>
+                        <?php endforeach; ?>
+                        <hr>
+                        <a href="notifications.php" class="btn btn-link">View All</a>
+                    <?php else: ?>
+                        <li>
+                            <span class="dropdown-item text-center text-muted">No new notifications</span>
+                        </li>
+                    <?php endif; ?>
+                    <?php 
+                    } else { 
+                    ?>
+                        <li>
+                            <span class="dropdown-item text-center text-muted">No customer logged in</span>
+                        </li>
+                    <?php } ?>
+                </div>
+            </div>
         </div>
-    </div>
+</div>
 </div>
 
 </header>
@@ -137,7 +197,7 @@ $result = $statement->fetchAll(PDO::FETCH_ASSOC);
         <li>Next Page</li>
    </ul>
 </section>
-
+<?php include('../loading.php'); ?>
 
 <script>
 // Function to filter products by ecat_id
