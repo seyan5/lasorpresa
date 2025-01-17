@@ -145,45 +145,53 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     const flowerContainer = document.getElementById('flower-container');
     const selectedSelections = document.getElementById('selected-selections');
 
+    document.getElementById('container_type').addEventListener('change', updateSelection);
+document.getElementById('container_color').addEventListener('change', updateSelection);
+flowerContainer.addEventListener('change', (event) => {
+    if (event.target && (event.target.id.startsWith('flower_type_') || event.target.id.startsWith('num_flowers_'))) {
+        updateSelection(); // Update the preview when flower type or number of flowers changes
+    }
+});
+
     // Update selection summary in real-time, including remarks
     function updateSelection() {
-        selectedSelections.innerHTML = ''; // Clear previous selections
-        const flowerTypes = document.querySelectorAll('[id^="flower_type_"]');
-        const numFlowers = document.querySelectorAll('[id^="num_flowers_"]');
-        const containerType = document.getElementById('container_type');
-        const containerColor = document.getElementById('container_color');
-        const remarks = document.getElementById('remarks').value;
+    selectedSelections.innerHTML = ''; // Clear previous selections
+    const flowerTypes = document.querySelectorAll('[id^="flower_type_"]');
+    const numFlowers = document.querySelectorAll('[id^="num_flowers_"]');
+    const containerType = document.getElementById('container_type');
+    const containerColor = document.getElementById('container_color');
+    const remarks = document.getElementById('remarks').value;
 
-        // Get selected container details
-        const selectedContainerOption = containerType.options[containerType.selectedIndex];
-        const containerImage = selectedContainerOption.getAttribute('data-image');
-        const containerName = selectedContainerOption.text;
+    // Get selected container details
+    const selectedContainerOption = containerType.options[containerType.selectedIndex];
+    const containerImage = selectedContainerOption.getAttribute('data-image');
+    const containerName = selectedContainerOption.text;
 
-        // Display container details
-        selectedSelections.innerHTML = ` 
-            <p><strong>Container:</strong> ${containerName}</p>
-            <img src="${containerImage}" alt="${containerName}" style="width: 150px; height: auto; margin-bottom: 10px;">
-            <p><strong>Container Color:</strong> ${containerColor.options[containerColor.selectedIndex].text}</p>
-            <p><strong>Remarks:</strong> ${remarks}</p>
+    // Display container details
+    selectedSelections.innerHTML = ` 
+        <p><strong>Container:</strong> ${containerName}</p>
+        <img src="${containerImage}" alt="${containerName}" style="width: 150px; height: auto; margin-bottom: 10px;">
+        <p><strong>Container Color:</strong> ${containerColor.options[containerColor.selectedIndex].text}</p>
+        <p><strong>Remarks:</strong> ${remarks}</p>
+        <hr>
+    `;
+
+    // Display selected flowers with updated number
+    flowerTypes.forEach((flowerType, index) => {
+        const selectedFlowerOption = flowerType.options[flowerType.selectedIndex];
+        const flowerImage = selectedFlowerOption.getAttribute('data-image');
+        const flowerName = selectedFlowerOption.text;
+        const numFlower = numFlowers[index].value;
+
+        const flowerSummary = `
+            <p><strong>Flower ${index + 1}:</strong> ${flowerName}</p>
+            <img src="${flowerImage}" alt="${flowerName}" style="width: 100px; height: auto; margin-bottom: 10px;">
+            <p>Number of Flowers: ${numFlower}</p>
             <hr>
         `;
-
-        // Display selected flowers
-        flowerTypes.forEach((flowerType, index) => {
-            const selectedFlowerOption = flowerType.options[flowerType.selectedIndex];
-            const flowerImage = selectedFlowerOption.getAttribute('data-image');
-            const flowerName = selectedFlowerOption.text;
-            const numFlower = numFlowers[index].value;
-
-            const flowerSummary = `
-                <p><strong>Flower ${index + 1}:</strong> ${flowerName}</p>
-                <img src="${flowerImage}" alt="${flowerName}" style="width: 100px; height: auto; margin-bottom: 10px;">
-                <p>Number of Flowers: ${numFlower}</p>
-                <hr>
-            `;
-            selectedSelections.innerHTML += flowerSummary;
-        });
-    }
+        selectedSelections.innerHTML += flowerSummary;
+    });
+}
 
     // Add event listener for the remarks field to update the live preview
     document.getElementById('remarks').addEventListener('input', updateSelection);
