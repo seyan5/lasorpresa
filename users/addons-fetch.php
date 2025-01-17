@@ -51,7 +51,12 @@ try {
         }
     } else {
         // Fallback if no products found for the selected category
-        echo "<p>No products found in this category.</p>";
+        echo '
+        <div class="no-products text-center p-4 my-4">
+            <i class="fas fa-box-open fa-3x text-secondary mb-3"></i>
+            <h4 class="text-muted">No products found in this category</h4>
+            <p>Try selecting a different category or check back later.</p>
+        </div>';
     }
 } catch (Exception $e) {
     // Error handling for database connection or query issues
@@ -60,3 +65,38 @@ try {
 
 
 ?>
+
+<style>
+    .no-products {
+        background-color: #f8f9fa;
+        border: 1px solid #dee2e6;
+        border-radius: 8px;
+    }
+    .no-products i {
+        color: #6c757d;
+    }
+
+    /* Grey out out-of-stock products */
+    .out-of-stock {
+        opacity: 0.5;
+        pointer-events: none;
+        background-color: #f0f0f0;
+    }
+
+    /* Out of Stock message styling */
+    .out-of-stock-text {
+        color: #999;
+        font-weight: bold;
+        text-align: center;
+        font-size: 14px;
+    }
+
+    .out-of-stock a {
+        pointer-events: none;
+        color: #888;
+    }
+
+    .out-of-stock .price {
+        color: #888;
+    }
+</style>
