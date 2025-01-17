@@ -5,124 +5,140 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="css/loading.css">
   <style>
-    /* Fallback inline CSS for the loading screen */
-    /* Loading screen: covers the entire viewport and is pure white */
+    /* Updated loading design */
     .loading-screen {
       position: fixed;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      background-color: white; /* Pure white background */
-      z-index: 9999; /* Ensure it stays on top of all other elements */
+      background-color: white;
+      z-index: 9999;
       display: flex;
       justify-content: center;
       align-items: center;
     }
 
-    /* Optional loader style */
-    .flower-loader {
-      overflow: hidden;
-      position: relative;
-      text-indent: -9999px;
-      display: inline-block;
-      width: 16px;
-      height: 16px;
-      background: #e96;
-      border-radius: 100%;
-      box-shadow: white 0 0 15px 0, #e84393 -12px -12px 0 4px,
-      #e84393 12px -12px 0 4px, #e84393 12px 12px 0 4px, #e84393 -12px 12px 0 4px;
-      animation: flower-loader 5s infinite ease-in-out;
-      transform-origin: 50% 50%;
+    /* Flower loader */
+    .flower {
+      width: 300px;
+      height: 300px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      animation: rotateFlower 5s infinite ease-in-out;
     }
 
+    .petal {
+      position: absolute;
+      width: 35px;
+      height: 60px;
+      background: linear-gradient(180deg, #fcdbdf, #fd688d);
+      border-radius: 50%;
+    }
 
-@-moz-keyframes flower-loader {
-    0% {
-      -moz-transform: rotate(0deg);
-      transform: rotate(0deg);
-      -moz-box-shadow: white 0 0 15px 0, #e84393 -12px -12px 0 4px,
-      #e84393 12px -12px 0 4px, #e84393 12px 12px 0 4px, #e84393 -12px 12px 0 4px;
-      box-shadow: white 0 0 15px 0, #e84393 -12px -12px 0 4px, #e84393 12px -12px 0 4px,
-      #e84393 12px 12px 0 4px, #e84393 -12px 12px 0 4px;
+   .petal1 {
+  transform: rotate(0deg) translateY(-50%);
+  animation-delay: 0.1s;
+}
+
+.petal2 {
+  transform: rotate(45deg) translateY(-50%);
+  animation-delay: 0.2s;
+}
+
+.petal3 {
+  transform: rotate(90deg) translateY(-50%);
+  animation-delay: 0.3s;
+}
+
+.petal4 {
+  transform: rotate(135deg) translateY(-50%);
+  animation-delay: 0.4s;
+}
+
+.petal5 {
+  transform: rotate(180deg) translateY(-50%);
+  animation-delay: 0.5s;
+}
+
+.petal6 {
+  transform: rotate(225deg) translateY(-50%);
+  animation-delay: 0.6s;
+}
+
+.petal7 {
+  transform: rotate(270deg) translateY(-50%);
+  animation-delay: 0.7s;
+}
+
+.petal8 {
+  transform: rotate(315deg) translateY(-50%);
+  animation-delay: 0.8s;
+}
+    .center {
+      position: absolute;
+      width: 30px;
+      height: 30px;
+      background-color: #f1d2d2;
+      border-radius: 50%;
     }
-    50% {
-      -moz-transform: rotate(1080deg);
-      transform: rotate(1080deg);
-      -moz-box-shadow: white 0 0 15px 0, #e84393 12px 12px 0 4px,
-      #e84393 -12px 12px 0 4px, #e84393 -12px -12px 0 4px, #e84393 12px -12px 0 4px;
-      box-shadow: white 0 0 15px 0, #e84393 12px 12px 0 4px, #e84393 -12px 12px 0 4px,
-        #e84393 -12px -12px 0 4px, #e84393 12px -12px 0 4px;
+
+    flower:hover .petal {
+  animation-name: changeColor;
+  animation-duration: 8s;
+  animation-direction: reverse;
+  animation-iteration-count: infinite;
+}
+
+.flower:hover {
+  animation-name: rotateFlower;
+  animation-duration: 8s;
+  animation-iteration-count: infinite;
+  animation-timing-function: ease;
+}
+
+    @keyframes rotateFlower {
+      0% {
+        transform: rotate(0deg);
+      }
+      100% {
+        transform: rotate(360deg);
+      }
     }
-  }
-  @-webkit-keyframes flower-loader {
-    0% {
-      -webkit-transform: rotate(0deg);
-      transform: rotate(0deg);
-      -webkit-box-shadow: white 0 0 15px 0, #e84393 -12px -12px 0 4px,
-        #e84393 12px -12px 0 4px, #e84393 12px 12px 0 4px, #e84393 -12px 12px 0 4px;
-      box-shadow: white 0 0 15px 0, #e84393 -12px -12px 0 4px, #e84393 12px -12px 0 4px,
-        #e84393 12px 12px 0 4px, #e84393 -12px 12px 0 4px;
-    }
-    50% {
-      -webkit-transform: rotate(1080deg);
-      transform: rotate(1080deg);
-      -webkit-box-shadow: white 0 0 15px 0, #e84393 12px 12px 0 4px,
-        #e84393 -12px 12px 0 4px, #e84393 -12px -12px 0 4px, #e84393 12px -12px 0 4px;
-      box-shadow: white 0 0 15px 0, #e84393 12px 12px 0 4px, #e84393 -12px 12px 0 4px,
-        #e84393 -12px -12px 0 4px, #e84393 12px -12px 0 4px;
-    }
-  }
-  @keyframes flower-loader {
-    0% {
-      -moz-transform: rotate(0deg);
-      -ms-transform: rotate(0deg);
-      -webkit-transform: rotate(0deg);
-      transform: rotate(0deg);
-      -moz-box-shadow: white 0 0 15px 0, #e84393 -12px -12px 0 4px,
-        #e84393 12px -12px 0 4px, #e84393 12px 12px 0 4px, #e84393 -12px 12px 0 4px;
-      -webkit-box-shadow: white 0 0 15px 0, #e84393 -12px -12px 0 4px,
-        #e84393 12px -12px 0 4px, #e84393 12px 12px 0 4px, #e84393 -12px 12px 0 4px;
-      box-shadow: white 0 0 15px 0, #e84393 -12px -12px 0 4px, #e84393 12px -12px 0 4px,
-        #e84393 12px 12px 0 4px, #e84393 -12px 12px 0 4px;
-    }
-    50% {
-      -moz-transform: rotate(1080deg);
-      -ms-transform: rotate(1080deg);
-      -webkit-transform: rotate(1080deg);
-      transform: rotate(1080deg);
-      -moz-box-shadow: white 0 0 15px 0, #e84393 12px 12px 0 4px,
-        #e84393 -12px 12px 0 4px, #e84393 -12px -12px 0 4px, #e84393 12px -12px 0 4px;
-      -webkit-box-shadow: white 0 0 15px 0, #e84393 12px 12px 0 4px,
-        #e84393 -12px 12px 0 4px, #e84393 -12px -12px 0 4px, #e84393 12px -12px 0 4px;
-      box-shadow: white 0 0 15px 0, #e84393 12px 12px 0 4px, #e84393 -12px 12px 0 4px,
-        #e84393 -12px -12px 0 4px, #e84393 12px -12px 0 4px;
-    }
-  }
   </style>
 </head>
 <body>
   <div class="loading-screen">
-    <span class="flower-loader">Loading…</span>
+    <div class="flower">
+      <div class="petal petal1"></div>
+      <div class="petal petal2"></div>
+      <div class="petal petal3"></div>
+      <div class="petal petal4"></div>
+      <div class="petal petal5"></div>
+      <div class="petal petal6"></div>
+      <div class="petal petal7"></div>
+      <div class="petal petal8"></div>
+      <div class="center"></div>
+    </div>
   </div>
+
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script>
-  $(window).on('load', function () {
-    // Keep the loading screen for an extended duration before fading it out
-    setTimeout(function () {
-      $(".loading-screen").fadeOut(1000, function () { // Fade-out duration: 2 seconds
-        $("#content").fadeIn(1000); // Show the main content after fade-out
-      });
-    }, 1500); // Delay of 3000ms (3 seconds) before fading out
-  });
+  <script>
+    $(window).on('load', function () {
+      // Keep the loading screen for a short duration before fading it out
+      setTimeout(function () {
+        $(".loading-screen").fadeOut(1000, function () {
+          $("#content").fadeIn(1000);
+        });
+      }, 1500);
+    });
 
-  // Optional: Handle AJAX requests with a global loading indicator
-  $(document).ajaxStart(function () {
-    $(".loading-screen").fadeIn(1000); // Show loading screen during AJAX
-  }).ajaxStop(function () {
-    $(".loading-screen").fadeOut(1000); // Hide loading screen after AJAX completes
-  });
-</script>
-
+    $(document).ajaxStart(function () {
+      $(".loading-screen").fadeIn(1000);
+    }).ajaxStop(function () {
+      $(".loading-screen").fadeOut(1000);
+    });
+  </script>
 </body>
 </html>
