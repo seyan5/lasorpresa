@@ -1,4 +1,7 @@
 <?php
+
+require("../header.php");
+
 if(isset($_POST['form1'])) {
     $valid = 1;
     $error_message = '';  // Initialize error message
@@ -24,16 +27,29 @@ if(isset($_POST['form1'])) {
         $error_message .= "Valid price is required<br>";
     }
 
-    // Validate Container Color
-    if(empty($_POST['container_color'])) {
+    // Validate Container Image
+    if(empty($_FILES['container_image']['name'])) {
         $valid = 0;
-        $error_message .= "Container Color cannot be empty<br>";
+        $error_message .= "Container Image cannot be empty<br>";
+    } else {
+        $path = $_FILES['container_image']['name'];
+        $path_tmp = $_FILES['container_image']['tmp_name'];
+        $ext = pathinfo($path, PATHINFO_EXTENSION);
+        $allowed_ext = array('jpg', 'jpeg', 'png', 'gif');
+        if(!in_array($ext, $allowed_ext)) {
+            $valid = 0;
+            $error_message .= "You must upload a valid image file (jpg, jpeg, png, gif)<br>";
+        }
     }
 
     if($valid == 1) {
+        // Upload image
+        $final_name = 'container_' . time() . '.' . $ext;
+        move_uploaded_file($path_tmp, '../uploads/' . $final_name);
+
         // Insert data into the container table
-        $statement = $pdo->prepare("INSERT INTO container (container_name, price, container_color) VALUES (?, ?, ?)");
-        $statement->execute(array($_POST['container_name'], $_POST['container_price'], $_POST['container_color']));
+        $statement = $pdo->prepare("INSERT INTO container (container_name, price, container_image) VALUES (?, ?, ?)");
+        $statement->execute(array($_POST['container_name'], $_POST['container_price'], $final_name));
         
         $success_message = 'Container is added successfully.';
     }
@@ -64,7 +80,7 @@ if(isset($_POST['form1'])) {
             </div>
             <?php endif; ?>
 
-            <form class="form-horizontal" action="" method="post">
+            <form class="form-horizontal" action="" method="post" enctype="multipart/form-data">
                 <div class="box box-info">
                     <div class="box-body">
                         <!-- Container Name -->
@@ -81,11 +97,11 @@ if(isset($_POST['form1'])) {
                                 <input type="text" class="form-control" name="container_price" placeholder="Enter Price">
                             </div>
                         </div>
-                        <!-- Container Color -->
+                        <!-- Container Image -->
                         <div class="form-group">
-                            <label for="" class="col-sm-2 control-label">Container Color <span>*</span></label>
+                            <label for="" class="col-sm-2 control-label">Container Image <span>*</span></label>
                             <div class="col-sm-4">
-                                <input type="text" class="form-control" name="container_color" placeholder="Enter Color (e.g., Red, #FF0000)">
+                                <input type="file" class="form-control" name="container_image">
                             </div>
                         </div>
                         <!-- Submit Button -->
