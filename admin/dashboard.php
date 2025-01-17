@@ -1,4 +1,3 @@
-
 <?php
 ob_start();
 session_start();
@@ -58,12 +57,6 @@ try {
 } catch (Exception $e) {
     echo "Error fetching recent orders: " . $e->getMessage();
 }
-
-
-
-
-
-
 ?>
 
 <!DOCTYPE html>
@@ -74,7 +67,8 @@ try {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>La Sorpresa Admin</title>
     <link rel="stylesheet" href="../css/style.css">
-    
+    <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
 </head>
 <body>
     <div class="container">
@@ -236,10 +230,6 @@ try {
                     <div class="numbers"><?= number_format($paymentPending) ?></div>
                     <div class="cardName">Payment Pending</div>
                 </div>
-
-                <div class="iconBx">
-                    <ion-icon name="cash-outline"></ion-icon>
-                </div>
             </div>
 
             <div class="card">
@@ -252,64 +242,73 @@ try {
                     <ion-icon name="cart-outline"></ion-icon>
                 </div>
             </div>
-</div>
+        </div>
 
-           
-
-            <!-- ================ Order Details List ================= -->
+        <!-- Recent Orders and Recent Customers Side by Side -->
+        <div class="row">
             <div class="recentOrders">
-    <div class="cardHeader d-flex justify-content-between align-items-center">
-        <h2>Recent Orders</h2>
-        <a href="orders/order.php" class="btn btn-primary">View All</a>
-    </div>
+                <div class="cardHeader d-flex justify-content-between align-items-center">
+                    <h2>Recent Orders</h2>
+                    <a href="orders/order.php" class="btn btn-primary">View All</a>
+                </div>
 
-    <?php if (empty($recentOrders)) { ?>
-        <p class="text-center">No orders found.</p>
-    <?php } else { ?>
-        <table class="table table-striped table-bordered">
-            <thead class="thead-dark">
-                <tr>
-                    <th>Name</th>
-                    <th>Price</th>
-                    <th>Payment Status</th>
-                    <th>Shipping Status</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php foreach ($recentOrders as $order) { ?>
-                    <tr>
-                        <td><?= htmlspecialchars($order['product_name']) ?></td>
-                        <td>P <?= number_format($order['current_price'], 2) ?></td>
-                        <td><?= ucfirst(htmlspecialchars($order['payment_status'])) ?></td>
-                        <td>
-                            <span class="status 
-                                <?= $order['shipping_status'] === 'delivered' ? 'delivered' : 
-                                   ($order['shipping_status'] === 'pending' ? 'pending' : 
-                                   ($order['shipping_status'] === 'in_progress' ? 'inProgress' : 'return')) ?>">
-                                <?= ucfirst(htmlspecialchars($order['shipping_status'])) ?>
-                            </span>
-                        </td>
-                    </tr>
-                <?php } ?>
-            </tbody>
-        </table>
-    <?php } ?>
-</div>
+                <!-- Order table content goes here -->
+                <table class="table table-striped table-bordered">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>Name</th>
+                            <th>Price</th>
+                            <th>Payment Status</th>
+                            <th>Shipping Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($recentOrders as $order) { ?>
+                            <tr>
+                                <td><?= htmlspecialchars($order['product_name']) ?></td>
+                                <td>P <?= number_format($order['current_price'], 2) ?></td>
+                                <td><?= ucfirst(htmlspecialchars($order['payment_status'])) ?></td>
+                                <td>
+                                    <span class="status 
+                                        <?php 
+                                            switch ($order['shipping_status']) {
+                                                case 'delivered':
+                                                    echo 'delivered';
+                                                    break;
+                                                case 'pending':
+                                                    echo 'pending';
+                                                    break;
+                                                case 'in_progress':
+                                                    echo 'inProgress';
+                                                    break;
+                                                default:
+                                                    echo 'return';
+                                                    break;
+                                            }
+                                        ?>">
+                                        <?= ucfirst(htmlspecialchars($order['shipping_status'])) ?>
+                                    </span>
+                                </td>
+                            </tr>
+                        <?php } ?>
+                    </tbody>
+                </table>
+            </div>
 
-                <!-- ================= New Customers ================ -->
-                <div class="recentCustomers">
-                    <div class="cardHeader">
-                        <h2>Recent Customer</h2>
-                    </div>
+            <!-- Recent Customers next to recent orders -->
+            <div class="recentCustomers">
+                <div class="cardHeader">
+                    <h2>Recent Customers</h2>
+                    <a href="users.php" class="btn btn-primary">View All</a>
+                </div>
 
-                    <table>
+                <!-- Customer table content goes here -->
+                <table>
                     <?php foreach ($recentCustomers as $customer) { ?>
                         <tr>
-                            <td width="60px">
-                                <div class="imgBx">
-                                    
-                                </div>
-                            </td>
+                            <!-- <td width="60px">
+                                <div class="imgBx"></div>
+                            </td> -->
                             <td>
                                 <h4><?= htmlspecialchars($customer['cust_name']) ?><br>
                                     <span><?= htmlspecialchars($customer['cust_city']) ?></span>
@@ -318,79 +317,98 @@ try {
                         </tr>
                     <?php } ?>
                 </table>
-                </div>
             </div>
         </div>
     </div>
-
-    
-
-
-
-    <!-- =========== Scripts =========  -->
-    <script src="assets/js/main.js"></script>
-
-    <!-- ====== ionicons ======= -->
-    <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
-    <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
-
 </body>
-
 <style>
     .recentOrders {
-        margin-top: 20px;
-    }
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 70%; /* Don't override .container styles */
+}
 
-    .cardHeader {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 10px;
-    }
+.recentCustomers {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 30%; /* Don't override .container styles */
+}
 
-    .btn {
-        font-size: 14px;
-        padding: 8px 16px;
-    }
+.row {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    margin-top: 20px;
+}
 
-    table {
-        width: 100%;
-        border-collapse: collapse;
-    }
+.table {
+    width: 100%;
+    border-collapse: collapse;
+}
 
-    table th, table td {
-        padding: 10px;
-        text-align: left;
-    }
+.table th, .table td {
+    padding: 10px;
+    text-align: left;
+}
 
-    table th {
-        background-color: #f8f9fa;
-    }
+.table th {
+    background-color: #f4f4f4;
+}
 
-    .status {
-        padding: 5px 10px;
-        border-radius: 3px;
-        font-weight: bold;
-    }
+.status {
+    padding: 5px 10px;
+    border-radius: 3px;
+    font-weight: bold;
+}
 
-    .status.delivered {
-        background-color: #28a745;
-        color: white;
-    }
+.status.delivered {
+    background-color: #28a745;
+    color: white;
+}
 
-    .status.pending {
-        background-color: #ffc107;
-        color: white;
-    }
+.status.pending {
+    background-color: #ffc107;
+    color: white;
+}
 
-    .status.inProgress {
-        background-color: #007bff;
-        color: white;
-    }
+.status.inProgress {
+    background-color: #007bff;
+    color: white;
+}
 
-    .status.return {
-        background-color: #dc3545;
-        color: white;
-    }
+.status.return {
+    background-color: #dc3545;
+    color: white;
+}
+.cardHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px; /* Optional: Adds space below the header */
+}
+
+.cardHeader h2 {
+    margin: 0; /* Remove default margin to align it properly */
+}
+
+.cardHeader .btn {
+    display: inline-block;
+    background-color: #007bff;
+    color: white;
+    padding: 10px 15px;
+    text-decoration: none;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+.cardHeader .btn:hover {
+    background-color: #0056b3;
+}
+
+
 </style>
 </html>
