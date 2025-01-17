@@ -16,7 +16,7 @@ session_start();
     <!-- css -->
      <link rel="stylesheet" href="../css/dropdown.css">
     <link rel="stylesheet" href="../css/main.css">
-  <link rel="stylesheet" href="../css/shopcart.css">
+  <link rel="stylesheet" href="../css/shopcart.css?">
   <title>Shopping Cart</title>
 </head>
 <body>

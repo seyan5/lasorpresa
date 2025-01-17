@@ -26,8 +26,8 @@ include("../admin/inc/CSRF_Protect.php");
 
     <!-- css -->
      <link rel="stylesheet" href="../css/footer.css">
-    <link rel="stylesheet" href="../css/dropdown.css">
-    <link rel="stylesheet" href="../css/main.css?v=1.1">
+    <link rel="stylesheet" href="../css/dropdown.css?">
+    <link rel="stylesheet" href="../css/main.css?v=1.0">
 </head>
 
 <>
@@ -57,7 +57,43 @@ include("../admin/inc/CSRF_Protect.php");
 
         </nav>
         <div class="icons">
-            <a href="shopcart.php" class="fas fa-shopping-cart"></a>
+        <?php 
+        $cart = isset($_SESSION['cart']) ? $_SESSION['cart'] : [];
+        $count = count($cart);
+        ?>
+        <div class="cart-container">
+    <a href="shopcart.php" class="cart-icon">
+        <i class="fas fa-shopping-cart"></i>
+        <span class="cart-count"><?php echo $count; ?></span>
+    </a>
+    <div class="cart-dropdown">
+        <p class="recent-products-title">Recently Added Products</p>
+        <ul class="recent-products-list">
+            <?php 
+            if (!empty($cart)) {
+                $totalProducts = 0;
+                foreach ($cart as $item) {
+                    $totalProducts++;
+                    if ($totalProducts <= 5) { // Display only the first 5 items
+                        echo '<li class="product-item">';
+                        echo '<img src="../admin/uploads/' . (!empty($item['image']) ? htmlspecialchars($item['image']) : 'default-image.jpg') . '" alt="' . htmlspecialchars($item['name']) . '" class="product-image" style="width:50px; height:50px; object-fit:cover; margin-right:10px;">';
+                        echo '<span class="product-name">' . htmlspecialchars($item['name']) . '</span>';
+                        echo '<span class="product-price">₱' . htmlspecialchars($item['price']) . '</span>';
+                        echo '</li>';
+                    }
+                }
+            } else {
+                echo '<li class="empty-cart">Your cart is empty</li>';
+            }
+            ?>
+        </ul>
+        <?php if (count($cart) > 5): ?>
+        <a href="shopcart.php" class="view-cart-link">View <?php echo count($cart) - 5; ?> More Products In Cart</a>
+        <?php endif; ?>
+        <a href="shopcart.php" class="view-shopping-cart-button">View My Shopping Cart</a>
+    </div>
+</div>
+
             <div class="user-dropdown">
                 <a href="#" class="fas fa-user" onclick="toggleDropdown()"></a>
                 <div class="dropdown-menu" id="userDropdown">
