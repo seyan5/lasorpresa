@@ -1,7 +1,6 @@
 <?php
 require("conn.php");
 
-
 if (!isset($_SESSION['customer']['cust_id'])) {
     echo "You need to log in to proceed to checkout.";
     exit;
@@ -15,6 +14,14 @@ $customer = $stmt->fetch(PDO::FETCH_ASSOC);
 
 if (!$customer) {
     echo "Customer details not found.";
+    exit;
+}
+
+// Retrieve customization from session
+$customization = $_SESSION['customization'] ?? null;
+
+if (!$customization || !is_array($customization)) {
+    echo "No customization details found. Please go back and customize your arrangement.";
     exit;
 }
 
@@ -33,7 +40,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'shipping_address' => $customer['cust_address'],
         'total_price' => $total_price,
     ]);
-
 
     // Step 2: Get the last inserted `order_id`
     $order_id = $pdo->lastInsertId();
@@ -63,7 +69,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     
         // Calculate total price for the item
         $total_price_item = ($flower_price * $item['num_flowers']) + $container_price + $color_price;
-        $_SESSION['total_price'] = $total_price;
     
         // Insert into `custom_orderitems`
         $stmt = $pdo->prepare("INSERT INTO custom_orderitems (order_id, flower_type, num_flowers, container_type, container_color, flower_price, container_price, color_price, total_price, remarks) VALUES (:order_id, :flower_type, :num_flowers, :container_type, :container_color, :flower_price, :container_price, :color_price, :total_price, :remarks)");
@@ -80,8 +85,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'remarks' => $item['remarks'], // Add remarks to database insertion
         ]);
     }
-    
-    
 
     // Step 4: Insert into `custom_payment` table
     $stmt = $pdo->prepare("INSERT INTO custom_payment (order_id, customer_name, customer_email, amount_paid, payment_method, reference_number, payment_status, shipping_status, created_at) VALUES (:order_id, :customer_name, :customer_email, :amount_paid, :payment_method, :reference_number, 'Pending', 'Pending', NOW())");
@@ -95,8 +98,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     ]);
 
     echo "<script>alert('Payment successful!');</script>";
+    echo "<script>window.location.href = 'customization.php';</script>";
     exit;
 }
+?>
+
 
 
 ?>

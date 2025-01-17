@@ -24,7 +24,8 @@ $query = $pdo->prepare(
     FROM custom_order co
     LEFT JOIN custom_orderitems coi ON co.order_id = coi.order_id
     LEFT JOIN custom_payment cp ON co.order_id = cp.order_id
-    GROUP BY co.order_id, coi.container_type, coi.container_color, coi.remarks, cp.payment_method, cp.amount_paid, cp.payment_status, cp.shipping_status"
+    GROUP BY co.order_id, coi.container_type, coi.container_color, coi.remarks, cp.payment_method, cp.amount_paid, cp.payment_status, cp.shipping_status
+    ORDER BY co.order_id DESC" // Add this line to order by order_id in descending order
 );
 
 $query->execute();
@@ -44,6 +45,10 @@ $orders = $query->fetchAll(PDO::FETCH_ASSOC);
 <body>
     <div class="container mt-5">
         <h3 class="text-center">Order Dashboard</h3>
+        <!-- Back Button -->
+        <div class="d-flex justify-content-start mb-3">
+            <a href="../dashboard.php" class="btn btn-secondary">Back to Dashboard</a>
+        </div>
         <table class="table table-bordered table-striped">
             <thead>
                 <tr>

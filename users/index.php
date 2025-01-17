@@ -405,41 +405,56 @@ include("../admin/inc/CSRF_Protect.php");
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         if ("Notification" in window) {
-            // Request permission if not already granted
-            if (Notification.permission !== "granted") {
-                Notification.requestPermission().then(permission => {
-                    if (permission !== "granted") {
-                        console.log("Notification permission denied.");
-                    }
-                });
+            // Request notification permission if not granted
+            Notification.requestPermission().then(permission => {
+                if (permission !== "granted") {
+                    console.log("Notification permission denied.");
+                }
+            });
+
+            // Check payment and shipping statuses and schedule notifications
+            var paymentUpdates = [];
+            
+            <?php foreach ($payments as $payment): ?>
+                var paymentStatus = '<?php echo $payment['payment_status']; ?>';
+                var shippingStatus = '<?php echo $payment['shipping_status']; ?>';
+                var paymentId = '<?php echo $payment['name']; ?>';
+
+                if (paymentStatus === 'pending' || shippingStatus !== 'delivered') {
+                    paymentUpdates.push({
+                        id: paymentId,
+                        paymentStatus: paymentStatus,
+                        shippingStatus: shippingStatus
+                    });
+                }
+            <?php endforeach; ?>
+
+            // Function to show notification
+            function showPaymentShippingNotification(payment) {
+                const options = {
+                    body: `Payment Status: ${payment.paymentStatus}, Shipping Status: ${payment.shippingStatus}`,
+                    icon: '../../images/logo.png',
+                    tag: `payment-shipping-${payment.id}`
+                };
+                new Notification(`Product ${payment.id} Update`, options);
             }
 
-            // Show notifications for payment and shipping status
-            if (<?php echo count($payments); ?> > 0 && Notification.permission === "granted") {
-                <?php foreach ($payments as $payment): ?>
-                    // Check payment status and shipping status
-                    var paymentStatus = '<?php echo $payment['payment_status']; ?>';
-                    var shippingStatus = '<?php echo $payment['shipping_status']; ?>';
-                    var paymentId = '<?php echo $payment['name']; ?>';
-
-                    if (paymentStatus === 'pending' || shippingStatus !== 'delivered') {
-                        showPaymentShippingNotification(paymentId, paymentStatus, shippingStatus);
+            // Display notifications at intervals (2 seconds)
+            if (paymentUpdates.length > 0 && Notification.permission === "granted") {
+                let index = 0;
+                const notificationInterval = setInterval(() => {
+                    if (index < paymentUpdates.length) {
+                        showPaymentShippingNotification(paymentUpdates[index]);
+                        index++;
+                    } else {
+                        clearInterval(notificationInterval); // Stop interval after all notifications
                     }
-                <?php endforeach; ?>
+                }, 2000); // 2 seconds interval
             }
         }
     });
-
-    // Function to show payment and shipping status notification
-    function showPaymentShippingNotification(paymentId, paymentStatus, shippingStatus) {
-        const options = {
-            body: `Payment Status: ${paymentStatus}, Shipping Status: ${shippingStatus}`,
-            icon: '../../images/logo.png',
-            tag: 'payment-shipping-notification'
-        };
-        new Notification(`Product ${paymentId} Update`, options);
-    }
 </script>
+
 
 
 <script>

@@ -31,17 +31,36 @@ if(isset($_POST['form1'])) {
         $error_message .= "Valid price is required<br>";
     }
 
-    if(empty($_POST['container_color'])) {
-        $valid = 0;
-        $error_message .= "Container color cannot be empty<br>";
-    }
-
     if($valid == 1) {        
-        // Updating container data, including color and price
-        $statement = $pdo->prepare("UPDATE container SET container_name=?, price=?, container_color=? WHERE container_id=?");
-        $statement->execute(array($_POST['container_name'], $_POST['container_price'], $_POST['container_color'], $_REQUEST['id']));
+        // Handle Image Upload
+        $uploaded_image_name = $_FILES['container_image']['name'];
+        $uploaded_image_tmp = $_FILES['container_image']['tmp_name'];
+        $image_file_name = '';
 
-        $success_message = 'Container is updated successfully.';
+        if($uploaded_image_name != '') {
+            $ext = pathinfo($uploaded_image_name, PATHINFO_EXTENSION);
+            $allowed_extensions = ['jpg', 'jpeg', 'png', 'gif'];
+            if(!in_array($ext, $allowed_extensions)) {
+                $valid = 0;
+                $error_message .= 'You can only upload JPG, JPEG, PNG, or GIF files<br>';
+            } else {
+                $image_file_name = 'container-' . time() . '.' . $ext;
+                move_uploaded_file($uploaded_image_tmp, '../uploads/' . $image_file_name);
+            }
+        }
+
+        // Update database
+        if($valid == 1) {
+            if($image_file_name != '') {
+                $statement = $pdo->prepare("UPDATE container SET container_name=?, price=?, container_image=? WHERE container_id=?");
+                $statement->execute(array($_POST['container_name'], $_POST['container_price'], $image_file_name, $_REQUEST['id']));
+            } else {
+                $statement = $pdo->prepare("UPDATE container SET container_name=?, price=? WHERE container_id=?");
+                $statement->execute(array($_POST['container_name'], $_POST['container_price'], $_REQUEST['id']));
+            }
+
+            $success_message = 'Container is updated successfully.';
+        }
     }
 }
 ?>
@@ -76,7 +95,7 @@ if(!isset($_REQUEST['id'])) {
 foreach ($result as $row) {
     $container_name = $row['container_name'];
     $container_price = $row['price'];
-    $container_color = $row['container_color'];  // Fetch existing container color
+    $container_image = $row['container_image'];  // Fetch existing container image
 }
 ?>
 
@@ -95,7 +114,7 @@ foreach ($result as $row) {
         </div>
         <?php endif; ?>
 
-        <form class="form-horizontal" action="" method="post">
+        <form class="form-horizontal" action="" method="post" enctype="multipart/form-data">
             <div class="box box-info">
                 <div class="box-body">
                     <!-- Container Name -->
@@ -112,11 +131,14 @@ foreach ($result as $row) {
                             <input type="text" class="form-control" name="container_price" value="<?php echo $container_price; ?>" placeholder="Enter Price">
                         </div>
                     </div>
-                    <!-- Container Color -->
+                    <!-- Container Image -->
                     <div class="form-group">
-                        <label for="" class="col-sm-2 control-label">Container Color <span>*</span></label>
+                        <label for="" class="col-sm-2 control-label">Container Image</label>
                         <div class="col-sm-4">
-                            <input type="text" class="form-control" name="container_color" value="<?php echo $container_color; ?>" placeholder="Enter Color (e.g., Red, #FF0000)">
+                            <input type="file" name="container_image">
+                            <?php if(!empty($container_image)): ?>
+                                <img src="../../uploads/<?php echo $container_image; ?>" alt="Container Image" style="width: 80px; height: 80px; margin-top: 10px;">
+                            <?php endif; ?>
                         </div>
                     </div>
                     <!-- Submit Button -->

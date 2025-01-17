@@ -125,7 +125,7 @@ try {
                         <span class="icon">
                             <ion-icon name="flower-outline"></ion-icon>
                         </span>
-                        <span class="title">Manage Products</span>
+                        <span class="title">Manage Flowers</span>
                     </a>
                 </li>
                 <li>
@@ -222,7 +222,7 @@ try {
                 <div class="card">
                     <a href="sales-report.php" style="text-decoration: none; color: inherit;">
                         <div>
-                            <div class="numbers">P<?= number_format($totalSalesAmount, 2) ?></div>
+                            <div class="numbers">P <?= number_format($totalSalesAmount, 2) ?></div>
                             <div class="cardName">Total Sales</div>
                         </div>
                         <div class="iconBx">
@@ -279,7 +279,7 @@ try {
                 <?php foreach ($recentOrders as $order) { ?>
                     <tr>
                         <td><?= htmlspecialchars($order['product_name']) ?></td>
-                        <td>$<?= number_format($order['current_price'], 2) ?></td>
+                        <td>P <?= number_format($order['current_price'], 2) ?></td>
                         <td><?= ucfirst(htmlspecialchars($order['payment_status'])) ?></td>
                         <td>
                             <span class="status 

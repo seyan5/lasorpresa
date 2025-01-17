@@ -38,23 +38,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $flower_types_selected = [];
     $num_flowers = [];
 }
-
-
 ?>
 
 <!-- Include Bootstrap CSS -->
 <link rel="stylesheet" href="../css/customize.css?v=1.2">
-
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 <header>
     <a href="index.php" class="back">← Back to Home Page</a>
     <a href="customize-checkout.php" class="back">Check Out Cart</a>
-
 </header>
 
 <div class="page">
     <div class="container">
         <div class="row">
-            <div class="col-md-12">
+            <!-- Left side (60%) -->
+            <div class="col-md-7">
                 <h2>Customize Your Floral Arrangement</h2>
                 <form id="floral-customization-form" action="customization-submit.php" method="POST">
                     <!-- Container Customization Section -->
@@ -65,7 +63,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             <select id="container_type" name="container_type" class="form-control" required>
                                 <?php foreach ($container_types as $container): ?>
                                     <option value="<?= $container['container_id'] ?>"
-                                        <?= ($container_type == $container['container_id']) ? 'selected' : ''; ?>>
+                                            data-image="../admin/uploads/<?= htmlspecialchars($container['container_image']) ?>"
+                                            <?= ($container_type == $container['container_id']) ? 'selected' : ''; ?>>
                                         <?= htmlspecialchars($container['container_name']) ?>
                                     </option>
                                 <?php endforeach; ?>
@@ -91,23 +90,28 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             <div class="flower-item" id="flower-item-<?php echo $index + 1; ?>">
                                 <div class="form-group">
                                     <label for="flower_type_<?php echo $index + 1; ?>">Choose Flower Type:</label>
-                                    <select id="flower_type_<?php echo $index + 1; ?>" name="flower_type[]"
-                                        class="form-control" required>
+                                    <select id="flower_type_<?= $index + 1 ?>" name="flower_type[]" class="form-control" required>
                                         <?php foreach ($flower_types as $flower): ?>
-                                            <option value="<?= $flower['id'] ?>" <?= ($flower_type == $flower['id']) ? 'selected' : ''; ?>>
-                                                <?= htmlspecialchars($flower['name']) ?>
+                                            <option value="<?= $flower['id'] ?>"
+                                                    data-image="../admin/uploads/<?= htmlspecialchars($flower['image']) ?>"
+                                                    <?= ($flower_type == $flower['id']) ? 'selected' : ''; ?>>
+                                                    <?= htmlspecialchars($flower['name']) ?>
                                             </option>
                                         <?php endforeach; ?>
                                     </select>
+                                    <img id="flower-image-preview-<?= $index + 1 ?>" src="" alt="Flower Image" style="max-width: 150px; margin-top: 10px;">
                                 </div>
 
                                 <div class="form-group">
                                     <label for="num_flowers_<?php echo $index + 1; ?>">Number of Flowers:</label>
                                     <input type="number" id="num_flowers_<?php echo $index + 1; ?>" name="num_flowers[]"
-                                        class="form-control" min="1" max="100"
-                                        value="<?php echo isset($num_flowers[$index]) ? $num_flowers[$index] : 1; ?>"
-                                        required>
+                                           class="form-control" min="1" max="3"
+                                           value="<?php echo isset($num_flowers[$index]) ? $num_flowers[$index] : 1; ?>"
+                                           required>
                                 </div>
+
+                                <!-- Remove Flower Button -->
+                                <button type="button" class="btn btn-danger remove-flower-btn" data-index="<?= $index + 1 ?>">X</button>
                             </div>
                         <?php endforeach; ?>
                     </div>
@@ -117,19 +121,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <div class="form-group">
                         <label for="remarks">Remarks:</label>
                         <textarea id="remarks" name="remarks" class="form-control"
-                            placeholder="Enter any special instructions or remarks..." required></textarea>
-                    </div>
-
-                    <!-- Real-time Selections -->
-                    <div class="section">
-                        <h4>Your Selections</h4>
-                        <div id="selected-selections">
-                            <!-- This will show the real-time selections of flowers -->
-                        </div>
+                                  placeholder="Enter any special instructions or remarks..." required></textarea>
                     </div>
 
                     <button type="submit" class="btn btn-primary">Submit Your Customization</button>
                 </form>
+            </div>
+
+            <!-- Right side (40%) -->
+            <div class="col-md-5">
+                <h4>Your Selections</h4>
+                <div id="selected-selections">
+                    <!-- This will show the real-time selections of flowers -->
+                </div>
             </div>
         </div>
     </div>
@@ -141,39 +145,63 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     const flowerContainer = document.getElementById('flower-container');
     const selectedSelections = document.getElementById('selected-selections');
 
-    // Update selection summary in real-time
+    document.getElementById('container_type').addEventListener('change', updateSelection);
+document.getElementById('container_color').addEventListener('change', updateSelection);
+flowerContainer.addEventListener('change', (event) => {
+    if (event.target && (event.target.id.startsWith('flower_type_') || event.target.id.startsWith('num_flowers_'))) {
+        updateSelection(); // Update the preview when flower type or number of flowers changes
+    }
+});
+
     // Update selection summary in real-time, including remarks
     function updateSelection() {
-        selectedSelections.innerHTML = ''; // Clear previous selections
-        const flowerTypes = document.querySelectorAll('[id^="flower_type_"]');
-        const numFlowers = document.querySelectorAll('[id^="num_flowers_"]');
-        const containerType = document.getElementById('container_type').value;
-        const containerColor = document.getElementById('container_color').value;
-        const remarks = document.getElementById('remarks').value;
+    selectedSelections.innerHTML = ''; // Clear previous selections
+    const flowerTypes = document.querySelectorAll('[id^="flower_type_"]');
+    const numFlowers = document.querySelectorAll('[id^="num_flowers_"]');
+    const containerType = document.getElementById('container_type');
+    const containerColor = document.getElementById('container_color');
+    const remarks = document.getElementById('remarks').value;
 
-        selectedSelections.innerHTML = `
-        <p><strong>Container Type:</strong> ${containerType}</p>
-        <p><strong>Container Color:</strong> ${containerColor}</p>
+    // Get selected container details
+    const selectedContainerOption = containerType.options[containerType.selectedIndex];
+    const containerImage = selectedContainerOption.getAttribute('data-image');
+    const containerName = selectedContainerOption.text;
+
+    // Display container details
+    selectedSelections.innerHTML = ` 
+        <p><strong>Container:</strong> ${containerName}</p>
+        <img src="${containerImage}" alt="${containerName}" style="width: 150px; height: auto; margin-bottom: 10px;">
+        <p><strong>Container Color:</strong> ${containerColor.options[containerColor.selectedIndex].text}</p>
         <p><strong>Remarks:</strong> ${remarks}</p>
         <hr>
     `;
 
-        flowerTypes.forEach((flowerType, index) => {
-            const numFlower = numFlowers[index].value;
+    // Display selected flowers with updated number
+    flowerTypes.forEach((flowerType, index) => {
+        const selectedFlowerOption = flowerType.options[flowerType.selectedIndex];
+        const flowerImage = selectedFlowerOption.getAttribute('data-image');
+        const flowerName = selectedFlowerOption.text;
+        const numFlower = numFlowers[index].value;
 
-            const selectionSummary = `
-            <p><strong>Flower ${index + 1}</strong></p>
-            <p>Flower Type: ${flowerType.options[flowerType.selectedIndex].text}</p>
+        const flowerSummary = `
+            <p><strong>Flower ${index + 1}:</strong> ${flowerName}</p>
+            <img src="${flowerImage}" alt="${flowerName}" style="width: 100px; height: auto; margin-bottom: 10px;">
             <p>Number of Flowers: ${numFlower}</p>
             <hr>
         `;
-            selectedSelections.innerHTML += selectionSummary;
-        });
-    }
+        selectedSelections.innerHTML += flowerSummary;
+    });
+}
 
     // Add event listener for the remarks field to update the live preview
     document.getElementById('remarks').addEventListener('input', updateSelection);
 
+    // Add event listeners to flower type and number of flowers fields to update selection in real-time
+    flowerContainer.addEventListener('change', (event) => {
+        if (event.target && (event.target.id.startsWith('flower_type_') || event.target.id.startsWith('num_flowers_'))) {
+            updateSelection(); // Update the preview on flower selection change
+        }
+    });
 
     // Add another flower option to the same container
     addFlowerBtn.addEventListener('click', () => {
@@ -189,28 +217,34 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <label for="flower_type_${flowerCount}">Choose Flower Type:</label>
                 <select id="flower_type_${flowerCount}" name="flower_type[]" class="form-control" required>
                     <?php foreach ($flower_types as $flower): ?>
-                                <option value="<?= $flower['id'] ?>"><?= htmlspecialchars($flower['name']) ?></option>
+                        <option value="<?= $flower['id'] ?>" data-image="../admin/uploads/<?= htmlspecialchars($flower['image']) ?>"><?= htmlspecialchars($flower['name']) ?>
                     <?php endforeach; ?>
                 </select>
             </div>
 
             <div class="form-group">
                 <label for="num_flowers_${flowerCount}">Number of Flowers:</label>
-                <input type="number" id="num_flowers_${flowerCount}" name="num_flowers[]" class="form-control" min="1" max="100" value="1" required>
+                <input type="number" id="num_flowers_${flowerCount}" name="num_flowers[]" class="form-control" min="1" max="3" value="1" required>
             </div>
-        `;
 
-        // Append the new flower item
+            <!-- Remove Flower Button -->
+            <button type="button" class="btn btn-danger remove-flower-btn" data-index="${flowerCount}">X</button>
+        `;
         flowerContainer.appendChild(flowerItem);
 
-        // Update selection summary
+        // Update selection summary after adding a new flower
         updateSelection();
     });
 
-    // Listen to the form inputs to update the selection in real-time
-    flowerContainer.addEventListener('input', updateSelection);
-    flowerContainer.addEventListener('change', updateSelection);
+    // Event delegation for dynamically created "X" remove buttons
+    flowerContainer.addEventListener('click', function (event) {
+        if (event.target && event.target.classList.contains('remove-flower-btn')) {
+            const flowerItem = event.target.closest('.flower-item');
+            flowerItem.remove();
+            updateSelection(); // Update the preview after removal
+        }
+    });
 
-    // Initial update on page load
+    // Update the initial preview when the page loads
     updateSelection();
 </script>
