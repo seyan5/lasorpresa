@@ -237,6 +237,7 @@ function deleteOrder(orderId) {
       .then((data) => {
         if (data.success) {
           alert(data.message);
+          location.reload();
           // Remove the row from the table
           const row = document.querySelector(`tr[data-order-id="${orderId}"]`);
           if (row) row.remove();

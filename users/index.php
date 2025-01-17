@@ -14,6 +14,7 @@ include("../admin/inc/CSRF_Protect.php");
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lasorpresa</title>
     <!-- font -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
@@ -106,6 +107,8 @@ include("../admin/inc/CSRF_Protect.php");
                     <?php endif; ?>
                 </div>
             </div>
+
+
             <div class="notification-dropdown">
                 <a href="#" class="fas fa-bell" onclick="toggleNotificationDropdown()"></a>
                 <div class="dropdown-menu" id="notificationDropdown">
@@ -134,7 +137,7 @@ include("../admin/inc/CSRF_Protect.php");
                         <?php foreach ($payments as $payment): ?>
                             <?php 
                             // Determine payment status message and shipping status message
-                            $paymentStatus = ($payment['payment_status'] == 'pending') ? 'Payment Pending' : ($payment['payment_status'] == 'paid' ? 'Payment Confirmed' : 'Payment Failed');
+                            $paymentStatus = ($payment['payment_status'] == 'pending') ? 'Payment Pending' : ($payment['payment_status'] == 'paid' ? 'Paid' : 'Payment Failed');
                             $shippingStatus = ($payment['shipping_status'] == 'pending') ? 'Shipping Pending' : ($payment['shipping_status'] == 'shipped' ? 'Shipped' : 'Delivered');
                             ?>
                             <li class="dropdown-item d-flex align-items-center">
@@ -167,8 +170,6 @@ include("../admin/inc/CSRF_Protect.php");
         </div>
 
          
-        <!-- Notification Dropdown -->
-<!-- Notification Dropdown -->
 
 
 
@@ -469,10 +470,10 @@ include("../admin/inc/CSRF_Protect.php");
             function showPaymentShippingNotification(payment) {
                 const options = {
                     body: `Payment Status: ${payment.paymentStatus}, Shipping Status: ${payment.shippingStatus}`,
-                    icon: '../../images/logo.png',
+                    icon: '../images/logo.png',
                     tag: `payment-shipping-${payment.id}`
                 };
-                new Notification(`Product ${payment.id} Update`, options);
+                new Notification(`Product ${payment.id}`, options);
             }
 
             // Display notifications at intervals (2 seconds)
@@ -490,6 +491,7 @@ include("../admin/inc/CSRF_Protect.php");
         }
     });
 </script>
+
 
 
 

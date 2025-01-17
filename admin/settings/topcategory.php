@@ -9,12 +9,14 @@
     <title>La Sorpresa Admin</title>
     <link rel="stylesheet" href="../../css/settings.css?v.1.0">
     <link rel="stylesheet" href="../../css/products.css">
+    <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
     
 </head>
 <body>
     <div class="container">
         <div class="navigation">
-            <ul>
+        <ul>
                 <li>
                     <a href="#">
                         <div class="logo-container">
@@ -23,7 +25,6 @@
                         <span class="title"></span>
                     </a>
                 </li>
-
                 <li>
                     <a href="../dashboard.php">
                         <span class="icon">
@@ -32,7 +33,6 @@
                         <span class="title">Dashboard</span>
                     </a>
                 </li>
-
                 <li>
                     <a href="../users.php">
                         <span class="icon">
@@ -41,45 +41,56 @@
                         <span class="title">Users</span>
                     </a>
                 </li>
-
                 <li>
-                    <a href="#">
+                    <a href="../sales-report.php">
                         <span class="icon">
-                            <ion-icon name="chatbubble-outline"></ion-icon>
+                            <ion-icon name="cash-outline"></ion-icon>
                         </span>
-                        <span class="title">Messages</span>
+                        <span class="title">Sales</span>
                     </a>
                 </li>
-
                 <li>
-                    <a href="product/product.php">
+                    <a href="../product/product.php">
                         <span class="icon">
                             <ion-icon name="cube-outline"></ion-icon>
                         </span>
                         <span class="title">Manage Products</span>
                     </a>
                 </li>
-
                 <li>
-                    <a href="#">
+                    <a href="../product/flowers.php">
+                        <span class="icon">
+                            <ion-icon name="flower-outline"></ion-icon>
+                        </span>
+                        <span class="title">Manage Flowers</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="../orders/order.php">
                         <span class="icon">
                             <ion-icon name="cart-outline"></ion-icon>
                         </span>
                         <span class="title">Manage Orders</span>
                     </a>
                 </li>
-
                 <li>
-                    <a href="#">
+                    <a href="../customize/customize-order.php">
                         <span class="icon">
-                            <ion-icon name="settings-outline"></ion-icon>
+                        <ion-icon name="color-wand-outline"></ion-icon>
                         </span>
-                        <span class="title">Settings</span>
+                        <span class="title"> Customize Orders</span>
                     </a>
                 </li>
-
                 <li>
-                    <a href="../index.php">
+                    <a href="settings.php">
+                        <span class="icon">
+                            <ion-icon name="albums-outline"></ion-icon>
+                        </span>
+                        <span class="title">Categories</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="../logout.php">
                         <span class="icon">
                             <ion-icon name="log-out-outline"></ion-icon>
                         </span>
@@ -125,7 +136,7 @@
                 <tr>
                     <th>#</th>
 			        <th>Top Category Name</th>
-                    <th>Show on Menu?</th>
+                    <!-- <th>Show on Menu?</th> -->
 			        <th>Action</th>
                 </tr>
             </thead>
@@ -141,7 +152,7 @@
 					<tr>
 	                    <td><?php echo $i; ?></td>
 	                    <td><?php echo $row['tcat_name']; ?></td>
-                        <td>
+                        <!-- <td>
                             <?php 
                                 if($row['show_on_menu'] == 1) {
                                     echo 'Yes';
@@ -149,10 +160,10 @@
                                     echo 'No';
                                 }
                             ?>
-                        </td>
+                        </td> -->
 	                    <td>
-	                        <a href="settings/topcategory-edit.php?id=<?php echo $row['tcat_id']; ?>" class="btn btn-primary btn-xs">Edit</a>
-	                        <a href="#" class="btn btn-danger btn-xs" data-href="settings/topcategory-delete.php?id=<?php echo $row['tcat_id']; ?>" data-toggle="modal" data-target="#confirm-delete">Delete</a>
+	                        <a href="topcategory-edit.php?id=<?php echo $row['tcat_id']; ?>" class="btn btn-primary btn-xs">Edit</a>
+	                        <a href="#" class="btn btn-danger btn-xs" data-href="topcategory-delete.php?id=<?php echo $row['tcat_id']; ?>" data-toggle="modal" data-target="#confirm-delete">Delete</a>
 	                    </td>
 	                </tr>
             		<?php
@@ -163,7 +174,7 @@
     </div>
     <section class="content-header" style="background-color: white !important;">
         <div class="content-header-right">    
-            <a href="settings/topcategory-add.php" class="btn btn-primary btn-sm">Add New</a>
+            <a href="topcategory-add.php" class="btn btn-primary btn-sm">Add New</a>
         </div>
     </section>       
 </div>

@@ -3,26 +3,27 @@ include("conn.php");
 
 // Check if a customer is logged in
 if (isset($_SESSION['customer']) && isset($_SESSION['customer']['cust_id'])) {
-    $customerId = $_SESSION['customer']['cust_id']; // Get the logged-in customer's ID
+    $customerId = $_SESSION['customer']['cust_id'];
 
-    // Fetch payments for the logged-in customer with the necessary conditions
+    // Mark notifications as read when the page is loaded
+    $stmt = $pdo->prepare("UPDATE payment SET notification_read = 1 WHERE cust_id = :cust_id AND notification_read = 0");
+    $stmt->execute(['cust_id' => $customerId]);
+
+    // Fetch the notifications (excluding read ones)
     $statement = $pdo->prepare("
         SELECT p.*, oi.product_id, pr.name
         FROM payment p
         JOIN order_items oi ON p.order_id = oi.order_id
         JOIN product pr ON oi.product_id = pr.p_id
         WHERE p.cust_id = :cust_id
+        AND (p.payment_status = 'pending' OR p.shipping_status != 'delivered')
         ORDER BY p.created_at DESC
     ");
     $statement->execute(['cust_id' => $customerId]);
     $payments = $statement->fetchAll(PDO::FETCH_ASSOC);
-} else {
-    // Redirect if no customer is logged in
-    header("Location: login.php");
-    exit();
 }
-
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
