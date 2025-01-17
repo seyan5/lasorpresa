@@ -52,12 +52,14 @@ if (isset($_POST['form1'])) {
     <title>La Sorpresa Admin</title>
     <link rel="stylesheet" href="../css/settings.css?v.1.1">
     <link rel="stylesheet" href="../css/products.css">
+    <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
     
 </head>
 <body>
     <div class="container">
         <div class="navigation">
-            <ul>
+        <ul>
                 <li>
                     <a href="#">
                         <div class="logo-container">
@@ -66,34 +68,30 @@ if (isset($_POST['form1'])) {
                         <span class="title"></span>
                     </a>
                 </li>
-
                 <li>
-                    <a href="../admin/dashboard.php">
+                    <a href="dashboard.php">
                         <span class="icon">
                             <ion-icon name="home-outline"></ion-icon>
                         </span>
                         <span class="title">Dashboard</span>
                     </a>
                 </li>
-
                 <li>
-                    <a href="../admin/users.php">
+                    <a href="users.php">
                         <span class="icon">
                             <ion-icon name="people-outline"></ion-icon>
                         </span>
                         <span class="title">Users</span>
                     </a>
                 </li>
-
                 <li>
-                    <a href="#">
+                    <a href="sales-report.php">
                         <span class="icon">
-                            <ion-icon name="chatbubble-outline"></ion-icon>
+                            <ion-icon name="cash-outline"></ion-icon>
                         </span>
-                        <span class="title">Messages</span>
+                        <span class="title">Sales</span>
                     </a>
                 </li>
-
                 <li>
                     <a href="product/product.php">
                         <span class="icon">
@@ -102,9 +100,16 @@ if (isset($_POST['form1'])) {
                         <span class="title">Manage Products</span>
                     </a>
                 </li>
-
                 <li>
-                    <a href="../admin/orders/order.php">
+                    <a href="product/flowers.php">
+                        <span class="icon">
+                            <ion-icon name="flower-outline"></ion-icon>
+                        </span>
+                        <span class="title">Manage Flowers</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="orders/order.php">
                         <span class="icon">
                             <ion-icon name="cart-outline"></ion-icon>
                         </span>
@@ -119,18 +124,16 @@ if (isset($_POST['form1'])) {
                         <span class="title"> Customize Orders</span>
                     </a>
                 </li>
-
                 <li>
-                    <a href="#">
+                    <a href="settings.php">
                         <span class="icon">
-                            <ion-icon name="settings-outline"></ion-icon>
+                            <ion-icon name="albums-outline"></ion-icon>
                         </span>
-                        <span class="title">Settings</span>
+                        <span class="title">Categories</span>
                     </a>
                 </li>
-
                 <li>
-                    <a href="../index.php">
+                    <a href="logout.php">
                         <span class="icon">
                             <ion-icon name="log-out-outline"></ion-icon>
                         </span>
@@ -192,7 +195,7 @@ if (isset($_POST['form1'])) {
                         <td><?php echo $i; ?></td>
                         <td><?php echo $row['color_name']; ?></td>
                         <td>
-                            <a href="settings/color-edit.php?id=<?php echo $row['color_id']; ?>" class="btn btn-primary btn-xs">Edit</a>
+                            <a href="#" class="btn btn-primary btn-xs" data-toggle="modal" data-target="#editColorModal" data-id="<?php echo $row['color_id']; ?>" data-name="<?php echo $row['color_name']; ?>">Edit</a>
                             <a href="#" class="btn btn-danger btn-xs" data-href="settings/color-delete.php?id=<?php echo $row['color_id']; ?>" data-toggle="modal" data-target="#confirm-delete">Delete</a>
                         </td>
                     </tr>
@@ -263,63 +266,159 @@ if (isset($_POST['form1'])) {
 </div>
 
 
+<!-- Edit Color Modal -->
+<div class="modal fade" id="editColorModal" tabindex="-1" role="dialog" aria-labelledby="editColorModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editColorModalLabel">Edit Color</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="colorEditForm">
+                    <input type="hidden" id="edit_color_id" name="color_id">
+                    <div class="form-group">
+                        <label for="color_name">Color Name <span>*</span></label>
+                        <input type="text" class="form-control" id="edit_color_name" name="color_name" required>
+                    </div>
+                    <div class="form-group text-right">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-success">Save Changes</button>
+                    </div>
+                    <div id="editErrorMessage" class="alert alert-danger d-none"></div>
+                    <div id="editSuccessMessage" class="alert alert-success d-none"></div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 
 <script>
     $(document).ready(function() {
-        $('#colorAddForm').on('submit', function(e) {
-            e.preventDefault();  // Prevent form submission
+    $('#colorAddForm').on('submit', function(e) {
+        e.preventDefault();  // Prevent form submission
 
-            var colorName = $('#color_name').val();
+        var colorName = $('#color_name').val();
 
-            // Clear previous messages
-            $('#errorMessage').addClass('d-none');
-            $('#successMessage').addClass('d-none');
+        // Clear previous messages
+        $('#errorMessage').addClass('d-none');
+        $('#successMessage').addClass('d-none');
 
-            // Validate input (check if color name is empty)
-            if (colorName === '') {
-                $('#errorMessage').text('Color Name cannot be empty').removeClass('d-none');
-                return; // Stop further processing if input is invalid
-            }
+        // Validate input (check if color name is empty)
+        if (colorName === '') {
+            $('#errorMessage').text('Color Name cannot be empty').removeClass('d-none');
+            return; // Stop further processing if input is invalid
+        }
 
-            // Send AJAX request to add the color
-            $.ajax({
-                url: 'settings/color-add.php',
-                type: 'POST',
-                data: { color_name: colorName, form1: true },
-                success: function(response) {
-                    console.log("Response from server:", response);  // Log response to console
+        // Send AJAX request to add the color
+        $.ajax({
+            url: 'settings/color-add.php',
+            type: 'POST',
+            data: { color_name: colorName, form1: true },
+            success: function(response) {
+                console.log("Raw Response from server:", response);  // Log raw response to console
 
-                    try {
-                        var data = JSON.parse(response);  // Attempt to parse the JSON response
+                try {
+                    var data = JSON.parse(response);  // Attempt to parse the JSON response
 
-                        // Check for success or error messages
-                        if (data.success) {
-                            $('#successMessage').text(data.success).removeClass('d-none');
-                            $('#errorMessage').addClass('d-none');
-                            $('#color_name').val('');  // Clear input field after success
+                    // Check for success or error messages
+                    if (data.success) {
+                        $('#successMessage').text(data.success).removeClass('d-none');
+                        $('#errorMessage').addClass('d-none');
+                        $('#color_name').val('');  // Clear input field after success
 
-                            setTimeout(function() {
-                                $('#addColorModal').modal('hide');  // Close the modal after a short delay
-                                window.location.href = 'settings.php';  // Redirect to settings page
-                            }, 1500);
-                        } else if (data.error) {
-                            $('#errorMessage').text(data.error).removeClass('d-none');
-                            $('#successMessage').addClass('d-none');
-                        }
-                    } catch (error) {
-                        // If there's a JSON parsing error, show an error message
-                        console.error('JSON parsing error:', error);  // Log the error
-                        $('#errorMessage').text('There was an error processing the response. Please try again later.').removeClass('d-none');
+                        setTimeout(function() {
+                            $('#addColorModal').modal('hide');  // Close the modal after a short delay
+                            window.location.href = 'settings.php';  // Redirect to settings page
+                        }, 1500);
+                    } else if (data.error) {
+                        $('#errorMessage').text(data.error).removeClass('d-none');
+                        $('#successMessage').addClass('d-none');
                     }
-                },
-                error: function(xhr, status, error) {
-                    // Handle AJAX request failure
-                    console.error("AJAX Error:", error);  // Log AJAX error for debugging
-                    $('#errorMessage').text('An error occurred: ' + error).removeClass('d-none');
+                } catch (error) {
+                    // If there's a JSON parsing error, show an error message
+                    console.error('JSON parsing error:', error);  // Log the error
+                    $('#errorMessage').text('There was an error processing the response. Please try again later.').removeClass('d-none');
                 }
-            });
+            },
+            error: function(xhr, status, error) {
+                // Handle AJAX request failure
+                console.error("AJAX Error:", error);  // Log AJAX error for debugging
+                $('#errorMessage').text('An error occurred: ' + error).removeClass('d-none');
+            }
         });
     });
+});
+
+$(document).ready(function() {
+    // When the Edit button is clicked
+    $('a[data-toggle="modal"]').on('click', function() {
+        // Get the color ID and color name from the data attributes
+        var colorId = $(this).data('id');
+        var colorName = $(this).data('name');
+
+        // Set the values in the modal form
+        $('#edit_color_id').val(colorId);
+        $('#edit_color_name').val(colorName);
+    });
+
+    // Handle form submission for editing color
+    $('#colorEditForm').on('submit', function(e) {
+        e.preventDefault();  // Prevent form submission
+
+        var colorId = $('#edit_color_id').val();
+        var colorName = $('#edit_color_name').val();
+
+        // Clear previous messages
+        $('#editErrorMessage').addClass('d-none');
+        $('#editSuccessMessage').addClass('d-none');
+
+        // Validate input (check if color name is empty)
+        if (colorName === '') {
+            $('#editErrorMessage').text('Color Name cannot be empty').removeClass('d-none');
+            return; // Stop further processing if input is invalid
+        }
+
+        // Send AJAX request to edit the color
+        $.ajax({
+            url: 'settings/color-edit.php',  // Your server-side script to handle color edit
+            type: 'POST',
+            data: { color_id: colorId, color_name: colorName, form1: true },
+            success: function(response) {
+    console.log("Response from server:", response);  // Log the response to check
+
+    try {
+        var data = JSON.parse(response);
+
+        if (data.success) {
+            $('#editSuccessMessage').text(data.success).removeClass('d-none');
+            $('#editErrorMessage').addClass('d-none');
+
+            setTimeout(function() {
+                $('#editColorModal').modal('hide');
+                window.location.href = 'settings.php';  // Redirect after edit
+            }, 1500);
+        } else if (data.error) {
+            $('#editErrorMessage').text(data.error).removeClass('d-none');
+            $('#editSuccessMessage').addClass('d-none');
+        }
+    } catch (error) {
+        console.error('JSON parsing error:', error);
+        $('#editErrorMessage').text('There was an error processing the response. Please try again later.').removeClass('d-none');
+    }
+            },
+            error: function(xhr, status, error) {
+                console.error("AJAX Error:", error);
+                $('#editErrorMessage').text('An error occurred: ' + error).removeClass('d-none');
+            }
+        });
+    });
+});
+
 </script>
 
 

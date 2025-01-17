@@ -96,6 +96,7 @@ foreach ($result as $row) {
     $container_name = $row['container_name'];
     $container_price = $row['price'];
     $container_image = $row['container_image'];  // Fetch existing container image
+    
 }
 ?>
 
@@ -137,7 +138,7 @@ foreach ($result as $row) {
                         <div class="col-sm-4">
                             <input type="file" name="container_image">
                             <?php if(!empty($container_image)): ?>
-                                <img src="../../uploads/<?php echo $container_image; ?>" alt="Container Image" style="width: 80px; height: 80px; margin-top: 10px;">
+                                <img src="../uploads/<?php echo $container_image; ?>" alt="Container Image" style="width: 80px; height: 80px; margin-top: 10px;">
                             <?php endif; ?>
                         </div>
                     </div>
