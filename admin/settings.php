@@ -310,6 +310,7 @@ if (isset($_POST['form1'])) {
 
         // Validate input (check if color name is empty)
         if (colorName === '') {
+            window.location.href = 'settings.php';  
             $('#errorMessage').text('Color Name cannot be empty').removeClass('d-none');
             return; // Stop further processing if input is invalid
         }

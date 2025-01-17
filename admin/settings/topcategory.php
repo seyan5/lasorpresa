@@ -136,7 +136,7 @@
                 <tr>
                     <th>#</th>
 			        <th>Top Category Name</th>
-                    <th>Show on Menu?</th>
+                    <!-- <th>Show on Menu?</th> -->
 			        <th>Action</th>
                 </tr>
             </thead>
@@ -152,7 +152,7 @@
 					<tr>
 	                    <td><?php echo $i; ?></td>
 	                    <td><?php echo $row['tcat_name']; ?></td>
-                        <td>
+                        <!-- <td>
                             <?php 
                                 if($row['show_on_menu'] == 1) {
                                     echo 'Yes';
@@ -160,7 +160,7 @@
                                     echo 'No';
                                 }
                             ?>
-                        </td>
+                        </td> -->
 	                    <td>
 	                        <a href="topcategory-edit.php?id=<?php echo $row['tcat_id']; ?>" class="btn btn-primary btn-xs">Edit</a>
 	                        <a href="#" class="btn btn-danger btn-xs" data-href="topcategory-delete.php?id=<?php echo $row['tcat_id']; ?>" data-toggle="modal" data-target="#confirm-delete">Delete</a>
