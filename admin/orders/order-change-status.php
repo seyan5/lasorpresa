@@ -93,10 +93,34 @@ if ($customer) {
     }
 }
 
+
+
+function embedImage($filePath) {
+    // Check if the file exists
+    if (!file_exists($filePath)) {
+        return null;
+    }
+
+    // Read the file content
+    $fileContent = file_get_contents($filePath);
+    
+    // Get the file type (image)
+    $fileType = mime_content_type($filePath);
+
+    // Encode the file content in Base64
+    $base64Image = base64_encode($fileContent);
+    
+    // Create a data URL for the image
+    return 'data:' . $fileType . ';base64,' . $base64Image;
+}
+
 function sendShippingNotification($customerEmail, $customerName, $orderId, $shippingStatus, $paymentMethod, $productName, $quantity, $price, $featuredPhoto) {
     $mail = new PHPMailer(true);
 
     try {
+        // Embed the image if it's available
+        $encodedImage = embedImage($featuredPhoto);
+
         // Email content based on shipping status
         $subject = 'Order ' . ucfirst($shippingStatus) . ': Order ID #' . $orderId;
         $body = "<h3>Dear $customerName,</h3>
@@ -104,10 +128,19 @@ function sendShippingNotification($customerEmail, $customerName, $orderId, $ship
                  <p><strong>Payment Method:</strong> $paymentMethod</p>
                  <p><strong>Product:</strong> $productName</p>
                  <p><strong>Quantity:</strong> $quantity</p>
-                 <p><strong>Price:</strong> $$price</p>
-                 <p><strong>Product Image:</strong><br><img src='$featuredPhoto' alt='$productName' style='max-width: 200px;'></p>
-                 <p>Thank you for shopping with us!</p>
-                 <p>Best Regards,<br>Your Flower Shop</p>";
+                 <p><strong>Price:</strong> $$price</p>";
+
+        // If image is available, include it
+        if ($encodedImage) {
+            $body .= "<p><strong>Product Image:</strong><br><img src='$encodedImage' alt='$productName' style='max-width: 200px;'></p>";
+        }
+
+        $body .= "<p>Thank you for shopping with us!</p>
+                  <p>Best Regards,<br>Your Flower Shop</p>";
+
+
+
+                  
 
         $mail->isSMTP();
         $mail->Host = 'smtp.gmail.com';
