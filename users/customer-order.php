@@ -243,8 +243,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </span>
                   </td>
                   <td>
-                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#reviewModal" data-order-id="<?= $order['order_id'] ?>" data-product-id="<?= $order['p_id'] ?>">Add Review</button>
-                  </td>
+  <?php if ($order['shipping_status'] === 'delivered'): ?>
+    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#reviewModal" data-order-id="<?= $order['order_id'] ?>" data-product-id="<?= $order['p_id'] ?>">Add Review</button>
+  <?php else: ?>
+    <button class="btn btn-secondary" disabled>Review</button>
+  <?php endif; ?>
+</td>
                 </tr>
               <?php }
             } ?>
@@ -361,5 +365,33 @@ document.getElementById('reviewForm').addEventListener('submit', function(e) {
 .table-container {
   max-height: 200px; /* You can adjust the height as needed */
   overflow-y: auto;
+}
+/* Style for the 'Add Review' button */
+.btn-primary {
+    background-color: #007bff;  /* Blue color */
+    border-color: #007bff;
+}
+
+/* Style for the 'Review Available After Delivery' button */
+.btn-secondary {
+    background-color: #6c757d;  /* Gray color */
+    border-color: #6c757d;
+    cursor: not-allowed;  /* Show the disabled cursor */
+}
+
+/* Additional styling for the modal */
+#reviewModal .modal-header {
+    background-color: #007bff;
+    color: #fff;
+}
+
+#reviewModal .modal-footer .btn-primary {
+    background-color: #28a745;  /* Green color for submit button */
+}
+
+/* Disabled button appearance */
+.btn:disabled {
+    opacity: 0.65;
+    pointer-events: none;  /* Prevent interaction */
 }
 </style>

@@ -23,7 +23,7 @@ $flower = $stmt->fetch(PDO::FETCH_ASSOC);
 
     <label for="image">Flower Image:</label>
     <input type="file" name="image" id="image">
-    <img src="<?php echo $flower['image']; ?>" width="100">
+    <img src="../admin/uploads/<?php echo htmlspecialchars($flower['image']); ?>" width="100">
 
     <button type="submit" onclick="return confirmUpdate()">Update Flower</button>
 
