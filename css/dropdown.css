@@ -21,29 +21,30 @@
 }
 
 .dropdown-menu p {
-    margin: 10px;
+    margin: 15px; /* Increased spacing */
     font-weight: bold;
+    line-height: 1.8; /* Adjust line height */
 }
 
 .dropdown-menu hr {
-    margin: 5px 0;
+    margin: 10px 0; /* Adjust spacing above and below */
 }
 
 .dropdown-menu a {
     display: block;
-    padding: 10px;
+    padding: 15px; /* Increased padding for more space */
     text-decoration: none;
     color: #333;
+    line-height: 1.6; /* Adjust line height */
 }
 
 .dropdown-menu a:hover {
     background-color: #f0f0f0;
 }
-
+ 
 .dropdown-menu.show {
     display: block;
 }
-
 
 /* Style for the dropdown container */
 .prod-dropdown {
@@ -61,14 +62,17 @@
     min-width: 150px;
     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Optional shadow */
     z-index: 1000;
+    border: 1px solid #ccc; /* Add a light gray border */
+    border-radius: 5px; /* Optional rounded corners */
 }
 
 /* Links inside the dropdown menu */
 .prod-menu a {
     display: block;
-    padding: 10px;
+    padding: 15px; /* Increased padding for spacing */
     text-decoration: none;
     color: black;
+    line-height: 1.8; /* Adjust line height */
     transition: background-color 0.3s ease;
 }
 
@@ -80,4 +84,3 @@
 .prod-dropdown:hover .prod-menu {
     display: block; /* Make it visible */
 }
-

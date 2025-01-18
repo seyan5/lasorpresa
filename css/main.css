@@ -536,3 +536,103 @@ icons-container .icons span{
     font-size: 2rem;
     color: #333;
 }
+
+.cart-container {
+    position: relative;
+    display: inline-block;
+}
+
+.cart-icon {
+    text-decoration: none;
+    color: #000;
+    position: relative;
+}
+
+.cart-count {
+    background-color: var(--pink);
+    color: white;
+    border-radius: 50%;
+    padding: 2px 5px; /* Smaller padding */
+    font-size: 10px; /* Smaller font */
+    position: absolute;
+    top: -8px; /* Adjusted for compactness */
+    right: -8px;
+}
+
+.cart-dropdown {
+    display: none;
+    position: absolute;
+    right: 0;
+    top: 25px; /* Closer to the icon */
+    width: 220px; /* Reduced width */
+    background-color: white;
+    box-shadow: 0 3px 4px rgba(0, 0, 0, 0.1); /* Softer shadow */
+    border-radius: 3px; /* Smaller radius */
+    z-index: 1000;
+}
+
+.cart-container:hover .cart-dropdown {
+    display: block;
+}
+
+.recent-products-title {
+    font-size: 12px; /* Smaller title font */
+    font-weight: bold;
+    margin: 5px; /* Reduced margin */
+}
+
+.recent-products-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.product-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 5px; /* Reduced padding */
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.product-item:last-child {
+    border-bottom: none;
+}
+
+.product-name {
+    font-size: 14px; /* Reduced font size */
+    font-weight: bolder;
+}
+
+.product-price {
+    font-size: 14px; /* Reduced font size */
+    color: var(--pink);
+}
+
+.empty-cart {
+    text-align: center;
+    padding: 5px; /* Reduced padding */
+    color: #999;
+}
+
+.view-cart-link {
+    display: block;
+    padding: 5px; /* Reduced padding */
+    text-align: center;
+    text-decoration: none;
+    color: blue;
+    font-size: 8px; /* Smaller font size */
+}
+
+.view-shopping-cart-button {
+    display: block;
+    padding: 6px !important;
+    text-align: center !important;
+    text-decoration: none !important;
+    background-color: var(--pink) !important;
+    color: white !important;
+    font-weight: bold !important;
+    border-radius: 6px !important;
+    font-size: 13px !important;
+}
+
+
