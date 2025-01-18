@@ -17,7 +17,7 @@ if (!$customer) {
     exit;
 }
 
-// Retrieve customization from session
+// Retrieve customization and expected_image from session
 $customization = $_SESSION['customization'] ?? null;
 
 if (!$customization || !is_array($customization)) {
@@ -32,80 +32,132 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $reference_number = $_POST['reference_number'] ?? null;
     $amount_paid = $_POST['amount_paid'] ?? $total_price;
 
-    $stmt = $pdo->prepare("INSERT INTO custom_order (cust_id, customer_name, customer_email, shipping_address, total_price, order_date) VALUES (:cust_id, :customer_name, :customer_email, :shipping_address, :total_price, NOW())");
-    $stmt->execute([
-        'cust_id' => $customer_id,
-        'customer_name' => $customer['cust_name'],
-        'customer_email' => $customer['cust_email'],
-        'shipping_address' => $customer['cust_address'],
-        'total_price' => $total_price,
-    ]);
+    try {
+        // Start a transaction
+        $pdo->beginTransaction();
 
-    // Step 2: Get the last inserted `order_id`
-    $order_id = $pdo->lastInsertId();
-
-    // Step 3: Insert into `custom_orderitems` table
-    foreach ($customization as $item) {
-        // Fetch flower details
-        $stmt = $pdo->prepare("SELECT name, price FROM flowers WHERE id = :flower_id");
-        $stmt->execute(['flower_id' => $item['flower_type']]);
-        $flower = $stmt->fetch(PDO::FETCH_ASSOC);
-        $flower_name = $flower['name'] ?? 'Unknown';
-        $flower_price = $flower['price'] ?? 0;
-    
-        // Fetch container details
-        $stmt = $pdo->prepare("SELECT container_name, price FROM container WHERE container_id = :container_id");
-        $stmt->execute(['container_id' => $item['container_type']]);
-        $container = $stmt->fetch(PDO::FETCH_ASSOC);
-        $container_name = $container['container_name'] ?? 'Unknown';
-        $container_price = $container['price'] ?? 0;
-    
-        // Fetch color details
-        $stmt = $pdo->prepare("SELECT color_name FROM color WHERE color_id = :color_id");
-        $stmt->execute(['color_id' => $item['container_color']]);
-        $color = $stmt->fetch(PDO::FETCH_ASSOC);
-        $color_name = $color['color_name'] ?? 'Unknown';
-        $color_price = 0; // Assuming color price is static or not applicable
-    
-        // Calculate total price for the item
-        $total_price_item = ($flower_price * $item['num_flowers']) + $container_price + $color_price;
-    
-        // Insert into `custom_orderitems`
-        $stmt = $pdo->prepare("INSERT INTO custom_orderitems (order_id, flower_type, num_flowers, container_type, container_color, flower_price, container_price, color_price, total_price, remarks) VALUES (:order_id, :flower_type, :num_flowers, :container_type, :container_color, :flower_price, :container_price, :color_price, :total_price, :remarks)");
+        // Insert into custom_order
+        $stmt = $pdo->prepare("
+            INSERT INTO custom_order (cust_id, customer_name, customer_email, shipping_address, total_price, order_date)
+            VALUES (:cust_id, :customer_name, :customer_email, :shipping_address, :total_price, NOW())
+        ");
         $stmt->execute([
-            'order_id' => $order_id,
-            'flower_type' => $flower_name, // Insert name instead of ID
-            'num_flowers' => $item['num_flowers'],
-            'container_type' => $container_name, // Insert name instead of ID
-            'container_color' => $color_name, // Insert name instead of ID
-            'flower_price' => $flower_price,
-            'container_price' => $container_price,
-            'color_price' => $color_price,
-            'total_price' => $total_price_item,
-            'remarks' => $item['remarks'], // Add remarks to database insertion
+            'cust_id' => $customer_id,
+            'customer_name' => $customer['cust_name'],
+            'customer_email' => $customer['cust_email'],
+            'shipping_address' => $customer['cust_address'],
+            'total_price' => $total_price,
         ]);
+
+        // Get the `order_id`
+        $order_id = $pdo->lastInsertId();
+
+        // Prepare insert statements
+        $stmt_orderitems = $pdo->prepare("
+            INSERT INTO custom_orderitems (
+                order_id, flower_type, num_flowers, container_type, container_color, flower_price, container_price, color_price, total_price, remarks
+            ) VALUES (
+                :order_id, :flower_type, :num_flowers, :container_type, :container_color, :flower_price, :container_price, :color_price, :total_price, :remarks
+            )
+        ");
+
+        $stmt_images = $pdo->prepare("
+            INSERT INTO custom_images (order_id, expected_image)
+            VALUES (:order_id, :expected_image)
+        ");
+
+        // Flag to ensure container price is added only once
+        $container_price_added = false;
+
+        foreach ($customization as $item) {
+            // Fetch descriptive names for flower, container, and color
+            $stmt_flower = $pdo->prepare("SELECT name, price FROM flowers WHERE id = :id");
+            $stmt_flower->execute([':id' => $item['flower_type']]);
+            $flower = $stmt_flower->fetch(PDO::FETCH_ASSOC);
+
+            $stmt_container = $pdo->prepare("SELECT container_name, price FROM container WHERE container_id = :id");
+            $stmt_container->execute([':id' => $item['container_type']]);
+            $container = $stmt_container->fetch(PDO::FETCH_ASSOC);
+
+            $stmt_color = $pdo->prepare("SELECT color_name FROM color WHERE color_id = :id");
+            $stmt_color->execute([':id' => $item['container_color']]);
+            $color = $stmt_color->fetch(PDO::FETCH_ASSOC);
+
+            // Extract descriptive names and prices
+            $flower_name = $flower['name'] ?? 'Unknown';
+            $flower_price = $flower['price'] ?? 0;
+
+            $container_name = $container['container_name'] ?? 'Unknown';
+            $container_price = $container['price'] ?? 0;
+
+            $color_name = $color['color_name'] ?? 'Unknown';
+            $color_price = 0; // Assuming no price for color
+
+            // Calculate total price for this flower item
+            $item_total_price = ($flower_price * $item['num_flowers']);
+            $total_price += $item_total_price;
+
+            // Add container price only once
+            if (!$container_price_added) {
+                $total_price += $container_price;
+                $container_price_added = true;
+            }
+
+            // Insert into custom_orderitems
+            $stmt_orderitems->execute([
+                'order_id' => $order_id,
+                'flower_type' => $flower_name,
+                'num_flowers' => $item['num_flowers'],
+                'container_type' => $container_name,
+                'container_color' => $color_name,
+                'flower_price' => $flower_price,
+                'container_price' => $container_price_added ? $container_price : 0,
+                'color_price' => $color_price,
+                'total_price' => $item_total_price,
+                'remarks' => $item['remarks'] ?? '',
+            ]);
+
+            // Get the `orderitem_id`
+            $orderitem_id = $pdo->lastInsertId();
+
+            // Insert into custom_images if an image exists
+            if (!empty($item['expected_image'])) {
+                $stmt_images->execute([
+                    'order_id' => $orderitem_id, // Use orderitem_id here
+                    'expected_image' => $item['expected_image'],
+                ]);
+            }
+        }
+
+        // Insert into custom_payment
+        $stmt_payment = $pdo->prepare("
+            INSERT INTO custom_payment (order_id, customer_name, customer_email, amount_paid, payment_method, reference_number, payment_status, shipping_status, created_at)
+            VALUES (:order_id, :customer_name, :customer_email, :amount_paid, :payment_method, :reference_number, 'Pending', 'Pending', NOW())
+        ");
+        $stmt_payment->execute([
+            'order_id' => $order_id,
+            'customer_name' => $customer['cust_name'],
+            'customer_email' => $customer['cust_email'],
+            'amount_paid' => $amount_paid,
+            'payment_method' => $payment_method,
+            'reference_number' => $reference_number,
+        ]);
+
+        // Commit transaction
+        $pdo->commit();
+
+        echo "<script>alert('Payment successful!');</script>";
+        echo "<script>window.location.href = 'customization.php';</script>";
+        exit;
+    } catch (Exception $e) {
+        $pdo->rollBack();
+        echo "Failed to process the order: " . $e->getMessage();
+        exit;
     }
-
-    // Step 4: Insert into `custom_payment` table
-    $stmt = $pdo->prepare("INSERT INTO custom_payment (order_id, customer_name, customer_email, amount_paid, payment_method, reference_number, payment_status, shipping_status, created_at) VALUES (:order_id, :customer_name, :customer_email, :amount_paid, :payment_method, :reference_number, 'Pending', 'Pending', NOW())");
-    $stmt->execute([
-        'order_id' => $order_id,
-        'customer_name' => $customer['cust_name'],
-        'customer_email' => $customer['cust_email'],
-        'amount_paid' => $total_price,
-        'payment_method' => $payment_method,
-        'reference_number' => $reference_number,
-    ]);
-
-    echo "<script>alert('Payment successful!');</script>";
-    echo "<script>window.location.href = 'customization.php';</script>";
-    exit;
 }
 ?>
 
 
-
-?>
 
 
 
