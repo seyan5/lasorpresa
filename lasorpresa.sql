@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 18, 2025 at 05:42 PM
+-- Generation Time: Jan 19, 2025 at 12:10 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -147,30 +147,33 @@ CREATE TABLE `customer_messages` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `custom_finalimages`
+--
+
+CREATE TABLE `custom_finalimages` (
+  `image_id` int(11) NOT NULL,
+  `order_id` int(11) NOT NULL,
+  `final_image` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `custom_images`
 --
 
 CREATE TABLE `custom_images` (
   `image_id` int(11) NOT NULL,
   `order_id` int(11) NOT NULL,
-  `expected_image` varchar(255) NOT NULL,
-  `final_image` varchar(255) DEFAULT NULL
+  `expected_image` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `custom_images`
 --
 
-INSERT INTO `custom_images` (`image_id`, `order_id`, `expected_image`, `final_image`) VALUES
-(28, 151, '1737216323_sunfloweer1.jpg', NULL),
-(29, 152, '1737216364_boston_celtics_logo_primary_19977628.png', NULL),
-(30, 153, '1737216364_boston_celtics_logo_primary_19977628.png', NULL),
-(32, 155, '1737216609_sunflower1.png', NULL),
-(33, 156, '1737216609_sunflower1.png', NULL),
-(34, 157, '1737216736_white rose 1.jpg', NULL),
-(35, 158, '1737216736_white rose 1.jpg', NULL),
-(37, 160, '1737217588_Color-of-the-Lakers-Logo.jpg', NULL),
-(38, 161, '1737217588_Color-of-the-Lakers-Logo.jpg', NULL);
+INSERT INTO `custom_images` (`image_id`, `order_id`, `expected_image`) VALUES
+(39, 108, '1737237171_fr.jpg');
 
 -- --------------------------------------------------------
 
@@ -193,18 +196,7 @@ CREATE TABLE `custom_order` (
 --
 
 INSERT INTO `custom_order` (`order_id`, `cust_id`, `customer_name`, `customer_email`, `shipping_address`, `total_price`, `order_date`) VALUES
-(92, 13, 'seyan1', 'seanammiel@gmail.com', 'Brgy Tapia General Trias Cavite', 1000.00, '2025-01-18 15:39:00'),
-(93, 13, 'seyan1', 'seanammiel@gmail.com', 'Brgy Tapia General Trias Cavite', 1300.00, '2025-01-18 15:40:17'),
-(94, 13, 'seyan1', 'seanammiel@gmail.com', 'Brgy Tapia General Trias Cavite', 350.00, '2025-01-18 15:47:52'),
-(96, 13, 'seyan1', 'seanammiel@gmail.com', 'Brgy Tapia General Trias Cavite', 350.00, '2025-01-18 15:50:53'),
-(97, 13, 'seyan1', 'seanammiel@gmail.com', 'Brgy Tapia General Trias Cavite', 500.00, '2025-01-18 15:55:32'),
-(98, 13, 'seyan1', 'seanammiel@gmail.com', 'Brgy Tapia General Trias Cavite', 400.00, '2025-01-18 15:57:53'),
-(99, 13, 'seyan1', 'seanammiel@gmail.com', 'Brgy Tapia General Trias Cavite', 700.00, '2025-01-18 16:00:11'),
-(100, 13, 'seyan1', 'seanammiel@gmail.com', 'Brgy Tapia General Trias Cavite', 1000.00, '2025-01-18 16:05:27'),
-(101, 13, 'seyan1', 'seanammiel@gmail.com', 'Brgy Tapia General Trias Cavite', 900.00, '2025-01-18 16:06:09'),
-(103, 13, 'seyan1', 'seanammiel@gmail.com', 'Brgy Tapia General Trias Cavite', 800.00, '2025-01-18 16:11:37'),
-(104, 13, 'seyan1', 'seanammiel@gmail.com', 'Brgy Tapia General Trias Cavite', 800.00, '2025-01-18 16:12:20'),
-(107, 13, 'seyan1', 'seanammiel@gmail.com', 'Brgy Tapia General Trias Cavite', 800.00, '2025-01-18 16:30:21');
+(108, 13, 'seyan1', 'seanammiel@gmail.com', 'Brgy Tapia General Trias Cavite', 800.00, '2025-01-18 21:52:55');
 
 -- --------------------------------------------------------
 
@@ -231,27 +223,8 @@ CREATE TABLE `custom_orderitems` (
 --
 
 INSERT INTO `custom_orderitems` (`orderitem_id`, `order_id`, `flower_type`, `num_flowers`, `container_type`, `container_color`, `flower_price`, `container_price`, `color_price`, `remarks`, `total_price`) VALUES
-(139, 87, 'Sunflower', 1, 'Vase', 'Red', 400.00, 100.00, 0.00, 'asdasd', 500.00),
-(140, 88, 'Sunflower', 1, 'Vase', 'Red', 400.00, 100.00, 0.00, 'asdasdasd', 500.00),
-(141, 89, 'Rose', 1, 'Vase', 'Red', 300.00, 100.00, 0.00, 'asdasdasd', 400.00),
-(142, 90, 'Sunflower', 1, 'Vase', 'Red', 400.00, 100.00, 0.00, 'asdas', 500.00),
-(143, 91, 'Tulip', 1, 'Vase', 'Blue', 300.00, 100.00, 0.00, 'asd', 400.00),
-(144, 92, 'Rose', 3, 'Vase', 'Red', 300.00, 100.00, 0.00, 'asd', 1000.00),
-(145, 93, 'Sunflower', 3, 'Vase', 'Yellow', 400.00, 100.00, 0.00, 'asdasd', 1300.00),
-(146, 94, '6', 1, '2', '2', 0.00, 0.00, 0.00, 'asdasdsadasasdasd', 0.00),
-(147, 96, '6', 1, '2', '2', 0.00, 0.00, 0.00, 'asdasdsadasasdasd', 0.00),
-(148, 97, 'Sunflower', 1, 'Vase', 'Red', 400.00, 100.00, 0.00, 'dasdasd', 500.00),
-(149, 98, 'Tulip', 1, 'Vase', 'Red', 300.00, 100.00, 0.00, 'asdasd', 400.00),
-(150, 99, 'Tulip', 2, 'Vase', 'Violet', 300.00, 100.00, 0.00, 'asdasd', 700.00),
-(151, 100, 'Tulip', 3, 'Vase', 'Red', 300.00, 100.00, 0.00, 'asdasd', 1000.00),
-(152, 101, 'Sunflower', 1, 'Vase', 'Red', 400.00, 100.00, 0.00, '', 500.00),
-(153, 101, 'Rose', 1, 'Vase', 'Red', 300.00, 100.00, 0.00, '', 400.00),
-(155, 103, 'Tulip', 1, 'Vase', 'Red', 300.00, 100.00, 0.00, '', 400.00),
-(156, 103, 'Rose', 1, 'Vase', 'Red', 300.00, 100.00, 0.00, '', 400.00),
-(157, 104, 'Rose', 1, 'Vase', 'Red', 300.00, 100.00, 0.00, 'asdasdasd', 400.00),
-(158, 104, 'Tulip', 1, 'Vase', 'Red', 300.00, 100.00, 0.00, 'asdasdasd', 400.00),
-(160, 107, 'Sunflower', 1, 'Vase', 'Yellow', 400.00, 100.00, 0.00, 'asdasdasd', 400.00),
-(161, 107, 'Tulip', 1, 'Vase', 'Yellow', 300.00, 100.00, 0.00, 'asdasdasd', 300.00);
+(162, 108, 'Sunflower', 1, 'Vase', 'Pink', 400.00, 100.00, 0.00, 'asd', 400.00),
+(163, 108, 'Tulip', 1, 'Vase', 'Pink', 300.00, 100.00, 0.00, 'asd', 300.00);
 
 -- --------------------------------------------------------
 
@@ -279,17 +252,7 @@ CREATE TABLE `custom_payment` (
 --
 
 INSERT INTO `custom_payment` (`cpayment_id`, `order_id`, `customer_name`, `customer_email`, `reference_number`, `amount_paid`, `payment_method`, `payment_status`, `shipping_status`, `order_date`, `created_at`, `updated_at`) VALUES
-(69, 92, 'seyan1', 'seanammiel@gmail.com', '', 1000.00, 'cop', 'Pending', 'Pending', '0000-00-00 00:00:00', '2025-01-18 15:39:00', '2025-01-18 15:39:00'),
-(70, 93, 'seyan1', 'seanammiel@gmail.com', '', 1300.00, 'cop', 'Pending', 'Pending', '0000-00-00 00:00:00', '2025-01-18 15:40:17', '2025-01-18 15:40:17'),
-(71, 96, 'seyan1', 'seanammiel@gmail.com', '', 350.00, 'cop', 'Pending', 'Pending', '0000-00-00 00:00:00', '2025-01-18 15:50:53', '2025-01-18 15:50:53'),
-(72, 97, 'seyan1', 'seanammiel@gmail.com', '123', 500.00, 'gcash', 'Pending', 'Pending', '0000-00-00 00:00:00', '2025-01-18 15:55:32', '2025-01-18 15:55:32'),
-(73, 98, 'seyan1', 'seanammiel@gmail.com', '1233', 400.00, 'gcash', 'Pending', 'Pending', '0000-00-00 00:00:00', '2025-01-18 15:57:53', '2025-01-18 15:57:53'),
-(74, 99, 'seyan1', 'seanammiel@gmail.com', '', 700.00, 'cop', 'Pending', 'Pending', '0000-00-00 00:00:00', '2025-01-18 16:00:11', '2025-01-18 16:00:11'),
-(75, 100, 'seyan1', 'seanammiel@gmail.com', '', 1000.00, 'cop', 'Pending', 'Pending', '0000-00-00 00:00:00', '2025-01-18 16:05:27', '2025-01-18 16:05:27'),
-(76, 101, 'seyan1', 'seanammiel@gmail.com', '', 900.00, 'cop', 'Pending', 'Pending', '0000-00-00 00:00:00', '2025-01-18 16:06:09', '2025-01-18 16:06:09'),
-(77, 103, 'seyan1', 'seanammiel@gmail.com', '', 800.00, 'cop', 'Pending', 'Pending', '0000-00-00 00:00:00', '2025-01-18 16:11:37', '2025-01-18 16:11:37'),
-(78, 104, 'seyan1', 'seanammiel@gmail.com', '', 800.00, 'cop', 'Pending', 'Pending', '0000-00-00 00:00:00', '2025-01-18 16:12:20', '2025-01-18 16:12:20'),
-(79, 107, 'seyan1', 'seanammiel@gmail.com', '', 800.00, 'cop', 'Pending', 'Pending', '0000-00-00 00:00:00', '2025-01-18 16:30:21', '2025-01-18 16:30:21');
+(80, 108, 'seyan1', 'seanammiel@gmail.com', '', 800.00, 'cop', 'Pending', 'Pending', '0000-00-00 00:00:00', '2025-01-18 21:52:55', '2025-01-18 22:06:32');
 
 -- --------------------------------------------------------
 
@@ -1125,6 +1088,13 @@ ALTER TABLE `customer_messages`
   ADD KEY `cust_id` (`cust_id`);
 
 --
+-- Indexes for table `custom_finalimages`
+--
+ALTER TABLE `custom_finalimages`
+  ADD PRIMARY KEY (`image_id`),
+  ADD KEY `custom_finalimages_ibfk_1` (`order_id`);
+
+--
 -- Indexes for table `custom_images`
 --
 ALTER TABLE `custom_images`
@@ -1297,28 +1267,34 @@ ALTER TABLE `customer_messages`
   MODIFY `message_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT for table `custom_finalimages`
+--
+ALTER TABLE `custom_finalimages`
+  MODIFY `image_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+
+--
 -- AUTO_INCREMENT for table `custom_images`
 --
 ALTER TABLE `custom_images`
-  MODIFY `image_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39;
+  MODIFY `image_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=43;
 
 --
 -- AUTO_INCREMENT for table `custom_order`
 --
 ALTER TABLE `custom_order`
-  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=108;
+  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=109;
 
 --
 -- AUTO_INCREMENT for table `custom_orderitems`
 --
 ALTER TABLE `custom_orderitems`
-  MODIFY `orderitem_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=162;
+  MODIFY `orderitem_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=164;
 
 --
 -- AUTO_INCREMENT for table `custom_payment`
 --
 ALTER TABLE `custom_payment`
-  MODIFY `cpayment_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=80;
+  MODIFY `cpayment_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=81;
 
 --
 -- AUTO_INCREMENT for table `email_verifications`
@@ -1445,10 +1421,16 @@ ALTER TABLE `customer_messages`
   ADD CONSTRAINT `customer_messages_ibfk_1` FOREIGN KEY (`cust_id`) REFERENCES `customer` (`cust_id`) ON DELETE CASCADE;
 
 --
+-- Constraints for table `custom_finalimages`
+--
+ALTER TABLE `custom_finalimages`
+  ADD CONSTRAINT `custom_finalimages_ibfk_1` FOREIGN KEY (`order_id`) REFERENCES `custom_order` (`order_id`) ON DELETE CASCADE;
+
+--
 -- Constraints for table `custom_images`
 --
 ALTER TABLE `custom_images`
-  ADD CONSTRAINT `custom_images_ibfk_1` FOREIGN KEY (`order_id`) REFERENCES `custom_orderitems` (`orderitem_id`) ON DELETE CASCADE;
+  ADD CONSTRAINT `custom_images_ibfk_1` FOREIGN KEY (`order_id`) REFERENCES `custom_order` (`order_id`);
 
 --
 -- Constraints for table `custom_order`
