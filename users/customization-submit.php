@@ -4,7 +4,7 @@ require_once('conn.php'); // Includes session_start and database connection
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Validate required POST data
     if (
-        !isset($_POST['container_type'], $_POST['container_color'], $_POST['flower_type'], $_POST['num_flowers'], $_POST['remarks'])
+        !isset($_POST['container_type'], $_POST['container_color'], $_POST['flower_type'], $_POST['num_flowers'], $_POST['remarks'], $_FILES['expected_image'])
         || !is_array($_POST['flower_type'])
         || !is_array($_POST['num_flowers'])
     ) {
@@ -25,6 +25,30 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         exit;
     }
 
+    // Handle image upload
+    $expected_image = null;
+    if (isset($_FILES['expected_image']) && $_FILES['expected_image']['error'] == 0) {
+        $targetDir = "uploads/"; // Ensure this directory exists and is writable
+        $fileName = time() . '_' . basename($_FILES['expected_image']['name']);
+        $targetFilePath = $targetDir . $fileName;
+
+        // Validate file type
+        $fileType = pathinfo($targetFilePath, PATHINFO_EXTENSION);
+        $allowedTypes = ['jpg', 'jpeg', 'png', 'gif'];
+        if (!in_array(strtolower($fileType), $allowedTypes)) {
+            echo "Invalid file type. Please upload an image file (jpg, jpeg, png, gif).";
+            exit;
+        }
+
+        // Move the uploaded file
+        if (move_uploaded_file($_FILES['expected_image']['tmp_name'], $targetFilePath)) {
+            $expected_image = $fileName;
+        } else {
+            echo "Failed to upload the image.";
+            exit;
+        }
+    }
+
     // Prepare customization details
     $customization_details = [];
     foreach ($flower_types as $index => $flower_type) {
@@ -33,7 +57,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             'num_flowers' => $num_flowers[$index],
             'container_type' => $container_type,
             'container_color' => $container_color,
-            'remarks' => $remarks
+            'remarks' => $remarks,
+            'expected_image' => $expected_image // Include image in customization details
         ];
     }
 
@@ -48,5 +73,4 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     echo "Invalid request. Please use the customization form.";
     exit;
 }
-
 ?>
