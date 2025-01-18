@@ -62,9 +62,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         ");
 
         $stmt_images = $pdo->prepare("
-            INSERT INTO custom_images (order_id, expected_image)
-            VALUES (:order_id, :expected_image)
-        ");
+        INSERT INTO custom_images (order_id, expected_image)
+        VALUES (:order_id, :expected_image)
+    ");
 
         // Flag to ensure container price is added only once
         $container_price_added = false;
@@ -123,7 +123,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Insert into custom_images if an image exists
             if (!empty($item['expected_image'])) {
                 $stmt_images->execute([
-                    'order_id' => $orderitem_id, // Use orderitem_id here
+                    'order_id' => $order_id, // Use the correct `order_id`
                     'expected_image' => $item['expected_image'],
                 ]);
             }
