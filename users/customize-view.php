@@ -14,7 +14,7 @@ if (!isset($_SESSION['customer']['cust_email'])) {
 try {
     $cust_email = $_SESSION['customer']['cust_email']; // Get the logged-in user's email
 
-    // Fetch data grouped by order_id for the logged-in customer
+    // Fetch data grouped by order_id for the logged-in customer, including payment and shipping statuses
     $sql = "SELECT 
                 o.order_id, 
                 o.container_type, 
@@ -22,10 +22,13 @@ try {
                 o.flower_type, 
                 o.num_flowers, 
                 co.total_price AS order_total_price,
+                cp.payment_status,
+                cp.shipping_status,
                 GROUP_CONCAT(DISTINCT ci.expected_image SEPARATOR ', ') AS expected_images,
                 GROUP_CONCAT(DISTINCT cf.final_image SEPARATOR ', ') AS final_images
             FROM custom_orderitems o
             INNER JOIN custom_order co ON o.order_id = co.order_id
+            LEFT JOIN custom_payment cp ON o.order_id = cp.order_id
             LEFT JOIN custom_images ci ON o.order_id = ci.order_id
             LEFT JOIN custom_finalimages cf ON o.order_id = cf.order_id
             WHERE co.customer_email = :customer_email
@@ -167,6 +170,10 @@ try {
             }
 
             echo "<p><label>Order Total Price:</label> ₱{$order['order_total_price']}</p>";
+
+            // Add payment and shipping statuses
+            echo "<p><label>Payment Status:</label> {$order['payment_status']}</p>";
+            echo "<p><label>Shipping Status:</label> {$order['shipping_status']}</p>";
 
             // Display the expected images
             if (!empty($order['expected_images'])) {
