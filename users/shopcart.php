@@ -1,74 +1,203 @@
-<?php
+<?php 
 session_start();
+include("../admin/inc/config.php");
+include("../admin/inc/functions.php");
+include("../admin/inc/CSRF_Protect.php");
 ?>
+<?php include('navuser.php'); ?>
+<style>
+  .container {
+  display: flex;
+  max-width: 1600px; /* Increased max-width for larger layout */
+  margin: 40px auto; /* Larger margin for spacing */
+  gap: 30px; /* Increased gap between cart and payment sections */
+  margin-top: 25rem; /* Adjusted margin-top for better alignment */
+}
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- font -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+.cart, .payment {
+  border-radius: 12px; /* Smoother corners */
+  padding: 30px; /* Larger padding for better spacing */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Added shadow for both */
+}
 
-    <!-- css -->
-     <link rel="stylesheet" href="../css/dropdown.css">
-    <link rel="stylesheet" href="../css/main.css">
-  <link rel="stylesheet" href="../css/shopcart.css?">
-  <title>Shopping Cart</title>
-</head>
-<body>
-  <header>
+.cart {
+  flex: 3; /* Occupies more space for emphasis */
+  margin-top: -5rem;
+  max-height: calc(100vh - 10rem); /* Adjust height dynamically based on viewport */
+  overflow-y: auto; /* Enables vertical scrolling when content exceeds max height */
+  padding-right: 10px; /* Optional: Add padding to avoid cutting off content */
+  scrollbar-width: thin; /* Optional: Slim scrollbar for modern browsers */
+  scrollbar-color: #ccc transparent; /* Optional: Custom scrollbar colors */
+}
 
-  <input type="checkbox" name="" id="toggler">
-    <label for="toggler" class="fas fa-bars"></label>
+/* Optional: Custom scrollbar styles for Webkit browsers (e.g., Chrome, Edge, Safari) */
+.cart::-webkit-scrollbar {
+  width: 8px; /* Scrollbar width */
+}
 
-    <!-- <a href="#" class="logo">Flower<span>.</span></a> -->
-    <img src="../images/logo.png" alt="" class="logos" href="">
-    <nav class="navbar">
-        <a href="index.php">Home</a>
-        <a href="#about">About</a>
-        <div class="prod-dropdown">
-            <a href="" onclick="toggleDropdown()">Products</a>
-                <div class="prod-menu" id="prodDropdown">
-                    <a href="products.php">Flowers</a>
-                    <a href="occasion.php">Occasion</a>
-                    <a href="addons.php">Addons</a>
-                </div>
-        </div>
-        <a href="#review">Review</a>
-        <a href="#contacts">Contacts</a>
-        <a href="customization.php">Customize</a>
+.cart::-webkit-scrollbar-thumb {
+  background: #ccc; /* Scrollbar thumb color */
+  border-radius: 4px; /* Rounded corners */
+}
 
-    </nav>
-     
-    <div class="icons">
-    <a href="#" class="fas fa-heart"></a>
-    <a href="shopcart.php" class="fas fa-shopping-cart"></a>
-    <div class="user-dropdown">
-        <a href="#" class="fas fa-user" onclick="toggleDropdown()"></a>
-        <div class="dropdown-menu" id="userDropdown">
-            <?php if (isset($_SESSION['customer'])): ?>
-                <p>Welcome, <?php echo htmlspecialchars($_SESSION['customer']['cust_name']); ?></p>
-                <hr>
-                <a href="profile.php">Profile</a>
-                <a href="logout.php">Logout</a>
-            <?php else: ?>
-                <a href="login.php">Login</a>
-            <?php endif; ?>
-        </div>
-    </div>
-</div>
+.cart::-webkit-scrollbar-thumb:hover {
+  background: #aaa; /* Hover color */
+}
+
+.cart::-webkit-scrollbar-track {
+  background: transparent; /* Scrollbar track color */
+}
 
 
-  </header>
-      <!-- <div class="header">
-        <a href="index.php" class="back-link">
-          <span class="back-arrow">&lt;</span> La Sorpresa Home Page
-        </a>
-      </div> -->
+.cart p{
+  font-size: 15px; /* Larger font size */
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  font-style: italic;
+}
+
+.payment {
+  width: 400px; /* Fixed width for consistent size */
+  max-width: 100%; /* Ensures it doesn’t overflow the container on smaller screens */
+  background-color: #f5e6ec; /* Slightly lighter shade for contrast */
+  border-radius: 12px; /* Smooth corners */
+  padding: 30px; /* Ample padding for content spacing */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for better visibility */
+  align-self: flex-start; /* Aligns with the top of the container */
+  position: sticky; /* Optional: keeps it visible on scroll */
+  top: 20px; /* Ensures it sticks from the top */
+}
+
+.cart h2, .cart h3, .payment h3 {
+  margin: 0;
+  font-size: 25px; /* Increased font size */
+  color: #333; /* Darker color for emphasis */
+}
+
+.cart a{
+  font-size: 15px; /* Larger font size */
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  font-style: italic;
+}
+
+.cart-item {
+  display: flex;
+  align-items: center;
+  margin-top: 20px;
+  border-bottom: 2px solid #ddd; /* Thicker border for clarity */
+  padding-bottom: 15px; /* Extra padding for spacing */
+}
+
+.cart-item img {
+  width: 100px; /* Larger image size */
+  height: 100px; /* Larger image size */
+  object-fit: cover;
+  border-radius: 10px; /* Adjusted for a modern look */
+}
+
+.cart-item div {
+  margin-left: 15px; /* Increased spacing */
+  flex: 1;
+}
+
+.cart-item h4 {
+  margin: 0;
+  font-size: 15px; /* Increased font size */
+}
+
+.cart-item p {
+  margin: 8px 0 0; /* Adjusted spacing */
+  font-size: 20px; /* Larger font size */
+  color: #666; /* Slightly lighter color */
+}
+
+.cart-item .price{
+  font-size: 15px; /* Larger font size */
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  font-style: italic;
+  font-weight: 900;
+}
+
+.quantity input {
+  width: 60px; /* Wider input field */
+  text-align: center;
+  font-size: 16px; /* Larger font size */
+}
+
+.delete {
+  background: none;
+  border: none;
+  font-size: 18px; /* Larger font size */
+  color: #aaa; /* Softer color */
+  cursor: pointer;
+}
+
+.delete:hover {
+  color: #ff0000; /* Highlight on hover */
+}
+
+.payment-options {
+  display: flex;
+  align-items: center;
+  gap: 20px; /* Increased gap for better spacing */
+  margin-bottom: 30px; /* More spacing from other sections */
+}
+
+.payment-options img {
+  width: 60px; /* Larger icons */
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px; /* Increased gap for better spacing */
+}
+
+form label {
+  font-size: 16px; /* Larger font size */
+  color: #444; /* Slightly darker color */
+}
+
+form input {
+  padding: 12px; /* Increased padding */
+  border: 2px solid #ccc; /* Thicker border */
+  border-radius: 6px; /* Smoother corners */
+  font-size: 16px; /* Larger font size */
+}
+
+form input:focus {
+  border-color: #4caf50; /* Highlight border on focus */
+  outline: none;
+}
+
+.summary {
+  margin-top: 30px; /* Larger margin */
+}
+
+.summary p {
+  display: flex;
+  justify-content: space-between;
+  margin: 15px 0; /* Larger spacing between rows */
+  font-size: 16px; /* Larger font size */
+  font-weight: bold; /* Bold text for emphasis */
+}
+
+.checkout {
+  width: 100%;
+  background-color: #4caf50;
+  color: #fff;
+  padding: 15px; /* Larger button */
+  font-size: 18px; /* Larger font size */
+  border: none;
+  border-radius: 6px; /* Smoother corners */
+  cursor: pointer;
+}
+
+.checkout:hover {
+  background-color: #3b8b40; /* Darker green for hover effect */
+}
+
+</style>
+
 
       <div class="container">
         <div class="cart">
