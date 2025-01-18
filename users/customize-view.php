@@ -1,4 +1,4 @@
-<?php
+<?php 
 ob_start();
 session_start();
 include("../admin/inc/config.php");
@@ -21,32 +21,21 @@ try {
                 o.container_color, 
                 o.flower_type, 
                 o.num_flowers, 
-                co.total_price AS order_total_price
+                co.total_price AS order_total_price,
+                GROUP_CONCAT(DISTINCT ci.expected_image SEPARATOR ', ') AS expected_images,
+                GROUP_CONCAT(DISTINCT cf.final_image SEPARATOR ', ') AS final_images
             FROM custom_orderitems o
             INNER JOIN custom_order co ON o.order_id = co.order_id
+            LEFT JOIN custom_images ci ON o.order_id = ci.order_id
+            LEFT JOIN custom_finalimages cf ON o.order_id = cf.order_id
             WHERE co.customer_email = :customer_email
+            GROUP BY o.order_id
             ORDER BY o.order_id ASC";
     $stmt = $pdo->prepare($sql);
     $stmt->execute([':customer_email' => $cust_email]);
 
-    // Group data by Order ID
-    $groupedData = [];
-    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-        if (!isset($groupedData[$row['order_id']])) {
-            $groupedData[$row['order_id']] = [
-                'container_type' => $row['container_type'],
-                'container_color' => $row['container_color'],
-                'flowers' => [],
-                'order_total_price' => $row['order_total_price']
-            ];
-        }
-        $groupedData[$row['order_id']]['flowers'][] = [
-            'flower_type' => $row['flower_type'],
-            'quantity' => $row['num_flowers']
-        ];
-    }
+    $orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    // Display the orders in a styled container
     echo "<style>
             body {
                 font-family: Arial, sans-serif;
@@ -125,12 +114,13 @@ try {
                 color: #333;
             }
 
-            .order-section p {
-                margin-left: 20px;
-            }
-
-            .order-section .flower-info {
-                margin-left: 40px;
+            img {
+                max-width: 10%; 
+                display: block;
+                margin: 10px 0;
+                border: 1px solid #ddd;
+                border-radius: 5px;
+                box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
             }
 
             .order-section p:last-child {
@@ -159,20 +149,48 @@ try {
     echo "<div class='orders-container'>";
     echo "<h2>My Custom Orders</h2>";
 
-    if (!empty($groupedData)) {
-        foreach ($groupedData as $orderId => $details) {
+    if (!empty($orders)) {
+        foreach ($orders as $order) {
             echo "<div class='order-section'>
-                    <h3>Order ID: {$orderId}</h3>
-                    <p><label>Container Type:</label> {$details['container_type']}</p>
-                    <p><label>Container Color:</label> {$details['container_color']}</p>";
-            foreach ($details['flowers'] as $flower) {
+                    <h3>Order ID: {$order['order_id']}</h3>
+                    <p><label>Container Type:</label> {$order['container_type']}</p>
+                    <p><label>Container Color:</label> {$order['container_color']}</p>";
+
+            $flowerDetails = explode(", ", $order['flower_type']);
+            $flowerQuantities = explode(", ", $order['num_flowers']);
+            foreach ($flowerDetails as $index => $flowerType) {
+                $quantity = isset($flowerQuantities[$index]) ? $flowerQuantities[$index] : "N/A";
                 echo "<div class='flower-info'>
-                        <p><label>Flower Type:</label> {$flower['flower_type']}</p>
-                        <p><label>Quantity:</label> {$flower['quantity']}</p>
+                        <p><label>Flower Type:</label> {$flowerType}</p>
+                        <p><label>Quantity:</label> {$quantity}</p>
                       </div>";
             }
-            echo "<p><label>Order Total Price:</label> {$details['order_total_price']}</p>
-                  </div>";
+
+            echo "<p><label>Order Total Price:</label> ₱{$order['order_total_price']}</p>";
+
+            // Display the expected images
+            if (!empty($order['expected_images'])) {
+                echo "<p><strong>Expected Images:</strong></p>";
+                $expectedImages = explode(", ", $order['expected_images']);
+                foreach ($expectedImages as $image) {
+                    echo "<img src='uploads/{$image}' alt='Expected Image'>";
+                }
+            } else {
+                echo "<p>No expected images available.</p>";
+            }
+
+            // Display the final images
+            if (!empty($order['final_images'])) {
+                echo "<p><strong>Final Images:</strong></p>";
+                $finalImages = explode(", ", $order['final_images']);
+                foreach ($finalImages as $image) {
+                    echo "<img src='../admin/customize/final_image_uploads/{$image}' alt='Final Image'>";
+                }
+            } else {
+                echo "<p>No final images available.</p>";
+            }
+
+            echo "</div>";
         }
     } else {
         echo "<p>You have no orders.</p>";
