@@ -41,11 +41,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 ?>
 
 <!-- Include Bootstrap CSS -->
-<link rel="stylesheet" href="../css/customize.css?v=1.2">
+<link rel="stylesheet" href="../css/customize.css?">
 <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 <header>
-    <a href="index.php" class="back">← Back to Home Page</a>
-    <a href="customize-checkout.php" class="back">Check Out Cart</a>
+    <a href="index.php" class="header-cart">&lt; Back to Home Page</a>
+    <a href="customize-checkout.php" class="header-cart" >Check Out Cart&gt;</a>
 </header>
 
 <div class="page">
