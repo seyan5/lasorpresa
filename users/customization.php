@@ -132,8 +132,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
                     <div class="form-group">
                         <label for="remarks">Remarks:</label>
+                        <textarea id="remarks" name="remarks" class="form-control"
+                            placeholder="Enter any special instructions or remarks..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="expected_image">Attach your expected output:</label>
+                        <input type="file" id="expected_image" name="expected_image" class="form-control-file"
+                            accept="image/*">
+                        <!-- Preview uploaded image -->
+                        <img id="image_preview" src="" alt="Preview Image"
+                            style="display: none; max-width: 200px; margin-top: 10px;">
                         <textarea id="remarks" name="remarks" class="input-field"
                                   placeholder="Enter any special instructions or remarks..." required></textarea>
+
                     </div>
 
                     <button type="submit" class="btn-primary">Submit Your Customization</button>
