@@ -132,7 +132,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             placeholder="Enter any special instructions or remarks..."></textarea>
                     </div>
                     <div class="form-group">
-                        <label for="expected_image">Attach an Image:</label>
+                        <label for="expected_image">Attach your expected output:</label>
                         <input type="file" id="expected_image" name="expected_image" class="form-control-file"
                             accept="image/*">
                         <!-- Preview uploaded image -->
