@@ -41,15 +41,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 ?>
 
 <!-- Include Bootstrap CSS -->
+<?php include('navuser.php'); ?>
 <link rel="stylesheet" href="../css/customize.css?">
-<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-<header class="custom-header">
-    <a href="index.php" class="header-link">&lt; Back to Home Page</a>
-    <a href="customize-checkout.php" class="header-link">Check Out Cart&gt;</a>
-</header>
-
-<div class="custom-page">
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&display=swap" rel="stylesheet">
 <h2>Customize Your Floral Arrangement</h2>
+<div class="custom-page">
     <div class="custom-container">
         <div class="custom-row">
             <!-- Left side -->
@@ -173,7 +169,6 @@ flowerContainer.addEventListener('change', (event) => {
         <p><strong>Container:</strong> ${containerName}</p>
         <img src="${containerImage}" alt="${containerName}" style="width: 150px; height: auto; margin-bottom: 10px;">
         <p><strong>Container Color:</strong> ${containerColor.options[containerColor.selectedIndex].text}</p>
-        <p><strong>Remarks:</strong> ${remarks}</p>
         <hr>
     `;
 
