@@ -1,4 +1,5 @@
 <?php
+session_start();
 // Include necessary files for database connection and session management
 include("../admin/inc/config.php");
 include("../admin/inc/functions.php");
@@ -45,39 +46,112 @@ if ($order_id && $product_id) {
 }
 ?>
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Order Details</title>
-    <link rel="stylesheet" href="path_to_your_stylesheet.css">
-    <style>
-        /* Simple styling for the table */
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        th, td {
-            padding: 10px;
-            border: 1px solid #ddd;
-        }
-        th {
-            background-color: #f4f4f4;
-        }
-        img {
-            width: 100px;
-            height: auto;
-        }
-    </style>
-</head>
+<?php include('navuser.php'); ?>
+<style>
+/* General Styles */
+body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+    line-height: 1.6;
+    background-color: #f9f9f9;
+    color: #333;
+}
+
+h1 {
+    text-align: center;
+    color: #444;
+    margin-bottom: 20px;
+    margin-top: 15rem;       
+}
+
+h2 {
+    color: #555;
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+
+/* Table Styles */
+    .table {
+        width: 80%;
+        border-collapse: collapse;
+        margin: 20px auto; /* Changed to center the table */
+        background-color: #fff;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);       
+        border-radius: 8px; /* Added border radius */
+        overflow: hidden; /* Ensures rounded corners */
+        font-size: 1.4rem; /* Increased font size */
+        font-style: italic;
+    }
+
+/* Product Text Styling */
+strong {
+    font-size: 1.4rem; /* Increased font size for emphasis */
+}
+
+strong + span {
+    font-size: 1.4rem; /* Ensures the adjacent product name has a larger font */
+}
+
+
+.table th, .table td {
+    padding: 10px 15px;
+    text-align: left;
+    border: 1px solid #ddd;
+    text-align: center; /* Centers the content inside the table cells */
+    vertical-align: middle; /* Vertically centers content if cell height increases */
+}
+
+.table th {
+    background-color: #333;
+    color: #fff;
+    text-transform: uppercase;
+    font-size: 14px;
+}
+
+.table-hover tbody tr:hover {
+    background-color: #f1f1f1;
+}
+
+.table-bordered th, .table-bordered td {
+    border: 1px solid #ddd;
+}
+
+/* Highlight rows for readability */
+.table tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+/* Image Styling */
+.image img {
+    max-width: 100px;
+    height: auto;
+    display: block;
+    margin: 0 auto 10px; /* Centers the image horizontally */
+    border-radius: 4px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .table {
+        font-size: 14px;
+    }
+
+    img {
+        max-width: 80px;
+    }
+
+    body {
+        margin: 10px;
+    }
+}
+
+
+</style>
 <body>
     <h1>Order Details</h1>
 
     <?php if ($orderDetails): ?>
     <div class="order-details">
-        <!-- Customer Details -->
-        <h2>Customer Information</h2>
         <table class="table table-bordered table-hover">
         <thead class="table-dark">
           <tr>
@@ -96,7 +170,7 @@ if ($order_id && $product_id) {
                   <strong>Id:</strong> <?php echo htmlspecialchars($customerId); ?><br>
                   <strong>Name:</strong> <?php echo htmlspecialchars($fullName); ?><br>
                 </td>
-                <td>
+                <td class="image">        
                     <img src="../admin/uploads/<?php echo htmlspecialchars($productImage); ?>" alt="<?php echo htmlspecialchars($productName); ?>"><br>
                     <strong>Product:</strong> <?php echo htmlspecialchars($productName); ?><br>
                     <strong>Quantity:</strong> <?php echo htmlspecialchars($quantity); ?><br>
