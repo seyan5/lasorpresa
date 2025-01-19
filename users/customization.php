@@ -39,21 +39,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 ?>
 
 <!-- Include Bootstrap CSS -->
-<link rel="stylesheet" href="../css/customize.css?v=1.2">
-<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-<header>
-    <a href="index.php" class="back">← Back to Home Page</a>
-    <a href="customize-checkout.php" class="back">Check Out Cart</a>
-</header>
-
-<div class="page">
-    <div class="container">
-        <div class="row">
-            <!-- Left side (60%) -->
-            <div class="col-md-7">
-                <h2>Customize Your Floral Arrangement</h2>
-                <form id="floral-customization-form" action="customization-submit.php" method="POST"
-                    enctype="multipart/form-data">
+<?php include('navuser.php'); ?>
+<link rel="stylesheet" href="../css/customize.css?">
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&display=swap" rel="stylesheet">
+<h2>Customize Your Floral Arrangement</h2>
+<div class="custom-page">
+    <div class="custom-container">
+        <div class="custom-row">
+            <!-- Left side -->
+            <div class="custom-left">
+                <form id="floral-customization-form" action="customization-submit.php" method="POST">
                     <!-- Container Customization Section -->
                     <div class="section">
                         <h4>Container Customization</h4>
@@ -187,7 +182,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <p><strong>Container:</strong> ${containerName}</p>
         <img src="${containerImage}" alt="${containerName}" style="width: 150px; height: auto; margin-bottom: 10px;">
         <p><strong>Container Color:</strong> ${containerColor.options[containerColor.selectedIndex].text}</p>
-        <p><strong>Remarks:</strong> ${remarks}</p>
         <hr>
     `;
 

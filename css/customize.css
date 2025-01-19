@@ -1,78 +1,64 @@
-/* General Reset */
-body, html {
+@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@400..700&display=swap');
+
+:root{
+  --pink: #e84393;
+}
+
+/* General Page Styles */
+body {
+  font-family: "Caveat", serif;
+  background-color: #f9f9f9;
+  color: #333;
   margin: 0;
   padding: 0;
-  font-family: 'Arial', sans-serif;
-  background-color: #f9f9f9;
-  font-size: 16px; /* Ensure consistent font size */
-  line-height: 1.6; /* Better readability */
+  margin-top: 15rem;
 }
 
-/* Header */
-.custom-header {
-  background-color: #f4f4f4;
-  padding: 10px 20px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  border-bottom: 2px solid #ddd;
+h2 {
+  text-align: center;
+  margin-top: 20px;
+  font-size: 3rem;
+  color: var(--pink);
 }
 
-.header-link {
-  color: #007bff;
-  text-decoration: none;
-  font-weight: bold;
-  font-size: 16px;
-}
-
-.header-link:hover {
-  text-decoration: underline;
-}
-
-/* Page Layout */
 .custom-page {
-  padding: 20px;
   max-width: 1200px;
   margin: 20px auto;
+  padding: 20px;
+  background-color: #fff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  font-size: 16px;
+  
 }
 
+/* Custom Container Layout */
 .custom-container {
   display: flex;
-  gap: 20px;
   flex-wrap: wrap;
+  gap: 20px;
 }
 
-/* Left and Right Columns */
-.custom-left {
-  background: #fff;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  flex: 5; /* Increased ratio for larger size */
-  min-width: 800px; /* Allow flexibility for smaller screens */
+.custom-row {
+  display: flex;
+  flex: 1;
+  flex-wrap: wrap;
+  gap: 20px;
 }
 
-.custom-right {
-  background: #fff;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  flex: 3; /* Adjusted ratio for balance */
-  min-width: 80px; /* Allow flexibility for smaller screens */
+.custom-left, .flower-customization-right {
+  flex: 1;
+  min-width: 300px;
 }
 
-/* Form Elements */
+/* Form Section Styling */
 .section {
   margin-bottom: 20px;
 }
 
 h4 {
-  font-size: 18px;
   margin-bottom: 10px;
-  border-bottom: 2px solid #ddd;
-  padding-bottom: 5px;
   color: #333;
-  font-family: 'Arial', sans-serif;
 }
 
 .form-group {
@@ -80,126 +66,116 @@ h4 {
 }
 
 label {
+  display: block;
   font-weight: bold;
   margin-bottom: 5px;
-  display: block;
+  color: #555;
 }
 
-.input-field {
+.input-field, .form-control {
   width: 100%;
   padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  font-size: 14px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 1rem;
 }
 
 textarea.input-field {
   height: 100px;
-  resize: none;
 }
 
-/* Buttons */
-.btn-primary, .btn-secondary, .btn-remove {
-  padding: 10px 15px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 14px;
-  font-family: 'Arial', sans-serif;
-}
-
-.btn-primary {
-  background-color: #007bff;
+button {
+  display: inline-block;
+  padding: 10px 20px;
+  font-size: 1rem;
   color: #fff;
-  transition: background-color 0.3s ease;
+  background-color: #4CAF50;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
 }
 
-.btn-primary:hover {
-  background-color: #0056b3;
+button:hover {
+  background-color: #45a049;
 }
 
 .btn-secondary {
-  background-color: #6c757d;
-  color: #fff;
-  margin-top: 10px;
-  transition: background-color 0.3s ease;
+  background-color: #007BFF;
 }
 
 .btn-secondary:hover {
-  background-color: #565e64;
+  background-color: #0056b3;
 }
 
-.btn-remove {
-  background-color: #dc3545;
-  color: #fff;
-  margin-top: 10px;
-  transition: background-color 0.3s ease;
+.btn-danger {
+  background-color: #e74c3c;
 }
 
-.btn-remove:hover {
-  background-color: #a71d2a;
+.btn-danger:hover {
+  background-color: #c0392b;
 }
 
-/* Real-time Selection Preview */
-#selected-selections {
-  padding: 10px;
-  background-color: #f8f9fa;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  overflow-y: auto;
-  max-height: 700px;
-  font-family: 'Arial', sans-serif;
-}
-
-#selected-selections img {
-  width: 100px;
-  height: auto;
-  margin-bottom: 10px;
-  border-radius: 4px;
-}
-
-/* Flower Customization */
-.flower-customization-container {
-  display: flex;
-  gap: 20px;
-  flex-wrap: wrap;
-}
-
-.flower-customization-left {
-  flex: 2;
-}
-
-.flower-customization-right {
-  flex: 1;
-}
-
+/* Flower Item Styling */
 .flower-item {
-  margin-bottom: 15px;
-  margin-top: 15px;
   border: 1px solid #ddd;
-  border-radius: 5px;
-  padding: 10px;
-  background-color: #f4f4f4;
-  font-family: 'Arial', sans-serif;
+  border-radius: 6px;
+  padding: 15px;
+  margin-bottom: 15px;
+  background-color: #f8f8f8;
+  display: flex;
+  flex-direction: column;
 }
 
 .flower-item img {
-  max-width: 150px;
-  height: auto;
-  margin-top: 10px;
+  max-width: 100px;
+  margin-bottom: 10px;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.btn-remove {
+  align-self: flex-end;
+  padding: 5px 10px;
+  font-size: 0.8rem;
+  color: #fff;
+  background-color: #e74c3c;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.btn-remove:hover {
+  background-color: #c0392b;
+}
+
+/* Selected Selections Styling */
+#selected-selections {
+  background-color: #fafafa;
+  padding: 15px;
+  border-radius: 6px;
+  border: 1px solid #ddd;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+#selected-selections img {
+  max-width: 100px;
+  margin-bottom: 10px;
+  border-radius: 4px;
+  display: block;
 }
 
 /* Responsive Design */
 @media (max-width: 768px) {
-  .custom-container {
-    flex-direction: column;
+  .custom-row {
+      flex-direction: column;
   }
 
-  .custom-left, .custom-right {
-    min-width: 100%;
+  .custom-left, .flower-customization-right {
+      width: 100%;
   }
 
-  .flower-customization-container {
-    flex-direction: column;
+  button {
+      width: 100%;
   }
 }
