@@ -1,17 +1,22 @@
-<?php require_once('conn.php'); ?>
+<?php
+session_start(); // Start the session
+require_once('conn.php'); // Include your database connection
+?>
+
 
 <?php
-// Check if the customer is logged in or not
-if(!isset($_SESSION['customer'])) {
-    header('location: '.BASE_URL.'logout.php');
+// Check if the session is active
+if (!isset($_SESSION['customer'])) {
+    // Redirect to logout or login page if session is missing
+    header('Location: ' . BASE_URL . 'logout.php');
     exit;
 } else {
-    // If customer is logged in, but admin make him inactive, then force logout this user.
-    $statement = $pdo->prepare("SELECT * FROM customer WHERE cust_id=? AND cust_status=?");
-    $statement->execute(array($_SESSION['customer']['cust_id'],0));
-    $total = $statement->rowCount();
-    if($total) {
-        header('location: '.BASE_URL.'logout.php');
+    // Verify the user is still active
+    $statement = $pdo->prepare("SELECT * FROM customer WHERE cust_id = ? AND cust_status = ?");
+    $statement->execute([$_SESSION['customer']['cust_id'], 0]);
+    if ($statement->rowCount() > 0) {
+        // If user is inactive, log them out
+        header('Location: ' . BASE_URL . 'logout.php');
         exit;
     }
 }
