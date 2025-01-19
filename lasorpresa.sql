@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 15, 2025 at 10:59 AM
+-- Generation Time: Jan 19, 2025 at 12:10 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -77,19 +77,17 @@ INSERT INTO `color` (`color_id`, `color_name`) VALUES
 CREATE TABLE `container` (
   `container_id` int(11) NOT NULL,
   `container_name` varchar(255) NOT NULL,
-  `price` decimal(10,2) NOT NULL
+  `price` decimal(10,2) NOT NULL,
+  `container_image` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `container`
 --
 
-INSERT INTO `container` (`container_id`, `container_name`, `price`) VALUES
-(1, 'Basket', 100.00),
-(2, 'Paper Wrap', 50.00),
-(3, 'Plastic Wrap', 50.00),
-(4, 'Vase', 250.00),
-(5, 'huwaw', 10.00);
+INSERT INTO `container` (`container_id`, `container_name`, `price`, `container_image`) VALUES
+(1, 'Vase', 100.00, 'container_1737108148.png'),
+(2, 'Basket', 50.00, 'container_1737108185.jpeg');
 
 -- --------------------------------------------------------
 
@@ -121,7 +119,7 @@ CREATE TABLE `customer` (
 --
 
 INSERT INTO `customer` (`cust_id`, `cust_name`, `cust_email`, `cust_phone`, `cust_address`, `cust_city`, `cust_zip`, `cust_s_name`, `cust_s_phone`, `cust_s_address`, `cust_s_city`, `cust_s_zip`, `cust_password`, `cust_datetime`, `cust_timestamp`, `cust_status`) VALUES
-(1, 'Johnwayne', 'user@gmail.com', '09214991751', 'Blk 31 Lt 2 Lhinnete Homea', 'Cavite', '4109', 'Johnwayne', '09214991751', 'Blk 31 Lt 2 Lhinnete Homea\r\nBiga Tanza Cavite', 'Cavite', '4341', '$2y$10$CVBEIYx28iz79VGVuq2R8eYoqf.o9OZ7w6ykwKFKV3q37oqts6hmW', '2025-01-07 22:02:47', '2025-01-08 08:17:16', 'active'),
+(1, 'Johnwayne', 'user@gmail.com', '09214991751', 'Blk 31 Lt 2 Lhinnete Homea', 'Cavite', '4109', 'Johnwayne', '09214991751', 'Blk 31 Lt 2 Lhinnete Homea\r\nBiga Tanza Cavite', 'Cavite', '4341', '$2y$10$CVBEIYx28iz79VGVuq2R8eYoqf.o9OZ7w6ykwKFKV3q37oqts6hmW', '2025-01-07 22:02:47', '2025-01-15 14:56:37', 'active'),
 (3, 'test', 'test@gmail.com', '09214991751', 'Blk 31 Lt 2 Lhinnete Homea\r\nBiga Tanza Cavite', 'Cavite', '4314', 'Johnwayne', '09214991751', 'Blk 31 Lt 2 Lhinnete Homea\r\nBiga Tanza Cavite', 'Cavite', '4108', '979d472a84804b9f647bc185a877a8b5', '2025-01-07 22:34:55', '2025-01-08 07:37:52', 'active'),
 (5, 'test', 'qweqwe@gmail.com', '431431', 'asddsa', 'sdadsa', '1233', NULL, NULL, NULL, NULL, NULL, '$2y$10$LlJJaEWfq3GbuKZmaTXn0.86IneDNpn74YKw89bCLZNgOXINEyNwO', '2025-01-07 22:43:28', '2025-01-07 14:43:28', 'inactive'),
 (6, 'test', 'jw@mail.com', '431431', 'asddsa', 'sdadsa', '1233', NULL, NULL, NULL, NULL, NULL, '$2y$10$NO37F4xP6sQz30nLobL8NeZ08jfI6HvdxxtvjIPA2G55oyfY389DK', '2025-01-07 22:43:53', '2025-01-07 14:43:53', 'inactive'),
@@ -149,6 +147,37 @@ CREATE TABLE `customer_messages` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `custom_finalimages`
+--
+
+CREATE TABLE `custom_finalimages` (
+  `image_id` int(11) NOT NULL,
+  `order_id` int(11) NOT NULL,
+  `final_image` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `custom_images`
+--
+
+CREATE TABLE `custom_images` (
+  `image_id` int(11) NOT NULL,
+  `order_id` int(11) NOT NULL,
+  `expected_image` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `custom_images`
+--
+
+INSERT INTO `custom_images` (`image_id`, `order_id`, `expected_image`) VALUES
+(39, 108, '1737237171_fr.jpg');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `custom_order`
 --
 
@@ -167,26 +196,7 @@ CREATE TABLE `custom_order` (
 --
 
 INSERT INTO `custom_order` (`order_id`, `cust_id`, `customer_name`, `customer_email`, `shipping_address`, `total_price`, `order_date`) VALUES
-(6, 13, 'seyan1', 'seanammiel@gmail.com', 'Brgy Tapia General Trias Cavite', 123.00, '2025-01-13 15:48:24'),
-(7, 13, 'seyan1', 'seanammiel@gmail.com', 'Brgy Tapia General Trias Cavite', 123.00, '2025-01-13 15:49:02'),
-(8, 13, 'seyan1', 'seanammiel@gmail.com', 'Brgy Tapia General Trias Cavite', 123.00, '2025-01-13 15:54:04'),
-(9, 13, 'seyan1', 'seanammiel@gmail.com', 'Brgy Tapia General Trias Cavite', 123.00, '2025-01-13 15:54:08'),
-(10, 13, 'seyan1', 'seanammiel@gmail.com', 'Brgy Tapia General Trias Cavite', 123.00, '2025-01-13 16:03:55'),
-(11, 13, 'seyan1', 'seanammiel@gmail.com', 'Brgy Tapia General Trias Cavite', 123.00, '2025-01-13 16:17:26'),
-(12, 13, 'seyan1', 'seanammiel@gmail.com', 'Brgy Tapia General Trias Cavite', 123.00, '2025-01-13 16:18:28'),
-(13, 13, 'seyan1', 'seanammiel@gmail.com', 'Brgy Tapia General Trias Cavite', 123.00, '2025-01-13 16:20:52'),
-(14, 13, 'seyan1', 'seanammiel@gmail.com', 'Brgy Tapia General Trias Cavite', 123.00, '2025-01-13 16:23:17'),
-(15, 13, 'seyan1', 'seanammiel@gmail.com', 'Brgy Tapia General Trias Cavite', 246.00, '2025-01-13 16:24:32'),
-(16, 13, 'seyan1', 'seanammiel@gmail.com', 'Brgy Tapia General Trias Cavite', 148.00, '2025-01-15 09:16:48'),
-(17, 13, 'seyan1', 'seanammiel@gmail.com', 'Brgy Tapia General Trias Cavite', 123.00, '2025-01-15 09:25:35'),
-(18, 13, 'seyan1', 'seanammiel@gmail.com', 'Brgy Tapia General Trias Cavite', 123.00, '2025-01-15 09:26:18'),
-(19, 13, 'seyan1', 'seanammiel@gmail.com', 'Brgy Tapia General Trias Cavite', 123.00, '2025-01-15 09:26:22'),
-(20, 13, 'seyan1', 'seanammiel@gmail.com', 'Brgy Tapia General Trias Cavite', 123.00, '2025-01-15 09:26:34'),
-(21, 13, 'seyan1', 'seanammiel@gmail.com', 'Brgy Tapia General Trias Cavite', 123.00, '2025-01-15 09:28:02'),
-(22, 13, 'seyan1', 'seanammiel@gmail.com', 'Brgy Tapia General Trias Cavite', 123.00, '2025-01-15 09:29:48'),
-(23, 13, 'seyan1', 'seanammiel@gmail.com', 'Brgy Tapia General Trias Cavite', 25.00, '2025-01-15 09:30:27'),
-(24, 13, 'seyan1', 'seanammiel@gmail.com', 'Brgy Tapia General Trias Cavite', 123.00, '2025-01-15 09:54:49'),
-(25, 13, 'seyan1', 'seanammiel@gmail.com', 'Brgy Tapia General Trias Cavite', 123.00, '2025-01-15 09:57:26');
+(108, 13, 'seyan1', 'seanammiel@gmail.com', 'Brgy Tapia General Trias Cavite', 800.00, '2025-01-18 21:52:55');
 
 -- --------------------------------------------------------
 
@@ -213,21 +223,8 @@ CREATE TABLE `custom_orderitems` (
 --
 
 INSERT INTO `custom_orderitems` (`orderitem_id`, `order_id`, `flower_type`, `num_flowers`, `container_type`, `container_color`, `flower_price`, `container_price`, `color_price`, `remarks`, `total_price`) VALUES
-(4, 3, 'Tulip', 1, 'Basket', 'Red', 25.00, 100.00, 0.00, '', 125.00),
-(5, 4, 'Tulip', 5, 'Plastic Wrap', 'Yellow', 25.00, 50.00, 0.00, '', 175.00),
-(6, 4, 'Rosas', 3, 'Plastic Wrap', 'Yellow', 123.00, 50.00, 0.00, '', 419.00),
-(7, 4, 'Lilac', 1, 'Plastic Wrap', 'Yellow', 25.00, 50.00, 0.00, '', 75.00),
-(8, 5, 'Tulip', 1, 'Plastic Wrap', 'Blue', 25.00, 50.00, 0.00, '', 75.00),
-(9, 5, 'Tulip', 5, 'Plastic Wrap', 'Blue', 25.00, 50.00, 0.00, '', 175.00),
-(10, 5, 'Lilac', 3, 'Plastic Wrap', 'Blue', 25.00, 50.00, 0.00, '', 125.00),
-(13, 14, 'Rosas', 1, 'Basket', 'Red', 123.00, 100.00, 0.00, '', 223.00),
-(14, 15, 'Rosas', 2, 'Paper Wrap', 'Blue', 123.00, 50.00, 0.00, '', 296.00),
-(15, 16, 'Tulip', 1, 'Basket', 'Blue', 25.00, 100.00, 0.00, '', 125.00),
-(16, 16, 'Rosas', 1, 'Basket', 'Blue', 123.00, 100.00, 0.00, '', 223.00),
-(17, 22, 'Rosas', 1, 'Basket', 'Red', 123.00, 100.00, 0.00, '', 223.00),
-(18, 23, 'Tulip', 1, 'Basket', 'Red', 25.00, 100.00, 0.00, '', 125.00),
-(19, 24, 'Rosas', 1, 'Basket', 'Red', 123.00, 100.00, 0.00, 'asdasd', 223.00),
-(20, 25, 'Rosas', 1, 'Basket', 'Red', 123.00, 100.00, 0.00, 'asdasdasdasdasd', 223.00);
+(162, 108, 'Sunflower', 1, 'Vase', 'Pink', 400.00, 100.00, 0.00, 'asd', 400.00),
+(163, 108, 'Tulip', 1, 'Vase', 'Pink', 300.00, 100.00, 0.00, 'asd', 300.00);
 
 -- --------------------------------------------------------
 
@@ -244,7 +241,7 @@ CREATE TABLE `custom_payment` (
   `amount_paid` decimal(10,2) NOT NULL,
   `payment_method` enum('gcash','cop','','') NOT NULL,
   `payment_status` enum('Pending','Paid','Failed') DEFAULT 'Pending',
-  `shipping_status` enum('Pending','Shipped','Delivered','Cancelled') DEFAULT 'Pending',
+  `shipping_status` enum('Pending','Shipped','Delivered','Cancelled','Ready for Pickup') DEFAULT 'Pending',
   `order_date` datetime NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
@@ -255,20 +252,7 @@ CREATE TABLE `custom_payment` (
 --
 
 INSERT INTO `custom_payment` (`cpayment_id`, `order_id`, `customer_name`, `customer_email`, `reference_number`, `amount_paid`, `payment_method`, `payment_status`, `shipping_status`, `order_date`, `created_at`, `updated_at`) VALUES
-(3, 6, 'seyan1', 'seanammiel@gmail.com', '123', 123.00, 'gcash', 'Pending', 'Pending', '0000-00-00 00:00:00', '2025-01-13 15:48:24', '2025-01-13 15:48:24'),
-(4, 7, 'seyan1', 'seanammiel@gmail.com', '', 123.00, '', 'Pending', 'Pending', '0000-00-00 00:00:00', '2025-01-13 15:49:02', '2025-01-13 15:49:02'),
-(5, 8, 'seyan1', 'seanammiel@gmail.com', '', 123.00, '', 'Pending', 'Pending', '0000-00-00 00:00:00', '2025-01-13 15:54:04', '2025-01-13 15:54:04'),
-(6, 9, 'seyan1', 'seanammiel@gmail.com', '', 123.00, 'cop', 'Pending', 'Pending', '0000-00-00 00:00:00', '2025-01-13 15:54:08', '2025-01-13 15:54:08'),
-(7, 10, 'seyan1', 'seanammiel@gmail.com', '12335', 123.00, 'gcash', 'Pending', 'Pending', '0000-00-00 00:00:00', '2025-01-13 16:03:55', '2025-01-13 16:03:55'),
-(8, 12, 'seyan1', 'seanammiel@gmail.com', '3213123', 123.00, 'gcash', 'Pending', 'Pending', '0000-00-00 00:00:00', '2025-01-13 16:18:28', '2025-01-13 16:18:28'),
-(9, 13, 'seyan1', 'seanammiel@gmail.com', '3213123', 123.00, 'gcash', 'Pending', 'Pending', '0000-00-00 00:00:00', '2025-01-13 16:20:52', '2025-01-13 16:20:52'),
-(10, 14, 'seyan1', 'seanammiel@gmail.com', '3213123', 123.00, 'gcash', 'Pending', 'Pending', '0000-00-00 00:00:00', '2025-01-13 16:23:17', '2025-01-13 16:23:17'),
-(11, 15, 'seyan1', 'seanammiel@gmail.com', '123123123', 246.00, 'gcash', 'Pending', 'Pending', '0000-00-00 00:00:00', '2025-01-13 16:24:32', '2025-01-13 16:24:32'),
-(12, 16, 'seyan1', 'seanammiel@gmail.com', '', 148.00, 'cop', 'Pending', 'Pending', '0000-00-00 00:00:00', '2025-01-15 09:16:48', '2025-01-15 09:16:48'),
-(13, 22, 'seyan1', 'seanammiel@gmail.com', '', 123.00, 'cop', 'Pending', 'Pending', '0000-00-00 00:00:00', '2025-01-15 09:29:48', '2025-01-15 09:29:48'),
-(14, 23, 'seyan1', 'seanammiel@gmail.com', '', 25.00, 'cop', 'Pending', 'Pending', '0000-00-00 00:00:00', '2025-01-15 09:30:27', '2025-01-15 09:30:27'),
-(15, 24, 'seyan1', 'seanammiel@gmail.com', '', 123.00, 'cop', 'Pending', 'Pending', '0000-00-00 00:00:00', '2025-01-15 09:54:49', '2025-01-15 09:54:49'),
-(16, 25, 'seyan1', 'seanammiel@gmail.com', '123123', 123.00, 'gcash', 'Pending', 'Pending', '0000-00-00 00:00:00', '2025-01-15 09:57:26', '2025-01-15 09:57:26');
+(80, 108, 'seyan1', 'seanammiel@gmail.com', '', 800.00, 'cop', 'Pending', 'Pending', '0000-00-00 00:00:00', '2025-01-18 21:52:55', '2025-01-18 22:06:32');
 
 -- --------------------------------------------------------
 
@@ -342,7 +326,7 @@ CREATE TABLE `flowers` (
   `name` varchar(255) NOT NULL,
   `quantity` int(11) NOT NULL,
   `price` decimal(10,2) DEFAULT NULL,
-  `image` varchar(255) DEFAULT NULL
+  `image` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -350,9 +334,9 @@ CREATE TABLE `flowers` (
 --
 
 INSERT INTO `flowers` (`id`, `name`, `quantity`, `price`, `image`) VALUES
-(2, 'Rosas', 100, 123.00, '../uploads/flowerRose Flower.jpeg'),
-(3, 'Tulip', 100, 25.00, '../uploads/flowertulip flower.png'),
-(4, 'Lilac', 10, 25.00, '../uploads/flowerlilac.jpeg');
+(4, 'Sunflower', 100, 400.00, '../uploads/flowersunflower1.png'),
+(5, 'Rose', 100, 300.00, '../uploads/flowerrose.jpg'),
+(6, 'Tulip', 100, 300.00, '../uploads/flowertulip.jpg');
 
 -- --------------------------------------------------------
 
@@ -399,47 +383,7 @@ CREATE TABLE `orders` (
 --
 
 INSERT INTO `orders` (`order_id`, `customer_id`, `full_name`, `address`, `city`, `postal_code`, `phone`, `total`, `created_at`) VALUES
-(1, 1, 'Johnwayne', 'Blk 31 Lt 2 Lhinnete Homea\r\nBiga Tanza Cavite', 'Cavite', '4341', '09214991751', 10000.00, '2025-01-08 12:27:49'),
-(2, 1, 'Johnwayne', 'Blk 31 Lt 2 Lhinnete Homea\r\nBiga Tanza Cavite', 'Cavite', '4108', '09214991751', 50.00, '2025-01-08 12:28:47'),
-(4, 1, '', '', '', '', '', 10000.00, '2025-01-08 12:45:23'),
-(5, 1, '', '', '', '', '', 10000.00, '2025-01-08 12:46:03'),
-(6, 1, '', '', '', '', '', 10000.00, '2025-01-08 12:46:20'),
-(7, 1, '', '', '', '', '', 50.00, '2025-01-08 12:46:42'),
-(8, 1, '', '', '', '', '', 20000.00, '2025-01-08 12:49:34'),
-(9, 1, '', '', '', '', '', 50.00, '2025-01-08 12:50:19'),
-(10, 1, 'Johnwayne', 'Blk 31 Lt 2 Lhinnete Homea\r\nBiga Tanza Cavite', 'Cavite', '3441', '09214991751', 50.00, '2025-01-08 12:53:26'),
-(15, 1, 'Johnwayne', 'Blk 31 Lt 2 Lhinnete Homea\r\nBiga Tanza Cavite', 'Cavite', '4108', '09214991751', 50.00, '2025-01-08 12:57:50'),
-(17, 1, 'Johnwayne', 'Blk 31 Lt 2 Lhinnete Homea\r\nBiga Tanza Cavite', 'Cavite', '4341', '09214991751', 50.00, '2025-01-08 13:29:27'),
-(18, 1, 'Johnwayne', 'Blk 31 Lt 2 Lhinnete Homea\r\nBiga Tanza Cavite', 'Cavite', '4108', '09214991751', 50.00, '2025-01-08 13:32:13'),
-(20, 13, 'seyan1', 'pogi', 'street', '3123', '0956193051213', 8600.00, '2025-01-09 13:36:13'),
-(21, 13, 'seyan1', 'pogi', 'street', '3123', '0956193051213', 4300.00, '2025-01-09 14:09:22'),
-(22, 14, 'xofahon', 'Blk 31 Lt 2 Lhinnete Homea', 'Cavite', '4311', '09214991751', 4300.00, '2025-01-09 14:31:46'),
-(23, 14, 'xofahon', 'Blk 31 Lt 2 Lhinnete Homea', 'Cavite', '4311', '09214991751', 4000.00, '2025-01-09 14:49:01'),
-(24, 14, 'xofahon', 'Blk 31 Lt 2 Lhinnete Homea', 'Cavite', '4311', '09214991751', 4300.00, '2025-01-09 14:50:14'),
-(25, 14, 'xofahon', 'Blk 31 Lt 2 Lhinnete Homea', 'Cavite', '4311', '09214991751', 4300.00, '2025-01-10 04:09:28'),
-(26, 14, 'xofahon', 'Blk 31 Lt 2 Lhinnete Homea', 'Cavite', '4311', '09214991751', 4300.00, '2025-01-10 04:25:09'),
-(27, 13, 'seyan1', 'pogi', 'street', '3123', '0956193051213', 4300.00, '2025-01-10 05:01:22'),
-(28, 13, 'seyan1', 'pogi', 'street', '3123', '0956193051213', 4000.00, '2025-01-10 05:22:55'),
-(29, 13, 'seyan1', 'pogi', 'street', '3123', '0956193051213', 4300.00, '2025-01-10 05:23:44'),
-(30, 13, 'seyan1', 'pogi', 'street', '3123', '0956193051213', 8300.00, '2025-01-10 05:30:01'),
-(31, 13, 'seyan1', 'pogi', 'street', '3123', '0956193051213', 4000.00, '2025-01-10 05:32:54'),
-(32, 13, 'seyan1', 'pogi', 'street', '3123', '0956193051213', 8600.00, '2025-01-10 07:28:27'),
-(33, 13, 'seyan1', 'pogi', 'street', '3123', '0956193051213', 4300.00, '2025-01-11 02:21:35'),
-(36, 13, 'seyan1', 'pogi', 'street', '3123', '0956193051213', 3000.00, '2025-01-11 06:36:32'),
-(37, 13, 'seyan1', 'pogi', 'street', '3123', '0956193051213', 6000.00, '2025-01-11 07:20:43'),
-(38, 13, 'seyan1', 'pogi', 'street', '3123', '0956193051213', 2004.00, '2025-01-12 05:56:49'),
-(50, 13, 'seyan1', 'Brgy Tapia General Trias Cavite', 'street', '3123', '0956193051213', 72.00, '2025-01-13 12:48:47'),
-(51, 13, 'seyan1', 'Brgy Tapia General Trias Cavite', 'street', '3123', '0956193051213', 120.00, '2025-01-13 12:50:43'),
-(52, 13, 'seyan1', 'Brgy Tapia General Trias Cavite', 'street', '3123', '0956193051213', 12.00, '2025-01-13 12:53:40'),
-(53, 13, 'seyan1', 'Brgy Tapia General Trias Cavite', 'street', '3123', '0956193051213', 12.00, '2025-01-13 12:53:51'),
-(54, 13, 'seyan1', 'Brgy Tapia General Trias Cavite', 'street', '3123', '0956193051213', 13.00, '2025-01-13 12:57:05'),
-(55, 13, 'seyan1', 'Brgy Tapia General Trias Cavite', 'street', '3123', '0956193051213', 4.00, '2025-01-13 12:58:17'),
-(56, 13, 'seyan1', 'Brgy Tapia General Trias Cavite', 'street', '3123', '0956193051213', 12.00, '2025-01-13 12:58:50'),
-(57, 13, 'seyan1', 'Brgy Tapia General Trias Cavite', 'street', '3123', '0956193051213', 12.00, '2025-01-13 12:59:01'),
-(58, 13, 'seyan1', 'Brgy Tapia General Trias Cavite', 'street', '3123', '0956193051213', 4000.00, '2025-01-13 13:00:29'),
-(59, 13, 'seyan1', 'Brgy Tapia General Trias Cavite', 'street', '3123', '0956193051213', 2000.00, '2025-01-13 13:01:16'),
-(60, 13, 'seyan1', 'Brgy Tapia General Trias Cavite', 'street', '3123', '0956193051213', 12.00, '2025-01-13 14:19:39'),
-(61, 13, 'seyan1', 'Brgy Tapia General Trias Cavite', 'street', '3123', '0956193051213', 24.00, '2025-01-13 14:33:30');
+(63, 13, 'seyan1', 'Brgy Tapia General Trias Cavite', 'street', '3123', '0956193051213', 24.00, '2025-01-15 14:29:59');
 
 -- --------------------------------------------------------
 
@@ -460,20 +404,7 @@ CREATE TABLE `order_items` (
 --
 
 INSERT INTO `order_items` (`order_item_id`, `order_id`, `product_id`, `quantity`, `price`) VALUES
-(40, 38, 37, 1, 4.00),
-(41, 38, 31, 1, 2000.00),
-(53, 50, 35, 6, 12.00),
-(54, 51, 36, 1, 120.00),
-(55, 52, 35, 1, 12.00),
-(56, 53, 35, 1, 12.00),
-(57, 54, 34, 1, 13.00),
-(58, 55, 37, 1, 4.00),
-(59, 56, 33, 1, 12.00),
-(60, 57, 33, 1, 12.00),
-(61, 58, 32, 1, 4000.00),
-(62, 59, 31, 1, 2000.00),
-(63, 60, 33, 1, 12.00),
-(64, 61, 33, 2, 12.00);
+(66, 63, 33, 2, 12.00);
 
 -- --------------------------------------------------------
 
@@ -501,63 +432,7 @@ CREATE TABLE `payment` (
 --
 
 INSERT INTO `payment` (`payment_id`, `cust_id`, `order_id`, `cust_name`, `cust_email`, `reference_number`, `amount_paid`, `payment_method`, `payment_status`, `shipping_status`, `created_at`, `updated_at`) VALUES
-(1, 13, NULL, 'seyan1', 'seanammiel@gmail.com', '2893123123', 4300.00, 'gcash', 'paid', 'pending', '2025-01-09 11:06:44', '2025-01-09 11:06:44'),
-(2, 13, NULL, 'seyan1', 'seanammiel@gmail.com', '2893123123', 4300.00, 'gcash', 'paid', 'pending', '2025-01-09 11:06:47', '2025-01-09 11:06:47'),
-(3, 13, NULL, 'seyan1', 'seanammiel@gmail.com', '231123', 4300.00, 'gcash', 'paid', 'pending', '2025-01-09 11:08:46', '2025-01-09 11:08:46'),
-(4, 13, NULL, 'seyan1', 'seanammiel@gmail.com', '12213', 1212.00, 'gcash', 'paid', 'pending', '2025-01-09 11:12:30', '2025-01-09 11:12:30'),
-(5, 13, NULL, 'seyan1', 'seanammiel@gmail.com', '12323', 2133.00, 'gcash', 'paid', 'pending', '2025-01-09 11:17:11', '2025-01-09 11:17:11'),
-(6, 13, NULL, 'seyan1', 'seanammiel@gmail.com', '123', 123.00, 'gcash', 'paid', 'pending', '2025-01-09 11:21:35', '2025-01-09 11:21:35'),
-(7, 13, NULL, 'seyan1', 'seanammiel@gmail.com', '12312', 2133.00, 'gcash', 'paid', 'pending', '2025-01-09 11:32:01', '2025-01-09 11:32:01'),
-(8, 13, NULL, 'seyan1', 'seanammiel@gmail.com', '12312', 2133.00, 'gcash', 'paid', 'pending', '2025-01-09 11:32:15', '2025-01-09 11:32:15'),
-(9, 13, NULL, 'seyan1', 'seanammiel@gmail.com', '123123', 4324.00, 'gcash', 'paid', 'pending', '2025-01-09 11:36:36', '2025-01-09 11:36:36'),
-(10, 13, NULL, 'seyan1', 'seanammiel@gmail.com', '2893123123', 1222.00, 'gcash', 'paid', 'pending', '2025-01-09 11:42:52', '2025-01-09 11:42:52'),
-(11, 13, NULL, 'seyan1', 'seanammiel@gmail.com', '123', 4444.00, 'gcash', 'paid', 'pending', '2025-01-09 11:51:38', '2025-01-09 11:51:38'),
-(12, 13, NULL, 'seyan1', 'seanammiel@gmail.com', '123', 4444.00, 'gcash', 'paid', 'pending', '2025-01-09 11:51:46', '2025-01-09 11:51:46'),
-(13, 13, NULL, 'seyan1', 'seanammiel@gmail.com', '13123', 12323.00, 'gcash', 'paid', 'pending', '2025-01-09 12:02:26', '2025-01-09 12:02:26'),
-(14, 13, NULL, 'seyan1', 'seanammiel@gmail.com', '123', 4324.00, 'gcash', 'paid', 'pending', '2025-01-09 12:05:47', '2025-01-09 12:05:47'),
-(15, 13, NULL, 'seyan1', 'seanammiel@gmail.com', '123', 5678.00, 'gcash', 'paid', 'pending', '2025-01-09 12:09:50', '2025-01-09 12:09:50'),
-(16, 13, NULL, 'seyan1', 'seanammiel@gmail.com', '123', 5678.00, 'gcash', 'paid', 'pending', '2025-01-09 12:12:23', '2025-01-09 12:12:23'),
-(17, 13, NULL, 'seyan1', 'seanammiel@gmail.com', '123', 5678.00, 'gcash', 'paid', 'pending', '2025-01-09 12:13:28', '2025-01-09 12:13:28'),
-(18, 13, NULL, 'seyan1', 'seanammiel@gmail.com', '123', 432.00, 'gcash', 'paid', 'pending', '2025-01-09 12:15:40', '2025-01-09 12:15:40'),
-(19, 13, NULL, 'seyan1', 'seanammiel@gmail.com', '123', 432.00, 'gcash', 'paid', 'pending', '2025-01-09 12:15:45', '2025-01-09 12:15:45'),
-(20, 13, NULL, 'seyan1', 'seanammiel@gmail.com', '123', 432.00, 'gcash', 'paid', 'pending', '2025-01-09 12:17:21', '2025-01-09 12:17:21'),
-(21, 13, NULL, 'seyan1', 'seanammiel@gmail.com', '123', 432.00, 'gcash', 'paid', 'pending', '2025-01-09 12:18:15', '2025-01-09 12:18:15'),
-(22, 13, NULL, 'seyan1', 'seanammiel@gmail.com', '123', 432.00, 'gcash', 'paid', 'pending', '2025-01-09 12:19:57', '2025-01-09 12:19:57'),
-(23, 13, NULL, 'seyan1', 'seanammiel@gmail.com', '12', 123.00, 'gcash', 'paid', 'pending', '2025-01-09 12:21:01', '2025-01-09 12:21:01'),
-(24, 13, NULL, 'seyan1', 'seanammiel@gmail.com', '654', 756.00, 'gcash', 'paid', 'pending', '2025-01-09 12:21:08', '2025-01-09 12:21:08'),
-(25, 13, NULL, 'seyan1', 'seanammiel@gmail.com', '4234', 123.00, 'gcash', 'paid', 'pending', '2025-01-09 12:24:56', '2025-01-09 12:24:56'),
-(26, 13, NULL, 'seyan1', 'seanammiel@gmail.com', '123', 123.00, 'gcash', 'paid', 'pending', '2025-01-09 12:27:21', '2025-01-09 12:27:21'),
-(27, 13, NULL, 'seyan1', 'seanammiel@gmail.com', '123123', 123.00, 'gcash', 'paid', 'pending', '2025-01-09 12:28:50', '2025-01-09 12:28:50'),
-(28, 13, NULL, 'seyan1', 'seanammiel@gmail.com', '123', 123.00, 'gcash', 'paid', 'pending', '2025-01-09 13:30:44', '2025-01-09 13:30:44'),
-(29, 13, 20, 'seyan1', 'seanammiel@gmail.com', '123', 1123.00, 'gcash', 'failed', 'shipped', '2025-01-09 13:36:13', '2025-01-10 02:52:10'),
-(30, 13, 21, 'seyan1', 'seanammiel@gmail.com', '111', 1111.00, 'gcash', 'paid', 'pending', '2025-01-09 14:09:22', '2025-01-09 14:09:22'),
-(31, 14, 22, 'xofahon', 'xofahon594@pariag.com', '123', 100.00, 'gcash', 'paid', 'pending', '2025-01-09 14:31:46', '2025-01-09 14:31:46'),
-(32, 14, 23, 'xofahon', 'xofahon594@pariag.com', '123', 400000.00, 'gcash', 'paid', 'pending', '2025-01-09 14:49:01', '2025-01-09 14:49:01'),
-(33, 14, 24, 'xofahon', 'xofahon594@pariag.com', '123', 4300.00, 'gcash', 'failed', 'delivered', '2025-01-09 14:50:14', '2025-01-10 02:52:34'),
-(34, 14, 25, 'xofahon', 'xofahon594@pariag.com', '1123', 4300.00, 'gcash', 'paid', 'pending', '2025-01-10 04:09:28', '2025-01-10 04:09:28'),
-(35, 14, 26, 'xofahon', 'xofahon594@pariag.com', '1111', 321.00, 'gcash', 'paid', 'pending', '2025-01-10 04:25:09', '2025-01-10 04:25:09'),
-(36, 13, 27, 'seyan1', 'seanammiel@gmail.com', '12313', 333.00, 'gcash', 'paid', 'pending', '2025-01-10 05:01:22', '2025-01-10 05:01:22'),
-(37, 13, 28, 'seyan1', 'seanammiel@gmail.com', '143', 432.00, 'gcash', 'paid', 'pending', '2025-01-10 05:22:55', '2025-01-10 05:22:55'),
-(38, 13, 29, 'seyan1', 'seanammiel@gmail.com', '123', 123.00, 'gcash', 'paid', 'pending', '2025-01-10 05:23:44', '2025-01-10 05:23:44'),
-(39, 13, 30, 'seyan1', 'seanammiel@gmail.com', '4123123', 8300.00, 'gcash', 'paid', 'pending', '2025-01-10 05:30:01', '2025-01-10 05:30:01'),
-(40, 13, 31, 'seyan1', 'seanammiel@gmail.com', '3123', 4000.00, 'gcash', 'paid', 'pending', '2025-01-10 05:32:54', '2025-01-10 05:32:54'),
-(41, 13, 32, 'seyan1', 'seanammiel@gmail.com', '121312', 4000.00, 'gcash', 'paid', 'pending', '2025-01-10 07:28:27', '2025-01-10 07:28:27'),
-(42, 13, 33, 'seyan1', 'seanammiel@gmail.com', '123', 123123.00, 'gcash', 'paid', 'pending', '2025-01-11 02:21:35', '2025-01-11 02:21:35'),
-(43, 13, 36, 'seyan1', 'seanammiel@gmail.com', '7667666', 766.00, 'gcash', 'paid', 'pending', '2025-01-11 06:36:32', '2025-01-11 06:36:32'),
-(44, 13, 37, 'seyan1', 'seanammiel@gmail.com', '123', 123333.00, 'gcash', 'paid', 'pending', '2025-01-11 07:20:43', '2025-01-11 07:20:43'),
-(45, 13, 38, 'seyan1', 'seanammiel@gmail.com', '123', 450.00, 'gcash', 'paid', 'readyforpickup', '2025-01-12 05:56:49', '2025-01-14 11:40:37'),
-(46, 13, 50, 'seyan1', 'seanammiel@gmail.com', '0', 72.00, '', 'pending', 'pending', '2025-01-13 12:48:47', '2025-01-13 12:48:47'),
-(47, 13, 51, 'seyan1', 'seanammiel@gmail.com', '0', 120.00, '', 'pending', 'pending', '2025-01-13 12:50:43', '2025-01-13 12:50:43'),
-(48, 13, 52, 'seyan1', 'seanammiel@gmail.com', '213', 123.00, 'gcash', 'paid', 'pending', '2025-01-13 12:53:40', '2025-01-13 12:53:40'),
-(49, 13, 53, 'seyan1', 'seanammiel@gmail.com', '0', 12.00, '', 'pending', 'pending', '2025-01-13 12:53:51', '2025-01-13 12:53:51'),
-(50, 13, 54, 'seyan1', 'seanammiel@gmail.com', '0', 13.00, '', 'pending', '', '2025-01-13 12:57:05', '2025-01-14 11:35:55'),
-(51, 13, 55, 'seyan1', 'seanammiel@gmail.com', '0', 4.00, 'cop', 'paid', 'pending', '2025-01-13 12:58:17', '2025-01-14 11:35:41'),
-(52, 13, 56, 'seyan1', 'seanammiel@gmail.com', '0', 12.00, 'cop', 'pending', 'pending', '2025-01-13 12:58:50', '2025-01-13 12:58:50'),
-(53, 13, 57, 'seyan1', 'seanammiel@gmail.com', '0', 12.00, 'cop', 'pending', 'pending', '2025-01-13 12:59:01', '2025-01-13 12:59:01'),
-(54, 13, 58, 'seyan1', 'seanammiel@gmail.com', '0', 4000.00, 'cop', 'pending', 'pending', '2025-01-13 13:00:29', '2025-01-13 13:00:29'),
-(55, 13, 59, 'seyan1', 'seanammiel@gmail.com', '0', 2000.00, 'cop', 'pending', 'pending', '2025-01-13 13:01:16', '2025-01-13 13:01:16'),
-(56, 13, 60, 'seyan1', 'seanammiel@gmail.com', '0', 12.00, 'cop', 'pending', 'pending', '2025-01-13 14:19:39', '2025-01-13 14:19:39'),
-(57, 13, 61, 'seyan1', 'seanammiel@gmail.com', '0', 24.00, 'cop', 'pending', 'pending', '2025-01-13 14:33:30', '2025-01-13 14:33:30');
+(59, 13, 63, 'seyan1', 'seanammiel@gmail.com', '0', 24.00, 'cop', 'pending', 'delivered', '2025-01-15 14:29:59', '2025-01-15 14:30:10');
 
 -- --------------------------------------------------------
 
@@ -587,14 +462,42 @@ CREATE TABLE `product` (
 --
 
 INSERT INTO `product` (`p_id`, `name`, `old_price`, `current_price`, `quantity`, `featured_photo`, `description`, `short_description`, `feature`, `other_photo`, `condition`, `is_featured`, `is_active`, `ecat_id`) VALUES
-(30, 'Pink Life Size Teddy Bear', '2000', '1500', 100, 'product-featured-30.jpg', 'Pink Life Size Teddy Bear', 'Pink Life Size Teddy Bear', 'Pink Life Size Teddy Bear', '', 'Pink Life Size Teddy Bear', 1, 1, 19),
-(31, 'Red Life Size Teddy Bear', '1', '2000', 1499, 'product-featured-31.jpg', 'Red Life Size Teddy Bear', 'Red Life Size Teddy Bear', 'Red Life Size Teddy Bear', '', 'Red Life Size Teddy Bear', 1, 1, 19),
 (32, 'Vday 10 Roses Boquet', '4500', '4000', 999, 'product-featured-32.jpg', 'Vday 10 Roses Boquet', 'Vday 10 Roses Boquet', 'Vday 10 Roses Boquet', '', 'Vday 10 Roses Boquet', 1, 1, 23),
-(33, 'Tulip1', '1', '12', 98, 'product-featured-33.jpg', '', '', '', '', '', 1, 1, 15),
-(34, 'Sunflower', '1', '13', 0, 'product-featured-34.jpg', '', '', '', '', '', 1, 1, 16),
+(33, 'Tulip1', '1', '12', 93, 'product-featured-33.jpg', '', '', '', '', '', 1, 1, 15),
 (35, 'Roseee', '1', '12', 0, 'product-featured-35.jpg', '', '', '', '', '', 1, 1, 14),
 (36, 'Rose3', '1', '120', 0, 'product-featured-36.jpg', '', '', '', '', '', 1, 1, 14),
-(37, 'Sunflower', '1', '4', 0, 'product-featured-37.jpg', '', '', '', '', '', 1, 1, 16);
+(38, 'Sunflower with Pink Wrapper', '4500', '3000', 10, 'product-featured-38.jpg', 'Sunflower with Pink Wrapper', 'Sunflower with Pink Wrapper', 'Sunflower with Pink Wrapper', '', 'Sunflower with Pink Wrapper', 1, 1, 16),
+(39, 'Life Size Teddy Bear Red', '2000', '1500', 10, 'product-featured-39.jpg', 'Life Size Teddy Bear Red', 'Life Size Teddy Bear Red', 'Life Size Teddy Bear Red', '', 'Life Size Teddy Bear Red', 1, 1, 19),
+(40, 'Life Size Teddy Bear Pink', '2000', '1500', 10, 'product-featured-40.jpg', 'Life Size Teddy Bear Pink', 'Life Size Teddy Bear Pink', 'Life Size Teddy Bear Pink', '', 'Life Size Teddy Bear Pink', 1, 1, 19),
+(42, '1 Sunflower with Brown Wrapper', '1500', '1000', 100, 'product-featured-42.jpg', '1 Sunflower with Brown Wrapper', '1 Sunflower with Brown Wrapper', '1 Sunflower with Brown Wrapper', '', '1 Sunflower with Brown Wrapper', 1, 1, 16),
+(43, 'Kitkat', '50', '40', 100, 'product-featured-43.jpg', 'Kitkat', 'Kitkat', 'Kitkat', '', 'Kitkat', 1, 1, 17),
+(44, 'All Soul\'s Day ', '2900', '2400', 100, 'product-featured-44.jpg', 'All Soul\'s Day ', 'All Soul\'s Day ', 'All Soul\'s Day ', '', 'All Soul\'s Day ', 1, 1, 24),
+(45, 'All Soul\'s Day White Flower', '2900', '2400', 100, 'product-featured-45.jpg', 'All Soul\'s Day White Flowers', 'All Soul\'s Day White Flowers', 'All Soul\'s Day White Flowers', '', 'All Soul\'s Day White Flowers', 1, 1, 24),
+(46, '15pcs Rose With Black Wrapper', '4000', '4000', 50, 'product-featured-46.jpg', 'Rose With Black Wrapper', 'Rose With Black Wrapper', 'Rose With Black Wrapper', '', 'Rose With Black Wrapper', 1, 1, 14),
+(47, '15 Roses With White Wrapper', '4000', '4000', 100, 'product-featured-47.jpg', '15 Roses With White Wrapper', '15 Roses With White Wrapper', '15 Roses With White Wrapper', '', '15 Roses With White Wrapper', 1, 1, 14),
+(48, 'Bundle Chocolates (Ferrero and Toblerone)', '1000', '1000', 10, 'product-featured-48.jpg', 'Bundle Chocolates (Ferrero and Toblerone)', 'Bundle Chocolates (Ferrero and Toblerone)', 'Bundle Chocolates (Ferrero and Toblerone)', '', 'Bundle Chocolates (Ferrero and Toblerone)', 1, 1, 17),
+(49, '1 Tulip Boquet', '700', '700', 16, 'product-featured-49.jpg', '1 Tulip Boquet', '1 Tulip Boquet', '1 Tulip Boquet', '', '1 Tulip Boquet', 1, 1, 15),
+(50, '3 Sunflower Bouquet', '1700', '1700', 5, 'product-featured-50.jpg', '3 Sunflower Bouquet', '3 Sunflower Bouquet', '3 Sunflower Bouquet', '', '3 Sunflower Bouquet', 1, 1, 16),
+(51, '3 Tulips Bouquet', '1700', '1700', 43, 'product-featured-51.jpg', '3 Tulips Bouquet', '3 Tulips Bouquet', '3 Tulips Bouquet', '', '3 Tulips Bouquet', 1, 1, 15),
+(52, '6 Tulips Bouquet', '3200', '3200', 16, 'product-featured-52.jpg', '6 Tulips Bouquet', '6 Tulips Bouquet', '6 Tulips Bouquet', '', '6 Tulips Bouquet', 1, 1, 15),
+(53, '12 Tulips Bouquet', '5200', '5000', 100, 'product-featured-53.jpg', '12 Tulips Bouquet', '12 Tulips Bouquet', '12 Tulips Bouquet', '', '12 Tulips Bouquet', 1, 1, 15),
+(54, 'Sunflower and Rose Bouquet', '1700', '1700', 53, 'product-featured-54.jpg', 'Sunflower and Rose Bouquet', 'Sunflower and Rose Bouquet', 'Sunflower and Rose Bouquet', '', 'Sunflower and Rose Bouquet', 1, 1, 16),
+(55, 'Blue Rose Bouquet', '700', '700', 52, 'product-featured-55.jpg', 'Blue Rose Bouquet', 'Blue Rose Bouquet', 'Blue Rose Bouquet', '', 'Blue Rose Bouquet', 1, 1, 14),
+(56, 'Vday\'s Flower Basket', '2000', '1700', 23, 'product-featured-56.jpg', 'Vday\'s Flower Basket', 'Vday\'s Flower Basket', 'Vday\'s Flower Basket', '', 'Vday\'s Flower Basket', 1, 1, 23),
+(57, 'Vday\'s Flower Basket 2', '2000', '1700', 21, 'product-featured-57.jpg', 'Vday\'s Flower Basket', 'Vday\'s Flower Basket', 'Vday\'s Flower Basket', '', 'Vday\'s Flower Basket', 1, 1, 23),
+(58, 'Vday\'s Flower Basket 3', '2000', '1700', 16, 'product-featured-58.jpg', 'Vday\'s Flower Basket', 'Vday\'s Flower Basket', 'Vday\'s Flower Basket', '', 'Vday\'s Flower Basket', 1, 1, 23),
+(59, 'Vday\'s Flower Basket 4', '1700', '1800', 12, 'product-featured-59.jpg', 'Vday\'s Flower Basket', 'Vday\'s Flower Basket', 'Vday\'s Flower Basket', '', 'Vday\'s Flower Basket', 1, 1, 23),
+(60, '6pcs Rose Bouquet ', '3200', '2777', 100, 'product-featured-60.jpg', '6pcs Rose Boquet ', '6pcs Rose Bouquet ', '6pcs Rose Bouquet ', '', '6pcs Rose Bouquet ', 1, 1, 14),
+(61, '12pcs Rose Bouquet ', '121', '4500', 4200, 'product-featured-61.jpg', '12pcs Rose Bouquet ', '12pcs Rose Bouquet ', '12pcs Rose Bouquet ', '', '12pcs Rose Bouquet ', 1, 1, 14),
+(62, 'Mixed 12pcs Pink and Red Roses Bouquet ', '4500', '4333', 16, 'product-featured-62.jpg', 'Mixed 12pcs Pink and Red Roses Bouquet ', 'Mixed 12pcs Pink and Red Roses Bouquet ', 'Mixed 12pcs Pink and Red Roses Bouquet ', '', 'Mixed 12pcs Pink and Red Roses Bouquet ', 1, 1, 14),
+(63, 'All Soul\'s Day Mixed Flowers in a Basket', '3000', '3200', 16, 'product-featured-63.jpg', 'All Soul\'s Day Mixed Flowers in a Basket', 'All Soul\'s Day Mixed Flowers in a Basket', 'All Soul\'s Day Mixed Flowers in a Basket', '', 'All Soul\'s Day Mixed Flowers in a Basket', 1, 1, 24),
+(64, 'All Soul\'s Day Mixed Pink and White Flowers in a Basket', '4000', '3000', 21, 'product-featured-64.jpg', 'All Soul\'s Day Mixed Pink and White Flowers in a Basket', 'All Soul\'s Day Mixed Pink and White Flowers in a Basket', 'All Soul\'s Day Mixed Pink and White Flowers in a Basket', '', 'All Soul\'s Day Mixed Pink and White Flowers in a Basket', 1, 1, 24),
+(65, 'Toblerone', '120', '100', 234, 'product-featured-65.jpg', 'Toblerone', 'Toblerone', 'Toblerone', '', 'Toblerone', 1, 1, 17),
+(66, 'Ferrero Rocher', '300', '260', 100, 'product-featured-66.jpg', 'Ferrero Rocher', 'Ferrero Rocher', 'Ferrero Rocher', '', 'Ferrero Rocher', 1, 1, 17),
+(67, 'Mixed Balloons', '150', '150', 16, 'product-featured-67.jpg', 'Mixed Balloons', 'Mixed Balloons', 'Mixed Balloons', '', 'Mixed Balloons', 1, 1, 18),
+(68, 'Heart Balloon', '50', '60', 324, 'product-featured-68.jpg', 'Heart Balloon', 'Heart Balloon', 'Heart Balloon', '', 'Heart Balloon', 1, 1, 18),
+(69, 'Love Balloon', '200', '200', 12, 'product-featured-69.jpg', 'Love Balloon', 'Love Balloon', 'Love Balloon', '', 'Love Balloon', 1, 1, 18),
+(70, 'Orange Life Size Teddy Bear ', '1700', '1500', 12, 'product-featured-70.png', 'Orange Life Size Teddy Bear ', 'Orange Life Size Teddy Bear ', 'Orange Life Size Teddy Bear ', '', 'Orange Life Size Teddy Bear ', 1, 1, 19);
 
 -- --------------------------------------------------------
 
@@ -623,13 +526,41 @@ INSERT INTO `product_color` (`id`, `color_id`, `p_id`) VALUES
 (14, 0, 6),
 (22, 1, 15),
 (34, 1, 32),
-(36, 1, 34),
 (37, 2, 35),
 (38, 1, 36),
-(39, 2, 37),
-(43, 1, 31),
-(46, 4, 30),
-(47, 1, 33);
+(47, 1, 33),
+(48, 6, 38),
+(49, 1, 39),
+(50, 4, 40),
+(52, 3, 42),
+(53, 1, 43),
+(54, 3, 44),
+(55, 1, 45),
+(56, 1, 46),
+(57, 1, 47),
+(58, 1, 48),
+(59, 4, 49),
+(60, 6, 50),
+(61, 4, 51),
+(62, 6, 52),
+(63, 6, 53),
+(64, 3, 54),
+(66, 1, 56),
+(67, 2, 57),
+(68, 2, 58),
+(69, 1, 59),
+(70, 2, 55),
+(71, 2, 60),
+(72, 1, 61),
+(73, 4, 62),
+(74, 4, 63),
+(75, 2, 64),
+(76, 1, 65),
+(77, 2, 66),
+(78, 1, 67),
+(79, 2, 68),
+(80, 1, 69),
+(81, 2, 70);
 
 -- --------------------------------------------------------
 
@@ -648,9 +579,38 @@ CREATE TABLE `product_photo` (
 --
 
 INSERT INTO `product_photo` (`pp_id`, `photo`, `p_id`) VALUES
-(34, '34.jpg', 30),
-(35, '35.jpg', 31),
-(36, '36.jpg', 32);
+(36, '36.jpg', 32),
+(37, '37.jpg', 38),
+(38, '38.jpg', 39),
+(39, '39.jpg', 40),
+(41, '41.jpg', 42),
+(42, '42.jpg', 43),
+(43, '43.jpg', 44),
+(44, '44.jpg', 45),
+(45, '45.jpg', 47),
+(46, '46.jpg', 48),
+(47, '47.jpg', 49),
+(48, '48.jpg', 50),
+(49, '49.jpg', 51),
+(50, '50.jpg', 52),
+(51, '51.jpg', 53),
+(52, '52.jpg', 54),
+(53, '53.jpg', 55),
+(54, '54.jpg', 56),
+(55, '55.jpg', 57),
+(56, '56.jpg', 58),
+(57, '57.jpg', 59),
+(58, '58.jpg', 60),
+(59, '59.jpg', 61),
+(60, '60.jpg', 62),
+(61, '61.jpg', 63),
+(62, '62.jpg', 64),
+(63, '63.jpg', 65),
+(64, '64.jpg', 66),
+(65, '65.jpg', 67),
+(66, '66.jpg', 68),
+(67, '67.jpg', 69),
+(68, '68.png', 70);
 
 -- --------------------------------------------------------
 
@@ -698,7 +658,40 @@ INSERT INTO `product_type` (`id`, `type_id`, `p_id`) VALUES
 (27, 10, 34),
 (28, 9, 35),
 (29, 9, 36),
-(30, 10, 37);
+(30, 10, 37),
+(31, 11, 38),
+(32, 11, 39),
+(33, 11, 40),
+(34, 9, 41),
+(35, 9, 42),
+(36, 9, 43),
+(37, 9, 44),
+(38, 10, 45),
+(39, 10, 46),
+(40, 11, 47),
+(41, 11, 48),
+(42, 9, 49),
+(43, 10, 50),
+(44, 10, 51),
+(45, 10, 52),
+(46, 11, 53),
+(47, 10, 54),
+(48, 9, 55),
+(49, 10, 56),
+(50, 10, 57),
+(51, 10, 58),
+(52, 11, 59),
+(53, 10, 60),
+(54, 11, 61),
+(55, 10, 62),
+(56, 10, 63),
+(57, 9, 64),
+(58, 9, 65),
+(59, 10, 66),
+(60, 10, 67),
+(61, 10, 68),
+(62, 9, 69),
+(63, 9, 70);
 
 -- --------------------------------------------------------
 
@@ -1081,12 +1074,6 @@ ALTER TABLE `color`
   ADD PRIMARY KEY (`color_id`);
 
 --
--- Indexes for table `container`
---
-ALTER TABLE `container`
-  ADD PRIMARY KEY (`container_id`);
-
---
 -- Indexes for table `customer`
 --
 ALTER TABLE `customer`
@@ -1099,6 +1086,20 @@ ALTER TABLE `customer`
 ALTER TABLE `customer_messages`
   ADD PRIMARY KEY (`message_id`),
   ADD KEY `cust_id` (`cust_id`);
+
+--
+-- Indexes for table `custom_finalimages`
+--
+ALTER TABLE `custom_finalimages`
+  ADD PRIMARY KEY (`image_id`),
+  ADD KEY `custom_finalimages_ibfk_1` (`order_id`);
+
+--
+-- Indexes for table `custom_images`
+--
+ALTER TABLE `custom_images`
+  ADD PRIMARY KEY (`image_id`),
+  ADD KEY `order_id` (`order_id`);
 
 --
 -- Indexes for table `custom_order`
@@ -1266,22 +1267,34 @@ ALTER TABLE `customer_messages`
   MODIFY `message_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT for table `custom_finalimages`
+--
+ALTER TABLE `custom_finalimages`
+  MODIFY `image_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+
+--
+-- AUTO_INCREMENT for table `custom_images`
+--
+ALTER TABLE `custom_images`
+  MODIFY `image_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=43;
+
+--
 -- AUTO_INCREMENT for table `custom_order`
 --
 ALTER TABLE `custom_order`
-  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
+  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=109;
 
 --
 -- AUTO_INCREMENT for table `custom_orderitems`
 --
 ALTER TABLE `custom_orderitems`
-  MODIFY `orderitem_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+  MODIFY `orderitem_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=164;
 
 --
 -- AUTO_INCREMENT for table `custom_payment`
 --
 ALTER TABLE `custom_payment`
-  MODIFY `cpayment_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `cpayment_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=81;
 
 --
 -- AUTO_INCREMENT for table `email_verifications`
@@ -1299,7 +1312,7 @@ ALTER TABLE `end_category`
 -- AUTO_INCREMENT for table `flowers`
 --
 ALTER TABLE `flowers`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `mid_category`
@@ -1311,43 +1324,43 @@ ALTER TABLE `mid_category`
 -- AUTO_INCREMENT for table `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=62;
+  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=64;
 
 --
 -- AUTO_INCREMENT for table `order_items`
 --
 ALTER TABLE `order_items`
-  MODIFY `order_item_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=65;
+  MODIFY `order_item_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=67;
 
 --
 -- AUTO_INCREMENT for table `payment`
 --
 ALTER TABLE `payment`
-  MODIFY `payment_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=58;
+  MODIFY `payment_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=60;
 
 --
 -- AUTO_INCREMENT for table `product`
 --
 ALTER TABLE `product`
-  MODIFY `p_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=38;
+  MODIFY `p_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=71;
 
 --
 -- AUTO_INCREMENT for table `product_color`
 --
 ALTER TABLE `product_color`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=48;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=82;
 
 --
 -- AUTO_INCREMENT for table `product_photo`
 --
 ALTER TABLE `product_photo`
-  MODIFY `pp_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
+  MODIFY `pp_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=69;
 
 --
 -- AUTO_INCREMENT for table `product_type`
 --
 ALTER TABLE `product_type`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=64;
 
 --
 -- AUTO_INCREMENT for table `rating`
@@ -1406,6 +1419,18 @@ ALTER TABLE `chat_messages`
 --
 ALTER TABLE `customer_messages`
   ADD CONSTRAINT `customer_messages_ibfk_1` FOREIGN KEY (`cust_id`) REFERENCES `customer` (`cust_id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `custom_finalimages`
+--
+ALTER TABLE `custom_finalimages`
+  ADD CONSTRAINT `custom_finalimages_ibfk_1` FOREIGN KEY (`order_id`) REFERENCES `custom_order` (`order_id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `custom_images`
+--
+ALTER TABLE `custom_images`
+  ADD CONSTRAINT `custom_images_ibfk_1` FOREIGN KEY (`order_id`) REFERENCES `custom_order` (`order_id`);
 
 --
 -- Constraints for table `custom_order`

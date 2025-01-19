@@ -175,7 +175,7 @@
     </div>
     <section class="content-header" style="background-color: white !important;">
         <div class="content-header-right">    
-            <a href="settings/endcategory-add.php" class="btn btn-primary btn-sm">Add New</a>
+            <a href="endcategory-add.php" class="btn btn-primary btn-sm">Add New</a>
         </div>
     </section>       
 </div>

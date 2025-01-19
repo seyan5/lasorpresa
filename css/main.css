@@ -49,6 +49,168 @@ section{
     margin-top: 100px;
 }
 
+/* Notification Dropdown Container */
+.notification-dropdown {
+    position: relative;
+    display: inline-block;
+  }
+  
+  .notification-dropdown .btn {
+    display: inline-block;
+    margin-top: 1rem;
+    border-radius: 8px;
+    background: #333; /* Default background color */
+    color: #fff; /* Default text color */
+    padding: 1rem 0; /* Equal top and bottom padding */
+    width: 30rem; /* Fixed width for symmetry */
+    text-align: center; /* Center-align the text */
+    cursor: pointer;
+    font-size: 1.4rem; /* Larger font size */
+    margin-top: 100px;
+    transition: background 0.3s ease, color 0.3s ease, transform 0.2s ease; /* Smooth transitions */
+}
+
+
+.notification-dropdown .btn:hover {
+    background: var(--pink); /* Slightly lighter background on hover */
+    color: #ddd; /* Softer text color */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add subtle shadow on hover */
+}
+
+  /* Badge for Notification Count (Optional) */
+  .notification-dropdown .fas.fa-bell::after {
+    content: attr(data-count); /* Dynamic count of notifications */
+    position: absolute;
+    top: -5px;
+    right: -10px;
+    background-color: #ff0000; /* Red badge */
+    color: #fff; /* White text */
+    font-size: 12px; /* Badge text size */
+    padding: 2px 6px;
+    border-radius: 50%; /* Circle shape */
+    display: none; /* Hidden by default, show dynamically */
+  }
+  
+  /* Dropdown Menu */
+  .dropdown-menu {
+    position: absolute;
+    top: 35px; /* Position below the bell icon */
+    right: 0; /* Align to the right */
+    background-color: #fff; /* Background color */
+    border: 1px solid #ddd; /* Light border */
+    border-radius: 8px; /* Rounded corners */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    width: 300px; /* Fixed width */
+    max-height: 400px; /* Limit height for scrollable content */
+    overflow-y: auto; /* Enable vertical scrolling if content overflows */
+    z-index: 1000; /* Ensure it appears above other elements */
+    display: none; /* Hidden by default */
+  }
+  
+  /* Show dropdown menu on toggle */
+  .notification-dropdown .dropdown-menu.show {
+    display: block;
+  }
+  
+  /* Dropdown Title */
+  .dropdown-menu p {
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+    margin: 10px 15px 5px;
+  }
+  
+  /* Horizontal Separator */
+  .dropdown-menu hr {
+    margin: 5px 15px;
+    border-color: #eee;
+  }
+  
+  /* Dropdown Item */
+  .dropdown-item {
+    display: flex;
+    align-items: center;
+    padding: 10px 15px;
+    border-bottom: 1px solid #f1f1f1; /* Light separator */
+    transition: background-color 0.3s ease;
+  }
+  
+  .dropdown-item:last-child {
+    border-bottom: none; /* Remove border for the last item */
+  }
+  
+  /* Hover Effect */
+  .dropdown-item:hover {
+    background-color: #f9f9f9; /* Light gray background */
+  }
+  
+  /* Icon Styles */
+  .dropdown-item i {
+    font-size: 18px; /* Adjust icon size */
+    padding: 8px;
+    color: #fff; /* White icon color */
+    margin-right: 10px;
+  }
+  
+  .bg-warning {
+    background-color: #ffc107; /* Yellow for pending */
+    border-radius: 50%; /* Circle shape */
+  }
+  
+  .bg-success {
+    background-color: #28a745; /* Green for successful */
+    border-radius: 50%; /* Circle shape */
+  }
+  
+  /* Text Styles */
+  .dropdown-item strong {
+    font-size: 14px;
+    color: #333;
+    display: block;
+  }
+  
+  .text-muted {
+    font-size: 12px;
+    color: #888;
+  }
+  
+  /* "View All" Button */
+  .btn-link {
+    display: block;
+    text-align: center;
+    font-size: 14px;
+    color: #007bff;
+    text-decoration: none;
+    padding: 10px;
+  }
+  
+  
+  /* No Notifications Message */
+  .dropdown-item.text-center {
+    padding: 20px;
+    color: #aaa;
+    font-style: italic;
+  }
+  
+  /* Scrollbar Styles (Optional) */
+  .dropdown-menu::-webkit-scrollbar {
+    width: 8px;
+  }
+  
+  .dropdown-menu::-webkit-scrollbar-thumb {
+    background-color: #ccc;
+    border-radius: 4px;
+  }
+  
+  .dropdown-menu::-webkit-scrollbar-thumb:hover {
+    background-color: #aaa;
+  }
+  
+  .dropdown-menu::-webkit-scrollbar-track {
+    background-color: transparent;
+  }
+  
+
 /* Style for the dropdown container */
 .dropdown {
     position: relative;
@@ -563,12 +725,15 @@ icons-container .icons span{
     display: none;
     position: absolute;
     right: 0;
-    top: 25px; /* Closer to the icon */
-    width: 220px; /* Reduced width */
+    top: 40px; /* Closer to the icon */
+    width: 280px; /* Reduced width */
     background-color: white;
     box-shadow: 0 3px 4px rgba(0, 0, 0, 0.1); /* Softer shadow */
     border-radius: 3px; /* Smaller radius */
+    font-size: 1.4rem;
     z-index: 1000;
+    text-align: center;
+    overflow-y: auto; /* Enable vertical scrolling if content overflows */
 }
 
 .cart-container:hover .cart-dropdown {
@@ -625,14 +790,22 @@ icons-container .icons span{
 
 .view-shopping-cart-button {
     display: block;
-    padding: 6px !important;
+    padding: 12px !important;
     text-align: center !important;
     text-decoration: none !important;
-    background-color: var(--pink) !important;
+    background: #333; /* Default background color */
+    transition: background 0.3s ease, color 0.3s ease, transform 0.2s ease; /* Smooth transitions */
     color: white !important;
     font-weight: bold !important;
     border-radius: 6px !important;
     font-size: 13px !important;
+    cursor: pointer;
+}
+
+.view-shopping-cart-button:hover {
+    background: var(--pink); /* Slightly lighter background on hover */
+    color: #ddd; /* Softer text color */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add subtle shadow on hover */
 }
 
 
