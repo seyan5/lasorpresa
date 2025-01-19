@@ -1,8 +1,6 @@
 <?php
 require_once('conn.php');
 
-// Database connection using PDO (already in your code)
-
 // Fetch container types from the 'container' table
 $container_types = [];
 $container_query = $pdo->prepare("SELECT * FROM `container`");
