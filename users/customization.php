@@ -43,6 +43,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <link rel="stylesheet" href="../css/customize.css?">
 <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&display=swap" rel="stylesheet">
 <h2>Customize Your Floral Arrangement</h2>
+
 <div class="custom-page">
     <div class="custom-container">
         <div class="custom-row">
@@ -148,6 +149,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <div id="selected-selections">
             <!-- This will show the real-time selections of flowers -->
         </div>
+        <button type="button" class="btn btn-primary" onclick="location.href='customize-cart.php'">Customization Cart</button>
     </div>
 </div>
 <?php include('../loading.php'); ?>

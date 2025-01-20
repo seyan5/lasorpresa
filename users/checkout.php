@@ -116,76 +116,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 ?>
-
-
-
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- font -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
-        rel="stylesheet">
-
-    <!-- css -->
-    <link rel="stylesheet" href="../css/dropdown.css">
-    <link rel="stylesheet" href="../css/main.css">
-    <link rel="stylesheet" href="../css/shopcart.css?v1.1">
-    <link rel="stylesheet" href="../css/checkout.css">
-</head>
-
-<body>
-    <!-- header -->
-
-    <header>
-
-        <input type="checkbox" name="" id="toggler">
-        <label for="toggler" class="fas fa-bars"></label>
-
-        <!-- <a href="#" class="logo">Flower<span>.</span></a> -->
-        <img src="../images/logo.png" alt="" class="logos" href="">
-        <nav class="navbar">
-            <a href="index.php">Home</a>
-            <a href="#about">About</a>
-            <div class="prod-dropdown">
-                <a href="" onclick="toggleDropdown()">Products</a>
-                <div class="prod-menu" id="prodDropdown">
-                    <a href="products.php">Flowers</a>
-                    <a href="occasion.php">Occasion</a>
-                    <a href="addons.php">Addons</a>
-                </div>
-            </div>
-            <a href="#review">Review</a>
-            <a href="#contacts">Contacts</a>
-            <a href="customization.php">Customize</a>
-
-        </nav>
-
-        <div class="icons">
-            <a href="shopcart.php" class="fas fa-shopping-cart"></a>
-            <div class="user-dropdown">
-                <a href="#" class="fas fa-user" onclick="toggleDropdown()"></a>
-                <div class="dropdown-menu" id="userDropdown">
-                    <?php if (isset($_SESSION['customer'])): ?>
-                        <p>Welcome, <?php echo htmlspecialchars($_SESSION['customer']['cust_name']); ?></p>
-                        <hr>
-                        <a href="customer-profile-update.php">Profile</a>
-                        <a href="logout.php">Logout</a>
-                    <?php else: ?>
-                        <a href="login.php">Login</a>
-                    <?php endif; ?>
-                </div>
-            </div>
-        </div>
-
-    </header>
-
+<?php include('navuser.php'); ?>
+<link rel="stylesheet" href="../css/shopcart.css?">
     <body>
         <div class="header">
             <a href="shopcart.php" class="back-link">
@@ -242,14 +174,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 
                     <label for="payment_method">Mode of Payment:</label>
-                    <div>
+                    <div class="pradio">
                         <input type="radio" id="gcash" name="payment_method" value="gcash" required>
                         <label for="gcash">
                             <img src="../images/Gcash.png" alt="GCash" width="50">
                             GCash
                         </label>
                     </div>
-                    <div>
+                    <div class="pradio">
                         <input type="radio" id="cop" name="payment_method" value="cop" required>
                         <label for="cop">
                             <img src="../images/cop.png" alt="Cash on PickUp" width="50">

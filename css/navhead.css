@@ -1,3 +1,5 @@
+@import url(https://db.onlinewebfonts.com/c/90ac3b18aaef9f2db3ac8e062c7a033b?family=NudMotoya+Maru+W55+W5);
+
 :root{
     --pink: #e84393;
 }
@@ -5,7 +7,7 @@
 *{
     margin: 0;
     padding: 0;
-    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-family: "NudMotoya Maru W55 W5";
     outline: none;
     border: none;
     text-decoration: none;
@@ -235,7 +237,7 @@ header .fa-bars{
     font-size: 1.2rem;
     color: #444;
     font-weight: bold; /* Bold text */
-    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-family: "NudMotoya Maru W55 W5";
     text-decoration: none; /* Remove underline */
     word-wrap: break-word; /* Break long words to wrap */
     overflow-wrap: break-word; /* Ensures text wrapping */
@@ -297,7 +299,7 @@ header .fa-bars{
  /* Fallback message styling */
  .indicator li {
     color: #6c757d; /* Grey text for fallback message */
-    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-family: "NudMotoya Maru W55 W5";
  }
 
  /* filter */

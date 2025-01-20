@@ -5,7 +5,7 @@ include("../admin/inc/functions.php");
 include("../admin/inc/CSRF_Protect.php");
 ?>
 <?php include('navuser.php'); ?>
-<link rel="stylesheet" href="../css/navhead.css?"> 
+<link rel="stylesheet" href="../css/navhead.css"> 
 
 <section>
    <div class="container">
