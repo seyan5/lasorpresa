@@ -29,21 +29,15 @@
         <label for="toggler" class="fas fa-bars"></label>
 
         <!-- <a href="#" class="logo">Flower<span>.</span></a> -->
-        <img src="../images/logo.png" alt="" class="logos" href="">
+        <a href="index.php">
+    <img src="../images/logo.png" alt="" class="logos">
+</a>
         <nav class="navbar">
-            <a href="index.php">Home</a>
-            <a href="#about">About</a>
-            <div class="prod-dropdown">
-                <a href="" onclick="toggleDropdown()">Products</a>
-                <div class="prod-menu" id="prodDropdown">
-                    <a href="products.php">Flowers</a>
-                    <a href="occasion.php">Occasion</a>
-                    <a href="addons.php">Addons</a>
-                </div>
-            </div>
-            <a href="review.php">Review</a>
-            <a href="#contacts">Contacts</a>
+            <a href="products.php">Flowers</a>
+            <a href="occasion.php">Occasion</a>
+            <a href="addons.php">Addons</a>
             <a href="customization.php">Customize</a>
+            <a href="review.php">Reviews</a>
 
         </nav>
         <div class="icons">
