@@ -1,5 +1,7 @@
 <?php
 require_once('header.php');
+require_once 'auth.php';
+
 
 // Handle form submission for adding color
 if (isset($_POST['form1'])) {

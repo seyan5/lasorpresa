@@ -1,6 +1,8 @@
 <?php
 
 require("../header.php");
+require_once '../auth.php';
+
 
 if(isset($_POST['form1'])) {
     $valid = 1;

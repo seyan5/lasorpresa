@@ -2,6 +2,7 @@
 // Database connection
 require_once('../header.php');
 
+
 $stmt = $pdo->prepare("SELECT * FROM flowers");
 $stmt->execute();
 $flowers = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -24,7 +25,7 @@ $i = 1;  // Initialize $i for product numbering
     <link rel="stylesheet" href="../../css/animations.css">  
     <link rel="stylesheet" href="../../css/admin1.css">  
     <link rel="stylesheet" href="../../css/admin2.css">
-    <title>Manage Products</title>
+    <title>Admin - Manage Flowers</title>
 </head>
 
 <body>

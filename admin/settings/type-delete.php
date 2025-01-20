@@ -1,5 +1,7 @@
 <?php
 require_once('../header.php');
+require_once '../auth.php';
+
 
 // Check if the ID is passed and valid
 if (!isset($_GET['id']) || empty($_GET['id'])) {

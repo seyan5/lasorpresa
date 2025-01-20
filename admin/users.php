@@ -1,5 +1,5 @@
 <?php
-session_start();
+include('auth.php');
 
 // Include database configuration
 include '../config.php';

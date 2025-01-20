@@ -1,5 +1,7 @@
 <?php
 require_once('../header.php');
+require_once '../auth.php';
+
 if(isset($_POST['id'])) {
     $tcat_id = $_POST['id'];
     $statement = $pdo->prepare("SELECT * FROM mid_category WHERE tcat_id = ? ORDER BY mcat_name ASC");

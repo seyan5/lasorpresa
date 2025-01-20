@@ -5,11 +5,7 @@ include("conn.php");
 if (isset($_SESSION['customer']) && isset($_SESSION['customer']['cust_id'])) {
     $customerId = $_SESSION['customer']['cust_id'];
 
-    // Mark notifications as read when the page is loaded
-    $stmt = $pdo->prepare("UPDATE payment SET notification_read = 1 WHERE cust_id = :cust_id AND notification_read = 0");
-    $stmt->execute(['cust_id' => $customerId]);
-
-    // Fetch the notifications (excluding read ones)
+    // Fetch the notifications
     $statement = $pdo->prepare("
         SELECT p.*, oi.product_id, pr.name
         FROM payment p
@@ -32,7 +28,89 @@ if (isset($_SESSION['customer']) && isset($_SESSION['customer']['cust_id'])) {
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>All Notifications</title>
-    <link rel="stylesheet" href="../css/style.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        h2 {
+            background-color: #e18aaa;
+            color: #fff;
+            margin: 0;
+            padding: 15px;
+            text-align: center;
+        }
+
+        .notifications-list {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .notification-item {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            border-bottom: 1px solid #f0f0f0;
+            transition: background-color 0.3s ease;
+        }
+
+        .notification-item:hover {
+            background-color: #fdf0f5;
+        }
+
+        .notification-item i {
+            font-size: 24px;
+            margin-right: 15px;
+        }
+
+        .notification-item .bg-warning {
+            color: #f39c12;
+        }
+
+        .notification-item .bg-success {
+            color: #2ecc71;
+        }
+
+        .notification-item div {
+            flex: 1;
+        }
+
+        .notification-item a {
+            text-decoration: none;
+            color: #333;
+        }
+
+        .notification-item a:hover {
+            text-decoration: underline;
+        }
+
+        .text-muted {
+            color: #7d7d7d;
+        }
+
+        .text-muted.small {
+            font-size: 14px;
+        }
+
+        p {
+            text-align: center;
+            padding: 20px;
+            color: #7d7d7d;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
@@ -49,7 +127,7 @@ if (isset($_SESSION['customer']) && isset($_SESSION['customer']['cust_id'])) {
                     <li class="notification-item">
                         <i class="fa fa-credit-card <?php echo $payment['payment_status'] == 'pending' ? 'bg-warning' : 'bg-success'; ?>"></i>
                         <div>
-                            <a href="order-details.php?order_id=<?php echo $payment['order_id']; ?>&product_id=<?php echo $payment['product_id']; ?>" style="text-decoration: none;">
+                            <a href="order-details.php?order_id=<?php echo $payment['order_id']; ?>&product_id=<?php echo $payment['product_id']; ?>">
                                 <strong>Product: <?php echo htmlspecialchars($payment['name']); ?></strong>
                                 <div class="text-muted small"><?php echo $paymentStatus; ?></div>
                                 <div class="text-muted small"><?php echo $shippingStatus; ?></div>

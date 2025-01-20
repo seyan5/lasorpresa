@@ -48,8 +48,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <div class="custom-row">
             <!-- Left side -->
             <div class="custom-left">
-            <form id="floral-customization-form" action="customization-submit.php" method="POST"
-            enctype="multipart/form-data">
+                <form id="floral-customization-form" action="customization-submit.php" method="POST"
+                    enctype="multipart/form-data">
                     <!-- Container Customization Section -->
                     <div class="section">
                         <div class="form-group">
@@ -61,7 +61,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                         data-image="../admin/uploads/<?= htmlspecialchars($container['container_image']) ?>"
                                         data-price="<?= $container['price'] ?>">
                                         <?= htmlspecialchars($container['container_name']) ?>
-                                        (<?= '$' . number_format($container['price'], 2) ?>)
+                                        (<?= '₱' . number_format($container['price'], 2) ?>)
                                     </option>
                                 <?php endforeach; ?>
                             </select>
@@ -80,14 +80,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     </div>
 
                     <!-- Flower Customization Section -->
+                    <!-- Flower Customization Section -->
                     <div id="flower-container">
                         <h4>Flower Customization</h4>
                         <?php foreach ($flower_types_selected as $index => $flower_type): ?>
                             <div class="flower-item" id="flower-item-<?php echo $index + 1; ?>">
                                 <div class="form-group">
-                                    <label for="flower_type_<?php echo $index + 1; ?>" class="flower-type-label">Choose Flower Type:</label>
-                                    <select id="flower_type_<?= $index + 1 ?>" name="flower_type[]" class="form-control flower-type-select"" 
-                                        required>
+                                    <label for="flower_type_<?php echo $index + 1; ?>" class="flower-type-label">Choose
+                                        Flower Type:</label>
+                                    <select id="flower_type_<?= $index + 1 ?>" name="flower_type[]"
+                                        class="form-control flower-type-select" required>
+                                        <option value="" disabled selected>-- Select Flower Type --</option>
+                                        <!-- Blank default value -->
                                         <?php foreach ($flower_types as $flower): ?>
                                             <option value="<?= $flower['id'] ?>"
                                                 data-image="../admin/uploads/<?= htmlspecialchars($flower['image']) ?>"
@@ -98,7 +102,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                     </select>
                                     <img id="flower-image-preview-<?= $index + 1 ?>" src="" alt="Flower Image"
                                         style="max-width: 150px; margin-top: 10px;">
-
                                 </div>
 
                                 <div class="form-group">
@@ -113,7 +116,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                 <button type="button" class="btn btn-danger remove-flower-btn"
                                     data-index="<?= $index + 1 ?>">X</button>
                             </div>
-
                         <?php endforeach; ?>
                     </div>
 
@@ -142,11 +144,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         </div>
     </div>
     <div class="col-md-5">
-                <h4>Your Selections</h4>
-                <div id="selected-selections">
-                    <!-- This will show the real-time selections of flowers -->
-                </div>
-            </div>
+        <h4>Your Selections</h4>
+        <div id="selected-selections">
+            <!-- This will show the real-time selections of flowers -->
+        </div>
+    </div>
 </div>
 <?php include('../loading.php'); ?>
 <script>
@@ -164,6 +166,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     });
 
     // Update selection summary in real-time, including remarks
+    // Keep track of selected flowers
+    // Keep track of selected flowers and update flower dropdown options
+    function updateFlowerOptions() {
+        const flowerTypes = document.querySelectorAll('[id^="flower_type_"]');
+        const selectedFlowers = Array.from(flowerTypes).map(flower => flower.value);
+
+        flowerTypes.forEach(flowerType => {
+            const options = flowerType.options;
+            for (let i = 0; i < options.length; i++) {
+                const option = options[i];
+                option.disabled = selectedFlowers.includes(option.value) && option.value !== flowerType.value;
+            }
+        });
+    }
+
+    // Update selection summary in real-time and apply flower option restrictions
     function updateSelection() {
         selectedSelections.innerHTML = ''; // Clear previous selections
         const flowerTypes = document.querySelectorAll('[id^="flower_type_"]');
@@ -200,17 +218,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         `;
             selectedSelections.innerHTML += flowerSummary;
         });
+
+        // Update flower options to avoid duplicate selections
+        updateFlowerOptions();
     }
-
-    // Add event listener for the remarks field to update the live preview
-    document.getElementById('remarks').addEventListener('input', updateSelection);
-
-    // Add event listeners to flower type and number of flowers fields to update selection in real-time
-    flowerContainer.addEventListener('change', (event) => {
-        if (event.target && (event.target.id.startsWith('flower_type_') || event.target.id.startsWith('num_flowers_'))) {
-            updateSelection(); // Update the preview on flower selection change
-        }
-    });
 
     // Add another flower option to the same container
     addFlowerBtn.addEventListener('click', () => {
@@ -222,28 +233,35 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         // Generate new flower customization form fields
         flowerItem.innerHTML = `
-            <div class="form-group">
-                <label for="flower_type_${flowerCount}">Choose Flower Type:</label>
-                <select id="flower_type_${flowerCount}" name="flower_type[]" class="form-control" required>
-                    <?php foreach ($flower_types as $flower): ?>
-                                    <option value="<?= $flower['id'] ?>" data-image="../admin/uploads/<?= htmlspecialchars($flower['image']) ?>"><?= htmlspecialchars($flower['name']) ?>
-                    <?php endforeach; ?>
-                </select>
-            </div>
+        <div class="form-group">
+            <label for="flower_type_${flowerCount}">Choose Flower Type:</label>
+            <select id="flower_type_${flowerCount}" name="flower_type[]" class="form-control" required>
+                <option value="" disabled selected>-- Select Flower Type --</option>
+                <?php foreach ($flower_types as $flower): ?>
+                        <option value="<?= $flower['id'] ?>" data-image="../admin/uploads/<?= htmlspecialchars($flower['image']) ?>">
+                            <?= htmlspecialchars($flower['name']) ?>
+                        </option>
+                <?php endforeach; ?>
+            </select>
+        </div>
 
-            <div class="form-group">
-                <label for="num_flowers_${flowerCount}">Number of Flowers:</label>
-                <input type="number" id="num_flowers_${flowerCount}" name="num_flowers[]" class="form-control" min="1" max="3" value="1" required>
-            </div>
+        <div class="form-group">
+            <label for="num_flowers_${flowerCount}">Number of Flowers:</label>
+            <input type="number" id="num_flowers_${flowerCount}" name="num_flowers[]" class="form-control" min="1" max="3" value="1" required>
+        </div>
 
-            <!-- Remove Flower Button -->
-            <button type="button" class="btn btn-danger remove-flower-btn" data-index="${flowerCount}">X</button>
-        `;
+        <!-- Remove Flower Button -->
+        <button type="button" class="btn btn-danger remove-flower-btn" data-index="${flowerCount}">X</button>
+    `;
         flowerContainer.appendChild(flowerItem);
+
+        // Attach event listener to the new dropdown
+        flowerItem.querySelector('select').addEventListener('change', updateSelection);
 
         // Update selection summary after adding a new flower
         updateSelection();
     });
+
 
     // Event delegation for dynamically created "X" remove buttons
     flowerContainer.addEventListener('click', function (event) {
@@ -254,8 +272,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
     });
 
-    // Update the initial preview when the page loads
+    // Initial update of flower options
     updateSelection();
+
+
 
     document.getElementById('expected_image').addEventListener('change', function (event) {
         const file = event.target.files[0];
