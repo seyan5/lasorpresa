@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 19, 2025 at 04:09 PM
+-- Generation Time: Jan 20, 2025 at 04:36 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -161,7 +161,9 @@ CREATE TABLE `custom_finalimages` (
 --
 
 INSERT INTO `custom_finalimages` (`image_id`, `order_id`, `final_image`) VALUES
-(18, 108, '1737241959_bundle chocolates.jpg');
+(18, 108, '1737241959_bundle chocolates.jpg'),
+(19, 114, '1737358009_3 tulips.jpg'),
+(20, 114, '1737359382_472511258_1005374171610075_7962955050148450845_n.jpg');
 
 -- --------------------------------------------------------
 
@@ -183,7 +185,12 @@ INSERT INTO `custom_images` (`image_id`, `order_id`, `expected_image`) VALUES
 (39, 108, '1737237171_fr.jpg'),
 (43, 109, '1737299236_rose.jpg'),
 (44, 110, '1737299323_vday basket.jpg'),
-(45, 110, '1737299323_vday basket.jpg');
+(45, 110, '1737299323_vday basket.jpg'),
+(46, 111, '1737300150_Screenshot 2025-01-16 142759.png'),
+(47, 111, '1737300150_Screenshot 2025-01-16 142759.png'),
+(48, 112, '1737340874_sunfloweer1.jpg'),
+(49, 113, '1737356843_rose black wrapper.jpg'),
+(50, 114, '1737357520_472669324_1005373998276759_8249993597083614977_n.jpg');
 
 -- --------------------------------------------------------
 
@@ -208,7 +215,12 @@ CREATE TABLE `custom_order` (
 INSERT INTO `custom_order` (`order_id`, `cust_id`, `customer_name`, `customer_email`, `shipping_address`, `total_price`, `order_date`) VALUES
 (108, 13, 'seyan1', 'seanammiel@gmail.com', 'Brgy Tapia General Trias Cavite', 800.00, '2025-01-18 21:52:55'),
 (109, 13, 'seyan1', 'seanammiel@gmail.com', 'Brgy Tapia General Trias Cavite', 450.00, '2025-01-19 15:07:20'),
-(110, 13, 'seyan1', 'seanammiel@gmail.com', 'Brgy Tapia General Trias Cavite', 800.00, '2025-01-19 15:08:47');
+(110, 13, 'seyan1', 'seanammiel@gmail.com', 'Brgy Tapia General Trias Cavite', 800.00, '2025-01-19 15:08:47'),
+(111, 13, 'seyan1', 'seanammiel@gmail.com', 'Brgy Tapia General Trias Cavite', 800.00, '2025-01-19 15:22:34'),
+(112, 13, 'seyan1', 'seanammiel@gmail.com', 'Brgy Tapia General Trias Cavite', 500.00, '2025-01-20 02:41:22'),
+(113, 13, 'seyan1', 'seanammiel@gmail.com', 'Brgy Tapia General Trias Cavite', 500.00, '2025-01-20 07:07:32'),
+(114, 13, 'seyan1', 'seanammiel@gmail.com', 'Brgy Tapia General Trias Cavite', 950.00, '2025-01-20 07:19:04'),
+(115, 13, 'seyan1', 'seanammiel@gmail.com', 'Brgy Tapia General Trias Cavite', 450.00, '2025-01-20 07:47:54');
 
 -- --------------------------------------------------------
 
@@ -239,7 +251,13 @@ INSERT INTO `custom_orderitems` (`orderitem_id`, `order_id`, `flower_type`, `num
 (163, 108, 'Tulip', 1, 'Vase', 'Pink', 300.00, 100.00, 0.00, 'asd', 300.00),
 (164, 109, 'Sunflower', 1, 'Basket', 'Blue', 400.00, 50.00, 0.00, '', 400.00),
 (165, 110, 'Sunflower', 1, 'Vase', 'Red', 400.00, 100.00, 0.00, '', 400.00),
-(166, 110, 'Tulip', 1, 'Vase', 'Red', 300.00, 100.00, 0.00, '', 300.00);
+(166, 110, 'Tulip', 1, 'Vase', 'Red', 300.00, 100.00, 0.00, '', 300.00),
+(167, 111, 'Sunflower', 1, 'Vase', 'Red', 400.00, 100.00, 0.00, 'aasd', 400.00),
+(168, 111, 'Rose', 1, 'Vase', 'Red', 300.00, 100.00, 0.00, 'aasd', 300.00),
+(169, 112, 'Sunflower', 1, 'Vase', 'Red', 400.00, 100.00, 0.00, '', 400.00),
+(170, 113, 'Sunflower', 1, 'Vase', 'Red', 400.00, 100.00, 0.00, 'hey', 400.00),
+(171, 114, 'Tulip', 3, 'Basket', 'Red', 300.00, 50.00, 0.00, 'jujjjjuuuu', 900.00),
+(172, 115, 'Sunflower', 1, 'Basket', 'Yellow', 400.00, 50.00, 0.00, 'reret', 400.00);
 
 -- --------------------------------------------------------
 
@@ -256,7 +274,7 @@ CREATE TABLE `custom_payment` (
   `amount_paid` decimal(10,2) NOT NULL,
   `payment_method` enum('gcash','cop','','') NOT NULL,
   `payment_status` enum('Pending','Paid','Failed') DEFAULT 'Pending',
-  `shipping_status` enum('Pending','Shipped','Delivered','Cancelled','Ready for Pickup') DEFAULT 'Pending',
+  `shipping_status` enum('Pending','Shipped','Delivered','Cancelled','ReadyForPickup') DEFAULT 'Pending',
   `order_date` datetime NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
@@ -269,7 +287,12 @@ CREATE TABLE `custom_payment` (
 INSERT INTO `custom_payment` (`cpayment_id`, `order_id`, `customer_name`, `customer_email`, `reference_number`, `amount_paid`, `payment_method`, `payment_status`, `shipping_status`, `order_date`, `created_at`, `updated_at`) VALUES
 (80, 108, 'seyan1', 'seanammiel@gmail.com', '', 800.00, 'cop', 'Pending', 'Pending', '0000-00-00 00:00:00', '2025-01-18 21:52:55', '2025-01-18 22:06:32'),
 (81, 109, 'seyan1', 'seanammiel@gmail.com', '', 450.00, 'cop', 'Pending', 'Pending', '0000-00-00 00:00:00', '2025-01-19 15:07:20', '2025-01-19 15:07:20'),
-(82, 110, 'seyan1', 'seanammiel@gmail.com', '', 800.00, 'cop', 'Pending', 'Pending', '0000-00-00 00:00:00', '2025-01-19 15:08:47', '2025-01-19 15:08:47');
+(82, 110, 'seyan1', 'seanammiel@gmail.com', '', 800.00, 'cop', 'Pending', 'Pending', '0000-00-00 00:00:00', '2025-01-19 15:08:47', '2025-01-19 15:08:47'),
+(83, 111, 'seyan1', 'seanammiel@gmail.com', '', 800.00, 'cop', 'Pending', 'Pending', '0000-00-00 00:00:00', '2025-01-19 15:22:34', '2025-01-19 15:22:34'),
+(84, 112, 'seyan1', 'seanammiel@gmail.com', '', 500.00, 'cop', 'Pending', 'Pending', '0000-00-00 00:00:00', '2025-01-20 02:41:22', '2025-01-20 02:41:22'),
+(85, 113, 'seyan1', 'seanammiel@gmail.com', '', 500.00, 'cop', 'Pending', 'Pending', '0000-00-00 00:00:00', '2025-01-20 07:07:32', '2025-01-20 07:07:32'),
+(86, 114, 'seyan1', 'seanammiel@gmail.com', '3213123', 950.00, 'gcash', 'Pending', 'ReadyForPickup', '0000-00-00 00:00:00', '2025-01-20 07:19:04', '2025-01-20 14:27:37'),
+(87, 115, 'seyan1', 'seanammiel@gmail.com', '', 450.00, 'cop', 'Failed', 'Cancelled', '0000-00-00 00:00:00', '2025-01-20 07:47:54', '2025-01-20 14:27:30');
 
 -- --------------------------------------------------------
 
@@ -351,9 +374,9 @@ CREATE TABLE `flowers` (
 --
 
 INSERT INTO `flowers` (`id`, `name`, `quantity`, `price`, `image`) VALUES
-(4, 'Sunflower', 100, 400.00, '../uploads/flowersunflower1.png'),
-(5, 'Rose', 100, 300.00, '../uploads/flowerrose.jpg'),
-(6, 'Tulip', 100, 300.00, '../uploads/flowertulip.jpg');
+(4, 'Sunflower', 100, 400.00, '../uploads/flower_1737299490_sunflower1.png'),
+(5, 'Rose', 100, 300.00, '../uploads/flower_1737299498_rose.jpg'),
+(6, 'Tulip', 100, 300.00, '../uploads/flower_1737299503_tulip.jpg');
 
 -- --------------------------------------------------------
 
@@ -401,7 +424,8 @@ CREATE TABLE `orders` (
 
 INSERT INTO `orders` (`order_id`, `customer_id`, `full_name`, `address`, `city`, `postal_code`, `phone`, `total`, `created_at`) VALUES
 (63, 13, 'seyan1', 'Brgy Tapia General Trias Cavite', 'street', '3123', '0956193051213', 24.00, '2025-01-15 14:29:59'),
-(64, 13, 'seyan1', 'Brgy Tapia General Trias Cavite', 'street', '3123', '0956193051213', 2777.00, '2025-01-19 12:15:35');
+(64, 13, 'seyan1', 'Brgy Tapia General Trias Cavite', 'street', '3123', '0956193051213', 2777.00, '2025-01-19 12:15:35'),
+(65, 13, 'seyan1', 'Brgy Tapia General Trias Cavite', 'street', '3123', '0956193051213', 20000.00, '2025-01-20 15:32:52');
 
 -- --------------------------------------------------------
 
@@ -423,7 +447,8 @@ CREATE TABLE `order_items` (
 
 INSERT INTO `order_items` (`order_item_id`, `order_id`, `product_id`, `quantity`, `price`) VALUES
 (66, 63, 33, 2, 12.00),
-(67, 64, 60, 1, 2777.00);
+(67, 64, 60, 1, 2777.00),
+(68, 65, 53, 4, 5000.00);
 
 -- --------------------------------------------------------
 
@@ -452,7 +477,8 @@ CREATE TABLE `payment` (
 
 INSERT INTO `payment` (`payment_id`, `cust_id`, `order_id`, `cust_name`, `cust_email`, `reference_number`, `amount_paid`, `payment_method`, `payment_status`, `shipping_status`, `created_at`, `updated_at`) VALUES
 (59, 13, 63, 'seyan1', 'seanammiel@gmail.com', '0', 24.00, 'cop', 'pending', 'delivered', '2025-01-15 14:29:59', '2025-01-15 14:30:10'),
-(60, 13, 64, 'seyan1', 'seanammiel@gmail.com', '0', 2777.00, 'cop', 'pending', 'pending', '2025-01-19 12:15:35', '2025-01-19 12:15:35');
+(60, 13, 64, 'seyan1', 'seanammiel@gmail.com', '0', 2777.00, 'cop', 'pending', 'pending', '2025-01-19 12:15:35', '2025-01-19 12:15:35'),
+(61, 13, 65, 'seyan1', 'seanammiel@gmail.com', '123123', 3223.00, 'gcash', 'pending', 'pending', '2025-01-20 15:32:52', '2025-01-20 15:32:52');
 
 -- --------------------------------------------------------
 
@@ -500,7 +526,7 @@ INSERT INTO `product` (`p_id`, `name`, `old_price`, `current_price`, `quantity`,
 (50, '3 Sunflower Bouquet', '1700', '1700', 5, 'product-featured-50.jpg', '3 Sunflower Bouquet', '3 Sunflower Bouquet', '3 Sunflower Bouquet', '', '3 Sunflower Bouquet', 1, 1, 16),
 (51, '3 Tulips Bouquet', '1700', '1700', 43, 'product-featured-51.jpg', '3 Tulips Bouquet', '3 Tulips Bouquet', '3 Tulips Bouquet', '', '3 Tulips Bouquet', 1, 1, 15),
 (52, '6 Tulips Bouquet', '3200', '3200', 16, 'product-featured-52.jpg', '6 Tulips Bouquet', '6 Tulips Bouquet', '6 Tulips Bouquet', '', '6 Tulips Bouquet', 1, 1, 15),
-(53, '12 Tulips Bouquet', '5200', '5000', 100, 'product-featured-53.jpg', '12 Tulips Bouquet', '12 Tulips Bouquet', '12 Tulips Bouquet', '', '12 Tulips Bouquet', 1, 1, 15),
+(53, '12 Tulips Bouquet', '5200', '5000', 96, 'product-featured-53.jpg', '12 Tulips Bouquet', '12 Tulips Bouquet', '12 Tulips Bouquet', '', '12 Tulips Bouquet', 1, 1, 15),
 (54, 'Sunflower and Rose Bouquet', '1700', '1700', 53, 'product-featured-54.jpg', 'Sunflower and Rose Bouquet', 'Sunflower and Rose Bouquet', 'Sunflower and Rose Bouquet', '', 'Sunflower and Rose Bouquet', 1, 1, 16),
 (55, 'Blue Rose Bouquet', '700', '700', 52, 'product-featured-55.jpg', 'Blue Rose Bouquet', 'Blue Rose Bouquet', 'Blue Rose Bouquet', '', 'Blue Rose Bouquet', 1, 1, 14),
 (56, 'Vday\'s Flower Basket', '2000', '1700', 23, 'product-featured-56.jpg', 'Vday\'s Flower Basket', 'Vday\'s Flower Basket', 'Vday\'s Flower Basket', '', 'Vday\'s Flower Basket', 1, 1, 23),
@@ -741,6 +767,13 @@ CREATE TABLE `reviews` (
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `customer_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `reviews`
+--
+
+INSERT INTO `reviews` (`review_id`, `order_id`, `product_id`, `review`, `rating`, `created_at`, `customer_id`) VALUES
+(6, 63, 33, 'go', 5, '2025-01-20 07:56:30', 13);
 
 -- --------------------------------------------------------
 
@@ -1290,31 +1323,31 @@ ALTER TABLE `customer_messages`
 -- AUTO_INCREMENT for table `custom_finalimages`
 --
 ALTER TABLE `custom_finalimages`
-  MODIFY `image_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+  MODIFY `image_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- AUTO_INCREMENT for table `custom_images`
 --
 ALTER TABLE `custom_images`
-  MODIFY `image_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=46;
+  MODIFY `image_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=51;
 
 --
 -- AUTO_INCREMENT for table `custom_order`
 --
 ALTER TABLE `custom_order`
-  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=111;
+  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=116;
 
 --
 -- AUTO_INCREMENT for table `custom_orderitems`
 --
 ALTER TABLE `custom_orderitems`
-  MODIFY `orderitem_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=167;
+  MODIFY `orderitem_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=173;
 
 --
 -- AUTO_INCREMENT for table `custom_payment`
 --
 ALTER TABLE `custom_payment`
-  MODIFY `cpayment_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=83;
+  MODIFY `cpayment_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=88;
 
 --
 -- AUTO_INCREMENT for table `email_verifications`
@@ -1344,19 +1377,19 @@ ALTER TABLE `mid_category`
 -- AUTO_INCREMENT for table `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=65;
+  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=66;
 
 --
 -- AUTO_INCREMENT for table `order_items`
 --
 ALTER TABLE `order_items`
-  MODIFY `order_item_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=68;
+  MODIFY `order_item_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=69;
 
 --
 -- AUTO_INCREMENT for table `payment`
 --
 ALTER TABLE `payment`
-  MODIFY `payment_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=61;
+  MODIFY `payment_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=62;
 
 --
 -- AUTO_INCREMENT for table `product`
@@ -1392,7 +1425,7 @@ ALTER TABLE `rating`
 -- AUTO_INCREMENT for table `reviews`
 --
 ALTER TABLE `reviews`
-  MODIFY `review_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `review_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `tbl_language`
