@@ -334,7 +334,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 .then(data => {
                     if (data.status === 'success') {
                         alert(data.message);
-                        window.location.href = 'shopcart.php'; // Redirect to cart or confirmation page
+                        window.location.href = 'customer-order.php'; // Redirect to cart or confirmation page
                     } else {
                         alert(data.message || 'An error occurred.');
                     }
@@ -406,7 +406,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 .then(data => {
                     if (data.status === 'success') {
                         alert(data.message);
-                        window.location.href = 'shopcart.php'; // Redirect to cart or confirmation page
+                        window.location.href = 'customer-order.php'; // Redirect to cart or confirmation page
                     } else {
                         alert(data.message || 'An error occurred.');
                     }
