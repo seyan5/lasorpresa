@@ -1,5 +1,5 @@
 <?php
-require 'header.php'; // Include database connection
+require 'conn.php'; // Include database connection
 
 // Get the product ID from the query parameter
 $p_id = isset($_GET['p_id']) ? (int) $_GET['p_id'] : 0;
@@ -27,29 +27,10 @@ $product_quantity = $product['quantity']; // Get product quantity
 }
 ?>
 
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?php echo htmlspecialchars($product['name']); ?></title>
-    <!-- Font Awesome and Google Fonts -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap"
-        rel="stylesheet">
-</head>
-
-<body>
-    <header>
-        <a href="occasion.php" class="back">← Back to Occasion</a>
-        <a href="shopcart.php" class="back"> Cart</a>
-
-    </header>
+<?php include('navuser.php'); ?>
+<link rel="stylesheet" href="../css/prod-details.css?v=1.1">
     <main>
-        <div class="">
+        <div class="pic">
             <img src="../admin/uploads/<?php echo htmlspecialchars($product['featured_photo']); ?>"
                 alt="<?php echo htmlspecialchars($product['name']); ?>">
             <h1><?php echo htmlspecialchars($product['name']); ?></h1>
