@@ -70,12 +70,12 @@ if (isset($_POST['login'])) {
             <p style="color: red; text-align: center;"><?php echo htmlspecialchars($error); ?></p>
         <?php endif; ?>
         <div class="infield">
-            <label for="cust_email">Email:</label>
-            <input placeholder="Email" type="email" id="cust_email" name="cust_email" required><br>
+            <label for="email">Email:</label>
+            <input placeholder="Email" type="email" id="email" name="email" required><br>
         </div>
         <div class="infield">
-            <label for="cust_password">Password:</label>
-            <input placeholder="Password" type="password" id="cust_password" name="cust_password" required><br>
+            <label for="password">Password:</label>
+            <input placeholder="Password" type="password" id="password" name="password" required><br>
         </div>
         <p style="text-align: center; margin-top: 10px; font-size: 14px;">
             Don't Have an Account? 

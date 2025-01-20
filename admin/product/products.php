@@ -1,6 +1,6 @@
 <?php
 ob_start();
-require_once 'auth.php';
+require_once '../auth.php';
 include("../inc/config.php");
 include("../inc/functions.php");
 include("../inc/CSRF_Protect.php");
