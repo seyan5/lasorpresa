@@ -21,7 +21,7 @@
     <!-- css -->
      <link rel="stylesheet" href="../css/footer.css">
     <link rel="stylesheet" href="../css/dropdown.css?">
-    <link rel="stylesheet" href="../css/main.css?">
+    <link rel="stylesheet" href="../css/main.css?v=1.1">
 </head>
 
 <>
@@ -37,13 +37,11 @@
     <img src="../images/logo.png" alt="" class="logos">
 </a>
         <nav class="navbar">
-            <a href="products.php">Flowers</a>
-            <a href="occasion.php">Occasion</a>
-            <a href="addons.php">Addons</a>
-            <a href="customization.php">Customize</a>
-            <a href="review.php">Reviews</a>
-
-        </nav>
+        <a href="customer-profile-update.php">Update Profile</a>
+        <a href="customer-password-update.php">Update Password</a>
+        <a href="customer-order.php">Orders</a>
+        <a href="customize-view.php">Custom Orders</a>
+    </nav>
         <div class="icons">
         <?php 
         $cart = isset($_SESSION['cart']) ? $_SESSION['cart'] : [];

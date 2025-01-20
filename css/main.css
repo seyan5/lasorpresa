@@ -1,3 +1,5 @@
+@import url(https://db.onlinewebfonts.com/c/90ac3b18aaef9f2db3ac8e062c7a033b?family=NudMotoya+Maru+W55+W5);
+
 :root{
     --pink: #e84393;
 }
@@ -5,7 +7,7 @@
 *{
     margin: 0;
     padding: 0;
-    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-family: "NudMotoya Maru W55 W5";
     outline: none;
     border: none;
     text-decoration: none;
@@ -266,7 +268,7 @@ section{
 
 .shop h3{
     margin: 1rem;
-    font-family: "Poppins", sans-serif;
+    font-family: "NudMotoya Maru W55 W5";
     color: #9b9b9b;
     font-size: 1.5rem;
 }
@@ -292,7 +294,7 @@ section{
     padding: 10px; /* Add padding */
     font-size: 16px; /* Increase font size */
     flex: 1; /* Allow input to grow and fill space */
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: "NudMotoya Maru W55 W5";
 }
 
 .search-input:focus {
@@ -430,7 +432,7 @@ header .fa-bars{
   
 .item h1 {
     font-size: 3em;
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: "NudMotoya Maru W55 W5";
 }
   
 .item p {
@@ -456,7 +458,7 @@ header .fa-bars{
     color: #000000;
     padding: 1rem 0;
     line-height: 1.5;
-    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-family: "NudMotoya Maru W55 W5";
 }
 
 .about .row{
@@ -499,17 +501,17 @@ header .fa-bars{
 }
 
 .about .row .content h3{
-    font-size: 3rem;
+    font-size: 3.5rem;
     color: #333;
 }
 
 .about .row .content p{
-    font-size: 1.7rem;
+    font-size: 1.5rem;
     color: #999;
     padding: .5rem 0;
     padding-top: 1.3rem;
     line-height: 1.5;
-    font-family: Verdana, Geneva, Tahoma, sans-serif
+    font-family: "NudMotoya Maru W55 W5";
 }
 
 .icons-container{
