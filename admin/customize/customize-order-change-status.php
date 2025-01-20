@@ -9,26 +9,23 @@ header('Content-Type: application/json');
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $orderId = isset($_POST['order_id']) ? intval($_POST['order_id']) : null;
-    $paymentStatus = isset($_POST['payment_status']) ? $_POST['payment_status'] : null;
-    $shippingStatus = isset($_POST['shipping_status']) ? $_POST['shipping_status'] : null;
+    $field = isset($_POST['field']) ? $_POST['field'] : null;
+    $value = isset($_POST['value']) ? trim($_POST['value']) : null;
 
-    if (!$orderId || (!$paymentStatus && !$shippingStatus)) {
+    if (!$orderId || !$field || !$value || !in_array($field, ['payment_status', 'shipping_status'])) {
         echo json_encode(["success" => false, "message" => "Invalid request data."]);
         exit;
     }
 
     try {
-        if ($paymentStatus) {
-            $stmt = $pdo->prepare("UPDATE custom_payment SET payment_status = :payment_status WHERE order_id = :order_id");
-            $stmt->execute(['payment_status' => $paymentStatus, 'order_id' => $orderId]);
-        }
+        $stmt = $pdo->prepare("UPDATE custom_payment SET $field = :value WHERE order_id = :order_id");
+        $stmt->execute(['value' => $value, 'order_id' => $orderId]);
 
-        if ($shippingStatus) {
-            $stmt = $pdo->prepare("UPDATE custom_payment SET shipping_status = :shipping_status WHERE order_id = :order_id");
-            $stmt->execute(['shipping_status' => $shippingStatus, 'order_id' => $orderId]);
+        if ($stmt->rowCount() > 0) {
+            echo json_encode(["success" => true, "message" => ucfirst($field) . " updated successfully."]);
+        } else {
+            echo json_encode(["success" => false, "message" => "No changes were made."]);
         }
-
-        echo json_encode(["success" => true, "message" => "Order status updated successfully."]);
     } catch (Exception $e) {
         echo json_encode(["success" => false, "message" => "Failed to update order status: " . $e->getMessage()]);
     }

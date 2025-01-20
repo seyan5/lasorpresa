@@ -87,8 +87,22 @@ $orders = $query->fetchAll(PDO::FETCH_ASSOC);
                             <strong>Date:</strong> <?= htmlspecialchars($order['order_date'] ?? 'N/A'); ?>
                         </td>
                         <td>₱<?= number_format($order['amount_paid'] ?? 0, 2); ?></td>
-                        <td><?= htmlspecialchars($order['payment_status'] ?? 'Pending'); ?></td>
-                        <td><?= htmlspecialchars($order['shipping_status'] ?? 'Pending'); ?></td>
+                        <td>
+                            <select class="form-control change-status" data-order-id="<?= $order['order_id']; ?>" data-field="payment_status">
+                                <option value="Pending" <?= $order['payment_status'] == 'Pending' ? 'selected' : ''; ?>>Pending</option>
+                                <option value="Paid" <?= $order['payment_status'] == 'Paid' ? 'selected' : ''; ?>>Paid</option>
+                                <option value="Failed" <?= $order['payment_status'] == 'Failed' ? 'selected' : ''; ?>>Failed</option>
+                            </select>
+                        </td>
+                        <td>
+                            <select class="form-control change-status" data-order-id="<?= $order['order_id']; ?>" data-field="shipping_status">
+                                <option value="Pending" <?= $order['shipping_status'] == 'Pending' ? 'selected' : ''; ?>>Pending</option>
+                                <option value="Shipped" <?= $order['shipping_status'] == 'Shipped' ? 'selected' : ''; ?>>Shipped</option>
+                                <option value="Delivered" <?= $order['shipping_status'] == 'Delivered' ? 'selected' : ''; ?>>Delivered</option>
+                                <option value="Cancelled" <?= $order['shipping_status'] == 'Cancelled' ? 'selected' : ''; ?>>Cancelled</option>
+                                <option value="ReadyForPickup" <?= $order['shipping_status'] == 'ReadyForPickup' ? 'selected' : ''; ?>>Ready For Pickup</option>
+                            </select>
+                        </td>
                         <td>
                             <button class="btn btn-info btn-sm view-images" data-order-id="<?= $order['order_id']; ?>"
                                 data-expected-images="<?= htmlspecialchars($order['expected_images']); ?>"
@@ -213,8 +227,6 @@ $orders = $query->fetchAll(PDO::FETCH_ASSOC);
                 });
             });
 
-
-
             // Remove Final Image
             $('#removeFinalImageBtn').on('click', function () {
                 const orderId = $('#orderIdForImage').val();
@@ -232,6 +244,25 @@ $orders = $query->fetchAll(PDO::FETCH_ASSOC);
                 }
             });
 
+            // Change Payment or Shipping Status
+            $('.change-status').on('change', function () {
+                const orderId = $(this).data('order-id');
+                const field = $(this).data('field');
+                const value = $(this).val();
+
+                $.post('customize-order-change-status.php', {
+                    order_id: orderId,
+                    field: field,
+                    value: value
+                }, function (response) {
+                    if (response.success) {
+                        alert(`${field.replace('_', ' ')} updated successfully!`);
+                    } else {
+                        alert(`Failed to update ${field.replace('_', ' ')}.`);
+                    }
+                }, 'json');
+            });
+
             // Delete Order
             $('.delete-order').on('click', function () {
                 const orderId = $(this).data('order-id');
@@ -244,7 +275,6 @@ $orders = $query->fetchAll(PDO::FETCH_ASSOC);
                 }
             });
         });
-
 
     </script>
 
