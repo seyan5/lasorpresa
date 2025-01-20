@@ -17,24 +17,6 @@ body {
     padding: 0;
 }
 
-header {
-    background-color: #ffffff;
-    padding: 20px 50px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-bottom: 1px solid #ddd;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
-
-header a {
-    text-decoration: none;
-    color: var(--pink);
-    font-size: 16px;
-    font-weight: 500;
-    transition: color 0.3s;
-}
-
 header a:hover {
     color: var(--pink);
 }
@@ -46,6 +28,7 @@ main {
     padding: 40px;
     gap: 15px;
     flex-wrap: wrap;
+    margin-top: 10rem;
 }
 
 .pic {
@@ -122,7 +105,7 @@ main {
 }
 
 .sidebar {
-    margin-top: 8rem;
+    margin-top: 2rem;
     margin-right: 15rem;
     max-width: 420px;
     background-color: #ffffff;
