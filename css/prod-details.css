@@ -1,6 +1,6 @@
-:root{
+:root {
     --pink: #e84393;
- }
+}
 
 /* General Reset */
 * {
@@ -14,9 +14,9 @@ body {
     background-color: #f4f4f9;
     color: #333;
     margin: 0;
-    padding: 0;
 }
 
+/* Header */
 header {
     background-color: #ffffff;
     padding: 20px 50px;
@@ -39,6 +39,7 @@ header a:hover {
     color: var(--pink);
 }
 
+/* Main Content */
 main {
     display: flex;
     justify-content: space-between;
@@ -48,6 +49,7 @@ main {
     flex-wrap: wrap;
 }
 
+/* Product Section */
 .pic {
     display: flex;
     flex-direction: column;
@@ -56,8 +58,7 @@ main {
     padding: 25px;
     border-radius: 10px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    margin-bottom: 30px;
-    margin-left: 20rem;
+    margin: 0 auto 30px;
 }
 
 .pic img {
@@ -86,6 +87,7 @@ main {
     text-align: center;
 }
 
+/* Reviews Section */
 #reviews {
     width: 100%;
     margin-top: 30px;
@@ -121,15 +123,14 @@ main {
     color: #888;
 }
 
+/* Sidebar */
 .sidebar {
-    margin-top: 8rem;
-    margin-right: 15rem;
     max-width: 420px;
     background-color: #ffffff;
     padding: 25px;
     border-radius: 10px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    margin-left: 15px;
+    margin: 0 auto;
     align-self: flex-start;
 }
 
@@ -190,4 +191,16 @@ main {
 
 .sidebar button:hover {
     background-color: var(--pink);
+}
+
+/* Responsive Design */
+@media screen and (max-width: 768px) {
+    main {
+        flex-direction: column;
+        padding: 20px;
+    }
+
+    .sidebar {
+        margin-top: 20px;
+    }
 }

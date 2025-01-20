@@ -57,6 +57,7 @@ $reviews = $reviewStmt->fetchAll(PDO::FETCH_ASSOC);
         rel="stylesheet">
     
     <link rel="stylesheet" href="../css/prod-details.css?v=1.0">
+
 </head>
 
 <body>
@@ -127,6 +128,7 @@ $reviews = $reviewStmt->fetchAll(PDO::FETCH_ASSOC);
 </section>
 
         </section>
+        
     </main>
     
     <script>
