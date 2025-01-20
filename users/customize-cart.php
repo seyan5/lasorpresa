@@ -79,7 +79,7 @@ foreach ($customization as $item) {
             'remarks' => $item['remarks'] ?? 'No remarks provided',
             'flowers' => [],
             'container_price' => $container_price,
-            'expected_image' => $item['expected_image'] ?? "../images/previews/default.jpg",
+            'expected_image' => $item['expected_image'] ?? '/lasorpresa/images/default-image.jpg',
         ];
 
         $total_price += $container_price;
@@ -121,9 +121,15 @@ $_SESSION['total_price'] = $total_price;
       $expected_image = $group['expected_image'];
       ?>
 
-      <div class="cart-item">
-        <img src="<?php echo htmlspecialchars("uploads/" . $expected_image); ?>" alt="Customization Preview">
-      </div>
+
+<div class="cart-item">
+    <img src="<?php echo htmlspecialchars(empty($expected_image) ? '/lasorpresa/images/default-image.jpg' : (strpos($expected_image, '/') === 0 ? $expected_image : 'uploads/' . $expected_image)); ?>" alt="Customization Preview">
+</div>
+
+
+
+
+
       <p><strong>Remarks:</strong> <?php echo htmlspecialchars($group['remarks']); ?></p>
     <?php endforeach; ?>
   </div>

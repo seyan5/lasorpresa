@@ -8,8 +8,69 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         || !is_array($_POST['flower_type'])
         || !is_array($_POST['num_flowers'])
     ) {
-        echo "Incomplete or invalid customization data. Please go back and try again.";
-        exit;
+        echo "
+    <html>
+    <head>
+        <meta http-equiv='refresh' content='5;url=customization.php'>
+        <title>Redirecting...</title>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 100vh;
+                margin: 0;
+                background-color: #f2f2f2;
+                color: #333;
+            }
+            .message-container {
+                text-align: center;
+                padding: 30px;
+                background-color: #fff;
+                border-radius: 10px;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+                width: 80%;
+                max-width: 400px;
+            }
+            .message-container h2 {
+                color: #e74c3c;
+                font-size: 24px;
+            }
+            .message-container p {
+                font-size: 18px;
+                margin: 20px 0;
+            }
+            .message-container .redirect-info {
+                font-size: 16px;
+                color: #888;
+            }
+        </style>
+    </head>
+    <body>
+        <div class='message-container'>
+            <h2>Incomplete or Invalid Customization Data</h2>
+            <p>Please go back and try again.</p>
+            <div class='redirect-info'>
+                <p>You will be redirected in <span id='countdown'>5</span> seconds.</p>
+            </div>
+        </div>
+        <script>
+            // Countdown for redirection
+            var countdownElement = document.getElementById('countdown');
+            var countdown = 5;
+            var interval = setInterval(function() {
+                countdown--;
+                countdownElement.textContent = countdown;
+                if (countdown <= 0) {
+                    clearInterval(interval);
+                }
+            }, 1000);
+        </script>
+    </body>
+    </html>
+";
+exit;
     }
 
     // Sanitize and retrieve inputs
