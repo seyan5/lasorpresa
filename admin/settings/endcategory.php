@@ -86,7 +86,7 @@ require_once '../auth.php';
                     </a>
                 </li>
                 <li>
-                    <a href="settings.php">
+                    <a href="../settings.php">
                         <span class="icon">
                             <ion-icon name="albums-outline"></ion-icon>
                         </span>

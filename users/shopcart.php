@@ -284,26 +284,56 @@ const isCartEmpty = <?php echo isset($_SESSION['cart']) && count($_SESSION['cart
 // Handle checkout action
 function checkout() {
   if (isCartEmpty) {
-    if (confirm("Your cart is empty. Would you like to browse products?")) {
-      window.location.href = "products.php";
-    }
+    Swal.fire({
+      title: 'Your cart is empty!',
+      text: 'Would you like to browse products?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, take me there!',
+      cancelButtonText: 'No, thanks',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        window.location.href = "products.php";
+      }
+    });
   } else {
     if (!isLoggedIn) {
-      if (confirm("You need to log in to proceed to checkout. Do you want to log in now?")) {
-        window.location.href = "login.php";
-      }
+      Swal.fire({
+        title: 'You need to log in!',
+        text: 'Do you want to log in now?',
+        icon: 'info',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, log me in!',
+        cancelButtonText: 'No, I will log in later',
+      }).then((result) => {
+        if (result.isConfirmed) {
+          window.location.href = "login.php";
+        }
+      });
     } else {
       window.location.href = "checkout.php";
     }
   }
 }
 
+
     // Confirm deletion of cart item
     function confirmDelete(itemIndex) {
-      if (confirm("Are you sure you want to remove this item from your cart?")) {
-        document.getElementById('delete-form-' + itemIndex).submit();
-      }
-    }
+    Swal.fire({
+        title: 'Are you sure?',
+        text: 'You are about to remove this item from your cart.',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, remove it!',
+        cancelButtonText: 'Cancel',
+        reverseButtons: true
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // If confirmed, submit the form
+            document.getElementById('delete-form-' + itemIndex).submit();
+        }
+    });
+}
   </script>
 </body>
 
@@ -380,5 +410,6 @@ function checkout() {
 </style>
 
 </style>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 
 </html>

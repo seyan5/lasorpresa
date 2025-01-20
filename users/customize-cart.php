@@ -1,8 +1,63 @@
 <?php
 require("conn.php");
 if (!isset($_SESSION['customization'])) {
-    echo "No customization found. Please go back and customize your arrangement.";
-    exit;
+  echo '
+  <html lang="en">
+  <head>
+      <meta charset="UTF-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>No Customization Found</title>
+      <style>
+          body {
+              font-family: Arial, sans-serif;
+              background-color: #f4f4f9;
+              margin: 0;
+              padding: 0;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              height: 100vh;
+          }
+          .message-box {
+              background-color: #fff;
+              border-radius: 8px;
+              padding: 20px;
+              text-align: center;
+              box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+              max-width: 400px;
+              width: 100%;
+          }
+          .message-box h1 {
+              color: #f44336;
+              font-size: 24px;
+              margin-bottom: 10px;
+          }
+          .message-box p {
+              color: #555;
+              font-size: 16px;
+              margin-bottom: 20px;
+          }
+          .message-box a {
+              text-decoration: none;
+              color: #2196f3;
+              font-weight: bold;
+          }
+      </style>
+  </head>
+  <body>
+      <div class="message-box">
+          <h1>No Customization Found</h1>
+          <p>Please go back and customize your arrangement.</p>
+          <p>Redirecting in 3 seconds...</p>
+          <p>If you are not redirected, click <a href="customization.php">here</a>.</p>
+      </div>
+  </body>
+  </html>
+  ';
+  // Delay the redirect for a few seconds to allow the message to be seen
+  header("refresh:3;url=customization.php"); 
+  exit;
 }
 
 $customization = $_SESSION['customization'];
@@ -24,7 +79,7 @@ foreach ($customization as $item) {
             'remarks' => $item['remarks'] ?? 'No remarks provided',
             'flowers' => [],
             'container_price' => $container_price,
-            'expected_image' => $item['expected_image'] ?? "../images/previews/default.jpg",
+            'expected_image' => $item['expected_image'] ?? '/lasorpresa/images/default-image.jpg',
         ];
 
         $total_price += $container_price;
@@ -66,9 +121,15 @@ $_SESSION['total_price'] = $total_price;
       $expected_image = $group['expected_image'];
       ?>
 
-      <div class="cart-item">
-        <img src="<?php echo htmlspecialchars("uploads/" . $expected_image); ?>" alt="Customization Preview">
-      </div>
+
+<div class="cart-item">
+    <img src="<?php echo htmlspecialchars(empty($expected_image) ? '/lasorpresa/images/default-image.jpg' : (strpos($expected_image, '/') === 0 ? $expected_image : 'uploads/' . $expected_image)); ?>" alt="Customization Preview">
+</div>
+
+
+
+
+
       <p><strong>Remarks:</strong> <?php echo htmlspecialchars($group['remarks']); ?></p>
     <?php endforeach; ?>
   </div>

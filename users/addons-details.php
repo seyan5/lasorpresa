@@ -29,6 +29,7 @@ $product_quantity = $product['quantity']; // Get product quantity
 
 <?php include('navuser.php'); ?>
 <link rel="stylesheet" href="../css/prod-details.css?v=1.1">
+
     <main>
         <div class="pic">
             <img src="../admin/uploads/<?php echo htmlspecialchars($product['featured_photo']); ?>"
@@ -87,8 +88,19 @@ $product_quantity = $product['quantity']; // Get product quantity
         }
     });
 
-        function addToCart(productName) {
-            alert("Product added to cart successfully!");
+    function addToCart(productName) {
+    Swal.fire({
+        title: 'Product added to cart!',
+        text: `Do you want to go to your cart to review your items?`,
+        icon: 'success',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, go to cart',
+        cancelButtonText: 'No, continue shopping'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            window.location.href = 'shopcart.php';  // Redirect to cart
+        }
+    });
         }
     </script>
     <script>

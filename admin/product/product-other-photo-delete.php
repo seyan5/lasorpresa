@@ -1,6 +1,6 @@
 <?php
 require_once('../header.php');
-require_once 'auth.php';
+require_once '../auth.php';
 
 if( !isset($_REQUEST['id']) || !isset($_REQUEST['id1']) ) {
 	header('location: logout.php');

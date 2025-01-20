@@ -1,5 +1,5 @@
 <?php require_once('../header.php');
-include('auth.php'); ?>
+include('../auth.php'); ?>
 <link rel="stylesheet" href="css/prodadd.css">
 
 <?php
