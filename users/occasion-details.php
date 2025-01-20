@@ -25,6 +25,18 @@ $product_quantity = $product['quantity']; // Get product quantity
     echo "<p>Invalid product ID.</p>";
     exit;
 }
+
+  // Fetch reviews for the product
+  $reviewStmt = $pdo->prepare("
+  SELECT r.review, r.rating, r.created_at, c.cust_name
+  FROM reviews r
+  LEFT JOIN customer c ON r.customer_id = c.cust_id
+  WHERE r.product_id = :p_id
+  ORDER BY r.created_at DESC
+");
+$reviewStmt->bindParam(':p_id', $p_id, PDO::PARAM_INT);
+$reviewStmt->execute();
+$reviews = $reviewStmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 <?php include('navuser.php'); ?>
 <link rel="stylesheet" href="../css/prod-details.css?v=1.1">
@@ -73,8 +85,23 @@ $product_quantity = $product['quantity']; // Get product quantity
             </div>
         </main>
 
-        </section>
-    </main>
+        <section id="reviews">
+    <h3>Customer Reviews</h3>
+    <?php if (empty($reviews)): ?>
+        <p>No reviews yet. Be the first to review this product!</p>
+    <?php else: ?>
+        <?php foreach ($reviews as $review): ?>
+            <div class="review">
+                <p><strong>Reviewer:</strong> <?php echo htmlspecialchars($review['cust_name']) ?: 'Anonymous'; ?></p>
+                <p><strong>Rating:</strong> <?php echo htmlspecialchars($review['rating']) ?: 'No rating'; ?></p>
+                <p><strong>Review:</strong> <?php echo nl2br(htmlspecialchars($review['review'])); ?></p>
+                <p><small>Reviewed on <?php echo htmlspecialchars($review['created_at']); ?></small></p>
+            </div>
+        <?php endforeach; ?>
+    <?php endif; ?>
+</section>
+
+        
     <script>
         document.addEventListener('DOMContentLoaded', function () {
         const productQuantity = <?php echo $product_quantity; ?>;
