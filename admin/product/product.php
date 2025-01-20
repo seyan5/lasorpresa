@@ -16,7 +16,7 @@ require_once '../auth.php';
     <link rel="stylesheet" href="../../css/animations.css">
     <link rel="stylesheet" href="../../css/admin1.css">
     <link rel="stylesheet" href="../../css/admin2.css">
-    <title>Manage Products</title>
+    <title>Admin - Manage Products</title>
     <style>
         .dashbord-tables {
             animation: transitionIn-Y-over 0.5s;

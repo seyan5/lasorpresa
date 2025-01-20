@@ -25,7 +25,7 @@ $i = 1;  // Initialize $i for product numbering
     <link rel="stylesheet" href="../../css/animations.css">  
     <link rel="stylesheet" href="../../css/admin1.css">  
     <link rel="stylesheet" href="../../css/admin2.css">
-    <title>Manage Products</title>
+    <title>Admin - Manage Flowers</title>
 </head>
 
 <body>
