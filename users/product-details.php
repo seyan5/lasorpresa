@@ -47,6 +47,8 @@ $reviews = $reviewStmt->fetchAll(PDO::FETCH_ASSOC);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo htmlspecialchars($product['name']); ?></title>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <!-- Font Awesome and Google Fonts -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -129,47 +131,57 @@ $reviews = $reviewStmt->fetchAll(PDO::FETCH_ASSOC);
     
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-        const productQuantity = <?php echo $product_quantity; ?>;
-        const addToCartButton = document.getElementById('addToCartButton');
-        
-        if (productQuantity === 0) {
-            addToCartButton.disabled = true;
-            alert('This product is out of stock!');
+    const productQuantity = <?php echo $product_quantity; ?>;
+    const addToCartButton = document.getElementById('addToCartButton');
+    
+    if (productQuantity === 0) {
+        addToCartButton.disabled = true;
+        alert('This product is out of stock!');
+    }
+});
+
+function addToCart(productName) {
+    Swal.fire({
+        title: 'Product added to cart!',
+        text: `Do you want to go to your cart to review your items?`,
+        icon: 'success',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, go to cart',
+        cancelButtonText: 'No, continue shopping'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            window.location.href = 'shopcart.php';  // Redirect to cart
         }
     });
+}
 
-        function addToCart(productName) {
-            alert("Product added to cart successfully!");
-        }
-    </script>
-    <script>
-        document.getElementById('addToCartButton').addEventListener('click', function () {
-            const productId = this.getAttribute('data-id');
-            const productName = this.getAttribute('data-name');
-            const productPrice = this.getAttribute('data-price');
+document.getElementById('addToCartButton').addEventListener('click', function () {
+    const productId = this.getAttribute('data-id');
+    const productName = this.getAttribute('data-name');
+    const productPrice = this.getAttribute('data-price');
 
-            // Send AJAX request to add product to cart
-            fetch('cart-handler.php', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                },
-                body: `product_id=${productId}&product_name=${encodeURIComponent(productName)}&product_price=${productPrice}`
-            })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        alert(data.message);
-                        window.location.href = 'shopcart.php';  
-                        console.log('Cart:', data.cart); // Debugging: Log cart content
-                    } else {
-                        alert(data.message);
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                });
+    // Send AJAX request to add product to cart
+    fetch('cart-handler.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: `product_id=${productId}&product_name=${encodeURIComponent(productName)}&product_price=${productPrice}`
+    })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                addToCart(productName);  // Trigger SweetAlert after product added
+                console.log('Cart:', data.cart); // Debugging: Log cart content
+            } else {
+                alert(data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
         });
+});
+
     </script>
 
 </body>

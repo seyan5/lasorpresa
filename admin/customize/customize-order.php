@@ -42,13 +42,13 @@ $orders = $query->fetchAll(PDO::FETCH_ASSOC);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Order Dashboard</title>
+    <title>Custom Order Dashboard</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 
 <body>
     <div class="container mt-5">
-        <h3 class="text-center">Order Dashboard</h3>
+        <h3 class="text-center">Custom Order Dashboard</h3>
         <div class="d-flex justify-content-start mb-3">
             <a href="../dashboard.php" class="btn btn-secondary">Back to Dashboard</a>
         </div>
