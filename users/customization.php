@@ -39,24 +39,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 ?>
 
 <!-- Include Bootstrap CSS -->
-<link rel="stylesheet" href="../css/customize.css?v=1.2">
-<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-<header>
-    <a href="index.php" class="back">← Back to Home Page</a>
-    <a href="customize-checkout.php" class="back">Check Out Cart</a>
-</header>
-
-<div class="page">
-    <div class="container">
-        <div class="row">
-            <!-- Left side (60%) -->
-            <div class="col-md-7">
-                <h2>Customize Your Floral Arrangement</h2>
-                <form id="floral-customization-form" action="customization-submit.php" method="POST"
-                    enctype="multipart/form-data">
+<?php include('navuser.php'); ?>
+<link rel="stylesheet" href="../css/customize.css?">
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&display=swap" rel="stylesheet">
+<h2>Customize Your Floral Arrangement</h2>
+<div class="custom-page">
+    <div class="custom-container">
+        <div class="custom-row">
+            <!-- Left side -->
+            <div class="custom-left">
+            <form id="floral-customization-form" action="customization-submit.php" method="POST"
+            enctype="multipart/form-data">
                     <!-- Container Customization Section -->
                     <div class="section">
-                        <h4>Container Customization</h4>
                         <div class="form-group">
                             <label for="container_type">Choose Container Type:</label>
                             <!-- Container Dropdown -->
@@ -90,8 +85,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         <?php foreach ($flower_types_selected as $index => $flower_type): ?>
                             <div class="flower-item" id="flower-item-<?php echo $index + 1; ?>">
                                 <div class="form-group">
-                                    <label for="flower_type_<?php echo $index + 1; ?>">Choose Flower Type:</label>
-                                    <select id="flower_type_<?= $index + 1 ?>" name="flower_type[]" class="form-control"
+                                    <label for="flower_type_<?php echo $index + 1; ?>" class="flower-type-label">Choose Flower Type:</label>
+                                    <select id="flower_type_<?= $index + 1 ?>" name="flower_type[]" class="form-control flower-type-select"" 
                                         required>
                                         <?php foreach ($flower_types as $flower): ?>
                                             <option value="<?= $flower['id'] ?>"
@@ -124,13 +119,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
                     <!-- Button to add more flowers -->
                     <button type="button" class="btn btn-secondary" id="add-flower-btn">Add Flower</button>
+                    <label for="remarks" class="remarks-label">Remarks:</label>
                     <div class="form-group">
-                        <label for="remarks">Remarks:</label>
                         <textarea id="remarks" name="remarks" class="form-control"
                             placeholder="Enter any special instructions or remarks..."></textarea>
                     </div>
                     <div class="form-group">
-                        <label for="expected_image">Attach your expected output:</label>
+                        <label for="expected_image" class="expected-image-label">Attach your expected output:</label>
                         <input type="file" id="expected_image" name="expected_image" class="form-control-file"
                             accept="image/*">
                         <!-- Preview uploaded image -->
@@ -144,14 +139,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             </div>
 
             <!-- Right side (40%) -->
-            <div class="col-md-5">
+        </div>
+    </div>
+    <div class="col-md-5">
                 <h4>Your Selections</h4>
                 <div id="selected-selections">
                     <!-- This will show the real-time selections of flowers -->
                 </div>
             </div>
-        </div>
-    </div>
 </div>
 <?php include('../loading.php'); ?>
 <script>
@@ -187,7 +182,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <p><strong>Container:</strong> ${containerName}</p>
         <img src="${containerImage}" alt="${containerName}" style="width: 150px; height: auto; margin-bottom: 10px;">
         <p><strong>Container Color:</strong> ${containerColor.options[containerColor.selectedIndex].text}</p>
-        <p><strong>Remarks:</strong> ${remarks}</p>
         <hr>
     `;
 

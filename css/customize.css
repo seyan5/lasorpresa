@@ -1,205 +1,348 @@
-/* General Reset */
-body, html {
+:root{
+  --pink: #e84393;
+}
+
+/* General Styles */
+body {
+  font-family: 'Caveat', cursive, sans-serif;
+  background-color: #f7f9fc;
+  color: #333;
   margin: 0;
   padding: 0;
-  font-family: 'Arial', sans-serif;
-  background-color: #f9f9f9;
-  font-size: 16px; /* Ensure consistent font size */
-  line-height: 1.6; /* Better readability */
 }
 
-/* Header */
-.custom-header {
-  background-color: #f4f4f4;
-  padding: 10px 20px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  border-bottom: 2px solid #ddd;
+h2 {
+  text-align: center;
+  margin-top: 13rem;
+  color: #666;
+  font-size: 3rem;
 }
 
-.header-link {
-  color: #007bff;
-  text-decoration: none;
-  font-weight: bold;
-  font-size: 16px;
+.section label {
+  color: #666;
+  font-size: 1.7rem;
+  font-style: italic;
 }
 
-.header-link:hover {
-  text-decoration: underline;
+.section  #container_type{
+  font-size: 1.4rem; /* Bigger font size */
+    padding: 10px;   /* Add padding for better appearance */
+    border: 1px solid #ccc; /* Add a border */
+    border-radius: 5px; /* Rounded corners */
+    background-color: #f9f9f9; /* Light background color */
+    color: #333; /* Text color */
+    width: 100%; /* Full width */
+    box-sizing: border-box; /* Include padding in width calculation */
+    font-style: italic;
+    margin-top: 15px;
+    margin-bottom: 15px;
 }
 
-/* Page Layout */
+.section  #container_color{
+  font-size: 1.4rem; /* Bigger font size */
+    padding: 10px;   /* Add padding for better appearance */
+    border: 1px solid #ccc; /* Add a border */
+    border-radius: 5px; /* Rounded corners */
+    background-color: #f9f9f9; /* Light background color */
+    color: #333; /* Text color */
+    width: 100%; /* Full width */
+    box-sizing: border-box; /* Include padding in width calculation */
+    font-style: italic;
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+
+#flower-container {
+  width: 100%;               /* Full-width container */
+  max-width: 1200px;         /* Restrict maximum width */
+  color: #666;
+  font-size: 1.7rem;
+  font-style: italic;
+}
+
 .custom-page {
-  padding: 20px;
+  padding: 30px;
   max-width: 1200px;
-  margin: 20px auto;
+  margin: 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 20px;
+  font-size: 1.7rem;
 }
 
 .custom-container {
+  flex: 1 1 60%;
+  background: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.custom-row {
   display: flex;
-  gap: 20px;
-  flex-wrap: wrap;
+  flex-direction: column;
 }
 
-/* Left and Right Columns */
-.custom-left {
-  background: #fff;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  flex: 5; /* Increased ratio for larger size */
-  min-width: 800px; /* Allow flexibility for smaller screens */
-}
-
-.custom-right {
-  background: #fff;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  flex: 3; /* Adjusted ratio for balance */
-  min-width: 80px; /* Allow flexibility for smaller screens */
-}
-
-/* Form Elements */
-.section {
-  margin-bottom: 20px;
-}
-
-h4 {
-  font-size: 18px;
-  margin-bottom: 10px;
-  border-bottom: 2px solid #ddd;
-  padding-bottom: 5px;
-  color: #333;
-  font-family: 'Arial', sans-serif;
-}
-
-.form-group {
-  margin-bottom: 15px;
+/* Form Styles */
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
 }
 
 label {
+  font-size: 1rem;
   font-weight: bold;
-  margin-bottom: 5px;
-  display: block;
+  color: #4a4a4a;
 }
 
-.input-field {
+input, select, textarea {
   width: 100%;
   padding: 10px;
+  font-size: 1rem;
   border: 1px solid #ccc;
   border-radius: 5px;
-  font-size: 14px;
+  transition: border-color 0.3s;
 }
 
-textarea.input-field {
-  height: 100px;
-  resize: none;
+input:focus, select:focus, textarea:focus {
+  border-color: #6b5b95;
+  outline: none;
 }
 
-/* Buttons */
-.btn-primary, .btn-secondary, .btn-remove {
-  padding: 10px 15px;
+select {
+  appearance: none;
+  background: url('data:image/svg+xml;charset=US-ASCII,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2220%22 height=%2220%22 viewBox=%220 0 20 20%22%3E%3Cpath fill=%22%236b5b95%22 d=%22M0 5l10 10L20 5z%22/%3E%3C/svg%3E') no-repeat right 10px center;
+  background-color: #f7f9fc;
+  background-size: 10px;
+}
+
+textarea {
+  min-height: 100px;
+}
+
+button {
+  padding: 5px 10px;
+  font-size: 1rem;
+  font-weight: bold;
   border: none;
   border-radius: 5px;
   cursor: pointer;
-  font-size: 14px;
-  font-family: 'Arial', sans-serif;
+  transition: background-color 0.3s;
 }
 
-.btn-primary {
-  background-color: #007bff;
+#add-flower-btn {
+  margin-top: 5px; /* Reduce the space above the button */
+}
+
+.btn.btn-primary {
+  margin-top: 5px; /* Reduce the space above the button */
+}
+
+#remarks {
+  width: 97%; /* Set the width to 50% of its container */
+  max-width: 900px; /* Optional: Set a maximum width */
+  min-width: 200px; /* Optional: Set a minimum width */
+  padding: 10px; /* Add some padding for better usability */
+  resize: vertical; /* Allow only vertical resizing */
+}
+
+.remarks-label {
+  color: #666;
+  font-size: 1.7rem;
+  font-style: italic;
+}
+
+
+button[type="submit"] {
+  background-color: var(--pink);
   color: #fff;
-  transition: background-color 0.3s ease;
 }
 
-.btn-primary:hover {
-  background-color: #0056b3;
+button[type="submit"]:hover {
+  background-color: #333;
 }
 
-.btn-secondary {
-  background-color: #6c757d;
+button.btn-secondary {
+  background-color: var(--pink);
   color: #fff;
-  margin-top: 10px;
-  transition: background-color 0.3s ease;
 }
 
-.btn-secondary:hover {
-  background-color: #565e64;
+button.btn-secondary:hover {
+  background-color: #333;
 }
 
-.btn-remove {
-  background-color: #dc3545;
-  color: #fff;
-  margin-top: 10px;
-  transition: background-color 0.3s ease;
+button.btn-danger {
+  background-color: var(--pink); /* Uses the custom pink color variable */
+  color: #fff;                  /* Sets the text color to white for contrast */
+  padding: 10px 15px;           /* Adds comfortable padding */
+  border: none;                 /* Removes default border */
+  border-radius: 5px;           /* Adds rounded corners for a modern look */
+  cursor: pointer;              /* Changes cursor to pointer on hover */
+  transition: background-color 0.3s; /* Smooth transition for hover effect */
+  margin-top: 1rem;             /* Adjusts spacing above the button */
 }
 
-.btn-remove:hover {
-  background-color: #a71d2a;
+/* Hover effect for the button */
+button.btn-danger:hover {
+  background-color: #ff5a5f;    /* Slightly darker shade of pink on hover */
 }
 
-/* Real-time Selection Preview */
+
+button.btn-danger:hover {
+  background-color: #333;
+}
+
+/* Image Preview */
+img {
+  border-radius: 5px;
+  max-width: 100%;
+  height: auto;
+}
+
+/* Selected Selections */
 #selected-selections {
-  padding: 10px;
-  background-color: #f8f9fa;
-  border: 1px solid #ddd;
+  margin-top: 20px;
+  padding: 40px;
+  border: 1px dashed var(--pink);
+  background: #faf8fc;
   border-radius: 5px;
-  overflow-y: auto;
-  max-height: 700px;
-  font-family: 'Arial', sans-serif;
 }
 
-#selected-selections img {
-  width: 100px;
-  height: auto;
-  margin-bottom: 10px;
-  border-radius: 4px;
+#selected-selections p {
+  margin: 10px 0;
+  color: var(--pink);
+  font-weight: bold;
+  font-style: italic;
 }
 
-/* Flower Customization */
-.flower-customization-container {
-  display: flex;
-  gap: 20px;
-  flex-wrap: wrap;
+hr {
+  border: 0;
+  border-top: 1px solid #eee;
+  margin: 10px 0;
 }
 
-.flower-customization-left {
-  flex: 2;
+.expected-image-label {
+  color: #666;
+  font-size: 1.7rem;
+  font-style: italic;      /* Adds space below the label */
 }
 
-.flower-customization-right {
-  flex: 1;
+.form-control-file {
+  display: block;            /* Ensures the input is on its own line */
+  width: 97%;               /* Make the input stretch to container width */
+  max-width: 850px;          /* Optional: Limit the input width */
+  padding: 8px;              /* Add inner padding */
+  font-size: 1.3rem;         /* Adjust the font size */
+  color: #555;               /* Set text color */
+  border: 1px solid #ccc;    /* Light border */
+  border-radius: 5px;        /* Rounded corners */
+  background-color: #f9f9f9; /* Light background for better contrast */
+  cursor: pointer;           /* Changes cursor to pointer on hover */
 }
 
+.form-control-file:hover {
+  border-color: #888;        /* Darker border on hover */
+  background-color: #f0f0f0; /* Subtle background change on hover */
+}
+
+/* Container for each flower item */
 .flower-item {
-  margin-bottom: 15px;
-  margin-top: 15px;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  padding: 10px;
-  background-color: #f4f4f4;
-  font-family: 'Arial', sans-serif;
+  border: 1px solid #ccc;        /* Light gray border for separation */
+  border-radius: 10px;           /* Rounded corners for a modern look */
+  padding: 15px;                 /* Inner spacing */
+  margin-bottom: 20px;           /* Spacing between flower items */
+  background-color: #f9f9f9;     /* Subtle background color */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Soft shadow for depth */
 }
 
-.flower-item img {
-  max-width: 150px;
-  height: auto;
-  margin-top: 10px;
+/* Form group for each field */
+.flower-item .form-group {
+  margin-bottom: 15px;           /* Space between input fields */
+}
+
+/* Labels styling */
+.flower-type-label,
+label {
+  font-size: 1.4rem;             /* Slightly larger font */
+  font-weight: bold;             /* Bold for emphasis */
+  color: #333;                   /* Dark gray for readability */
+  display: block;                /* Ensures it occupies its own line */
+  margin-bottom: 5px;            /* Adds space below the label */
+}
+
+/* Select dropdown styling */
+.flower-type-select {
+  width: 100%;                   /* Full width of the container */
+  max-width: 400px;              /* Limits the maximum width */
+  padding: 8px;                  /* Adds inner spacing */
+  font-size: 1.4rem;               /* Font size for better readability */
+  color: #555;                   /* Text color */
+  background-color: #fff;        /* White background */
+  border: 1px solid #ccc;        /* Light gray border */
+  border-radius: 5px;            /* Rounded corners */
+  appearance: none;              /* Removes default dropdown styling */
+  cursor: pointer;               /* Pointer cursor for interactivity */
+  transition: border-color 0.3s, box-shadow 0.3s; /* Smooth transitions */
+}
+
+/* Dropdown hover and focus states */
+.flower-type-select:hover,
+.flower-type-select:focus {
+  border-color: #007bff;         /* Blue border on hover/focus */
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.3); /* Subtle glow */
+  outline: none;                 /* Removes default focus outline */
+}
+
+/* Number input styling */
+input[type="number"] {
+  width: 100%;                   /* Full width of the container */
+  max-width: 100px;              /* Optional: Limits width for number input */
+  padding: 8px;                  /* Adds inner spacing */
+  font-size: 1.4rem;               /* Font size for readability */
+  color: #555;                   /* Text color */
+  background-color: #fff;        /* White background */
+  border: 1px solid #ccc;        /* Light gray border */
+  border-radius: 5px;            /* Rounded corners */
+  transition: border-color 0.3s, box-shadow 0.3s; /* Smooth transitions */
+}
+
+/* Number input hover and focus states */
+input[type="number"]:hover,
+input[type="number"]:focus {
+  border-color: #28a745;         /* Green border on hover/focus */
+  box-shadow: 0 0 5px rgba(40, 167, 69, 0.3); /* Subtle green glow */
+  outline: none;
+  font-size: 1.4rem;                 /* Removes default focus outline */
+}
+
+/* Image preview */
+img[id^="flower-image-preview"] {
+  display: block;                /* Ensures it starts on a new line */
+  margin-top: 10px;              /* Adds space above the image */
+  border: 1px solid #ccc;        /* Light border around the image */
+  border-radius: 5px;            /* Rounded corners */
+  max-width: 150px;              /* Limits image width */
+  height: auto;                  /* Maintains aspect ratio */
 }
 
 /* Responsive Design */
+@media (max-width: 600px) {
+  .flower-item {
+    padding: 10px;               /* Adjust padding for smaller screens */
+  }
+  .flower-type-select, input[type="number"] {
+    max-width: 100%;             /* Full width on smaller screens */
+  }
+}
+
+
+
+/* Responsive Design */
 @media (max-width: 768px) {
-  .custom-container {
-    flex-direction: column;
-  }
-
-  .custom-left, .custom-right {
-    min-width: 100%;
-  }
-
-  .flower-customization-container {
-    flex-direction: column;
+  .custom-page {
+      flex-direction: column;
+      gap: 10px;
   }
 }
