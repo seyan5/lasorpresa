@@ -47,6 +47,7 @@ main {
     padding: 40px;
     gap: 15px;
     flex-wrap: wrap;
+    margin-top: 10rem;
 }
 
 /* Product Section */
@@ -125,6 +126,8 @@ main {
 
 /* Sidebar */
 .sidebar {
+    margin-top: 2rem;
+    margin-right: 15rem;
     max-width: 420px;
     background-color: #ffffff;
     padding: 25px;
