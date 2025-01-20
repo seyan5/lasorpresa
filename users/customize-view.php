@@ -1,4 +1,4 @@
-<?php 
+<?php
 ob_start();
 session_start();
 include("../admin/inc/config.php");
@@ -19,9 +19,8 @@ try {
                 o.order_id, 
                 o.container_type, 
                 o.container_color, 
-                o.flower_type, 
-                o.num_flowers, 
-                co.total_price AS order_total_price,
+                GROUP_CONCAT(DISTINCT CONCAT(o.flower_type, ' (', o.num_flowers, ')') SEPARATOR ', ') AS flower_details, 
+                SUM(co.total_price) AS order_total_price,
                 cp.payment_status,
                 cp.shipping_status,
                 GROUP_CONCAT(DISTINCT ci.expected_image SEPARATOR ', ') AS expected_images,
@@ -33,7 +32,8 @@ try {
             LEFT JOIN custom_finalimages cf ON o.order_id = cf.order_id
             WHERE co.customer_email = :customer_email
             GROUP BY o.order_id
-            ORDER BY o.order_id ASC";
+            ORDER BY o.order_id ASC;";
+    
     $stmt = $pdo->prepare($sql);
     $stmt->execute([':customer_email' => $cust_email]);
 
@@ -147,7 +147,7 @@ try {
             <a href='customer-profile-update.php' class='back-link'>
                 <span class='back-arrow'>&lt;</span> Back to Profile
             </a>
-          </div>";    
+          </div>";
 
     echo "<div class='orders-container'>";
     echo "<h2>My Custom Orders</h2>";
@@ -159,14 +159,14 @@ try {
                     <p><label>Container Type:</label> {$order['container_type']}</p>
                     <p><label>Container Color:</label> {$order['container_color']}</p>";
 
-            $flowerDetails = explode(", ", $order['flower_type']);
-            $flowerQuantities = explode(", ", $order['num_flowers']);
-            foreach ($flowerDetails as $index => $flowerType) {
-                $quantity = isset($flowerQuantities[$index]) ? $flowerQuantities[$index] : "N/A";
-                echo "<div class='flower-info'>
-                        <p><label>Flower Type:</label> {$flowerType}</p>
-                        <p><label>Quantity:</label> {$quantity}</p>
-                      </div>";
+            // Check if flower_details is available
+            if (!empty($order['flower_details'])) {
+                $flowerDetails = explode(", ", $order['flower_details']);
+                foreach ($flowerDetails as $flowerDetail) {
+                    echo "<p><label>Flower:</label> {$flowerDetail}</p>";
+                }
+            } else {
+                echo "<p>No flowers available for this order.</p>";
             }
 
             echo "<p><label>Order Total Price:</label> ₱{$order['order_total_price']}</p>";
