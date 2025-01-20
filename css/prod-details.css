@@ -1,6 +1,6 @@
-:root{
+:root {
     --pink: #e84393;
- }
+}
 
 /* General Reset */
 * {
@@ -14,13 +14,32 @@ body {
     background-color: #f4f4f9;
     color: #333;
     margin: 0;
-    padding: 0;
+}
+
+/* Header */
+header {
+    background-color: #ffffff;
+    padding: 20px 50px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #ddd;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+header a {
+    text-decoration: none;
+    color: var(--pink);
+    font-size: 16px;
+    font-weight: 500;
+    transition: color 0.3s;
 }
 
 header a:hover {
     color: var(--pink);
 }
 
+/* Main Content */
 main {
     display: flex;
     justify-content: space-between;
@@ -31,6 +50,7 @@ main {
     margin-top: 10rem;
 }
 
+/* Product Section */
 .pic {
     display: flex;
     flex-direction: column;
@@ -39,8 +59,7 @@ main {
     padding: 25px;
     border-radius: 10px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    margin-bottom: 30px;
-    margin-left: 20rem;
+    margin: 0 auto 30px;
 }
 
 .pic img {
@@ -69,6 +88,7 @@ main {
     text-align: center;
 }
 
+/* Reviews Section */
 #reviews {
     width: 100%;
     margin-top: 30px;
@@ -104,6 +124,7 @@ main {
     color: #888;
 }
 
+/* Sidebar */
 .sidebar {
     margin-top: 2rem;
     margin-right: 15rem;
@@ -112,7 +133,7 @@ main {
     padding: 25px;
     border-radius: 10px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    margin-left: 15px;
+    margin: 0 auto;
     align-self: flex-start;
 }
 
@@ -173,4 +194,16 @@ main {
 
 .sidebar button:hover {
     background-color: var(--pink);
+}
+
+/* Responsive Design */
+@media screen and (max-width: 768px) {
+    main {
+        flex-direction: column;
+        padding: 20px;
+    }
+
+    .sidebar {
+        margin-top: 20px;
+    }
 }
