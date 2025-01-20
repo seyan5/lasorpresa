@@ -75,7 +75,7 @@ $result = $statement->fetchAll(PDO::FETCH_ASSOC);
 </div>
 
    <ul class="listPage">
-        <li>Next Page</li>
+        <li>Next Page </li>
    </ul>
 </section>
 <?php include('../loading.php'); ?>

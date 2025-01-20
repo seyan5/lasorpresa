@@ -363,7 +363,7 @@ document.getElementById('reviewForm').addEventListener('submit', function(e) {
 <style>
   /* Add these styles to make the table scrollable */
 .table-container {
-  max-height: 200px; /* You can adjust the height as needed */
+  max-height: 400px; /* You can adjust the height as needed */
   overflow-y: auto;
 }
 /* Style for the 'Add Review' button */
