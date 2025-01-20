@@ -17,15 +17,14 @@ if (!$customer) {
     exit;
 }
 
-// Retrieve customization and expected_image from session
+// Retrieve customization and total price from session
 $customization = $_SESSION['customization'] ?? null;
+$total_price = $_SESSION['total_price'] ?? 0;
 
 if (!$customization || !is_array($customization)) {
     echo "No customization details found. Please go back and customize your arrangement.";
     exit;
 }
-
-$total_price = $_SESSION['total_price'] ?? 0; // Use the session total price
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $payment_method = $_POST['payment_method'];
@@ -33,10 +32,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $amount_paid = $_POST['amount_paid'] ?? $total_price;
 
     try {
-        // Start a transaction
         $pdo->beginTransaction();
 
-        // Insert into custom_order
+        // Insert into `custom_order`
         $stmt = $pdo->prepare("
             INSERT INTO custom_order (cust_id, customer_name, customer_email, shipping_address, total_price, order_date)
             VALUES (:cust_id, :customer_name, :customer_email, :shipping_address, :total_price, NOW())
@@ -49,92 +47,53 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'total_price' => $total_price,
         ]);
 
-        // Get the `order_id`
         $order_id = $pdo->lastInsertId();
 
-        // Prepare insert statements
-        $stmt_orderitems = $pdo->prepare("
-            INSERT INTO custom_orderitems (
-                order_id, flower_type, num_flowers, container_type, container_color, flower_price, container_price, color_price, total_price, remarks
-            ) VALUES (
-                :order_id, :flower_type, :num_flowers, :container_type, :container_color, :flower_price, :container_price, :color_price, :total_price, :remarks
-            )
-        ");
-
-        $stmt_images = $pdo->prepare("
-        INSERT INTO custom_images (order_id, expected_image)
-        VALUES (:order_id, :expected_image)
-    ");
-
-        // Flag to ensure container price is added only once
-        $container_price_added = false;
-
+        // Insert order items and images
         foreach ($customization as $item) {
-            // Fetch descriptive names for flower, container, and color
-            $stmt_flower = $pdo->prepare("SELECT name, price FROM flowers WHERE id = :id");
-            $stmt_flower->execute([':id' => $item['flower_type']]);
-            $flower = $stmt_flower->fetch(PDO::FETCH_ASSOC);
+            $flower_name = $item['flower_type'] ?? 'Unknown';
+            $flower_price = $item['flower_price'] ?? 0;
+            $num_flowers = $item['num_flowers'] ?? 0;
+            $container_name = $item['container_type'] ?? 'Unknown';
+            $container_price = $item['container_price'] ?? 0;
+            $color_name = $item['container_color'] ?? 'Unknown';
+            $item_total_price = $flower_price * $num_flowers;
 
-            $stmt_container = $pdo->prepare("SELECT container_name, price FROM container WHERE container_id = :id");
-            $stmt_container->execute([':id' => $item['container_type']]);
-            $container = $stmt_container->fetch(PDO::FETCH_ASSOC);
-
-            $stmt_color = $pdo->prepare("SELECT color_name FROM color WHERE color_id = :id");
-            $stmt_color->execute([':id' => $item['container_color']]);
-            $color = $stmt_color->fetch(PDO::FETCH_ASSOC);
-
-            // Extract descriptive names and prices
-            $flower_name = $flower['name'] ?? 'Unknown';
-            $flower_price = $flower['price'] ?? 0;
-
-            $container_name = $container['container_name'] ?? 'Unknown';
-            $container_price = $container['price'] ?? 0;
-
-            $color_name = $color['color_name'] ?? 'Unknown';
-            $color_price = 0; // Assuming no price for color
-
-            // Calculate total price for this flower item
-            $item_total_price = ($flower_price * $item['num_flowers']);
-            $total_price += $item_total_price;
-
-            // Add container price only once
-            if (!$container_price_added) {
-                $total_price += $container_price;
-                $container_price_added = true;
-            }
-
-            // Insert into custom_orderitems
-            $stmt_orderitems->execute([
+            $stmt = $pdo->prepare("
+                INSERT INTO custom_orderitems (
+                    order_id, flower_type, num_flowers, container_type, container_color, flower_price, container_price, color_price, total_price, remarks
+                ) VALUES (
+                    :order_id, :flower_type, :num_flowers, :container_type, :container_color, :flower_price, :container_price, :color_price, :total_price, :remarks
+                )
+            ");
+            $stmt->execute([
                 'order_id' => $order_id,
                 'flower_type' => $flower_name,
-                'num_flowers' => $item['num_flowers'],
+                'num_flowers' => $num_flowers,
                 'container_type' => $container_name,
                 'container_color' => $color_name,
                 'flower_price' => $flower_price,
-                'container_price' => $container_price_added ? $container_price : 0,
-                'color_price' => $color_price,
+                'container_price' => $container_price,
+                'color_price' => 0,
                 'total_price' => $item_total_price,
                 'remarks' => $item['remarks'] ?? '',
             ]);
 
-            // Get the `orderitem_id`
-            $orderitem_id = $pdo->lastInsertId();
-
-            // Insert into custom_images if an image exists
             if (!empty($item['expected_image'])) {
-                $stmt_images->execute([
-                    'order_id' => $order_id, // Use the correct `order_id`
+                $stmt = $pdo->prepare("INSERT INTO custom_images (order_id, expected_image) VALUES (:order_id, :expected_image)");
+                $stmt->execute([
+                    'order_id' => $order_id,
                     'expected_image' => $item['expected_image'],
                 ]);
             }
         }
 
-        // Insert into custom_payment
-        $stmt_payment = $pdo->prepare("
+        // Insert into `custom_payment`
+        $stmt = $pdo->prepare("
             INSERT INTO custom_payment (order_id, customer_name, customer_email, amount_paid, payment_method, reference_number, payment_status, shipping_status, created_at)
             VALUES (:order_id, :customer_name, :customer_email, :amount_paid, :payment_method, :reference_number, 'Pending', 'Pending', NOW())
         ");
-        $stmt_payment->execute([
+        $stmt->execute([
             'order_id' => $order_id,
             'customer_name' => $customer['cust_name'],
             'customer_email' => $customer['cust_email'],
@@ -143,7 +102,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'reference_number' => $reference_number,
         ]);
 
-        // Commit transaction
         $pdo->commit();
 
         echo "<script>alert('Payment successful!');</script>";
@@ -155,100 +113,289 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 }
+$customization = $_SESSION['customization'];
+$grouped_customization = [];
+$total_price = 0;
+
+foreach ($customization as $item) {
+    $key = $item['container_type'] . '-' . $item['container_color'] . '-' . $item['remarks'];
+
+    if (!isset($grouped_customization[$key])) {
+        $stmt = $pdo->prepare("SELECT price FROM container WHERE container_id = :container_id");
+        $stmt->execute(['container_id' => $item['container_type']]);
+        $container = $stmt->fetch(PDO::FETCH_ASSOC);
+        $container_price = $container['price'] ?? 0;
+
+        $grouped_customization[$key] = [
+            'container_type' => $item['container_type'],
+            'container_color' => $item['container_color'],
+            'remarks' => $item['remarks'] ?? 'No remarks provided',
+            'flowers' => [],
+            'container_price' => $container_price,
+            'expected_image' => $item['expected_image'] ?? '/lasorpresa/images/default-image.jpg',
+        ];
+
+        $total_price += $container_price;
+    }
+
+    $grouped_customization[$key]['flowers'][] = $item;
+
+    $stmt = $pdo->prepare("SELECT price FROM flowers WHERE id = :flower_id");
+    $stmt->execute(['flower_id' => $item['flower_type']]);
+    $flower = $stmt->fetch(PDO::FETCH_ASSOC);
+    $flower_price = $flower['price'] ?? 0;
+
+    $total_price += $flower_price * $item['num_flowers'];
+}
+
+$_SESSION['total_price'] = $total_price;
 ?>
 
+<?php include('navuser.php'); ?>
+<link rel="stylesheet" href="../css/customize-checkout.css?">
 
 
+<style>
+        /* General Modal Styles */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.4);
+}
 
+/* Modal Content */
+.modal-dialog {
+    background-color: #fefefe;
+            margin: 10% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 500px;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
 
-<!DOCTYPE html>
-<html lang="en">
+/* Close Button */
+.modal-close {
+    color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Checkout</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.min.js"></script>
-</head>
+.modal-close:hover,
+.modal-close:focus {
+    color: black;
+            text-decoration: none;
+}
 
-<body>
-    <div class="container mt-5">
-        <h3>Checkout</h3>
-        <p><strong>Name:</strong> <?php echo htmlspecialchars($customer['cust_name']); ?></p>
-        <p><strong>Email:</strong> <?php echo htmlspecialchars($customer['cust_email']); ?></p>
-        <p><strong>Address:</strong> <?php echo htmlspecialchars($customer['cust_address']); ?></p>
-        <p><strong>Total Price:</strong> ₱<?php echo number_format($total_price, 2); ?></p>
+/* Modal Header */
+.modal-header {
 
-        <form id="checkout-form" method="POST">
-            <label for="payment_method">Select Payment Method:</label><br>
-            <input type="radio" name="payment_method" value="GCash" id="gcash" required> GCash<br>
-            <input type="radio" name="payment_method" value="Cash on Pickup" id="cop" required> Cash on Pickup<br><br>
+    padding: 10px;
+    font-size: 18px;
+    font-weight: bold;
+}
 
-            <button type="button" class="btn btn-primary" id="proceed-payment">Proceed to Payment</button>
-        </form>
+/* Modal Body */
+.modal-body {
+    padding: 20px;
+}
+
+.modal-body img{
+    max-width: 100%;
+            height: auto;
+            margin-bottom: 20px;
+}
+
+.modal-body img {
+    max-width: 100%;
+            height: auto;
+            margin-bottom: 20px;
+}
+
+/* Input Styles */
+.modal-body label {
+    display: block;
+            margin-bottom: 5px;
+            font-size: 1rem;
+            font-weight: bold;
+            text-align: left;
+}
+
+.modal-body input {
+    width: calc(100% - 20px);
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 1rem;
+    box-sizing: border-box;
+}
+
+/* Buttons */
+.modal-body button {
+    display: inline-block;
+            padding: 10px 20px;
+            font-size: 1rem;
+            color: white;
+            background-color: #28a745;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin-top: -1rem;
+}
+
+.modal-body button:hover {
+    background-color: #218838;
+}
+
+    </style>
+    <body>
+
+        <div class="header">
+            <a href="customize-cart.php" class="back-link">
+                <span class="back-arrow">&lt;</span> Back to Customize Cart
+            </a>
+        </div>
+        <div class="container">
+    <!-- Left Side: Cart/Items -->
+    <div class="cart">
+        <h3>Your Floral Arrangement Customization</h3>
+            <?php foreach ($grouped_customization as $key => $group): ?>
+                <?php
+                // Fetch container details
+                $stmt = $pdo->prepare("SELECT container_name FROM container WHERE container_id = :container_id");
+                $stmt->execute(['container_id' => $group['container_type']]);
+                $container = $stmt->fetch(PDO::FETCH_ASSOC);
+                $container_name = $container['container_name'] ?? "Unknown Container";
+
+                // Fetch color details
+                $stmt = $pdo->prepare("SELECT color_name FROM color WHERE color_id = :color_id");
+                $stmt->execute(['color_id' => $group['container_color']]);
+                $color = $stmt->fetch(PDO::FETCH_ASSOC);
+                $color_name = $color['color_name'] ?? "Unknown Color";
+
+                // Get expected image or use a default placeholder
+                $expected_image = $group['expected_image'] ?? '../images/default-placeholder.png';
+                ?>
+                <!-- HTML to display the details -->
+                <div class="custom-item">
+                    <h4>Container: <?php echo htmlspecialchars($container_name); ?></h4>
+                    <p>Color: <?php echo htmlspecialchars($color_name); ?></p>
+                    <img src="<?php echo htmlspecialchars($expected_image); ?>" alt="Expected Image" style="width: 200px; height: auto;" 
+                        onerror="this.onerror=null;this.src='../images/default-placeholder.png';">
+                </div>
+            <?php endforeach; ?>
     </div>
 
-    <!-- GCash Modal -->
-    <div class="modal fade" id="gcashModal" tabindex="-1" aria-labelledby="gcashModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="gcashModalLabel">GCash Payment</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">&times;</button>
+            <!-- Right Side: Checkout -->
+            <div class="payment">
+                <h3>Checkout</h3>
+                <form id="checkout-form" method="POST">
+                    <label for="cust_name">Full Name:</label>
+                    <span id="cust_name"><?php echo htmlspecialchars($customer['cust_name']); ?></span>
+
+                    <label for="cust_email">Email:</label>
+                    <span id="cust_email"><?php echo htmlspecialchars($customer['cust_email']); ?></span>
+
+                    <label for="cust_address">Address:</label>
+                    <span id="cust_address"><?php echo htmlspecialchars($customer['cust_address']); ?></span>
+
+                    <label for="payment_method">Select Payment Method:</label>
+                    <div class="pradio">
+                        <input type="radio" name="payment_method" value="GCash" id="gcash" required>
+                        <label for="gcash">
+                        <img src="../images/Gcash.png" alt="GCash" width="50">
+                            GCash
+                        </label>
+                    </div>
+                    <div class="pradio">
+                        <input type="radio" name="payment_method" value="Cash on Pickup" id="cop" required>
+                        <label for="cop">
+                        <img src="../images/cop.png" alt="Cash on PickUp" width="50">
+                            Cash on Pickup
+                        </label>
+                    </div>
+                </form>
+                <hr>
+                <div class="summary">
+                    <p>
+                        <strong>Total:</strong>
+                        ₱<?php echo number_format($total_price, 2); ?>
+                    </p>
                 </div>
-                <div class="modal-body">
-                    <p>Scan the QR Code to pay:</p>
-                    <img src="../images/gcashqr.jpg" alt="GCash QR Code" style="width: 100%; height: auto;">
-                    <form method="POST">
-                        <input type="hidden" name="payment_method" value="gcash">
-                        <label for="reference_number">Reference Number:</label>
-                        <input type="text" name="reference_number" class="form-control" required>
-                        <label for="amount_paid">Amount Paid:</label>
-                        <input type="text" name="amount_paid" class="form-control" value="<?php echo $total_price; ?>"
-                            readonly>
-                        <button type="submit" class="btn btn-success mt-3">Done</button>
-                    </form>
-                </div>
+                <button class="checkout" id="proceed-payment">Proceed to Payment</button>
             </div>
         </div>
-    </div>
 
-    <div class="modal fade" id="copModal" tabindex="-1" aria-labelledby="copModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="copModalLabel">Cash on Pickup</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">&times;</button>
+                <!-- GCash Modal -->
+                <div class="modal" id="gcashModal">
+                    <div class="modal-dialog">
+                        <div class="modal-header">
+                            GCash Payment
+                            <button class="modal-close" data-dismiss="modal">&times;</button>
+                        </div>
+                        <div class="modal-body">
+                            <p>Scan the QR Code to pay:</p>
+                            <img src="../images/gcashqr.jpg" alt="GCash QR Code" style="width: 100%; height: auto;">
+                            <form method="POST">
+                                <input type="hidden" name="payment_method" value="GCash">
+                                <label for="reference_number">Reference Number:</label>
+                                <input type="text" name="reference_number" class="form-control" required>
+                                <label for="amount_paid">Amount Paid:</label>
+                                <input type="text" name="amount_paid" class="form-control" value="₱<?php echo number_format($total_price, 2); ?>" readonly>
+                                <button type="submit" class="btn btn-success">Done</button>
+                            </form>
+                        </div>
+                    </div>
                 </div>
-                <div class="modal-body">
-                    <p>Please bring the exact amount of ₱<?php echo number_format($total_price, 2); ?> upon pickup.</p>
-                    <form method="POST">
-                        <input type="hidden" name="payment_method" value="cop">
-                        <input type="hidden" name="reference_number" value="">
-                        <input type="hidden" name="amount_paid" value="<?php echo $total_price; ?>">
-                        <button type="submit" class="btn btn-success">Confirm</button>
-                    </form>
+
+                <!-- Cash on Pickup Modal -->
+                <div class="modal" id="copModal">
+                    <div class="modal-dialog">
+                        <div class="modal-header">
+                            Cash on Pickup
+                            <button class="modal-close" data-dismiss="modal">&times;</button>
+                        </div>
+                        <div class="modal-body">
+                            <p>Please bring the exact amount of ₱<?php echo number_format($total_price, 2); ?> upon pickup.</p>
+                            <form method="POST">
+                                <input type="hidden" name="payment_method" value="Cash on Pickup">
+                                <input type="hidden" name="amount_paid" value="<?php echo $total_price; ?>">
+                                <button type="submit" class="btn btn-success">Confirm</button>
+                            </form>
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </div>
-    </div>
+            </div>   
+        </div>    
+    </body>
 
-
-    <script>
-        $(document).ready(function () {
-            $('#proceed-payment').on('click', function () {
-                if ($('#gcash').is(':checked')) {
-                    $('#gcashModal').modal('show');
-                } else if ($('#cop').is(':checked')) {
-                    $('#copModal').modal('show');
-                } else {
-                    alert('Please select a payment method.');
-                }
-            });
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#proceed-payment').on('click', function () {
+            if ($('#gcash').is(':checked')) {
+                $('#gcashModal').fadeIn();
+            } else if ($('#cop').is(':checked')) {
+                $('#copModal').fadeIn();
+            } else {
+                alert('Please select a payment method.');
+            }
         });
-    </script>
-</body>
 
-</html>
+        $('.modal-close').on('click', function () {
+            $(this).closest('.modal').fadeOut();
+        });
+    });
+</script>
