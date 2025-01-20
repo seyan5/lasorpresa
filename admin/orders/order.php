@@ -1,9 +1,10 @@
 <?php
 ob_start();
-session_start();
 include("../inc/config.php");
 include("../inc/functions.php");
 include("../inc/CSRF_Protect.php");
+require_once 'auth.php';
+
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_status'])) {
   try {

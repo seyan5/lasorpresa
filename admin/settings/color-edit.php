@@ -1,5 +1,7 @@
 <?php
 include("../header.php");
+require_once '../auth.php';
+
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['color_id'], $_POST['color_name'])) {
     $colorId = $_POST['color_id'];

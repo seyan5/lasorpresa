@@ -1,6 +1,6 @@
 <?php
 ob_start();
-session_start();
+include('auth.php');
 include("inc/config.php");
 include("inc/functions.php");
 include("inc/CSRF_Protect.php");

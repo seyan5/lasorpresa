@@ -1,4 +1,9 @@
-<?php require_once('header.php'); ?>
+<?php 
+require_once('header.php'); 
+require_once 'auth.php';
+
+
+?>
 
 <!DOCTYPE html>
 <html lang="en">

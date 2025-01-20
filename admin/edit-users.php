@@ -1,5 +1,7 @@
 <?php
 include("../config.php");
+require_once 'auth.php';
+
 
 if ($_POST) {
     // Retrieve form data
