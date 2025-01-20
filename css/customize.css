@@ -1,10 +1,12 @@
+@import url(https://db.onlinewebfonts.com/c/90ac3b18aaef9f2db3ac8e062c7a033b?family=NudMotoya+Maru+W55+W5);
+
 :root{
   --pink: #e84393;
 }
 
 /* General Styles */
 body {
-  font-family: 'Caveat', cursive, sans-serif;
+  font-family: "NudMotoya Maru W55 W5";
   background-color: #f7f9fc;
   color: #333;
   margin: 0;
@@ -16,12 +18,13 @@ h2 {
   margin-top: 13rem;
   color: #666;
   font-size: 3rem;
+  font-family: "NudMotoya Maru W55 W5";
 }
 
 .section label {
   color: #666;
   font-size: 1.7rem;
-  font-style: italic;
+  font-family: "NudMotoya Maru W55 W5";
 }
 
 .section  #container_type{
@@ -33,7 +36,7 @@ h2 {
     color: #333; /* Text color */
     width: 100%; /* Full width */
     box-sizing: border-box; /* Include padding in width calculation */
-    font-style: italic;
+    font-family: "NudMotoya Maru W55 W5";
     margin-top: 15px;
     margin-bottom: 15px;
 }
@@ -47,7 +50,7 @@ h2 {
     color: #333; /* Text color */
     width: 100%; /* Full width */
     box-sizing: border-box; /* Include padding in width calculation */
-    font-style: italic;
+    font-family: "NudMotoya Maru W55 W5";
     margin-top: 15px;
     margin-bottom: 15px;
 }
@@ -57,7 +60,7 @@ h2 {
   max-width: 1200px;         /* Restrict maximum width */
   color: #666;
   font-size: 1.7rem;
-  font-style: italic;
+  font-family: "NudMotoya Maru W55 W5";
 }
 
 .custom-page {
@@ -69,7 +72,9 @@ h2 {
   justify-content: space-between;
   gap: 20px;
   font-size: 1.7rem;
+  font-family: "NudMotoya Maru W55 W5";
 }
+
 
 .custom-container {
   flex: 1 1 60%;
@@ -151,7 +156,7 @@ button {
 .remarks-label {
   color: #666;
   font-size: 1.7rem;
-  font-style: italic;
+  font-family: "NudMotoya Maru W55 W5";
 }
 
 
@@ -161,6 +166,16 @@ button[type="submit"] {
 }
 
 button[type="submit"]:hover {
+  background-color: #333;
+}
+
+.btn-primary {
+  background-color: var(--pink);
+  color: #fff;
+  font-family: "NudMotoya Maru W55 W5";
+}
+
+.btn-primary:hover {
   background-color: #333;
 }
 
@@ -214,7 +229,7 @@ img {
   margin: 10px 0;
   color: var(--pink);
   font-weight: bold;
-  font-style: italic;
+  font-family: "NudMotoya Maru W55 W5";
 }
 
 hr {
@@ -226,7 +241,7 @@ hr {
 .expected-image-label {
   color: #666;
   font-size: 1.7rem;
-  font-style: italic;      /* Adds space below the label */
+  font-family: "NudMotoya Maru W55 W5";      /* Adds space below the label */
 }
 
 .form-control-file {
