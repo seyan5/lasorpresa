@@ -3,20 +3,22 @@ require_once('header.php');
 require_once 'auth.php';
 
 
-// Handle form submission for adding color
-if (isset($_POST['form1'])) {
+
+
+// Handle form submission for editing color
+if (isset($_POST['form2'])) {
     $valid = 1;
     $error_message = '';
     $success_message = '';
 
-    // Validation: check if the color name is empty
+    // Validate Color Name
     if (empty($_POST['color_name'])) {
         $valid = 0;
         $error_message .= "Color Name cannot be empty<br>";
     } else {
-        // Duplicate Color Name check
-        $statement = $pdo->prepare("SELECT * FROM color WHERE color_name=?");
-        $statement->execute([$_POST['color_name']]);
+        // Duplicate Color Name check (ignoring the current color ID)
+        $statement = $pdo->prepare("SELECT * FROM color WHERE color_name=? AND color_id != ?");
+        $statement->execute([$_POST['color_name'], $_POST['color_id']]);
         $total = $statement->rowCount();
         if ($total) {
             $valid = 0;
@@ -24,23 +26,22 @@ if (isset($_POST['form1'])) {
         }
     }
 
-    // If validation passed, insert the new color into the database
+    // If validation passed, update the color
     if ($valid == 1) {
-        $statement = $pdo->prepare("INSERT INTO color (color_name) VALUES (?)");
-        $statement->execute([$_POST['color_name']]);
-        $success_message = 'Color is added successfully.';
+        $statement = $pdo->prepare("UPDATE color SET color_name=? WHERE color_id=?");
+        $statement->execute([$_POST['color_name'], $_POST['color_id']]);
+        $success_message = 'Color updated successfully.';
     }
 
-    // Make sure the headers are set to return JSON correctly
-    header('Content-Type: application/json');  // Ensure JSON response
-    // Ensure only one response is sent.
+    // Return JSON response
+    header('Content-Type: application/json');
     if ($valid == 1) {
         echo json_encode(['success' => $success_message]);
     } else {
         echo json_encode(['error' => $error_message]);
     }
 
-    exit();  // Ensure no additional output after the response
+    exit();
 }
 ?>
 
@@ -235,11 +236,8 @@ if (isset($_POST['form1'])) {
                 </div>
             </div>
 </div>
-        </section>
-    </div>
-</body>
 
-<!-- Modal Structure for Add Color -->
+<!-- Add New Color Modal -->
 <div class="modal fade" id="addColorModal" tabindex="-1" role="dialog" aria-labelledby="addColorModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -250,18 +248,25 @@ if (isset($_POST['form1'])) {
                 </button>
             </div>
             <div class="modal-body">
-                <form id="colorAddForm">
+                <!-- Error or Success Messages -->
+                <?php if (!empty($error_message)): ?>
+                    <div class="alert alert-danger"><?php echo $error_message; ?></div>
+                <?php endif; ?>
+                <?php if (!empty($success_message)): ?>
+                    <div class="alert alert-success"><?php echo $success_message; ?></div>
+                <?php endif; ?>
+
+                <!-- Add New Color Form -->
+                <form id="addColorForm" class="form-horizontal" action="" method="post">
                     <div class="form-group">
                         <label for="color_name">Color Name <span>*</span></label>
-                        <input type="text" class="form-control" id="color_name" name="color_name" required>
+                        <input type="text" class="form-control" name="color_name" id="color_name" required>
                     </div>
-                    <div class="form-group text-right">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-success">Submit</button>
-                    </div>
-                    <div id="errorMessage" class="alert alert-danger d-none"></div>
-                    <div id="successMessage" class="alert alert-success d-none"></div>
                 </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary" form="addColorForm" name="form1">Add Color</button>
             </div>
         </div>
     </div>
@@ -279,149 +284,51 @@ if (isset($_POST['form1'])) {
                 </button>
             </div>
             <div class="modal-body">
-                <form id="colorEditForm">
-                    <input type="hidden" id="edit_color_id" name="color_id">
+                <!-- Error or Success Messages -->
+                <div id="edit-error-message" class="alert alert-danger" style="display:none;"></div>
+                <div id="edit-success-message" class="alert alert-success" style="display:none;"></div>
+
+                <!-- Edit Color Form -->
+                <form id="editColorForm" class="form-horizontal" action="" method="post">
+                    <input type="hidden" name="color_id" id="editColorId">
                     <div class="form-group">
-                        <label for="color_name">Color Name <span>*</span></label>
-                        <input type="text" class="form-control" id="edit_color_name" name="color_name" required>
+                        <label for="edit_color_name">Color Name <span>*</span></label>
+                        <input type="text" class="form-control" name="color_name" id="edit_color_name" required>
                     </div>
-                    <div class="form-group text-right">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-success">Save Changes</button>
-                    </div>
-                    <div id="editErrorMessage" class="alert alert-danger d-none"></div>
-                    <div id="editSuccessMessage" class="alert alert-success d-none"></div>
                 </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary" form="editColorForm" name="form2">Save Changes</button>
             </div>
         </div>
     </div>
 </div>
 
 
+        </section>
+    </div>
+
+</body>
+
+
 
 <script>
-    $(document).ready(function() {
-    $('#colorAddForm').on('submit', function(e) {
-        e.preventDefault();  // Prevent form submission
+    // JavaScript for Edit Color Modal
+$('#editColorModal').on('show.bs.modal', function (event) {
+    var button = $(event.relatedTarget); // Button that triggered the modal
+    var colorId = button.data('id'); // Extract info from data-* attributes
+    var colorName = button.data('name');
 
-        var colorName = $('#color_name').val();
-
-        // Clear previous messages
-        $('#errorMessage').addClass('d-none');
-        $('#successMessage').addClass('d-none');
-
-        // Validate input (check if color name is empty)
-        if (colorName === '') {
-            window.location.href = 'settings.php';  
-            $('#errorMessage').text('Color Name cannot be empty').removeClass('d-none');
-            return; // Stop further processing if input is invalid
-        }
-
-        // Send AJAX request to add the color
-        $.ajax({
-            url: 'settings/color-add.php',
-            type: 'POST',
-            data: { color_name: colorName, form1: true },
-            success: function(response) {
-                console.log("Raw Response from server:", response);  // Log raw response to console
-
-                try {
-                    var data = JSON.parse(response);  // Attempt to parse the JSON response
-
-                    // Check for success or error messages
-                    if (data.success) {
-                        $('#successMessage').text(data.success).removeClass('d-none');
-                        $('#errorMessage').addClass('d-none');
-                        $('#color_name').val('');  // Clear input field after success
-
-                        setTimeout(function() {
-                            $('#addColorModal').modal('hide');  // Close the modal after a short delay
-                            window.location.href = 'settings.php';  // Redirect to settings page
-                        }, 1500);
-                    } else if (data.error) {
-                        $('#errorMessage').text(data.error).removeClass('d-none');
-                        $('#successMessage').addClass('d-none');
-                    }
-                } catch (error) {
-                    // If there's a JSON parsing error, show an error message
-                    console.error('JSON parsing error:', error);  // Log the error
-                    $('#errorMessage').text('There was an error processing the response. Please try again later.').removeClass('d-none');
-                }
-            },
-            error: function(xhr, status, error) {
-                // Handle AJAX request failure
-                console.error("AJAX Error:", error);  // Log AJAX error for debugging
-                $('#errorMessage').text('An error occurred: ' + error).removeClass('d-none');
-            }
-        });
-    });
+    // Populate the form with the color data
+    var modal = $(this);
+    modal.find('#editColorId').val(colorId);
+    modal.find('#edit_color_name').val(colorName);
 });
 
-$(document).ready(function() {
-    // When the Edit button is clicked
-    $('a[data-toggle="modal"]').on('click', function() {
-        // Get the color ID and color name from the data attributes
-        var colorId = $(this).data('id');
-        var colorName = $(this).data('name');
 
-        // Set the values in the modal form
-        $('#edit_color_id').val(colorId);
-        $('#edit_color_name').val(colorName);
-    });
-
-    // Handle form submission for editing color
-    $('#colorEditForm').on('submit', function(e) {
-        e.preventDefault();  // Prevent form submission
-
-        var colorId = $('#edit_color_id').val();
-        var colorName = $('#edit_color_name').val();
-
-        // Clear previous messages
-        $('#editErrorMessage').addClass('d-none');
-        $('#editSuccessMessage').addClass('d-none');
-
-        // Validate input (check if color name is empty)
-        if (colorName === '') {
-            $('#editErrorMessage').text('Color Name cannot be empty').removeClass('d-none');
-            return; // Stop further processing if input is invalid
-        }
-
-        // Send AJAX request to edit the color
-        $.ajax({
-            url: 'settings/color-edit.php',  // Your server-side script to handle color edit
-            type: 'POST',
-            data: { color_id: colorId, color_name: colorName, form1: true },
-            success: function(response) {
-    console.log("Response from server:", response);  // Log the response to check
-
-    try {
-        var data = JSON.parse(response);
-
-        if (data.success) {
-            $('#editSuccessMessage').text(data.success).removeClass('d-none');
-            $('#editErrorMessage').addClass('d-none');
-
-            setTimeout(function() {
-                $('#editColorModal').modal('hide');
-                window.location.href = 'settings.php';  // Redirect after edit
-            }, 1500);
-        } else if (data.error) {
-            $('#editErrorMessage').text(data.error).removeClass('d-none');
-            $('#editSuccessMessage').addClass('d-none');
-        }
-    } catch (error) {
-        console.error('JSON parsing error:', error);
-        $('#editErrorMessage').text('There was an error processing the response. Please try again later.').removeClass('d-none');
-    }
-            },
-            error: function(xhr, status, error) {
-                console.error("AJAX Error:", error);
-                $('#editErrorMessage').text('An error occurred: ' + error).removeClass('d-none');
-            }
-        });
-    });
-});
 
 </script>
+
 
 
