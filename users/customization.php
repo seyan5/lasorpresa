@@ -48,7 +48,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <div class="custom-row">
             <!-- Left side -->
             <div class="custom-left">
-                <form id="floral-customization-form" action="customization-submit.php" method="POST">
+            <form id="floral-customization-form" action="customization-submit.php" method="POST"
+            enctype="multipart/form-data">
                     <!-- Container Customization Section -->
                     <div class="section">
                         <div class="form-group">
@@ -85,7 +86,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             <div class="flower-item" id="flower-item-<?php echo $index + 1; ?>">
                                 <div class="form-group">
                                     <label for="flower_type_<?php echo $index + 1; ?>" class="flower-type-label">Choose Flower Type:</label>
-                                    <select id="flower_type_<?= $index + 1 ?>" name="flower_type[]" class="form-control flower-type-select" 
+                                    <select id="flower_type_<?= $index + 1 ?>" name="flower_type[]" class="form-control flower-type-select"" 
                                         required>
                                         <?php foreach ($flower_types as $flower): ?>
                                             <option value="<?= $flower['id'] ?>"
