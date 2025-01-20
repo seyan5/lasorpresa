@@ -25,41 +25,57 @@ try {
 <div class="container">
     <?php if (!empty($reviews)): ?>
         <?php foreach ($reviews as $review): ?>
-            <div class="box">
-                <div class="user">
-                    <div class="user-info">
-                        <h3><?php echo htmlspecialchars($review['cust_name']); ?></h3>
-                        <span>Reviewed Product: <?php echo htmlspecialchars($review['product_name']); ?></span>
+            <a href="product-details.php?p_id=<?php echo $review['p_id']; ?>" class="review-link">
+                <div class="box">
+                    <div class="user">
+                        <div class="user-info">
+                            <h3><?php echo htmlspecialchars($review['cust_name']); ?></h3>
+                            <span>Reviewed Product: <?php echo htmlspecialchars($review['product_name']); ?></span>
+                        </div>
+                    </div>
+                    
+                    <!-- Review Text -->
+                    <h>Comment: </h>
+                    <p><?php echo nl2br(htmlspecialchars($review['review'])); ?></p>
+                    
+                    <!-- Product Image -->
+                    <img src="../admin/uploads/<?php echo htmlspecialchars($review['featured_photo']); ?>" alt="<?php echo htmlspecialchars($review['product_name']); ?>">
+
+                    <!-- Displaying Rating Stars -->
+                    <div class="stars">
+                        <?php for ($i = 0; $i < $review['rating']; $i++): ?>
+                            <i class="fas fa-star"></i>
+                        <?php endfor; ?>
+                        <?php for ($i = $review['rating']; $i < 5; $i++): ?>
+                            <i class="far fa-star"></i>
+                        <?php endfor; ?>
+                    </div>
+
+                    <!-- Review Date -->
+                    <div class="review-date">
+                        <strong>Reviewed on:</strong> <?php echo date("F j, Y, g:i a", strtotime($review['created_at'])); ?>
                     </div>
                 </div>
-                
-
-                <!-- Review Text -->
-                <h>comment: </h>
-                <p><?php echo nl2br(htmlspecialchars($review['review'])); ?></p>
-                
-                <!-- Product Image -->
-                <img src="../admin/uploads/<?php echo htmlspecialchars($review['featured_photo']); ?>" alt="<?php echo htmlspecialchars($review['product_name']); ?>">
-
-                <!-- Displaying Rating Stars -->
-                <div class="stars">
-                    <?php for ($i = 0; $i < $review['rating']; $i++): ?>
-                        <i class="fas fa-star"></i>
-                    <?php endfor; ?>
-                    <?php for ($i = $review['rating']; $i < 5; $i++): ?>
-                        <i class="far fa-star"></i>
-                    <?php endfor; ?>
-                </div>
-
-                <!-- Review Date -->
-                <div class="review-date">
-                    <strong>Reviewed on:</strong> <?php echo date("F j, Y, g:i a", strtotime($review['created_at'])); ?>
-                </div>
-            </div>
+            </a>
         <?php endforeach; ?>
     <?php else: ?>
         <p>No reviews available.</p>
     <?php endif; ?>
 </div>
+
 <?php include('../loading.php'); ?>
 
+<style>
+    .review-link {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+}
+
+.review-link:hover .box {
+    transform: scale(1.02);
+    transition: transform 0.3s;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+</style>
