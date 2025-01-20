@@ -1,5 +1,7 @@
 <?php
 require_once('../header.php');
+require_once '../auth.php';
+
 
 // Preventing direct access to the page
 if (!isset($_REQUEST['id'])) {

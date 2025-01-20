@@ -1,9 +1,9 @@
 <?php
 ob_start();
-session_start();
 include("inc/config.php");
 include("inc/functions.php");
 include("inc/CSRF_Protect.php");
+include('auth.php');
 
 // Query to fetch recent customers, ordered by the registration date
 try {

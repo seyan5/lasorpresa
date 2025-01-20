@@ -10,8 +10,8 @@ if (isset($_POST['login'])) {
     $password = $_POST['password'];
 
     try {
-        // Corrected query to bind the :email parameter
-        $stmt = $pdo->prepare("SELECT id, name, email, password FROM users WHERE email = :email");
+        // Correct query to bind the :email parameter and include user_type
+        $stmt = $pdo->prepare("SELECT id, name, email, password, user_type FROM users WHERE email = :email");
         $stmt->execute([':email' => $email]);
 
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -23,9 +23,14 @@ if (isset($_POST['login'])) {
                 $_SESSION['id'] = $user['id'];
                 $_SESSION['name'] = $user['name'];
                 $_SESSION['email'] = $user['email'];
+                $_SESSION['user_type'] = $user['user_type'];
 
-                // Redirect to the dashboard or user home page
-                header("Location: dashboard.php"); // Change to the appropriate page
+                // Redirect based on user type
+                if ($user['user_type'] === 'admin') {
+                    header("Location: dashboard.php"); // Change to admin dashboard page
+                } else {
+                    header("Location: login.php"); // Change to user home page
+                }
                 exit;
             } else {
                 echo "Incorrect password. Please try again.";
@@ -38,6 +43,7 @@ if (isset($_POST['login'])) {
     }
 }
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">

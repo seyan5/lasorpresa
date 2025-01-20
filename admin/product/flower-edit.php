@@ -1,6 +1,7 @@
 <?php
 // Database connection
 require_once('../header.php');
+include('auth.php');
 
 $id = $_GET['id'] ?? 0;
 $stmt = $pdo->prepare("SELECT * FROM flowers WHERE id = ?");

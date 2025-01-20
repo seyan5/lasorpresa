@@ -1,5 +1,7 @@
 <?php
-include("header.php"); // Make sure config.php is properly included
+include("header.php");
+require_once 'auth.php';
+ // Make sure config.php is properly included
 
 
 

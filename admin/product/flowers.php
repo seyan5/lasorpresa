@@ -2,6 +2,7 @@
 // Database connection
 require_once('../header.php');
 
+
 $stmt = $pdo->prepare("SELECT * FROM flowers");
 $stmt->execute();
 $flowers = $stmt->fetchAll(PDO::FETCH_ASSOC);
