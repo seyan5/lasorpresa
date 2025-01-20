@@ -3,7 +3,7 @@ ob_start();
 include("../inc/config.php");
 include("../inc/functions.php");
 include("../inc/CSRF_Protect.php");
-require_once 'auth.php';
+require_once '../auth.php';
 
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_status'])) {
@@ -41,7 +41,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_status'])) {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Order Dashboard</title>
+  <title>Admin - Order Dashboard</title>
   <link rel="stylesheet" href="order.css">
 </head>
 
