@@ -200,7 +200,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </div>
                 <div class="modal-body">
                     <p>Scan the QR Code to pay:</p>
-                    <img src="path_to_qr_code_image" alt="GCash QR Code" style="width: 100%; height: auto;">
+                    <img src="../images/gcashqr.jpg" alt="GCash QR Code" style="width: 100%; height: auto;">
                     <form method="POST">
                         <input type="hidden" name="payment_method" value="gcash">
                         <label for="reference_number">Reference Number:</label>
