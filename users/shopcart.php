@@ -319,10 +319,21 @@ function checkout() {
 
     // Confirm deletion of cart item
     function confirmDelete(itemIndex) {
-      if (confirm("Are you sure you want to remove this item from your cart?")) {
-        document.getElementById('delete-form-' + itemIndex).submit();
-      }
-    }
+    Swal.fire({
+        title: 'Are you sure?',
+        text: 'You are about to remove this item from your cart.',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, remove it!',
+        cancelButtonText: 'Cancel',
+        reverseButtons: true
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // If confirmed, submit the form
+            document.getElementById('delete-form-' + itemIndex).submit();
+        }
+    });
+}
   </script>
 </body>
 
