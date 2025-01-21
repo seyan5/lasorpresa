@@ -1,35 +1,44 @@
 <?php
 require 'conn.php'; // Include database connection
 
-// Check if ecat_id is passed
+// Check if ecat_id and sort parameters are passed
 $ecat_id = isset($_GET['ecat_id']) ? (int)$_GET['ecat_id'] : 'all';
+$sort = isset($_GET['sort']) ? $_GET['sort'] : 'Default';  // Default is 'Default'
 
+// Build the query based on ecat_id and sort parameter
 try {
-    // Prepare SQL query based on whether 'all' or a specific category is selected
+    // Base query
+    $baseQuery = "
+        SELECT p_id, name, featured_photo, current_price 
+        FROM product
+        WHERE is_active = 1 AND ecat_id IN (
+            SELECT ecat_id 
+            FROM end_category 
+            WHERE mcat_id = 20
+        )
+    ";
+
+    // Check for category and sorting
     if ($ecat_id === 'all') {
-        // Fetch all products for ecat_id that is linked to mcat_id = 3
-        $statement = $pdo->prepare("
-            SELECT p_id, name, featured_photo, current_price 
-            FROM product
-            WHERE is_active = 1 AND ecat_id IN (
-                SELECT ecat_id 
-                FROM end_category 
-                WHERE mcat_id = 20
-            )
-            ORDER BY p_id DESC
-        ");
+        // If 'all' is selected, just order by p_id
+        $query = $baseQuery . " ORDER BY p_id DESC";
     } else {
-        // Fetch products for the selected category within mcat_id = 3
-        $statement = $pdo->prepare("
-            SELECT p_id, name, featured_photo, current_price 
-            FROM product
-            WHERE is_active = 1 AND ecat_id = :ecat_id AND ecat_id IN (
-                SELECT ecat_id 
-                FROM end_category 
-                WHERE mcat_id = 20
-            )
-            ORDER BY p_id DESC
-        ");
+        // If a specific category is selected
+        $query = $baseQuery . " AND ecat_id = :ecat_id ORDER BY p_id DESC";
+    }
+
+    // Modify the query based on the sort parameter
+    if ($sort === 'LowToHigh') {
+        $query = str_replace("ORDER BY p_id DESC", "ORDER BY current_price ASC", $query);
+    } elseif ($sort === 'HighToLow') {
+        $query = str_replace("ORDER BY p_id DESC", "ORDER BY current_price DESC", $query);
+    }
+
+    // Prepare the statement
+    $statement = $pdo->prepare($query);
+
+    // Bind parameters if a specific category is selected
+    if ($ecat_id !== 'all') {
         $statement->bindParam(':ecat_id', $ecat_id, PDO::PARAM_INT);
     }
 
@@ -62,7 +71,6 @@ try {
     // Error handling for database connection or query issues
     echo "<p>Error loading products: " . htmlspecialchars($e->getMessage()) . "</p>";
 }
-
 
 ?>
 
