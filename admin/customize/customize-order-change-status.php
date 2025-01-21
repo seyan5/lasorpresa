@@ -5,6 +5,14 @@ include("../inc/config.php");
 include("../inc/functions.php");
 include("../inc/CSRF_Protect.php");
 
+// Include PHPMailer files
+require '../../mail/PHPMailer/src/Exception.php';
+require '../../mail/PHPMailer/src/PHPMailer.php';
+require '../../mail/PHPMailer/src/SMTP.php';
+
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
 header('Content-Type: application/json');
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -22,6 +30,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->execute(['value' => $value, 'order_id' => $orderId]);
 
         if ($stmt->rowCount() > 0) {
+            // Fetch customer details (email, name) after updating the order status
+            $stmtCustomer = $pdo->prepare("SELECT customer_email, customer_name FROM custom_order WHERE order_id = :order_id");
+            $stmtCustomer->execute(['order_id' => $orderId]);
+            $customer = $stmtCustomer->fetch(PDO::FETCH_ASSOC);
+
+            if ($customer) {
+                $customerEmail = $customer['customer_email'];
+                $customerName = $customer['customer_name'];
+
+                // Send email notification
+                sendStatusChangeNotification($customerEmail, $customerName, $orderId, $field, $value);
+            }
+
             echo json_encode(["success" => true, "message" => ucfirst($field) . " updated successfully."]);
         } else {
             echo json_encode(["success" => false, "message" => "No changes were made."]);
@@ -32,4 +53,40 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 } else {
     echo json_encode(["success" => false, "message" => "Invalid request method."]);
 }
-?>
+
+function sendStatusChangeNotification($customerEmail, $customerName, $orderId, $field, $value)
+{
+    $mail = new PHPMailer(true);
+
+    try {
+        // SMTP configuration
+        $mail->isSMTP();
+        $mail->Host = 'smtp.gmail.com'; // Replace with your SMTP host
+        $mail->SMTPAuth = true;
+        $mail->Username = 'jpdeogracias@gmail.com'; // Replace with your email
+        $mail->Password = 'scut aysl nlei jyng'; // Replace with your email password
+        $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+        $mail->Port = 587;
+
+        // Email recipients
+        $mail->setFrom('lasorpresa@gmail.com', 'Lasorpreas'); // Replace with your sender email and name
+        $mail->addAddress($customerEmail, $customerName);
+
+        // Email content
+        $mail->isHTML(true);
+        $mail->Subject = 'Customize Order Status Update: Order ID #' . $orderId;
+        $mail->Body = "
+            <h3>Dear $customerName,</h3>
+            <p>The status of your customized order (Order ID: <strong>$orderId</strong>) has been updated:</p>
+            <p><strong>" . ucfirst($field) . ":</strong> $value</p>
+            <p>Thank you for shopping with us!</p>
+            <p>Best regards,<br>Your Shop Name</p>
+        ";
+
+        // Send email
+        $mail->send();
+    } catch (Exception $e) {
+        // Log the error for debugging
+        error_log("Failed to send email: " . $mail->ErrorInfo);
+    }
+}
