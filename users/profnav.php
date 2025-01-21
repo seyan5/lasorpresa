@@ -24,7 +24,6 @@
     <link rel="stylesheet" href="../css/main.css?v=1.1">
 </head>
 
-<>
     <!-- header -->
 
     <header>

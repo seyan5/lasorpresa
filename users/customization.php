@@ -108,7 +108,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                 <div class="form-group">
                                     <label for="num_flowers_<?php echo $index + 1; ?>">Number of Flowers:</label>
                                     <input type="number" id="num_flowers_<?php echo $index + 1; ?>" name="num_flowers[]"
-                                        class="form-control" min="1" max="3"
+                                        class="form-control" min="1" max="10"
                                         value="<?php echo isset($num_flowers[$index]) ? $num_flowers[$index] : 1; ?>"
                                         required>
                                 </div>
@@ -146,10 +146,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </div>
     <div class="col-md-5">
         <h4>Your Selections</h4>
+        <button type="button" class="btn btn-primary" onclick="location.href='customize-cart.php'">Customization Cart</button>
         <div id="selected-selections">
             <!-- This will show the real-time selections of flowers -->
         </div>
-        <button type="button" class="btn btn-primary" onclick="location.href='customize-cart.php'">Customization Cart</button>
+        
     </div>
 </div>
 <?php include('../loading.php'); ?>
