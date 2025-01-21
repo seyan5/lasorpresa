@@ -12,6 +12,10 @@ if (!$cust_id) {
   exit;
 }
 
+$items_per_page = 4; // Number of items per page
+$page = isset($_GET['page']) ? (int)$_GET['page'] : 1; // Current page
+$offset = ($page - 1) * $items_per_page; // Offset for pagination
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $action = $_POST['action'] ?? null;
   $order_id = $_POST['order_id'] ?? null;
@@ -23,32 +27,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
       // Check if a review already exists
       $stmt = $pdo->prepare("SELECT review_id FROM reviews WHERE order_id = :order_id AND product_id = :product_id AND customer_id = :customer_id");
-      $stmt->execute([
-        ':order_id' => $order_id,
-        ':product_id' => $product_id,
-        ':customer_id' => $cust_id
-      ]);
-      
+      $stmt->execute([ ':order_id' => $order_id, ':product_id' => $product_id, ':customer_id' => $cust_id ]);
       $existing_review = $stmt->fetch(PDO::FETCH_ASSOC);
 
       if ($existing_review) {
         // Update the existing review
         $stmt = $pdo->prepare("UPDATE reviews SET review = :review, rating = :rating WHERE review_id = :review_id");
-        $stmt->execute([
-          ':review' => $review,
-          ':rating' => $rating,
-          ':review_id' => $existing_review['review_id']
-        ]);
+        $stmt->execute([ ':review' => $review, ':rating' => $rating, ':review_id' => $existing_review['review_id'] ]);
       } else {
         // Insert new review
         $stmt = $pdo->prepare("INSERT INTO reviews (order_id, product_id, review, rating, customer_id) VALUES (:order_id, :product_id, :review, :rating, :customer_id)");
-        $stmt->execute([
-          ':order_id' => $order_id,
-          ':product_id' => $product_id,
-          ':review' => $review,
-          ':rating' => $rating,
-          ':customer_id' => $cust_id
-        ]);
+        $stmt->execute([ ':order_id' => $order_id, ':product_id' => $product_id, ':review' => $review, ':rating' => $rating, ':customer_id' => $cust_id ]);
       }
 
       echo json_encode(['success' => true, 'message' => 'Review submitted or updated successfully']);
@@ -61,14 +50,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 ?>
 
 <?php include('profnav.php'); ?>
-<link rel="stylesheet" href="../css/customerorder.css?v.1.0">
+<link rel="stylesheet" href="../css/customerorder.css?v.1.1">
 <div class="containers">
   <div class="col-md-12"> 
     <div class="container my-4">
       <h1 class="text-center">My Orders</h1>
       <div class="table-container">
         <table class="table table-bordered table-hover">
-          <thead class="table-dark">
+          <thead>
             <tr>
               <th>#</th>
               <th>Customer</th>
@@ -77,43 +66,43 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
               <th>Paid Amount</th>
               <th>Payment Status</th>
               <th>Shipping Status</th>
-              <th >Action</th>
+              <th>Action</th>
             </tr>
           </thead>
           <tbody>
             <?php
-            // Query to join the relevant tables and filter by the logged-in customer's ID
+            // Query to join the relevant tables and filter by the logged-in customer's ID with pagination
             $stmt = $pdo->prepare("
-    SELECT 
-        c.cust_id, 
-        c.cust_name, 
-        c.cust_email, 
-        p.name AS product_name, 
-        oi.quantity, 
-        p.current_price AS unit_price, 
-        pay.payment_method, 
-        pay.payment_id, 
-        pay.created_at AS payment_date, 
-        pay.amount_paid, 
-        pay.shipping_status, 
-        pay.payment_status, 
-        o.order_id, 
-        p.p_id
-    FROM 
-        customer c
-    JOIN orders o ON c.cust_id = o.customer_id
-    JOIN order_items oi ON o.order_id = oi.order_id
-    JOIN product p ON oi.product_id = p.p_id
-    JOIN payment pay ON o.order_id = pay.order_id
-    WHERE c.cust_id = :cust_id
-    ORDER BY pay.created_at DESC
-");
+              SELECT 
+                c.cust_id, 
+                c.cust_name, 
+                c.cust_email, 
+                p.name AS product_name, 
+                oi.quantity, 
+                p.current_price AS unit_price, 
+                pay.payment_method, 
+                pay.payment_id, 
+                pay.created_at AS payment_date, 
+                pay.amount_paid, 
+                pay.shipping_status, 
+                pay.payment_status, 
+                o.order_id, 
+                p.p_id
+              FROM 
+                customer c
+              JOIN orders o ON c.cust_id = o.customer_id
+              JOIN order_items oi ON o.order_id = oi.order_id
+              JOIN product p ON oi.product_id = p.p_id
+              JOIN payment pay ON o.order_id = pay.order_id
+              WHERE c.cust_id = :cust_id
+              ORDER BY pay.created_at DESC
+              LIMIT :offset, :items_per_page
+            ");
+            $stmt->bindParam(':cust_id', $cust_id, PDO::PARAM_INT);
+            $stmt->bindParam(':offset', $offset, PDO::PARAM_INT);
+            $stmt->bindParam(':items_per_page', $items_per_page, PDO::PARAM_INT);
 
-
-            // Execute query
-            $stmt->execute([':cust_id' => $cust_id]);
-
-            // Fetch orders
+            $stmt->execute();
             $orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
             if (empty($orders)) {
@@ -150,132 +139,136 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </span>
                   </td>
                   <td class="text-center">
-  <div style="display: flex; justify-content: center; align-items: center;">
-    <?php if ($order['shipping_status'] === 'delivered'): ?>
-      <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#reviewModal" data-order-id="<?= $order['order_id'] ?>" data-product-id="<?= $order['p_id'] ?>">Add Review</button>
-    <?php else: ?>
-      <button class="btn btn-secondary" disabled>Add Review</button>
-    <?php endif; ?>
-  </div>
-</td>
-
+                    <div style="display: flex; justify-content: center; align-items: center;">
+                      <?php if ($order['shipping_status'] === 'delivered'): ?>
+                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#reviewModal" data-order-id="<?= $order['order_id'] ?>" data-product-id="<?= $order['p_id'] ?>">Add Review</button>
+                      <?php else: ?>
+                        <button class="btn btn-secondary" disabled>Add Review</button>
+                      <?php endif; ?>
+                    </div>
+                  </td>
                 </tr>
               <?php }
             } ?>
           </tbody>
         </table>
       </div>
-    </div>
 
-    <!-- Modal for Adding Review -->
-    <div class="modal fade" id="reviewModal" tabindex="-1" aria-labelledby="reviewModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="reviewModalLabel">Add Review</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <form id="reviewForm">
-          <textarea id="review" rows="3" placeholder="Write your review here"></textarea>
-          <select id="rating">
-            <option value="">Select Rating</option>
-            <option value="1">1</option>
-            <option value="2">2</option>
-            <option value="3">3</option>
-            <option value="4">4</option>
-            <option value="5">5</option>
-          </select>
-          <input type="hidden" id="order-id">
-          <input type="hidden" id="product-id">
-          <button type="submit" class="btn btn-primary w-100">Submit Review</button>
-        </form>
+      <!-- Pagination -->
+      <div class="pagination">
+        <?php
+        // Calculate total pages
+        $stmt = $pdo->prepare("SELECT COUNT(*) FROM orders WHERE customer_id = :cust_id");
+        $stmt->execute([':cust_id' => $cust_id]);
+        $total_orders = $stmt->fetchColumn();
+        $total_pages = ceil($total_orders / $items_per_page);
+
+        // Display pagination links
+        for ($i = 1; $i <= $total_pages; $i++) {
+          echo "<a href='?page=$i' class='" . ($i === $page ? 'active' : '') . "'>$i</a> ";
+        }
+        ?>
       </div>
     </div>
   </div>
+
+  <!-- Modal for Adding Review -->
+  <div class="modal fade" id="reviewModal" tabindex="-1" aria-labelledby="reviewModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="reviewModalLabel">Add Review</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form id="reviewForm">
+            <textarea id="review" rows="3" placeholder="Write your review here"></textarea>
+            <select id="rating">
+              <option value="">Select Rating</option>
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
+            </select>
+            <input type="hidden" id="order-id">
+            <input type="hidden" id="product-id">
+            <button type="submit" class="btn btn-primary w-100">Submit Review</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  // Load existing review into the modal for editing
+  reviewModal.addEventListener('show.bs.modal', function(event) {
+    const button = event.relatedTarget;
+    const orderId = button.getAttribute('data-order-id');
+    const productId = button.getAttribute('data-product-id');
 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-  <script>
-    // Load existing review into the modal for editing
-reviewModal.addEventListener('show.bs.modal', function(event) {
-  const button = event.relatedTarget;
-  const orderId = button.getAttribute('data-order-id');
-  const productId = button.getAttribute('data-product-id');
+    document.getElementById('order-id').value = orderId;
+    document.getElementById('product-id').value = productId;
 
-  document.getElementById('order-id').value = orderId;
-  document.getElementById('product-id').value = productId;
+    // Fetch existing review for the order-product combination
+    fetch(`get_review.php?order_id=${orderId}&product_id=${productId}`)
+      .then(response => response.json())
+      .then(data => {
+        document.getElementById('review').value = data.review || '';
+        document.getElementById('rating').value = data.rating || '';
+      })
+      .catch(error => console.error('Error fetching review:', error));
+  });
 
-  // Fetch existing review for the order-product combination
-  fetch(`get_review.php?order_id=${orderId}&product_id=${productId}`)
+  // Handle review form submission for add/update
+  document.getElementById('reviewForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    const orderId = document.getElementById('order-id').value;
+    const productId = document.getElementById('product-id').value;
+    const review = document.getElementById('review').value;
+    const rating = document.getElementById('rating').value;
+
+    fetch('', {
+      method: 'POST',
+      body: new URLSearchParams({
+        action: 'add_or_update_review',
+        order_id: orderId,
+        product_id: productId,
+        review: review,
+        rating: rating
+      }),
+    })
     .then(response => response.json())
     .then(data => {
-      document.getElementById('review').value = data.review || '';
-      document.getElementById('rating').value = data.rating || '';
-    })
-    .catch(error => console.error('Error fetching review:', error));
-});
-
-// Handle review form submission for add/update
-document.getElementById('reviewForm').addEventListener('submit', function(e) {
-  e.preventDefault();
-
-  const orderId = document.getElementById('order-id').value;
-  const productId = document.getElementById('product-id').value;
-  const review = document.getElementById('review').value;
-  const rating = document.getElementById('rating').value;
-
-  fetch('', {
-    method: 'POST',
-    body: new URLSearchParams({
-      action: 'add_or_update_review',
-      order_id: orderId,
-      product_id: productId,
-      review: review,
-      rating: rating
-    }),
-  })
-  .then(response => response.json())
-  .then(data => {
-    if (data.success) {
-      alert('Review updated successfully');
-      window.location.reload();
-    } else {
-      alert('Error: ' + data.message);
-    }
+      if (data.success) {
+        alert('Review updated successfully');
+        window.location.reload();
+      } else {
+        alert('Error: ' + data.message);
+      }
+    });
   });
-});
+</script>
 
-    function toggleDropdown() {
-        const dropdown = document.getElementById('userDropdown');
-        dropdown.classList.toggle('show');
-    }
-
-    // Close the dropdown when clicking outside
-    window.onclick = function(event) {
-        if (!event.target.matches('.fa-user')) {
-            const dropdown = document.getElementById('userDropdown');
-            if (dropdown && dropdown.classList.contains('show')) {
-                dropdown.classList.remove('show');
-            }
-        }
-    };
-
-  </script>
 <style>
-  /* General table container styling */
+@import url(https://db.onlinewebfonts.com/c/90ac3b18aaef9f2db3ac8e062c7a033b?family=NudMotoya+Maru+W55+W5);
+
+/* General table container styling */
 .table-container {
-  max-height: 400px; /* Adjust height as needed */
-  overflow-y: auto;
-  border: 1px solid #ddd; /* Add a border for a cleaner look */
+  max-height: none; /* Remove the max-height to allow the table to grow naturally */
+  border: 1px solid #ddd;
   border-radius: 5px;
-  background-color: #f9f9f9; /* Light background for contrast */
+  background-color: #f9f9f9;
   margin-top: 20px;
   padding: 10px;
+  font-family: "NudMotoya Maru W55 W5"; /* Apply the same font */
+  font-size: 12px; /* Smaller font size for the entire table */
 }
 
-/* Table header styling */
 .table thead th {
   background-color: #e84393;
   color: white;
@@ -283,17 +276,14 @@ document.getElementById('reviewForm').addEventListener('submit', function(e) {
   font-weight: bold;
 }
 
-/* Table row hover effect */
 .table tbody tr:hover {
   background-color: #f1f1f1;
 }
 
-/* Add Review and disabled button styling */
 .btn-primary {
   background-color: #e84393;
-  border-color: ##e84393;
   color: white;
-  font-size: 14px;
+  font-size: 12px; /* Smaller font size for buttons */
   font-weight: bold;
   transition: background-color 0.3s ease;
 }
@@ -304,18 +294,60 @@ document.getElementById('reviewForm').addEventListener('submit', function(e) {
 
 .btn-secondary {
   background-color: #6c757d;
-  border-color: #6c757d;
   color: white;
-  font-size: 14px;
+  font-size: 12px; /* Smaller font size for secondary buttons */
   cursor: not-allowed;
   opacity: 0.7;
 }
 
+.modal-header {
+  color: white;
+  font-size: 14px; /* Ensure header font size is appropriate */
+}
+
+.modal .btn-primary {
+  background-color: #28a745;
+  border-color: #28a745;
+}
+
+.modal textarea,
+.modal select {
+  width: 100%;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  padding: 8px;
+  font-size: 12px; /* Smaller font size for inputs */
+  margin-bottom: 10px;
+}
+
+.pagination {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.pagination a {
+  padding: 6px 12px;
+  text-decoration: none;
+  color: #007bff;
+  margin: 0 5px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 12px; /* Smaller font size for pagination */
+}
+
+.pagination a.active {
+  background-color: #007bff;
+  color: white;
+}
+
+.pagination a:hover {
+  background-color: #f1f1f1;
+}
+
 /* Modal header styling */
 #reviewModal .modal-header {
-  background-color: #e84393;
+
   color: white;
-  border-bottom: 2px solid #e84393;
 }
 
 /* Modal submit button styling */
@@ -341,55 +373,6 @@ document.getElementById('reviewForm').addEventListener('submit', function(e) {
   font-size: 14px;
   margin-bottom: 10px;
 }
-
-/* Scrollbar styling for the table container */
-.table-container::-webkit-scrollbar {
-  width: 10px;
-}
-
-.table-container::-webkit-scrollbar-thumb {
-  background: #e84393;
-  border-radius: 10px;
-}
-
-.table-container::-webkit-scrollbar-thumb:hover {
-  background: #e84393;
-}
-
-/* Responsive layout for smaller screens */
-@media (max-width: 768px) {
-  .table-container {
-    max-height: none;
-    overflow-y: visible;
-  }
-
-  .table th, .table td {
-    font-size: 12px;
-    padding: 8px;
-  }
-
-  .btn-primary,
-  .btn-secondary {
-    font-size: 12px;
-    padding: 6px 12px;
-  }
-
-  #reviewModal textarea,
-  #reviewModal select {
-    font-size: 12px;
-  }
-}
-/* Center align buttons inside the table cell */
-.table td {
-  vertical-align: middle;
-  text-align: center;
-}
-
-.table-container .btn-primary,
-.table-container .btn-secondary {
-  display: inline-block;
-  margin: 0 auto;
-}
-
-
 </style>
+
+
