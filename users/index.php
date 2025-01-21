@@ -142,7 +142,7 @@ include("../admin/inc/CSRF_Protect.php");
     <!-- review -->
     <section class="review" id="review">
     <h1 class="heading">
-        <a href="review.php" style="color: inherit; text-decoration: none;">
+        <a href="reviews_page.php" style="color: inherit; text-decoration: none;">
             Customer's <span>Review</span>
         </a>
     </h1>
@@ -160,13 +160,14 @@ include("../admin/inc/CSRF_Protect.php");
             $stmt->execute();
             $reviews = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-            // Debugging: Output the fetched reviews count
-            echo "Number of reviews fetched: " . count($reviews);
-
             // Loop through each review and display
             foreach ($reviews as $review):
         ?>
             <div class="box">
+                <div class="product-photo">
+                    <!-- Display product photo -->
+                    <img src="../admin/uploads/<?php echo htmlspecialchars($review['featured_photo']); ?>" alt="Product Image" style="width: 100px; height: 100px;">
+                </div>
                 <div class="stars">
                     <?php 
                     // Dynamically show stars based on the rating
@@ -197,6 +198,7 @@ include("../admin/inc/CSRF_Protect.php");
         ?>
     </div>
 </section>
+
 
     <!-- review -->
 
