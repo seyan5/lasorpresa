@@ -84,29 +84,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <?php
             // Query to join the relevant tables and filter by the logged-in customer's ID
             $stmt = $pdo->prepare("
-                        SELECT 
-                            c.cust_id, 
-                            c.cust_name, 
-                            c.cust_email, 
-                            p.name AS product_name, 
-                            oi.quantity, 
-                            p.current_price AS unit_price, 
-                            pay.payment_method, 
-                            pay.payment_id, 
-                            pay.created_at AS payment_date, 
-                            pay.amount_paid, 
-                            pay.shipping_status, 
-                            pay.payment_status, 
-                            o.order_id, 
-                            p.p_id
-                        FROM 
-                            customer c
-                        JOIN orders o ON c.cust_id = o.customer_id
-                        JOIN order_items oi ON o.order_id = oi.order_id
-                        JOIN product p ON oi.product_id = p.p_id
-                        JOIN payment pay ON o.order_id = pay.order_id
-                        WHERE c.cust_id = :cust_id
-                    ");
+    SELECT 
+        c.cust_id, 
+        c.cust_name, 
+        c.cust_email, 
+        p.name AS product_name, 
+        oi.quantity, 
+        p.current_price AS unit_price, 
+        pay.payment_method, 
+        pay.payment_id, 
+        pay.created_at AS payment_date, 
+        pay.amount_paid, 
+        pay.shipping_status, 
+        pay.payment_status, 
+        o.order_id, 
+        p.p_id
+    FROM 
+        customer c
+    JOIN orders o ON c.cust_id = o.customer_id
+    JOIN order_items oi ON o.order_id = oi.order_id
+    JOIN product p ON oi.product_id = p.p_id
+    JOIN payment pay ON o.order_id = pay.order_id
+    WHERE c.cust_id = :cust_id
+    ORDER BY pay.created_at DESC
+");
+
 
             // Execute query
             $stmt->execute([':cust_id' => $cust_id]);
@@ -147,13 +149,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                       <?= ucfirst($order['shipping_status']) ?>
                     </span>
                   </td>
-                  <td>
-  <?php if ($order['shipping_status'] === 'delivered'): ?>
-    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#reviewModal" data-order-id="<?= $order['order_id'] ?>" data-product-id="<?= $order['p_id'] ?>">Add Review</button>
-  <?php else: ?>
-    <button class="btn btn-secondary" disabled>Review</button>
-  <?php endif; ?>
+                  <td class="text-center">
+  <div style="display: flex; justify-content: center; align-items: center;">
+    <?php if ($order['shipping_status'] === 'delivered'): ?>
+      <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#reviewModal" data-order-id="<?= $order['order_id'] ?>" data-product-id="<?= $order['p_id'] ?>">Add Review</button>
+    <?php else: ?>
+      <button class="btn btn-secondary" disabled>Add Review</button>
+    <?php endif; ?>
+  </div>
 </td>
+
                 </tr>
               <?php }
             } ?>
@@ -164,39 +169,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     <!-- Modal for Adding Review -->
     <div class="modal fade" id="reviewModal" tabindex="-1" aria-labelledby="reviewModalLabel" aria-hidden="true">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="reviewModalLabel">Add Review</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">x</button>
-          </div>
-          <div class="modal-body">
-            <form id="reviewForm">
-              <div class="mb-3">
-                <label for="review" class="form-label">Review</label>
-                <textarea class="form-control" id="review" rows="3"></textarea>
-              </div>
-              <div class="mb-3">
-                <label for="rating" class="form-label">Rating</label>
-                <select class="form-select" id="rating">
-                  <option value="">Select Rating (Optional)</option>
-                  <option value="1">1</option>
-                  <option value="2">2</option>
-                  <option value="3">3</option>
-                  <option value="4">4</option>
-                  <option value="5">5</option>
-                </select>
-              </div>
-              <input type="hidden" id="order-id">
-              <input type="hidden" id="product-id">
-              <button type="submit" class="btn btn-primary">Submit Review</button>
-            </form>
-          </div>
-        </div>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="reviewModalLabel">Add Review</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form id="reviewForm">
+          <textarea id="review" rows="3" placeholder="Write your review here"></textarea>
+          <select id="rating">
+            <option value="">Select Rating</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+          </select>
+          <input type="hidden" id="order-id">
+          <input type="hidden" id="product-id">
+          <button type="submit" class="btn btn-primary w-100">Submit Review</button>
+        </form>
       </div>
     </div>
   </div>
 </div>
+
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
   <script>
@@ -266,37 +264,132 @@ document.getElementById('reviewForm').addEventListener('submit', function(e) {
 
   </script>
 <style>
-  /* Add these styles to make the table scrollable */
+  /* General table container styling */
 .table-container {
-  max-height: 400px; /* You can adjust the height as needed */
+  max-height: 400px; /* Adjust height as needed */
   overflow-y: auto;
+  border: 1px solid #ddd; /* Add a border for a cleaner look */
+  border-radius: 5px;
+  background-color: #f9f9f9; /* Light background for contrast */
+  margin-top: 20px;
+  padding: 10px;
 }
-/* Style for the 'Add Review' button */
+
+/* Table header styling */
+.table thead th {
+  background-color: #e84393;
+  color: white;
+  text-align: center;
+  font-weight: bold;
+}
+
+/* Table row hover effect */
+.table tbody tr:hover {
+  background-color: #f1f1f1;
+}
+
+/* Add Review and disabled button styling */
 .btn-primary {
-    background-color: #007bff;  /* Blue color */
-    border-color: #007bff;
+  background-color: #e84393;
+  border-color: ##e84393;
+  color: white;
+  font-size: 14px;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
 }
 
-/* Style for the 'Review Available After Delivery' button */
+.btn-primary:hover {
+  background-color: #0056b3;
+}
+
 .btn-secondary {
-    background-color: #6c757d;  /* Gray color */
-    border-color: #6c757d;
-    cursor: not-allowed;  /* Show the disabled cursor */
+  background-color: #6c757d;
+  border-color: #6c757d;
+  color: white;
+  font-size: 14px;
+  cursor: not-allowed;
+  opacity: 0.7;
 }
 
-/* Additional styling for the modal */
+/* Modal header styling */
 #reviewModal .modal-header {
-    background-color: #007bff;
-    color: #fff;
+  background-color: #e84393;
+  color: white;
+  border-bottom: 2px solid #e84393;
 }
 
-#reviewModal .modal-footer .btn-primary {
-    background-color: #28a745;  /* Green color for submit button */
+/* Modal submit button styling */
+#reviewModal .btn-primary {
+  background-color: #28a745;
+  border-color: #28a745;
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
 }
 
-/* Disabled button appearance */
-.btn:disabled {
-    opacity: 0.65;
-    pointer-events: none;  /* Prevent interaction */
+#reviewModal .btn-primary:hover {
+  background-color: #218838;
 }
+
+/* Modal text area and select dropdown */
+#reviewModal textarea,
+#reviewModal select {
+  width: 100%;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  padding: 10px;
+  font-size: 14px;
+  margin-bottom: 10px;
+}
+
+/* Scrollbar styling for the table container */
+.table-container::-webkit-scrollbar {
+  width: 10px;
+}
+
+.table-container::-webkit-scrollbar-thumb {
+  background: #e84393;
+  border-radius: 10px;
+}
+
+.table-container::-webkit-scrollbar-thumb:hover {
+  background: #e84393;
+}
+
+/* Responsive layout for smaller screens */
+@media (max-width: 768px) {
+  .table-container {
+    max-height: none;
+    overflow-y: visible;
+  }
+
+  .table th, .table td {
+    font-size: 12px;
+    padding: 8px;
+  }
+
+  .btn-primary,
+  .btn-secondary {
+    font-size: 12px;
+    padding: 6px 12px;
+  }
+
+  #reviewModal textarea,
+  #reviewModal select {
+    font-size: 12px;
+  }
+}
+/* Center align buttons inside the table cell */
+.table td {
+  vertical-align: middle;
+  text-align: center;
+}
+
+.table-container .btn-primary,
+.table-container .btn-secondary {
+  display: inline-block;
+  margin: 0 auto;
+}
+
+
 </style>

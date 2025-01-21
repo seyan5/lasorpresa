@@ -1,151 +1,98 @@
 <?php
+ob_start();
 session_start();
-include 'config.php'; // Include your database connection file
+include("inc/config.php");
+include("inc/functions.php");
+include("inc/CSRF_Protect.php");
 
-date_default_timezone_set('Asia/Kolkata');
-$date = date('Y-m-d');
-$_SESSION["date"] = $date;
+if (isset($_POST['register'])) {
+    $name = $_POST['name'];
+    $email = $_POST['email'];
+    $password = $_POST['password'];
+    $confirmPassword = $_POST['confirm_password'];
 
-$error = ''; // Initialize error variable
-$success = ''; // Initialize success variable
+    try {
+        // Check if email already exists
+        $stmt = $pdo->prepare("SELECT id FROM users WHERE email = :email");
+        $stmt->execute([':email' => $email]);
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    // Check if the form is for login or registration
-    if (isset($_POST['login'])) {
-        // Login functionality
-        $usernameoremail = $_POST['usernameoremail'];
-        $password = $_POST['password'];
-
-        // Fetch user from the database
-        $sql = "SELECT * FROM users WHERE email = '$usernameoremail' OR username = '$usernameoremail'";
-        $result = mysqli_query($conn, $sql);
-
-        if ($result && mysqli_num_rows($result) > 0) {
-            $user = mysqli_fetch_assoc($result);
-
-            // Verify the password
-            if (password_verify($password, $user['password'])) {
-                $_SESSION['user_id'] = $user['id'];
-                $_SESSION['user_type'] = $user['user_type'];
-                $_SESSION['firstname'] = $user['firstname'];
-                $_SESSION['lastname'] = $user['lastname'];
-
-                if ($user['user_type'] == 'admin') {
-                    header('Location: admin/dashboard.php');
-                } else {
-                    header('Location: users/index.php');
-                }
-                exit();
-            } else {
-                $error = "Invalid password.";
-            }
+        if ($user) {
+            $error = "An account with this email already exists.";
         } else {
-            $error = "No user found with that email or username.";
-        }
-    } elseif (isset($_POST['register'])) {
-        // Registration functionality
-        $firstname = $_POST['firstname'];
-        $lastname = $_POST['lastname'];
-        $username = $_POST['username'];
-        $name = $firstname . " " . $lastname;
-        $email = $_POST['email'];
-        $contact = $_POST['contact'];
-        $password = $_POST['password'];
-        $confirmpassword = $_POST['confirmpassword'];
-        $user_type = 'user';
+            // Check if passwords match
+            if ($password === $confirmPassword) {
+                // Hash the password
+                $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
-        // Basic validation
-        if ($password !== $confirmpassword) {
-            $error = "Passwords do not match.";
-        } else {
-            // Hash the password
-            $passwordHash = password_hash($password, PASSWORD_BCRYPT);
+                // Insert the new user into the database
+                $stmt = $pdo->prepare("INSERT INTO users (name, email, password, user_type) VALUES (:name, :email, :password, 'user')");
+                $stmt->execute([':name' => $name, ':email' => $email, ':password' => $hashedPassword]);
 
-            // Prepare SQL statement
-            $stmt = $conn->prepare("INSERT INTO users (name, username, email, contact, password, user_type) VALUES (?, ?, ?, ?, ?, ?)");
-            if ($stmt === false) {
-                die('prepare() failed: ' . htmlspecialchars($conn->error));
-            }
+                // Start session and store user data
+                $_SESSION['name'] = $name;
+                $_SESSION['email'] = $email;
+                $_SESSION['user_type'] = 'user'; // Default user type
 
-            // Bind parameters
-            $stmt->bind_param("ssssss", $name, $username, $email, $contact, $passwordHash, $user_type);
-
-            // Execute statement
-            if ($stmt->execute()) {
-                $success = "Registration successful!";
+                // Redirect to login or home page
+                header("Location: login.php");
+                exit;
             } else {
-                $error = "Error: " . htmlspecialchars($stmt->error);
+                $error = "Passwords do not match.";
             }
-
-            // Close statement
-            $stmt->close();
         }
+    } catch (Exception $e) {
+        $error = "Error: " . $e->getMessage();
     }
 }
-
-// Close connection
-$conn->close();
 ?>
-
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="css/animations.css">  
-    <link rel="stylesheet" href="css/main.css">  
-    <link rel="stylesheet" href="css/signup.css">
-        
-    <title>Sign Up</title>
+    <link rel="stylesheet" href="../registerlogin.css">
+    <title>Register</title>
 </head>
 <body>
-    <div class="container">
-        <form action="" method="POST">
-            <div class="header">
-                <p class="header-text">Let's Get Started</p>
-                <p class="sub-text">Add Your Personal Details to Continue</p>
-            </div>
 
-            <div class="input-group">
-                <label for="name" class="form-label">Name:</label>
-                <input type="text" name="firstname" class="input-text" placeholder="First Name" required>
-                <input type="text" name="lastname" class="input-text" placeholder="Last Name" required>
-            </div>
-
-            <div class="input-group">
-                <label for="email" class="form-label">Email:</label>
-                <input type="email" name="email" class="input-text" placeholder="Email" required>
-            </div>
-
-            <div class="input-group">
-                <label for="username" class="form-label">Username:</label>
-                <input type="text" name="username" class="input-text" placeholder="Username" required>
-            </div>
-
-            <div class="input-group">
-                <label for="contact" class="form-label">Contact:</label>
-                <input type="text" name="contact" class="input-text" placeholder="Contact Number" required>
-            </div>
-            <div class="input-group">
-                <label for="password" class="form-label">Password:</label>
-                <input type="password" name="password" class="input-text" placeholder="Password" required>
-                <input type="password" name="confirmpassword" class="input-text" placeholder="Confirm Password" required>
-            </div>
-
-            <div class="button-group">
-                <input type="reset" value="Reset" class="login-btn btn-primary-soft btn">
-                <input type="submit" value="Next" class="login-btn btn-primary btn">
-            </div>
-
-            <div class="footer">
-                <p class="sub-text" style="font-weight: 280;">Already have an account? 
-                    <a href="login.php" class="hover-link1 non-style-link">Login</a>
-                </p>
-            </div>
-        </form>
+    <div class="logo-container">
+        <img src="../images/logo.png" alt="Logo" class="logo" />
     </div>
+
+    <!-- Flower Image -->
+    <div class="flower-container">
+        <img src="../images/flower2.png" alt="Flower" class="flower" />
+    </div>
+
+    <h2>Register</h2>
+    <form action="register.php" method="POST">
+        <?php if (!empty($error)): ?>
+            <p style="color: red; text-align: center;"><?php echo htmlspecialchars($error); ?></p>
+        <?php endif; ?>
+        <div class="infield">
+            <label for="name">Name:</label>
+            <input placeholder="Full Name" type="text" id="name" name="name" required><br>
+        </div>
+        <div class="infield">
+            <label for="email">Email:</label>
+            <input placeholder="Email" type="email" id="email" name="email" required><br>
+        </div>
+        <div class="infield">
+            <label for="password">Password:</label>
+            <input placeholder="Password" type="password" id="password" name="password" required><br>
+        </div>
+        <div class="infield">
+            <label for="confirm_password">Confirm Password:</label>
+            <input placeholder="Confirm Password" type="password" id="confirm_password" name="confirm_password" required><br>
+        </div>
+        <p style="text-align: center; margin-top: 10px; font-size: 14px;">
+            Already have an account? 
+            <a href="login.php" style="color: #e18aaa; font-weight: bold; text-decoration: none;">Login</a>
+        </p>
+        <button type="submit" name="register">Register</button>
+    </form>
 
 </body>
 </html>
