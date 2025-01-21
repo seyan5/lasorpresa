@@ -141,75 +141,63 @@ include("../admin/inc/CSRF_Protect.php");
 
     <!-- review -->
     <section class="review" id="review">
-        <h1 class="heading">Customer's <span>Review</span></h1>
-        <div class="box-container">
+    <h1 class="heading">
+        <a href="review.php" style="color: inherit; text-decoration: none;">
+            Customer's <span>Review</span>
+        </a>
+    </h1>
+    <div class="box-container">
+        <?php
+        try {
+            // Fetch the 3 most recent reviews from the database
+            $stmt = $pdo->prepare("SELECT r.review_id, r.review, r.rating, r.created_at, p.p_id, p.name AS product_name, p.featured_photo, c.cust_name 
+                                   FROM reviews r
+                                   JOIN product p ON r.product_id = p.p_id
+                                   JOIN customer c ON r.customer_id = c.cust_id
+                                   ORDER BY r.created_at DESC
+                                   LIMIT 3"); // Ensure the query limits to 3
+
+            $stmt->execute();
+            $reviews = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            // Debugging: Output the fetched reviews count
+            echo "Number of reviews fetched: " . count($reviews);
+
+            // Loop through each review and display
+            foreach ($reviews as $review):
+        ?>
             <div class="box">
                 <div class="stars">
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
+                    <?php 
+                    // Dynamically show stars based on the rating
+                    for ($i = 0; $i < 5; $i++) {
+                        if ($i < $review['rating']) {
+                            echo '<i class="fas fa-star"></i>';
+                        } else {
+                            echo '<i class="far fa-star"></i>';  // Empty star for remaining rating
+                        }
+                    }
+                    ?>
                 </div>
-                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Repudiandae natus hic ducimus repellat
-                    ipsam? Sit laborum labore explicabo earum! Consequuntur molestiae nostrum corrupti nam cum porro
-                    repudiandae nihil ut laudantium.</p>
+                <p><?php echo htmlspecialchars($review['review']); ?></p>
                 <div class="user">
                     <img src="../ivd/flower.png" alt="">
                     <div class="user-info">
-                        <h3>John Doe</h3>
+                        <h3><?php echo htmlspecialchars($review['cust_name']); ?></h3>
                         <span>Happy Customer</span>
                     </div>
                     <span class="fas fa-quote-right"></span>
                 </div>
-
             </div>
+        <?php
+            endforeach;
+        } catch (PDOException $e) {
+            echo "Error fetching reviews: " . $e->getMessage();
+        }
+        ?>
+    </div>
+</section>
 
-            <div class="box">
-                <div class="stars">
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                </div>
-                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Repudiandae natus hic ducimus repellat
-                    ipsam? Sit laborum labore explicabo earum! Consequuntur molestiae nostrum corrupti nam cum porro
-                    repudiandae nihil ut laudantium.</p>
-                <div class="user">
-                    <img src="../ivd/flower.png" alt="">
-                    <div class="user-info">
-                        <h3>John Doe</h3>
-                        <span>Happy Customer</span>
-                    </div>
-                    <span class="fas fa-quote-right"></span>
-                </div>
-
-            </div>
-
-            <div class="box">
-                <div class="stars">
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                </div>
-                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Repudiandae natus hic ducimus repellat
-                    ipsam? Sit laborum labore explicabo earum! Consequuntur molestiae nostrum corrupti nam cum porro
-                    repudiandae nihil ut laudantium.</p>
-                <div class="user">
-                    <img src="../ivd/flower.png" alt="">
-                    <div class="user-info">
-                        <h3>John Doe</h3>
-                        <span>Happy Customer</span>
-                    </div>
-                    <span class="fas fa-quote-right"></span>
-                </div>
-
-            </div>
-        </div>
-    </section>
     <!-- review -->
 
     <div class="footer-basic">
