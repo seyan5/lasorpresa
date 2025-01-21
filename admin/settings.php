@@ -2,21 +2,55 @@
 require_once('header.php');
 require_once 'auth.php';
 
-
-
-
-// Handle form submission for editing color
-if (isset($_POST['form2'])) {
+if(isset($_POST['form1'])) {
     $valid = 1;
     $error_message = '';
     $success_message = '';
 
-    // Validate Color Name
-    if (empty($_POST['color_name'])) {
+    // Validation: check if the color name is empty
+    if(empty($_POST['color_name'])) {
         $valid = 0;
         $error_message .= "Color Name cannot be empty<br>";
     } else {
-        // Duplicate Color Name check (ignoring the current color ID)
+        // Duplicate Color Name check
+        $statement = $pdo->prepare("SELECT * FROM color WHERE color_name=?");
+        $statement->execute(array($_POST['color_name']));
+        $total = $statement->rowCount();
+        if($total) {
+            $valid = 0;
+            $error_message .= "Color Name already exists<br>";
+        }
+    }
+
+    if($valid == 1) {
+        // Saving data into the color table
+        $statement = $pdo->prepare("INSERT INTO color (color_name) VALUES (?)");
+        $statement->execute(array($_POST['color_name']));
+        $success_message = 'Color is added successfully.';
+    }
+
+    // Return response as JSON (AJAX)
+    if(isset($_POST['form1']) && !empty($_POST['form1'])) {
+        if($valid == 1) {
+            echo json_encode(['success' => $success_message]);
+        } else {
+            echo json_encode(['error' => $error_message]);
+        }
+        exit();
+    }
+}
+
+if(isset($_POST['form2'])) {
+    $valid = 1;
+    $error_message = '';
+    $success_message = '';
+
+    // Validation: check if the color name is empty
+    if(empty($_POST['color_name'])) {
+        $valid = 0;
+        $error_message .= "Color Name cannot be empty<br>";
+    } else {
+        // Duplicate Color Name check
         $statement = $pdo->prepare("SELECT * FROM color WHERE color_name=? AND color_id != ?");
         $statement->execute([$_POST['color_name'], $_POST['color_id']]);
         $total = $statement->rowCount();
@@ -26,23 +60,24 @@ if (isset($_POST['form2'])) {
         }
     }
 
-    // If validation passed, update the color
     if ($valid == 1) {
         $statement = $pdo->prepare("UPDATE color SET color_name=? WHERE color_id=?");
         $statement->execute([$_POST['color_name'], $_POST['color_id']]);
         $success_message = 'Color updated successfully.';
     }
 
-    // Return JSON response
-    header('Content-Type: application/json');
-    if ($valid == 1) {
-        echo json_encode(['success' => $success_message]);
-    } else {
-        echo json_encode(['error' => $error_message]);
+    // Return response as JSON (AJAX)
+    if(isset($_POST['form2']) && !empty($_POST['form2'])) {
+        if($valid == 1) {
+            echo json_encode(['success' => $success_message]);
+        } else {
+            echo json_encode(['error' => $error_message]);
+        }
+        exit();
     }
-
-    exit();
 }
+
+
 ?>
 
 
