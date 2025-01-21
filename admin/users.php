@@ -110,6 +110,7 @@ if ($result->num_rows > 0) {
     </style>
 </head>
 
+
 <body>
     <!-- =============== Navigation ================ -->
     <div class="container">
@@ -217,6 +218,9 @@ if ($result->num_rows > 0) {
                     <img src="assets/imgs/customer01.jpg" alt="">
                 </div>
             </div>
+            <div class="d-flex justify-content-start mb-3">
+            <a href="manage-admin.php" class="btn btn-secondary">Manage Admin</a>
+        </div>
 
             <!-- ======================= Cards ================== -->
             <tr>
