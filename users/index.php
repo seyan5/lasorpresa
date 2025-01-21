@@ -142,7 +142,7 @@ include("../admin/inc/CSRF_Protect.php");
     <!-- review -->
     <section class="review" id="review">
     <h1 class="heading">
-        <a href="reviews_page.php" style="color: inherit; text-decoration: none;">
+        <a href="review.php" style="color: inherit; text-decoration: none;">
             Customer's <span>Review</span>
         </a>
     </h1>
