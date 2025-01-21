@@ -61,13 +61,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 ?>
 
 <?php include('profnav.php'); ?>
-<link rel="stylesheet" href="../css/profileupd.css">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
-    <link rel="stylesheet" href="../css/dropdown.css">
-    <link rel="stylesheet" href="../css/customerorder.css">
-
-<div class="container1">
+<link rel="stylesheet" href="../css/customerorder.css?v.1.0">
+<div class="containers">
   <div class="col-md-12"> 
     <div class="container my-4">
       <h1 class="text-center">My Orders</h1>
