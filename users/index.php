@@ -30,11 +30,11 @@ include("../admin/inc/CSRF_Protect.php");
             <div class="circle"></div>
         </div>
         
-        <div class="search-container">
+        <!-- <div class="search-container">
     <input type="text" id="search-input" placeholder="What are you looking for?" class="search-input">
     <button class="search-button"><i class="fas fa-search"></i></button>
     <div id="search-results"></div>
-</div>
+</div> -->
  <!-- Where the results will be shown -->
 
     </section>
