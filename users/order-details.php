@@ -48,100 +48,98 @@ if ($order_id && $product_id) {
 
 <?php include('navuser.php'); ?>
 <style>
+@import url(https://db.onlinewebfonts.com/c/90ac3b18aaef9f2db3ac8e062c7a033b?family=NudMotoya+Maru+W55+W5);
+:root {
+    --pink: #e84393;
+}
 /* General Styles */
 body {
-    font-family: Arial, sans-serif;
+    font-family: "NudMotoya Maru W55 W5", Arial, sans-serif;
     margin: 20px;
-    line-height: 1.6;
+    line-height: 1.8;
     background-color: #f9f9f9;
     color: #333;
+    font-size: 1.2rem; /* Increased base font size */
 }
 
 h1 {
     text-align: center;
     color: #444;
     margin-bottom: 20px;
-    margin-top: 15rem;       
+    margin-top: 15rem;
+    font-size: 2.5rem; /* Larger font for main heading */
 }
 
 h2 {
     color: #555;
     margin-top: 20px;
     margin-bottom: 10px;
+    font-size: 2rem; /* Larger font for subheadings */
 }
 
 /* Table Styles */
-    .table {
-        width: 80%;
-        border-collapse: collapse;
-        margin: 20px auto; /* Changed to center the table */
-        background-color: #fff;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);       
-        border-radius: 8px; /* Added border radius */
-        overflow: hidden; /* Ensures rounded corners */
-        font-size: 1.4rem; /* Increased font size */
-        font-style: italic;
-    }
-
-/* Product Text Styling */
-strong {
-    font-size: 1.4rem; /* Increased font size for emphasis */
+.table {
+    width: 80%;
+    margin: 20px auto;
+    border-collapse: collapse;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
+    font-size: 1.4rem; /* Larger font for table */
+    font-family: "NudMotoya Maru W55 W5", Arial, sans-serif;
+    font-weight: bold;
 }
-
-strong + span {
-    font-size: 1.4rem; /* Ensures the adjacent product name has a larger font */
-}
-
 
 .table th, .table td {
-    padding: 10px 15px;
-    text-align: left;
+    padding: 20px; /* Slightly increased padding for clarity */
+    text-align: center;
     border: 1px solid #ddd;
-    text-align: center; /* Centers the content inside the table cells */
-    vertical-align: middle; /* Vertically centers content if cell height increases */
 }
 
 .table th {
-    background-color: #333;
+    background-color: var(--pink);
     color: #fff;
     text-transform: uppercase;
-    font-size: 14px;
+    font-size: 1.5rem; /* Larger font for table headers */
+    letter-spacing: 1px;
 }
 
-.table-hover tbody tr:hover {
-    background-color: #f1f1f1;
-}
-
-.table-bordered th, .table-bordered td {
-    border: 1px solid #ddd;
-}
-
-/* Highlight rows for readability */
-.table tbody tr:nth-child(even) {
+.table tbody tr:nth-child(odd) {
     background-color: #f9f9f9;
+}
+
+.table tbody tr:nth-child(even) {
+    background-color: #fff;
+}
+
+.table tbody tr:hover {
+    background-color: #f1f1f1;
 }
 
 /* Image Styling */
 .image img {
-    max-width: 100px;
+    max-width: 120px; /* Slightly larger images */
     height: auto;
     display: block;
-    margin: 0 auto 10px; /* Centers the image horizontally */
+    margin: 0 auto;
     border-radius: 4px;
 }
 
 /* Responsive Design */
 @media (max-width: 768px) {
+    body {
+        font-size: 1rem; /* Adjusted for smaller screens */
+        margin: 10px;
+    }
+
     .table {
-        font-size: 14px;
+        font-size: 1rem;
     }
 
     img {
-        max-width: 80px;
-    }
-
-    body {
-        margin: 10px;
+        max-width: 100px;
     }
 }
 
@@ -152,8 +150,8 @@ strong + span {
 
     <?php if ($orderDetails): ?>
     <div class="order-details">
-        <table class="table table-bordered table-hover">
-        <thead class="table-dark">
+        <table class="table">
+        <thead>
           <tr>
             <th>Customer</th>
             <th>Product Details</th>
@@ -164,7 +162,6 @@ strong + span {
           </tr>
         </thead>
         <tbody>
-
               <tr>
                 <td>
                   <strong>Id:</strong> <?php echo htmlspecialchars($customerId); ?><br>
@@ -189,7 +186,6 @@ strong + span {
                 </td>
               </tr>
         </tbody>
-      </table>
       </table>
     </div>
     <?php endif; ?>

@@ -1,142 +1,89 @@
+@import url(https://db.onlinewebfonts.com/c/90ac3b18aaef9f2db3ac8e062c7a033b?family=NudMotoya+Maru+W55+W5);
+
+:root {
+    --pink: #e84393;
+}
+
 body {
-  font-family: Arial, sans-serif;
-  background-color: #f9f9f9;
-  color: #333;
-  margin: 0;
-  padding: 0;
+    font-family: "NudMotoya Maru W55 W5", sans-serif;
+    background-color: #f9f9f9;
+    color: #333;
+    margin: 20px;
+    line-height: 1.4;
 }
-/* Basic reset and layout setup */
-body {
-font-family: 'Arial', sans-serif;
-margin: 0;
-padding: 0;
-}
-.header {
-background-color: #f8f8f8;
-padding: 15px 30px;
-display: flex;
-align-items: center;
-justify-content: flex-start;
-border-bottom: 1px solid #ddd;
-}
-.back-link {
-font-size: 16px;
-color: #dd91ad;
-text-decoration: none;
-display: flex;
-align-items: center;
-transition: color 0.3s ease, transform 0.3s ease;
-}
-/* Style the back arrow */
-.back-arrow {
-font-size: 20px;
-margin-right: 8px;
-color: #dd91ad;
-transition: transform 0.3s ease;
-}
-/* Hover effects */
-.back-link:hover {
-color: #f75dd0;
-transform: translateX(-5px); /* Adds a subtle shift effect */
-}
-.back-arrow:hover {
-transform: rotate(180deg); /* Rotates the arrow on hover */
-}
-.back-link:active {
-color: #f75dd0;
-}
-body h1{
-  margin-top: 10px;
-  font-size: 2.5rem;
-  font-family: Verdana, Geneva, Tahoma, sans-serif;
-}
-.container {
-  max-width: 1200px;
-  margin: 20px auto;
-  background: #fff;
-  padding: 20px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  border-radius: 8px;
-}
+
 h1 {
-  text-align: center;
-  color: #444;
-  margin-bottom: 20px;
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 2.5rem;
+    color: #444;
 }
+
 .container {
-  max-height: 52rem;
-  overflow-y: auto;
-  border: 1px solid #ddd;
-  border-radius: 8px;
+    width: 80%;
+    margin: auto;
 }
-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 20px;
-  border-spacing: 0;
-  overflow: hidden;
-  border-radius: 20px;
+
+.custom-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
-table th, table td {
-  padding: 12px;
-  text-align: left;
-  border: 1px solid #ddd;
+
+.custom-table th,
+.custom-table td {
+    padding: 12px;
+    text-align: center;
 }
-table th {
-  background-color: #dd91ad;
-  color: white;
+
+.custom-table th {
+    background-color: var(--pink);
+    color: #fff;
+    text-transform: uppercase;
+    font-size: 0.85rem;
 }
-table tbody tr:nth-child(odd) {
-  background-color: #f2f2f2;
+
+.custom-table tr:nth-child(odd) {
+    background-color: #f9f9f9;
 }
-table tbody tr:hover {
-  background-color: #e0f7fa;
+
+.custom-table tr:nth-child(even) {
+    background-color: #fff;
 }
+
+.custom-table tr:hover {
+    background-color: #f1f1f1;
+}
+
+.pagination {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.pagination a {
+    margin: 0 5px;
+    padding: 8px 12px;
+    background-color: #ddd;
+    color: #333;
+    text-decoration: none;
+    border-radius: 4px;
+}
+
+.pagination a:hover {
+    background-color: #ccc;
+}
+
+.pagination .active {
+    background-color: #007bff;
+    color: white;
+}
+
 .form-select {
-  padding: 8px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  width: 100%;
-  background: #fff;
-}
-.btn {
-  display: inline-block;
-  padding: 8px 12px;
-  margin-right: 10px;
-  color: white;
-  background-color: #007BFF;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  text-align: center;
-}
-.btn-danger {
-  background-color: #FF5733;
-}
-.btn:hover {
-  opacity: 0.9;
-}
-.btn:active {
-  transform: scale(0.98);
-}
-.customer-details, .product-details, .payment-details {
-  margin-bottom: 10px;
-  line-height: 1.5;
-}
-.customer-details strong, .product-details strong, .payment-details strong {
-  color: #555;
-}
-.completed {
-  background-color: #d4edda;
-  color: #155724;
-  padding: 5px;
-  border-radius: 4px;
-  display: inline-block;
-}
-.pending {
-  background-color: #ffeeba;
-  color: #856404;
-  padding: 5px;
-  border-radius: 4px;
-  display: inline-block;
+    width: 100%;
+    padding: 6px;
+    font-size: 0.85rem;
 }
