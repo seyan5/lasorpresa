@@ -39,32 +39,8 @@ $reviewStmt->bindParam(':p_id', $p_id, PDO::PARAM_INT);
 $reviewStmt->execute();
 $reviews = $reviewStmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
-
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?php echo htmlspecialchars($product['name']); ?></title>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-    <!-- Font Awesome and Google Fonts -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap"
-        rel="stylesheet">
-    
-    <link rel="stylesheet" href="../css/prod-details.css?v=1.0">
-</head>
-
-<body>
-    <header>
-        <a href="products.php" class="back">← Back to Products</a>
-        <a href="shopcart.php" class="back"> Cart</a>
-
-    </header>
+<?php include('navuser.php'); ?>
+<link rel="stylesheet" href="../css/prod-details.css?">
     <main>
         <div class="pic">
             <img src="../admin/uploads/<?php echo htmlspecialchars($product['featured_photo']); ?>"

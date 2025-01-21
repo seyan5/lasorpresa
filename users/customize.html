@@ -1,88 +1,305 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Flower Customization</title>
-  <link rel="stylesheet" href="../css/customize.css">
-</head>
-<body>
-  <div class="container">
-    <header class="header">
-      <a href="#" class="back-link">
-        <span class="back-arrow">←</span> La Sorpresa Home Page
-      </a>
-    </header>
-    
-    <main class="main-content">
-      <section class="image-section">
-        <h2>Customization</h2>
-        <img src="../ivd/flower.png" alt="Flower Bouquet" class="bouquet-image">
-      </section>
-      <section class="form-section">
-        <h2>Customize your own bouquet</h2>
-        <form class="customization-form">
-          <div class="select-group">
-            <div>
-              <label for="typeOfFlower">Type of Flower</label>
-              <select id="typeOfFlower">
-                <option>Rose</option>
-                <option>Tulip</option>
-                <option>Lily</option>
-              </select>
-            </div>
-            <div>
-              <label for="numberOfFlowers">Number of Flowers</label>
-              <input type="number" id="numberOfFlowers" value="3">
-            </div>
-          </div>
+<?php
+ob_start();
+session_start();
+include("../admin/inc/config.php");
+include("../admin/inc/functions.php");
+include("../admin/inc/CSRF_Protect.php");
+
+// Fetch customer ID from session at the beginning
+$cust_id = $_SESSION['customer']['cust_id'] ?? null;
+if (!$cust_id) {
+  echo "No customer logged in.";
+  exit;
+}
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+  $action = $_POST['action'] ?? null;
+  $order_id = $_POST['order_id'] ?? null;
+  $product_id = $_POST['product_id'] ?? null;
+  $review = $_POST['review'] ?? null;
+  $rating = $_POST['rating'] ?? null;
+
+  if ($action === 'add_or_update_review') {
+    try {
+      // Check if a review already exists
+      $stmt = $pdo->prepare("SELECT review_id FROM reviews WHERE order_id = :order_id AND product_id = :product_id AND customer_id = :customer_id");
+      $stmt->execute([
+        ':order_id' => $order_id,
+        ':product_id' => $product_id,
+        ':customer_id' => $cust_id
+      ]);
       
-          <!-- New container for size, add another flower, and number of added flowers -->
-          <div class="row-container">
-            <div class="size-group">
-              <label for="size">Size</label>
-              <div class="radio-buttons">
-                <label><input type="radio" name="size" value="medium"> Medium</label>
-                <label><input type="radio" name="size" value="large" checked> Large</label>
-                <label><input type="radio" name="size" value="grande"> Grande</label>
-              </div>
-            </div>
-      
-            <div class="flower-group">
-              <label for="addAnotherFlower">Add Another Flower</label>
-              <select id="addAnotherFlower">
-                <option value="">Select a Flower</option>
-                <option>Sunflower</option>
-                <option>Orchid</option>
-                <option>Carnation</option>
-              </select>
-              
-              <label for="additionalFlowerCount">Number of Added Flowers</label>
-              <input type="number" id="additionalFlowerCount" value="2">
-            </div>
-          </div>
-      
-          <label for="wrapperColor">Wrapper Color</label>
-          <select id="wrapperColor">
-            <option>Red</option>
-            <option>Blue</option>
-            <option>Pink</option>
-          </select>
-      
-          <label for="customizedCard">Customized Card</label>
-          <textarea id="customizedCard" placeholder="Happy Monthsary"></textarea>
-      
-          <div class="totals">
-            <p>Subtotal: <span>₱4,500</span></p>
-            <p>Shipping: <span>₱223</span></p>
-            <p>Total (Tax incl.): <span>₱6,723</span></p>
-          </div>
-      
-          <button type="button" class="btn check-receipt">Check Receipt →</button>
-          <button type="submit" class="btn checkout">₱4,723 Checkout →</button>
-        </form>
-      </section>
-    </main>
+      $existing_review = $stmt->fetch(PDO::FETCH_ASSOC);
+
+      if ($existing_review) {
+        // Update the existing review
+        $stmt = $pdo->prepare("UPDATE reviews SET review = :review, rating = :rating WHERE review_id = :review_id");
+        $stmt->execute([
+          ':review' => $review,
+          ':rating' => $rating,
+          ':review_id' => $existing_review['review_id']
+        ]);
+      } else {
+        // Insert new review
+        $stmt = $pdo->prepare("INSERT INTO reviews (order_id, product_id, review, rating, customer_id) VALUES (:order_id, :product_id, :review, :rating, :customer_id)");
+        $stmt->execute([
+          ':order_id' => $order_id,
+          ':product_id' => $product_id,
+          ':review' => $review,
+          ':rating' => $rating,
+          ':customer_id' => $cust_id
+        ]);
+      }
+
+      echo json_encode(['success' => true, 'message' => 'Review submitted or updated successfully']);
+    } catch (Exception $e) {
+      echo json_encode(['success' => false, 'message' => $e->getMessage()]);
+    }
+    exit;
+  }
+}
+?>
+
+
+<link rel="stylesheet" href="../css/customerorder.css">
+
+
+<section>
+  <!--for demo wrap-->
+  <h1>Fixed Table header</h1>
+  <div class="tbl-header">
+    <table cellpadding="0" cellspacing="0" border="0">
+      <thead>
+        <tr>
+          <th>#</th>
+              <th>Customer</th>
+              <th>Product Details</th>
+              <th>Payment Information</th>
+              <th>Paid Amount</th>
+              <th>Payment Status</th>
+              <th>Shipping Status</th>
+              <th >Action</th>
+        </tr>
+      </thead>
+    </table>
   </div>
-</body>
-</html>
+  <div class="tbl-content">
+    <table cellpadding="0" cellspacing="0" border="0">
+      <tbody>
+        <?php
+            // Query to join the relevant tables and filter by the logged-in customer's ID
+            $stmt = $pdo->prepare("
+                        SELECT 
+                            c.cust_id, 
+                            c.cust_name, 
+                            c.cust_email, 
+                            p.name AS product_name, 
+                            oi.quantity, 
+                            p.current_price AS unit_price, 
+                            pay.payment_method, 
+                            pay.payment_id, 
+                            pay.created_at AS payment_date, 
+                            pay.amount_paid, 
+                            pay.shipping_status, 
+                            pay.payment_status, 
+                            o.order_id, 
+                            p.p_id
+                        FROM 
+                            customer c
+                        JOIN orders o ON c.cust_id = o.customer_id
+                        JOIN order_items oi ON o.order_id = oi.order_id
+                        JOIN product p ON oi.product_id = p.p_id
+                        JOIN payment pay ON o.order_id = pay.order_id
+                        WHERE c.cust_id = :cust_id
+                    ");
+
+            // Execute query
+            $stmt->execute([':cust_id' => $cust_id]);
+
+            // Fetch orders
+            $orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            if (empty($orders)) {
+              echo "<tr><td colspan='8' class='text-center'>No orders found</td></tr>";
+            } else {
+              foreach ($orders as $index => $order) {
+                ?>
+                <tr>
+                  <td><?= $index + 1 ?></td>
+                  <td>
+                    <strong>Id:</strong> <?= $order['cust_id'] ?><br>
+                    <strong>Name:</strong> <?= htmlspecialchars($order['cust_name']) ?><br>
+                    <strong>Email:</strong> <?= htmlspecialchars($order['cust_email']) ?>
+                  </td>
+                  <td>
+                    <strong>Product:</strong> <?= htmlspecialchars($order['product_name']) ?><br>
+                    <strong>Quantity:</strong> <?= $order['quantity'] ?><br>
+                    <strong>Unit Price:</strong> <?= $order['unit_price'] ?>
+                  </td>
+                  <td>
+                    <strong>Payment Method:</strong> <?= $order['payment_method'] ?><br>
+                    <strong>Payment Id:</strong> <?= $order['payment_id'] ?><br>
+                    <strong>Date:</strong> <?= $order['payment_date'] ?>
+                  </td>
+                  <td>₱<?= number_format($order['amount_paid'], 2) ?></td>
+                  <td>
+                    <span class="badge <?= $order['payment_status'] === 'pending' ? 'bg-warning' : ($order['payment_status'] === 'paid' ? 'bg-success' : 'bg-danger') ?>">
+                      <?= ucfirst($order['payment_status']) ?>
+                    </span>
+                  </td>
+                  <td>
+                    <span class="badge <?= $order['shipping_status'] === 'pending' ? 'bg-warning' : ($order['shipping_status'] === 'shipped' ? 'bg-info' : 'bg-success') ?>">
+                      <?= ucfirst($order['shipping_status']) ?>
+                    </span>
+                  </td>
+                  <td>
+  <?php if ($order['shipping_status'] === 'delivered'): ?>
+    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#reviewModal" data-order-id="<?= $order['order_id'] ?>" data-product-id="<?= $order['p_id'] ?>">Add Review</button>
+  <?php else: ?>
+    <button class="btn btn-secondary" disabled>Review</button>
+  <?php endif; ?>
+</td>
+                </tr>
+              <?php }
+            } ?>
+      </tbody>
+    </table>
+  </div>
+  <div class="modal fade" id="reviewModal" tabindex="-1" aria-labelledby="reviewModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="reviewModalLabel">Add Review</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">x</button>
+        </div>
+        <div class="modal-body">
+          <form id="reviewForm">
+            <div class="mb-3">
+              <label for="review" class="form-label">Review</label>
+              <textarea class="form-control" id="review" rows="3"></textarea>
+            </div>
+            <div class="mb-3">
+              <label for="rating" class="form-label">Rating</label>
+              <select class="form-select" id="rating">
+                <option value="">Select Rating (Optional)</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+              </select>
+            </div>
+            <input type="hidden" id="order-id">
+            <input type="hidden" id="product-id">
+            <button type="submit" class="btn btn-primary">Submit Review</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    // Load existing review into the modal for editing
+reviewModal.addEventListener('show.bs.modal', function(event) {
+  const button = event.relatedTarget;
+  const orderId = button.getAttribute('data-order-id');
+  const productId = button.getAttribute('data-product-id');
+
+  document.getElementById('order-id').value = orderId;
+  document.getElementById('product-id').value = productId;
+
+  // Fetch existing review for the order-product combination
+  fetch(`get_review.php?order_id=${orderId}&product_id=${productId}`)
+    .then(response => response.json())
+    .then(data => {
+      document.getElementById('review').value = data.review || '';
+      document.getElementById('rating').value = data.rating || '';
+    })
+    .catch(error => console.error('Error fetching review:', error));
+});
+
+// Handle review form submission for add/update
+document.getElementById('reviewForm').addEventListener('submit', function(e) {
+  e.preventDefault();
+
+  const orderId = document.getElementById('order-id').value;
+  const productId = document.getElementById('product-id').value;
+  const review = document.getElementById('review').value;
+  const rating = document.getElementById('rating').value;
+
+  fetch('', {
+    method: 'POST',
+    body: new URLSearchParams({
+      action: 'add_or_update_review',
+      order_id: orderId,
+      product_id: productId,
+      review: review,
+      rating: rating
+    }),
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.success) {
+      alert('Review updated successfully');
+      window.location.reload();
+    } else {
+      alert('Error: ' + data.message);
+    }
+  });
+});
+
+    function toggleDropdown() {
+        const dropdown = document.getElementById('userDropdown');
+        dropdown.classList.toggle('show');
+    }
+
+    // Close the dropdown when clicking outside
+    window.onclick = function(event) {
+        if (!event.target.matches('.fa-user')) {
+            const dropdown = document.getElementById('userDropdown');
+            if (dropdown && dropdown.classList.contains('show')) {
+                dropdown.classList.remove('show');
+            }
+        }
+    };
+
+  </script>
+
+<style>
+  /* Add these styles to make the table scrollable */
+.table-container {
+  max-height: 400px; /* You can adjust the height as needed */
+  overflow-y: auto;
+}
+/* Style for the 'Add Review' button */
+.btn-primary {
+    background-color: #007bff;  /* Blue color */
+    border-color: #007bff;
+}
+
+/* Style for the 'Review Available After Delivery' button */
+.btn-secondary {
+    background-color: #6c757d;  /* Gray color */
+    border-color: #6c757d;
+    cursor: not-allowed;  /* Show the disabled cursor */
+}
+
+/* Additional styling for the modal */
+#reviewModal .modal-header {
+    background-color: #007bff;
+    color: #fff;
+}
+
+#reviewModal .modal-footer .btn-primary {
+    background-color: #28a745;  /* Green color for submit button */
+}
+
+/* Disabled button appearance */
+.btn:disabled {
+    opacity: 0.65;
+    pointer-events: none;  /* Prevent interaction */
+}
+</style>
+

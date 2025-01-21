@@ -2,174 +2,6 @@
     --pink: #e84393;
 }
 
-*{
-    margin: 0;
-    padding: 0;
-    font-family: Verdana, Geneva, Tahoma, sans-serif;
-    outline: none;
-    border: none;
-    text-decoration: none;
-    text-transform: capitalize;
-    transition: .2s linear;
-}
-
-html{
-    font-size: 62.5%;
-    scroll-behavior: smooth;
-    scroll-padding-top: 6rem;
-    overflow-x: hidden;
-}
-
-header{
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    background: #fff;
-    padding: 2rem 9%;
-    display: flex;
-    align-items: center; 
-    justify-content: space-between; 
-    z-index: 1000;
-    box-shadow: 0 .5rem 1rem rgba(0, 0, 0, .1);    
-}
-
-.logos{
-    width: 10rem;
-    margin-top: -2rem;
-    margin-bottom: -3rem;
-}
-
-header .logo{
-    font-size: 3rem;
-    color: #333;
-    font-weight: bolder;
-}
-
-header .logo span{
-    color: var(--pink);
-}
-
-header .navbar a{
-    font-size: 2rem;
-    padding:0 1.5rem;
-    color: #666;
-}
-
-header .navbar a:hover{
-    color: var(--pink);
-}
-
-header .icons {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 6rem; /* Ensures no spacing between icons */
- }
- 
- header .icons a {
-    font-size: 2.5rem;
-    color: #333;
- }
-header #toggler{
-    display: none;
-}
-
-header .fa-bars{
-    font-size: 3rem;
-    color: #333;
-    border-radius: .5rem;
-    padding: .5rem 1.5rem;
-    cursor: pointer;
-    border: .1rem rgba(0, 0, 0, .3);
-    display: none;
-}
-
-/* dropdown */
-
-.user-dropdown {
-    position: relative;
-    display: inline-block;
-}
-
-.fas.fa-user {
-    cursor: pointer;
-}
-
-.dropdown-menu {
-    display: none;
-    position: absolute;
-    top: 100%;
-    right: 0;
-    background-color: white;
-    border: 1px solid #ccc;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    border-radius: 5px;
-    width: 200px;
-    z-index: 9999; /* Increase if needed */
-}
-
-.dropdown-menu p {
-    margin: 10px;
-    font-weight: bold;
-}
-
-.dropdown-menu hr {
-    margin: 5px 0;
-}
-
-.dropdown-menu a {
-    display: block;
-    padding: 10px;
-    text-decoration: none;
-    color: #333;
-}
-
-.dropdown-menu a:hover {
-    background-color: #f0f0f0;
-}
-
-.dropdown-menu.show {
-    display: block;
-}
-
-
-/* Style for the dropdown container */
-.prod-dropdown {
-    position: relative;
-    display: inline-block;
-}
-
-/* Style for the dropdown menu (hidden by default) */
-.prod-menu {
-    display: none; /* Hidden initially */
-    position: absolute;
-    top: 100%; /* Position below the parent element */
-    left: 0;
-    background-color: white;
-    min-width: 150px;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Optional shadow */
-    z-index: 1000;
-}
-
-/* Links inside the dropdown menu */
-.prod-menu a {
-    display: block;
-    padding: 10px;
-    text-decoration: none;
-    color: black;
-    transition: background-color 0.3s ease;
-}
-
-.prod-menu a:hover {
-    background-color: #f0f0f0; /* Highlight the link on hover */
-}
-
-/* Show the dropdown menu when hovering over the container */
-.prod-dropdown:hover .prod-menu {
-    display: block; /* Make it visible */
-}
-
 /* Container settings */
 .container {
     max-width: 100%;
@@ -181,7 +13,7 @@ header .fa-bars{
 }
 
 /* Title style */
-.container .title {
+.containers .title {
     font-size: 3.5rem; /* 35px (since 1rem = 10px) */
     color: #444;
     margin-bottom: 1rem;
@@ -380,6 +212,14 @@ h1 {
     margin-bottom: 20px;
 }
 
+.table-container {
+    max-height: 100%; /* Set a height for the scrollable area */
+    width: 180%; /* Use a percentage to make the container responsive */
+    max-width: 2000px; /* Maximum width to limit container expansion */
+    overflow-y: auto; /* Enable vertical scrolling only */
+    border-radius: 8px; /* Match table’s border-radius for consistency */
+}
+
 table {
     width: 100%; /* Makes the table fill the container's width */
     border-collapse: collapse;
@@ -387,18 +227,17 @@ table {
     border-radius: 12px; /* Smooth table corners */
     overflow: hidden; /* Prevents border-radius clipping */
     font-size: 16px; /* Sets consistent font size for the table */
+    max-height: 600px; /* Adjust height as needed */
 }
 
-.table-container {
-    max-height: 400px; /* Set a height for the scrollable area */
-    width: 180%; /* Use a percentage to make the container responsive */
-    max-width: 2000px; /* Maximum width to limit container expansion */
-    overflow-y: auto; /* Enable vertical scrolling only */
-    border: 1px solid #ddd; /* Optional: Add a border around the container */
-    border-radius: 8px; /* Match table’s border-radius for consistency */
+thead th {
+    position: sticky;
+    top: 0; /* Stick the heder to the top without adding extra space */
+    z-index: 2; /* Ensure it stays above table rows */
+    background-color:var(--pink); /* Match the table-dark header background */
+    color: #fff; /* White text for better visibility */
+    padding: 8px; /* Adjust padding for proper alignment */
 }
-
-
 
 strong {
     font-family: Verdana, Geneva, Tahoma, sans-serif;
