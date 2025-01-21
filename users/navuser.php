@@ -120,6 +120,7 @@
 
                         if (!empty($payments)): 
                     ?>
+                    
                         <p>Notifications</p>
                         <hr>
                         <?php foreach ($payments as $payment): ?>

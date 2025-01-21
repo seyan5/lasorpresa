@@ -83,14 +83,15 @@ $result = $statement->fetchAll(PDO::FETCH_ASSOC);
 
 <script>
 // Function to filter products by ecat_id
-function filterProducts(ecat_id) {
+// Function to filter products by ecat_id and sort option
+function filterProducts(ecat_id, sort) {
     const container = document.getElementById('productContainer');
     
     // Show loading message
     container.innerHTML = "<p>Loading products...</p>";
 
     // Determine the correct API endpoint or parameter for 'all'
-    const url = ecat_id === 'all' ? 'fetch-occasion.php' : `fetch-occasion.php?ecat_id=${ecat_id}`;
+    const url = ecat_id === 'all' ? `fetch-occasion.php?sort=${sort}` : `fetch-occasion.php?ecat_id=${ecat_id}&sort=${sort}`;
 
     const xhr = new XMLHttpRequest();
     xhr.open('GET', url, true);
@@ -105,8 +106,15 @@ function filterProducts(ecat_id) {
 }
 
 window.onload = function() {
-    filterProducts('all');
+    filterProducts('all', 'Default');
 };
+
+// Event listener for sort dropdown change
+document.getElementById('select').addEventListener('change', function() {
+    const sort = this.value;
+    filterProducts('all', sort);
+});
+
 
 function openModal(productId) {
     // Fetch product data from the selected product using AJAX or embedded data
