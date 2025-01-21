@@ -209,26 +209,63 @@ h1 {
     font-size: 2.5em;
     text-align: center;
     color: #333;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
+    margin-top: 30rem;
+    font-family: "NudMotoya Maru W55 W5";
 }
 
 .table-container {
-    max-height: 100%; /* Set a height for the scrollable area */
-    width: 180%; /* Use a percentage to make the container responsive */
-    max-width: 2000px; /* Maximum width to limit container expansion */
-    overflow-y: auto; /* Enable vertical scrolling only */
+    max-height: 50%; /* Remove max-height to prevent the scroll */
+    width: 150%; /* Adjust width to fit within the screen */
+    max-width: 2000px; /* Optional: Maximum width for large screens */
     border-radius: 8px; /* Match table’s border-radius for consistency */
 }
 
 table {
-    width: 100%; /* Makes the table fill the container's width */
+    width: 100%; /* Table takes full width of container */
     border-collapse: collapse;
     margin-top: 20px;
     border-radius: 12px; /* Smooth table corners */
     overflow: hidden; /* Prevents border-radius clipping */
-    font-size: 16px; /* Sets consistent font size for the table */
-    max-height: 600px; /* Adjust height as needed */
+    font-size: 16px; /* Consistent font size */
 }
+
+.pagination-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.pagination {
+    display: inline-flex;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.pagination li {
+    margin: 0 5px;
+}
+
+.pagination a {
+    padding: 8px 12px;
+    text-decoration: none;
+    color: #333;
+    border-radius: 5px;
+    background-color: #fff;
+    transition: background-color 0.3s;
+}
+
+.pagination a:hover {
+    background-color: var(--pink);
+    color: #fff;
+}
+
+.pagination .active a {
+    background-color: var(--pink);
+    color: white;
+}
+
 
 thead th {
     position: sticky;

@@ -1,6 +1,5 @@
 @import url(https://db.onlinewebfonts.com/c/90ac3b18aaef9f2db3ac8e062c7a033b?family=NudMotoya+Maru+W55+W5);
-
-:root{
+@import url('https://fonts.googleapis.com/css2?family=Caveat&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Quattrocento:wght@400;700&family=Yeseva+One&display=swap');:root{
     --pink: #e84393;
 }
 
@@ -431,7 +430,7 @@ header .fa-bars{
 }
   
 .item h1 {
-    font-size: 3em;
+    font-size: 3rem;
     font-family: "NudMotoya Maru W55 W5";
 }
   
@@ -442,7 +441,7 @@ header .fa-bars{
 
 .home .content h3{
     margin-top: 20px;
-    font-size: 6rem;
+    font-size: 8rem;
     color: #000000;
 }
 

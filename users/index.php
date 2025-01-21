@@ -12,9 +12,9 @@ include("../admin/inc/CSRF_Protect.php");
 
     <section class="home" id="home">
         <div class="content">
-            <h3>Say it</h3>
-            <h3>With</h3>
-            <h3>Flowers</h3>
+            <h3 style="font-family: Yeseva One, serif;">Say it</h3>
+            <h3 style="font-family: Yeseva One, serif;">With</h3>
+            <h3 style="font-family: Yeseva One, serif;">Flowers</h3>
             <div class="container">
                 <div class="item">
                     <h1>30+</h1>

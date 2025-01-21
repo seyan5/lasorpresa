@@ -5,7 +5,27 @@ include("../inc/config.php");
 include("../inc/functions.php");
 include("../inc/CSRF_Protect.php");
 
-// Fetch data from custom_order, custom_orderitems, custom_payment, and custom_images tables
+// Define how many results per page
+$results_per_page = 8;
+
+// Find out the total number of orders
+$total_query = $pdo->prepare("SELECT COUNT(*) FROM custom_order");
+$total_query->execute();
+$total_orders = $total_query->fetchColumn();
+
+// Calculate total pages
+$total_pages = ceil($total_orders / $results_per_page);
+
+// Get the current page number from the query string, default is 1
+$current_page = isset($_GET['page']) && is_numeric($_GET['page']) ? (int)$_GET['page'] : 1;
+
+// Prevent out-of-range page numbers
+$current_page = max(1, min($current_page, $total_pages));
+
+// Determine the starting limit number for the SQL query
+$starting_limit = ($current_page - 1) * $results_per_page;
+
+// Fetch data with limit and offset
 $query = $pdo->prepare(
     "SELECT 
         co.order_id,
@@ -29,9 +49,12 @@ $query = $pdo->prepare(
     LEFT JOIN custom_images ci ON co.order_id = ci.order_id
     LEFT JOIN custom_finalimages cf ON co.order_id = cf.order_id
     GROUP BY co.order_id
-    ORDER BY co.order_id DESC"
+    ORDER BY co.order_id DESC
+    LIMIT :starting_limit, :results_per_page"
 );
 
+$query->bindValue(':starting_limit', $starting_limit, PDO::PARAM_INT);
+$query->bindValue(':results_per_page', $results_per_page, PDO::PARAM_INT);
 $query->execute();
 $orders = $query->fetchAll(PDO::FETCH_ASSOC);
 ?>
@@ -43,16 +66,149 @@ $orders = $query->fetchAll(PDO::FETCH_ASSOC);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Custom Order Dashboard</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        /* Keep the existing CSS you provided */
+@import url(https://db.onlinewebfonts.com/c/90ac3b18aaef9f2db3ac8e062c7a033b?family=NudMotoya+Maru+W55+W5);
+
+:root {
+    --pink: #e84393;
+}
+
+body {
+    font-family: "NudMotoya Maru W55 W5", sans-serif;
+    background-color: #f9f9f9;
+    color: #333;
+    margin: 15px; /* Reduced margin */
+    line-height: 1.4; /* Slightly reduced line height */
+}
+
+h3 {
+    text-align: center;
+    margin-bottom: 15px; /* Reduced margin */
+    color: #444;
+    font-size: 2.5rem; /* Slightly smaller font size */
+}
+
+.container {
+    width: 85%; /* Reduced width slightly */
+    margin: auto;
+}
+
+.custom-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px; /* Reduced margin */
+    background-color: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Reduced shadow */
+    font-family: "NudMotoya Maru W55 W5", sans-serif;
+}
+
+.custom-table th,
+.custom-table td {
+    padding: 12px; /* Reduced padding */
+    text-align: center;
+}
+
+.custom-table th {
+    background-color: var(--pink);
+    color: #fff;
+    text-transform: uppercase;
+    font-size: 0.85rem; /* Slightly smaller font size */
+    letter-spacing: 0.8px; /* Slightly reduced letter spacing */
+}
+
+.custom-table tr:nth-child(odd) {
+    background-color: #f9f9f9;
+}
+
+.custom-table tr:nth-child(even) {
+    background-color: #fff;
+}
+
+.custom-table tr:hover {
+    background-color: #f1f1f1;
+}
+
+.btn {
+    padding: 6px 12px; /* Reduced padding */
+    font-size: 0.8rem; /* Smaller font size */
+    border-radius: 4px;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.btn-secondary {
+    background-color: #555;
+    color: #fff;
+}
+
+.btn-secondary:hover {
+    background-color: #444;
+}
+
+.btn-info {
+    background-color: #007bff;
+    color: #fff;
+}
+
+.btn-info:hover {
+    background-color: #0056b3;
+}
+
+.btn-danger {
+    background-color: #dc3545;
+    color: #fff;
+}
+
+.btn-danger:hover {
+    background-color: #a71d2a;
+}
+
+.form-control {
+    padding: 4px 8px; /* Reduced padding */
+    font-size: 0.85rem; /* Slightly smaller font size */
+    font-family: "NudMotoya Maru W55 W5", sans-serif;
+}
+
+.form-control select {
+    width: 100%;
+}
+
+/* Pagination Styles */
+.pagination {
+    text-align: center;
+    margin-top: 15px; /* Reduced margin */
+}
+
+.pagination a {
+    margin: 0 4px; /* Reduced margin */
+    padding: 6px 10px; /* Reduced padding */
+    background-color: #ddd;
+    color: #333;
+    text-decoration: none;
+    border-radius: 4px;
+}
+
+.pagination a:hover {
+    background-color: #ccc;
+}
+
+.pagination .active {
+    background-color: #007bff;
+    color: white;
+}
+    </style>
 </head>
 
 <body>
-    <div class="container mt-5">
-        <h3 class="text-center">Custom Order Dashboard</h3>
+    <div class="container">
+        <h3>Custom Order Dashboard</h3>
         <div class="d-flex justify-content-start mb-3">
             <a href="../dashboard.php" class="btn btn-secondary">Back to Dashboard</a>
         </div>
-        <table class="table table-bordered table-striped">
+        <table class="custom-table">
             <thead>
                 <tr>
                     <th>#</th>
@@ -70,7 +226,7 @@ $orders = $query->fetchAll(PDO::FETCH_ASSOC);
             <tbody>
                 <?php foreach ($orders as $index => $order): ?>
                     <tr>
-                        <td><?= $index + 1; ?></td>
+                        <td><?= $starting_limit + $index + 1; ?></td>
                         <td>
                             <strong>Id:</strong> <?= htmlspecialchars($order['order_id']); ?><br>
                             <strong>Name:</strong> <?= htmlspecialchars($order['customer_name']); ?><br>
@@ -117,169 +273,24 @@ $orders = $query->fetchAll(PDO::FETCH_ASSOC);
                 <?php endforeach; ?>
             </tbody>
         </table>
-    </div>
 
-    <!-- Modal for Viewing and Adding Images -->
-    <div class="modal fade" id="viewImagesModal" tabindex="-1" aria-labelledby="viewImagesModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="viewImagesModalLabel">Order Images</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">&times;</button>
-                </div>
-                <div class="modal-body">
-                    <div class="text-center">
-                        <p><strong>Expected Images:</strong></p>
-                        <div id="expectedImagesContainer"></div>
-                    </div>
-                    <div class="text-center mt-3">
-                        <p><strong>Final Images:</strong></p>
-                        <div id="finalImagesContainer"></div>
-                    </div>
-                    <hr>
-                    <h6>Add Final Image:</h6>
-                    <form id="addFinalImageForm" enctype="multipart/form-data">
-                        <input type="hidden" name="order_id" id="orderIdForImage">
-                        <div class="form-group">
-                            <label for="finalImageInput">Upload Final Image</label>
-                            <input type="file" class="form-control-file" id="finalImageInput" name="final_image"
-                                accept="image/*">
-                        </div>
-                        <button type="submit" class="btn btn-success">Upload</button>
-                    </form>
-                    <hr>
-                    <h6>Remove Final Image:</h6>
-                    <button id="removeFinalImageBtn" class="btn btn-danger btn-sm" style="display: none;">
-                        <i class="fa fa-times"></i> Remove Final Image
-                    </button>
-                </div>
-            </div>
+        <!-- Pagination Links -->
+        <div class="pagination">
+            <?php if ($current_page > 1): ?>
+                <a href="?page=<?= $current_page - 1; ?>" class="btn btn-secondary">Previous</a>
+            <?php endif; ?>
+
+            <?php for ($page = 1; $page <= $total_pages; $page++): ?>
+                <a href="?page=<?= $page; ?>" class="btn <?= $page == $current_page ? 'active' : ''; ?>">
+                    <?= $page; ?>
+                </a>
+            <?php endfor; ?>
+
+            <?php if ($current_page < $total_pages): ?>
+                <a href="?page=<?= $current_page + 1; ?>" class="btn btn-secondary">Next</a>
+            <?php endif; ?>
         </div>
     </div>
-
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script>
-        $(document).ready(function () {
-            // View Images
-            $('.view-images').on('click', function () {
-                const expectedImages = $(this).data('expected-images');
-                const finalImages = $(this).data('final-images');
-                const orderId = $(this).data('order-id');
-
-                $('#orderIdForImage').val(orderId);
-                $('#expectedImagesContainer').html('');
-                $('#finalImagesContainer').html('');
-                $('#removeFinalImageBtn').hide(); // Hide remove button initially
-
-                if (expectedImages) {
-                    const expectedImagesArray = expectedImages.split(', ');
-                    expectedImagesArray.forEach(image => {
-                        $('#expectedImagesContainer').append(`<img src="../../users/uploads/${image}" class="img-fluid mb-2" alt="Expected Image" style="max-width: 100%;">`);
-                    });
-                } else {
-                    $('#expectedImagesContainer').html('<p>No expected images available.</p>');
-                }
-
-                // Display final images and show remove button if images exist
-                if (finalImages) {
-                    const finalImagesArray = finalImages.split(', ');
-                    finalImagesArray.forEach(image => {
-                        $('#finalImagesContainer').append(`<img src="final_image_uploads/${image}" class="img-fluid mb-2" alt="Final Image" style="max-width: 100%;">`);
-                    });
-                    $('#removeFinalImageBtn').show(); // Show remove button if there is a final image
-                } else {
-                    $('#finalImagesContainer').html('<p>No final images available.</p>');
-                }
-
-                $('#viewImagesModal').modal('show');
-            });
-
-            // Upload Final Image
-            $('#addFinalImageForm').on('submit', function (e) {
-                e.preventDefault();
-                const formData = new FormData(this);
-
-                $.ajax({
-                    url: 'add-final-image.php',
-                    method: 'POST',
-                    data: formData,
-                    processData: false,
-                    contentType: false,
-                    success: function (response) {
-                        try {
-                            const data = JSON.parse(response);  // Parse the response to handle it properly
-                            if (data.success) {
-                                alert(data.message);  // Display success message
-                            } else {
-                                alert(data.message);  // Display failure message
-                            }
-                        } catch (error) {
-                            alert('An error occurred while processing the image.'); // Handle any parsing errors
-                        }
-
-                        $('#viewImagesModal').modal('hide');
-                        location.reload(); // Reload the page to reflect changes
-                    },
-                    error: function () {
-                        alert('Failed to upload the image. Please try again.');
-                    }
-                });
-            });
-
-            // Remove Final Image
-            $('#removeFinalImageBtn').on('click', function () {
-                const orderId = $('#orderIdForImage').val();
-
-                if (confirm('Are you sure you want to remove this final image?')) {
-                    $.post('remove-final-image.php', { order_id: orderId }, function (response) {
-                        if (response.success) {
-                            alert(response.message);
-                            $('#viewImagesModal').modal('hide');
-                            location.reload();
-                        } else {
-                            alert(response.message);
-                        }
-                    }, 'json');
-                }
-            });
-
-            // Change Payment or Shipping Status
-            $('.change-status').on('change', function () {
-                const orderId = $(this).data('order-id');
-                const field = $(this).data('field');
-                const value = $(this).val();
-
-                $.post('customize-order-change-status.php', {
-                    order_id: orderId,
-                    field: field,
-                    value: value
-                }, function (response) {
-                    if (response.success) {
-                        alert(`${field.replace('_', ' ')} updated successfully!`);
-                    } else {
-                        alert(`Failed to update ${field.replace('_', ' ')}.`);
-                    }
-                }, 'json');
-            });
-
-            // Delete Order
-            $('.delete-order').on('click', function () {
-                const orderId = $(this).data('order-id');
-
-                if (confirm('Are you sure you want to delete this order?')) {
-                    $.post('customize-order-delete.php', { order_id: orderId }, function (response) {
-                        alert(response.message);
-                        location.reload();
-                    }, 'json');
-                }
-            });
-        });
-
-    </script>
-
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/css/bootstrap.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>
