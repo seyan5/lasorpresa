@@ -21,7 +21,7 @@ try {
 <link rel="stylesheet" href="../css/review.css">
 
 <body>
-<h1>Customer Reviews</h1>
+<h1 style="margin-top: 10rem;">Customer Reviews</h1>
 <div class="container">
     <?php if (!empty($reviews)): ?>
         <?php foreach ($reviews as $review): ?>

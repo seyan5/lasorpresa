@@ -103,6 +103,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         ]);
 
         $pdo->commit();
+        unset($_SESSION['customization']);
+    unset($_SESSION['total_price']);
 
         echo "<script>alert('Payment successful!');</script>";
         echo "<script>window.location.href = 'customization.php';</script>";
