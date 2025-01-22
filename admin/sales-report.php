@@ -253,8 +253,8 @@ $productTypes = $productTypesStmt->fetchAll(PDO::FETCH_ASSOC);
                             <td><?= htmlspecialchars($sale['product_type']) ?></td>
                             <td><?= htmlspecialchars($sale['product_name']) ?></td>
                             <td><?= $sale['quantity'] ?></td>
-                            <td>P <?= number_format($sale['current_price'], 2) ?></td>
-                            <td>P <?= number_format($sale['amount_paid'], 2) ?></td>
+                            <td>₱ <?= number_format($sale['current_price'], 2) ?></td>
+                            <td>₱ <?= number_format($sale['amount_paid'], 2) ?></td>
                             <td><?= htmlspecialchars($sale['payment_date']) ?></td>
                         </tr>
                     <?php } ?>
@@ -269,7 +269,7 @@ $productTypes = $productTypesStmt->fetchAll(PDO::FETCH_ASSOC);
             </div>
             <div class="card-body">
                 <p>Total Quantity Sold: <?= $overallTotalData['total_quantity'] ?></p>
-                <p>Total Sales: P <?= number_format($overallTotalData['total_sales'], 2) ?></p>
+                <p>Total Sales: ₱ <?= number_format($overallTotalData['total_sales'], 2) ?></p>
             </div>
         </div>
 
@@ -280,7 +280,7 @@ $productTypes = $productTypesStmt->fetchAll(PDO::FETCH_ASSOC);
             </div>
             <div class="card-body">
                 <?php foreach ($totalSalesData as $data) { ?>
-                    <p><strong><?= $data['product_type'] ?>:</strong> <?= $data['total_quantity'] ?> items sold, P <?= number_format($data['total_sales'], 2) ?></p>
+                    <p><strong><?= $data['product_type'] ?>:</strong> <?= $data['total_quantity'] ?> items sold, ₱ <?= number_format($data['total_sales'], 2) ?></p>
                 <?php } ?>
             </div>
         </div>

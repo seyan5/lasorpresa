@@ -137,7 +137,7 @@ $_SESSION['total_price'] = $total_price;
   <div class="payment">
     <h3>Summary</h3>
     <div class="summary">
-    <p><strong>Container Type:</strong> <?php echo htmlspecialchars($container_name); ?> ($<?php echo number_format($group['container_price'], 2); ?>)</p>
+    <p><strong>Container Type:</strong> <?php echo htmlspecialchars($container_name); ?> (₱<?php echo number_format($group['container_price'], 2); ?>)</p>
           <p><strong>Container Color:</strong> <?php echo htmlspecialchars($color_name); ?></p>
           <?php foreach ($group['flowers'] as $flower_item): ?>
               <?php
@@ -148,9 +148,9 @@ $_SESSION['total_price'] = $total_price;
               $flower_price = $flower['price'] ?? 0;
               $flower_total_price = $flower_price * $flower_item['num_flowers'];
               ?>
-              <p><strong>Flower: </strong><?php echo htmlspecialchars($flower_name); ?> ($<?php echo number_format($flower_price, 2); ?> per flower)</p>
+              <p><strong>Flower: </strong><?php echo htmlspecialchars($flower_name); ?> (₱<?php echo number_format($flower_price, 2); ?> per flower)</p>
              <p><strong>Quantity: </strong><?php echo htmlspecialchars($flower_item['num_flowers']); ?></p>
-                <strong><p>Total:</strong> $<?php echo number_format($flower_total_price, 2); ?></p>
+                <strong><p>Total:</strong> ₱<?php echo number_format($flower_total_price, 2); ?></p>
             <?php endforeach; ?>
       <p><strong>Total Price: </strong><span>₱<?php echo number_format($total_price, 2); ?></span></p>
     </div>

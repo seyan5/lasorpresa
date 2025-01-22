@@ -99,7 +99,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_status'])) {
                     </a>
                 </li>
                 <li>
-                    <a href="dashboard.php">
+                    <a href="../dashboard.php">
                         <span class="icon">
                             <ion-icon name="home-outline"></ion-icon>
                         </span>
@@ -107,7 +107,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_status'])) {
                     </a>
                 </li>
                 <li>
-                    <a href="users.php">
+                    <a href="../users.php">
                         <span class="icon">
                             <ion-icon name="people-outline"></ion-icon>
                         </span>
@@ -115,7 +115,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_status'])) {
                     </a>
                 </li>
                 <li>
-                    <a href="sales-report.php">
+                    <a href="../sales-report.php">
                         <span class="icon">
                             <ion-icon name="cash-outline"></ion-icon>
                         </span>
@@ -123,7 +123,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_status'])) {
                     </a>
                 </li>
                 <li>
-                    <a href="product/product.php">
+                    <a href="../product/product.php">
                         <span class="icon">
                             <ion-icon name="cube-outline"></ion-icon>
                         </span>
@@ -131,7 +131,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_status'])) {
                     </a>
                 </li>
                 <li>
-                    <a href="product/flowers.php">
+                    <a href="../product/flowers.php">
                         <span class="icon">
                             <ion-icon name="flower-outline"></ion-icon>
                         </span>
@@ -139,7 +139,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_status'])) {
                     </a>
                 </li>
                 <li>
-                    <a href="orders/order.php">
+                    <a href="order.php">
                         <span class="icon">
                             <ion-icon name="cart-outline"></ion-icon>
                         </span>
@@ -147,7 +147,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_status'])) {
                     </a>
                 </li>
                 <li>
-                    <a href="customize/customize-order.php">
+                    <a href="../customize/customize-order.php">
                         <span class="icon">
                         <ion-icon name="color-wand-outline"></ion-icon>
                         </span>
@@ -155,7 +155,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_status'])) {
                     </a>
                 </li>
                 <li>
-                    <a href="settings.php">
+                    <a href="../settings.php">
                         <span class="icon">
                             <ion-icon name="albums-outline"></ion-icon>
                         </span>
@@ -201,14 +201,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_status'])) {
                                 <td>
                                     <strong>Product:</strong> <?= htmlspecialchars($order['product_name']) ?><br>
                                     <strong>Quantity:</strong> <?= $order['quantity'] ?><br>
-                                    <strong>Unit Price:</strong> $<?= number_format($order['unit_price'], 2) ?>
+                                    <strong>Unit Price:</strong> ₱<?= number_format($order['unit_price'], 2) ?>
                                 </td>
                                 <td>
                                     <strong>Payment Method:</strong> <?= $order['payment_method'] ?><br>
                                     <strong>Payment Id:</strong> <?= $order['payment_id'] ?><br>
                                     <strong>Date:</strong> <?= $order['payment_date'] ?>
                                 </td>
-                                <td>$<?= number_format($order['amount_paid'], 2) ?></td>
+                                <td>₱<?= number_format($order['amount_paid'], 2) ?></td>
                                 <td>
                                     <select class="form-select" id="payment-status-<?= $order['order_id'] ?>">
                                         <option <?= $order['payment_status'] === 'pending' ? 'selected' : '' ?> value="pending">Pending</option>
