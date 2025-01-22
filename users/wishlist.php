@@ -1,0 +1,181 @@
+<?php
+session_start();
+include("../admin/inc/config.php");
+include("../admin/inc/functions.php");
+include("../admin/inc/CSRF_Protect.php");
+?>
+<?php include('navuser.php'); ?>
+
+<?php
+// Fetch wishlist items for the logged-in customer
+if (isset($_SESSION['customer'])) {
+    $cust_id = $_SESSION['customer']['cust_id'];
+    $stmt = $pdo->prepare("SELECT w.*, p.name, p.featured_photo, p.current_price FROM wishlist w
+                           JOIN product p ON w.p_id = p.p_id
+                           WHERE w.cust_id = :cust_id");
+    $stmt->execute(['cust_id' => $cust_id]);
+    $wishlistItems = $stmt->fetchAll(PDO::FETCH_ASSOC);
+} else {
+    $wishlistItems = []; // No items if no customer is logged in
+}
+?>
+
+<style>
+  .container {
+    display: flex;
+    max-width: 1600px; 
+    margin: 40px auto; 
+    gap: 30px; 
+    margin-top: 25rem; 
+  }
+
+  .wishlist {
+    flex: 1; 
+    border-radius: 12px; 
+    padding: 30px; 
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+    max-height: calc(100vh - 10rem); 
+    overflow-y: auto; 
+  }
+
+  .wishlist h2, .wishlist h3 {
+    margin: 0;
+    font-size: 25px; 
+    color: #333; 
+  }
+
+  .wishlist-item {
+    display: flex;
+    align-items: center;
+    margin-top: 20px;
+    border-bottom: 2px solid #ddd; 
+    padding-bottom: 15px; 
+  }
+
+  .wishlist-item img {
+    width: 100px; 
+    height: 100px; 
+    object-fit: cover;
+    border-radius: 10px; 
+  }
+
+  .wishlist-item div {
+    margin-left: 15px; 
+    flex: 1;
+  }
+
+  .wishlist-item h4 {
+    margin: 0;
+    font-size: 15px; 
+  }
+
+  .wishlist-item p {
+    margin: 8px 0 0; 
+    font-size: 20px; 
+    color: #666; 
+  }
+
+  .wishlist-item .price {
+    font-size: 15px; 
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-style: italic;
+    font-weight: 900;
+  }
+
+  .remove {
+    background: none;
+    border: none;
+    font-size: 18px; 
+    color: #aaa; 
+    cursor: pointer;
+  }
+
+  .remove:hover {
+    color: #ff0000; 
+  }
+
+  .wishlist a {
+    font-size: 15px; 
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-style: italic;
+  }
+  .add-to-cart {
+    background-color: #4CAF50; 
+    border: none; 
+    color: white; 
+    padding: 10px 20px; 
+    text-align: center; 
+    font-size: 16px; 
+    cursor: pointer; 
+    border-radius: 5px;
+    margin-left: 10px;
+}
+
+.add-to-cart:hover {
+    background-color: #45a049;
+}
+
+</style>
+
+<div class="container">
+  <div class="wishlist">
+    <h3>Your Wishlist</h3>
+    
+    <?php if (!empty($wishlistItems)): ?>
+      <p>You have <?php echo count($wishlistItems); ?> items in your wishlist.</p>
+
+      <?php foreach ($wishlistItems as $index => $item): ?>
+        <div class="wishlist-item">
+          <img src="../admin/uploads/<?php echo !empty($item['featured_photo']) ? htmlspecialchars($item['featured_photo']) : 'default-image.jpg'; ?>" 
+               alt="<?php echo htmlspecialchars($item['name']); ?>" width="50">
+          
+          <div>
+            <p><?php echo htmlspecialchars($item['name']); ?></p>
+          </div>
+
+          <div class="price">
+            ₱<?php echo number_format($item['current_price'], 2); ?>
+          </div>
+
+          <!-- Remove Button -->
+          <form method="POST" action="wishlist-remove.php" id="remove-form-<?php echo $index; ?>">
+            <input type="hidden" name="item_id" value="<?php echo $item['id']; ?>"> <!-- Assuming `id` is the primary key -->
+            <button type="button" class="remove" onclick="confirmRemove(<?php echo $index; ?>)">🗑️</button>
+          </form>
+
+          <!-- Add to Cart Button -->
+          <form method="POST" action="wishlist-add-to-cart.php" id="add-to-cart-form-<?php echo $index; ?>">
+            <input type="hidden" name="item_id" value="<?php echo $item['id']; ?>"> <!-- Pass the product ID to add to the cart -->
+            <button type="submit" class="add-to-cart">Add to Cart</button>
+          </form>
+        </div>
+      <?php endforeach; ?>
+    <?php else: ?>
+      <p>Your wishlist is empty.</p>
+    <?php endif; ?>
+  </div>
+</div>
+
+<script>
+  function confirmRemove(itemIndex) {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'You are about to remove this item from your wishlist.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, remove it!',
+      cancelButtonText: 'Cancel',
+      reverseButtons: true
+    }).then((result) => {
+      if (result.isConfirmed) {
+        document.getElementById('remove-form-' + itemIndex).submit();
+      }
+    });
+  }
+</script>
+
+
+
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+</body>
+</html>
