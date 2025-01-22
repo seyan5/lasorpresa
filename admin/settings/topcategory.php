@@ -1,6 +1,53 @@
 <?php require("../header.php");
 require_once '../auth.php';
  ?>
+<?php
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $valid = 1;
+
+    if (empty($_POST['tcat_name'])) {
+        $valid = 0;
+        $error_message .= "Top Category Name cannot be empty<br>";
+    } else {
+        if (isset($_POST['form_add'])) {
+            // Duplicate check for adding
+            $statement = $pdo->prepare("SELECT * FROM top_category WHERE tcat_name=?");
+            $statement->execute([$_POST['tcat_name']]);
+            if ($statement->rowCount() > 0) {
+                $valid = 0;
+                $error_message .= "Top Category Name already exists<br>";
+            }
+        } elseif (isset($_POST['form_edit'])) {
+            // Duplicate check for editing
+            $statement = $pdo->prepare("SELECT * FROM top_category WHERE tcat_id=?");
+            $statement->execute([$_POST['tcat_id']]);
+            $current = $statement->fetch(PDO::FETCH_ASSOC);
+            $current_name = $current['tcat_name'] ?? '';
+
+            $statement = $pdo->prepare("SELECT * FROM top_category WHERE tcat_name=? AND tcat_name!=?");
+            $statement->execute([$_POST['tcat_name'], $current_name]);
+            if ($statement->rowCount() > 0) {
+                $valid = 0;
+                $error_message .= "Top Category Name already exists<br>";
+            }
+        }
+    }
+
+    if ($valid) {
+        if (isset($_POST['form_add'])) {
+            // Add new category
+            $statement = $pdo->prepare("INSERT INTO top_category (tcat_name) VALUES (?)");
+            $statement->execute([$_POST['tcat_name']]);
+            $success_message = "Top Category is added successfully.";
+        } elseif (isset($_POST['form_edit'])) {
+            // Edit existing category
+            $statement = $pdo->prepare("UPDATE top_category SET tcat_name=? WHERE tcat_id=?");
+            $statement->execute([$_POST['tcat_name'], $_POST['tcat_id']]);
+            $success_message = "Top Category is updated successfully.";
+        }
+    }
+}
+?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -164,7 +211,7 @@ require_once '../auth.php';
                             ?>
                         </td> -->
 	                    <td>
-	                        <a href="topcategory-edit.php?id=<?php echo $row['tcat_id']; ?>" class="btn btn-primary btn-xs">Edit</a>
+                        <a href="#" class="btn btn-primary btn-xs" data-toggle="modal" data-target="#editModal" data-id="<?php echo $row['tcat_id']; ?>" data-name="<?php echo $row['tcat_name']; ?>">Edit</a>
 	                        <a href="#" class="btn btn-danger btn-xs" data-href="topcategory-delete.php?id=<?php echo $row['tcat_id']; ?>" data-toggle="modal" data-target="#confirm-delete">Delete</a>
 	                    </td>
 	                </tr>
@@ -176,7 +223,7 @@ require_once '../auth.php';
     </div>
     <section class="content-header" style="background-color: white !important;">
         <div class="content-header-right">    
-            <a href="topcategory-add.php" class="btn btn-primary btn-sm">Add New</a>
+            <a href="#" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#addModal">Add New</a>
         </div>
     </section>       
 </div>
@@ -202,8 +249,74 @@ require_once '../auth.php';
         </div>
     </div>
 </div>
+
+<!-- Add Modal -->
+<div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="addModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <form method="post">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="addModalLabel">Add Top Category</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">&times;</button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label for="add-tcat-name">Category Name</label>
+                                <input type="text" class="form-control" id="add-tcat-name" name="tcat_name" required>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary" name="form_add">Add</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Edit Modal -->
+        <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <form method="post">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="editModalLabel">Edit Top Category</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">&times;</button>
+                        </div>
+                        <div class="modal-body">
+                            <input type="hidden" id="edit-tcat-id" name="tcat_id">
+                            <div class="form-group">
+                                <label for="edit-tcat-name">Category Name</label>
+                                <input type="text" class="form-control" id="edit-tcat-name" name="tcat_name" required>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary" name="form_edit">Update</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+
+
+
         </section>
     </div>
+
+<script>
+    $('#editModal').on('show.bs.modal', function (event) {
+    var button = $(event.relatedTarget); // Button that triggered the modal
+    var id = button.data('id');
+    var name = button.data('name');
+
+    var modal = $(this);
+    modal.find('#edit-tcat-id').val(id);
+    modal.find('#edit-tcat-name').val(name);
+});
+
+</script>
 </body>
 
 
