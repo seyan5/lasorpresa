@@ -1,5 +1,4 @@
 <?php require_once('../header.php');
-require_once '../auth.php';
 ?>
 
 <?php
@@ -26,22 +25,6 @@ if(isset($_POST['form1'])) {
 }
 ?>
 
-<?php
-if(!isset($_REQUEST['id'])) {
-	header('location: ../logout.php');
-	exit;
-} else {
-	// Check the id is valid or not
-	$statement = $pdo->prepare("SELECT * FROM mid_category WHERE mcat_id=?");
-	$statement->execute(array($_REQUEST['id']));
-	$total = $statement->rowCount();
-	$result = $statement->fetchAll(PDO::FETCH_ASSOC);
-	if( $total == 0 ) {
-		header('location: ../logout.php');
-		exit;
-	}
-}
-?>
 
 <section class="content-header">
 	<div class="content-header-left">
