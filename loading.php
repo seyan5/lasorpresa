@@ -131,7 +131,7 @@
         $(".loading-screen").fadeOut(1000, function () {
           $("#content").fadeIn(1000);
         });
-      }, 1500);
+      }, 1000);
     });
 
     $(document).ajaxStart(function () {
