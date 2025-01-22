@@ -1,9 +1,9 @@
 <?php
 ob_start();
-include("../inc/config.php");
-include("../inc/functions.php");
-include("../inc/CSRF_Protect.php");
-require_once '../auth.php';
+include("inc/config.php");
+include("inc/functions.php");
+include("inc/CSRF_Protect.php");
+require_once 'auth.php';
 
 // Pagination Variables
 $limit = 5; // Number of records per page
@@ -79,9 +79,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_status'])) {
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>La Sorpresa Admin</title>
-    <link rel="stylesheet" href="../../css/settings.css?v.1.1">
-    <link rel="stylesheet" href="../../css/navdash.css">
-    <link rel="stylesheet" href="../../css/products.css">
+    <link rel="stylesheet" href="../css/settings.css?v.1.1">
+    <link rel="stylesheet" href="../css/navdash.css">
+    <link rel="stylesheet" href="../css/products.css">
     <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
     
@@ -93,7 +93,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_status'])) {
                 <li>
                     <a href="#">
                         <div class="logo-container">
-                            <img src="../../images/logo.png" alt="Logo" class="logo" />
+                            <img src="../images/logo.png" alt="Logo" class="logo" />
                         </div>
                         <span class="title"></span>
                     </a>
@@ -252,7 +252,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_status'])) {
             const shippingStatus = document.getElementById(`shipping-status-${orderId}`).value;
 
             // Update Payment Status
-            fetch('order-change-status.php', {
+            fetch('orders/order-change-status.php', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
@@ -274,7 +274,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_status'])) {
                 .catch((error) => console.error('Error:', error));
 
             // Update Shipping Status
-            fetch('order-change-status.php', {
+            fetch('orders/order-change-status.php', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
