@@ -1,7 +1,83 @@
 <?php 
 require("../header.php");
 require_once '../auth.php';
+?>
 
+
+<?php
+if(isset($_POST['form1'])) {
+	$valid = 1;
+
+    if(empty($_POST['tcat_id'])) {
+        $valid = 0;
+        $error_message .= "You must have to select a top level category<br>";
+    }
+
+    if(empty($_POST['mcat_id'])) {
+        $valid = 0;
+        $error_message .= "You must have to select a mid level category<br>";
+    }
+
+    if(empty($_POST['ecat_name'])) {
+        $valid = 0;
+        $error_message .= "End level category name can not be empty<br>";
+    }
+
+    if($valid == 1) {
+
+		//Saving data into the main table end_category
+		$statement = $pdo->prepare("INSERT INTO end_category (ecat_name,mcat_id) VALUES (?,?)");
+		$statement->execute(array($_POST['ecat_name'],$_POST['mcat_id']));
+	
+    	$success_message = 'End Level Category is added successfully.';
+    }
+}
+?>
+
+<?php
+if(isset($_POST['form2'])) {
+	$valid = 1;
+    
+
+    if(empty($_POST['tcat_id'])) {
+        $valid = 0;
+        $error_message .= "You must have to select a top level category<br>";
+    }
+
+    if(empty($_POST['mcat_id'])) {
+        $valid = 0;
+        $error_message .= "You must have to select a mid level category<br>";
+    }
+
+    if(empty($_POST['ecat_name'])) {
+        $valid = 0;
+        $error_message .= "End level category name can not be empty<br>";
+    }
+
+    if($valid == 1) {    	
+
+        // Inside your PHP block where you prepare the form data for editing
+if (isset($_GET['id'])) {
+    $ecat_id = $_GET['id'];
+    $statement = $pdo->prepare("SELECT * FROM end_category WHERE ecat_id = ?");
+    $statement->execute([$ecat_id]);
+    $category = $statement->fetch(PDO::FETCH_ASSOC);
+    $ecat_name = $category['ecat_name'];
+    $tcat_id = $category['tcat_id']; // Get top-level category id from the record
+    $mcat_id = $category['mcat_id']; // Get mid-level category id from the record
+} else {
+    $ecat_name = '';
+    $tcat_id = ''; // Set empty if not editing
+    $mcat_id = '';
+}
+
+		// updating into the database
+		$statement = $pdo->prepare("UPDATE end_category SET ecat_name=?,mcat_id=? WHERE ecat_id=?");
+		$statement->execute(array($_POST['ecat_name'],$_POST['mcat_id'],$_REQUEST['id']));
+
+    	$success_message = 'End Level Category is updated successfully.';
+    }
+}
 ?>
 
 <!DOCTYPE html>
@@ -167,7 +243,16 @@ require_once '../auth.php';
                         <td><?php echo $row['mcat_name']; ?></td>
                         <td><?php echo $row['tcat_name']; ?></td>
 	                    <td>
-	                        <a href="endcategory-edit.php?id=<?php echo $row['ecat_id']; ?>" class="btn btn-primary btn-xs">Edit</a>
+                        <a href="#" 
+   class="btn btn-primary btn-xs" 
+   data-toggle="modal" 
+   data-target="#editCategoryModal" 
+   data-ecat-id="<?php echo $row['ecat_id']; ?>"
+   data-tcat-id="<?php echo $row['tcat_id']; ?>"
+   data-mcat-id="<?php echo $row['mcat_id']; ?>"
+   data-ecat-name="<?php echo $row['ecat_name']; ?>">
+   Edit
+</a>
 	                        <a href="#" class="btn btn-danger btn-xs" data-href="endcategory-delete.php?id=<?php echo $row['ecat_id']; ?>" data-toggle="modal" data-target="#confirm-delete">Delete</a>
 	                    </td>
 	                </tr>
@@ -179,7 +264,7 @@ require_once '../auth.php';
     </div>
     <section class="content-header" style="background-color: white !important;">
         <div class="content-header-right">    
-            <a href="endcategory-add.php" class="btn btn-primary btn-sm">Add New</a>
+            <a href="#" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#addCategoryModal">Add New</a>
         </div>
     </section>       
 </div>
@@ -206,8 +291,188 @@ require_once '../auth.php';
     </div>
 </div>
 
+
+<!-- Add Category Modal -->
+<div class="modal fade" id="addCategoryModal" tabindex="-1" aria-labelledby="addCategoryLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form class="form-horizontal" action="" method="post">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addCategoryLabel">Add End Level Category</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="box box-info">
+                        <div class="box-body">
+                            <div class="form-group">
+                                <label for="" class="col-sm-3 control-label">Top Level Category Name <span>*</span></label>
+                                <div class="col-sm-4">
+                                    <select name="tcat_id" id="tcat_id" class="form-control select2 top-cat">
+    <option value="">Select Top Level Category</option>
+    <?php
+    // Assuming $tcat_id is set here
+    $statement = $pdo->prepare("SELECT * FROM top_category ORDER BY tcat_name ASC");
+    $statement->execute();
+    $result = $statement->fetchAll(PDO::FETCH_ASSOC);
+    foreach ($result as $row) {
+        $selected = ($row['tcat_id'] == $tcat_id) ? 'selected' : '';
+        echo "<option value='{$row['tcat_id']}' $selected>{$row['tcat_name']}</option>";
+    }
+    ?>
+</select>
+
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="" class="col-sm-3 control-label">Mid Level Category Name <span>*</span></label>
+                                <div class="col-sm-4">
+                                    <select name="mcat_id" id="mcat_id" class="form-control select2 mid-cat">
+                                        <option value="">Select Mid Level Category</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="" class="col-sm-3 control-label">End Level Category Name <span>*</span></label>
+                                <div class="col-sm-4">
+                                    <input type="text" class="form-control" name="ecat_name">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="" class="col-sm-3 control-label"></label>
+                                <div class="col-sm-6">
+                                    <button type="submit" class="btn btn-success pull-left" name="form1">Submit</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<!-- Edit Category Modal -->
+<div class="modal fade" id="editCategoryModal" tabindex="-1" aria-labelledby="editCategoryLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form class="form-horizontal" action="" method="post">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editCategoryLabel">Edit End Level Category</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="box box-info">
+                        <div class="box-body">
+                            <div class="form-group">
+                                <label for="tcat_id" class="col-sm-3 control-label">Top Level Category Name <span>*</span></label>
+                                <div class="col-sm-4">
+                                    <select name="tcat_id" id="tcat_id" class="form-control select2 top-cat">
+                                        <option value="">Select Top Level Category</option>
+                                        <?php
+                                        $statement = $pdo->prepare("SELECT * FROM top_category ORDER BY tcat_name ASC");
+                                        $statement->execute();
+                                        $result = $statement->fetchAll(PDO::FETCH_ASSOC);   
+                                        foreach ($result as $row) {
+                                            ?>
+                                            <option value="<?php echo $row['tcat_id']; ?>" <?php if($row['tcat_id'] == $tcat_id){echo 'selected';} ?>><?php echo $row['tcat_name']; ?></option>
+                                            <?php
+                                        }
+                                        ?>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="mcat_id" class="col-sm-3 control-label">Mid Level Category Name <span>*</span></label>
+                                <div class="col-sm-4">
+                                    <select name="mcat_id" id="mcat_id" class="form-control select2 mid-cat">
+                                        <option value="">Select Mid Level Category</option>
+                                        <!-- Mid-level categories will be populated dynamically -->
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="ecat_name" class="col-sm-3 control-label">End Level Category Name <span>*</span></label>
+                                <div class="col-sm-4">
+                                    <input type="text" class="form-control" name="ecat_name" value="<?php echo $ecat_name; ?>" required>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-success" name="form2">Update</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
         </section>
     </div>
+
+    <script>
+    $(document).ready(function() {
+        // When the top-level category is changed
+        $('#tcat_id').change(function() {
+            var tcat_id = $(this).val();
+            
+            if (tcat_id != '') {
+                // Send an AJAX request to fetch mid-level categories
+                $.ajax({
+                    url: 'fetch-category.php',
+                    type: 'POST',
+                    data: { tcat_id: tcat_id },
+                    success: function(data) {
+                        // Populate the Mid Level Category dropdown with the data returned
+                        $('#mcat_id').html(data);
+                    }
+                });
+            } else {
+                // If no top category is selected, clear the mid-level category options
+                $('#mcat_id').html('<option value="">Select Mid Level Category</option>');
+            }
+        });
+    });
+</script>
+
+<script>
+    // When the modal is shown, set the values
+    $('#editCategoryModal').on('show.bs.modal', function (event) {
+    var button = $(event.relatedTarget); // Button that triggered the modal
+
+    // Extract data attributes
+    var ecatId = button.data('ecat-id');
+    var tcatId = button.data('tcat-id');
+    var mcatId = button.data('mcat-id');
+    var ecatName = button.data('ecat-name');
+
+    // Set the values in the modal
+    var modal = $(this);
+    modal.find('input[name="ecat_name"]').val(ecatName);
+    modal.find('select[name="tcat_id"]').val(tcatId); // Set selected top category
+    modal.find('select[name="mcat_id"]').val(mcatId); // Set selected mid category
+
+    // Fetch Mid Level categories based on selected Top Level category
+    $.ajax({
+        url: 'fetch-category.php',
+        type: 'POST',
+        data: { tcat_id: tcatId },
+        success: function(data) {
+            // Populate the Mid Level Category dropdown with the data returned
+            modal.find('select[name="mcat_id"]').html(data);
+
+            // Optionally, you can set the selected Mid Category based on the value
+            modal.find('select[name="mcat_id"]').val(mcatId);
+        }
+    });
+});
+</script>
+
 </body>
 
 
