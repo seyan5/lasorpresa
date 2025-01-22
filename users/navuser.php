@@ -82,6 +82,13 @@
     </div>
 </div>
 
+            <div class="wishlist-container">
+                <a href="wishlist.php" class="wishlist-icon">
+                    <i class="fas fa-heart"></i>
+                </a>
+            </div>
+
+
             <div class="user-dropdown">
                 <a href="#" class="fas fa-user" onclick="toggleDropdown()"></a>
                 <div class="dropdown-menu" id="userDropdown">

@@ -1,6 +1,13 @@
 <?php
-require 'conn.php'; // Include database connection
+require_once ('conn.php'); // Include database connection
 
+
+
+if (isset($_SESSION['customer'])) {
+    echo "Welcome, " . $_SESSION['customer']['cust_name'];
+} else {
+    echo "You are not logged in.";
+}
 
 // Get the product ID from the query parameter
 $p_id = isset($_GET['p_id']) ? (int) $_GET['p_id'] : 0;
@@ -40,6 +47,9 @@ $reviewStmt->execute();
 $reviews = $reviewStmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 <?php include('navuser.php'); ?>
+
+<script src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js" type="module"></script>
+<script src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js" nomodule></script>
 <link rel="stylesheet" href="../css/prod-details.css?">
     <main>
         <div class="pic">
@@ -54,13 +64,17 @@ $reviews = $reviewStmt->fetchAll(PDO::FETCH_ASSOC);
                 
         <main>
 
+        
+
             <!-- Right Sidebar -->
             <div class="sidebar">
+
+            
                 <h2>Cart</h2>
                 <div class="cart-item">
                     <img src="../admin/uploads/<?php echo htmlspecialchars($product['featured_photo']); ?>"
                         alt="Cart Item">
-                    <h4><?php echo htmlspecialchars($product['name']); ?></h4>
+                    <h4><?php echo htmlspecialchars($product['name']); ?>   </h4>
                     <div class="price">₱<?php echo number_format($product['current_price'], 2); ?></div>
                 </div>
 
@@ -68,16 +82,26 @@ $reviews = $reviewStmt->fetchAll(PDO::FETCH_ASSOC);
                 <div class="total">
                     <span>Subtotal:</span>
                     <span>₱<?php echo number_format($product['current_price'], 2); ?></span>
-                </div>
+                </div><br><br>
+
+                <button id="addToWishlistButton" data-id="<?php echo $product['p_id']; ?>"
+        data-name="<?php echo htmlspecialchars($product['name']); ?>"
+        data-price="<?php echo htmlspecialchars($product['current_price']); ?>"
+        onclick="addToWishlist(<?php echo $product['p_id']; ?>)"><ion-icon name="heart"></ion-icon>
+    Add to Wishlist
+</button><br><br>
 
 
-                <button id="addToCartButton" data-id="<?php echo $product['p_id']; ?>"
-                data-name="<?php echo htmlspecialchars($product['name']); ?>"
-                data-price="<?php echo htmlspecialchars($product['current_price']); ?>"
-                onclick="addToCart(<?php echo $product['p_id']; ?>)"
-                <?php if ($product_quantity == 0) echo 'disabled'; ?>>
-            Add to Cart
-        </button>
+<button id="addToCartButton" 
+        data-id="<?php echo $product['p_id']; ?>" 
+        data-name="<?php echo htmlspecialchars($product['name']); ?>" 
+        data-price="<?php echo htmlspecialchars($product['current_price']); ?>" 
+        onclick="addToCart(<?php echo $product['p_id']; ?>)"
+        <?php if ($product_quantity == 0) echo 'disabled'; ?>>
+    <ion-icon name="cart"></ion-icon>
+    Add to Cart
+</button>
+
 
 
             <?php if ($product_quantity == 0): ?>
@@ -161,6 +185,38 @@ document.getElementById('addToCartButton').addEventListener('click', function ()
 
     </script>
 
+
+<script>
+    function addToWishlist(productId) {
+    const productName = document.getElementById('addToWishlistButton').getAttribute('data-name');
+    const productPrice = document.getElementById('addToWishlistButton').getAttribute('data-price');
+
+    // Send AJAX request to add product to wishlist
+    fetch('wishlist-handler.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: `p_id=${productId}&name=${encodeURIComponent(productName)}&current_price=${productPrice}`
+    })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                Swal.fire({
+                    title: 'Added to Wishlist!',
+                    text: `${productName} has been added to your wishlist.`,
+                    icon: 'success'
+                });
+            } else {
+                alert(data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+}
+
+</script>
 </body>
 
 
