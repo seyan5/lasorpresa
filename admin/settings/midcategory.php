@@ -1,7 +1,55 @@
 <?php 
 require("../header.php");
-require_once '../auth.php';
+ require_once '../auth.php';
  ?>
+
+<?php
+if(isset($_POST['form2'])) {
+	$valid = 1;
+
+    if(empty($_POST['tcat_id'])) {
+        $valid = 0;
+        $error_message .= "You must have to select a top level category<br>";
+    }
+
+    if(empty($_POST['mcat_name'])) {
+        $valid = 0;
+        $error_message .= "Mid Level Category Name can not be empty<br>";
+    }
+
+    if ($valid == 1) {    	
+        // updating a specific row in the database
+        $statement = $pdo->prepare("UPDATE mid_category SET mcat_name=?, tcat_id=? WHERE mcat_id=?");
+        $statement->execute(array($_POST['mcat_name'], $_POST['tcat_id'], $_POST['mcat_id'])); 
+        $success_message = 'Mid Level Category is updated successfully.';
+    }
+}
+?>
+
+<?php
+if(isset($_POST['form1'])) {
+	$valid = 1;
+
+    if(empty($_POST['tcat_id'])) {
+        $valid = 0;
+        $error_message .= "You must have to select a top level category<br>";
+    }
+
+    if(empty($_POST['mcat_name'])) {
+        $valid = 0;
+        $error_message .= "Mid Level Category Name can not be empty<br>";
+    }
+
+    if($valid == 1) {
+
+		// Saving data into the main table mid_category
+		$statement = $pdo->prepare("INSERT INTO mid_category (mcat_name,tcat_id) VALUES (?,?)");
+		$statement->execute(array($_POST['mcat_name'],$_POST['tcat_id']));
+	
+    	$success_message = 'Mid Level Category is added successfully.';
+    }
+}
+?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -161,7 +209,7 @@ require_once '../auth.php';
 	                    <td><?php echo $row['mcat_name']; ?></td>
                         <td><?php echo $row['tcat_name']; ?></td>
 	                    <td>
-	                        <a href="midcategory-edit.php?id=<?php echo $row['mcat_id']; ?>" class="btn btn-primary btn-xs">Edit</a>
+                            <a href="#" class="btn btn-primary btn-xs" data-toggle="modal" data-target="#editCategoryModal" data-id="<?php echo $row['mcat_id']; ?>" data-name="<?php echo $row['mcat_name']; ?>" data-tcat="<?php echo $row['tcat_id']; ?>">Edit</a>
 	                        <a href="#" class="btn btn-danger btn-xs" data-href="midcategory-delete.php?id=<?php echo $row['mcat_id']; ?>" data-toggle="modal" data-target="#confirm-delete">Delete</a>
 	                    </td>
 	                </tr>
@@ -173,7 +221,7 @@ require_once '../auth.php';
     </div>
     <section class="content-header" style="background-color: white !important;">
         <div class="content-header-right">    
-            <a href="settings/midcategory-add.php" class="btn btn-primary btn-sm">Add New</a>
+            <a href="#" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#addCategoryModal">Add New</a>
         </div>
     </section>       
 </div>
@@ -199,8 +247,105 @@ require_once '../auth.php';
         </div>
     </div>
 </div>
+
+<div class="modal fade" id="addCategoryModal" tabindex="-1" role="dialog" aria-labelledby="addCategoryLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form action="" method="post">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addCategoryLabel">Add New Category</h5>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="tcat_id">Top Level Category</label>
+                        <select name="tcat_id" class="form-control">
+                            <option value="">Select Top Level Category</option>
+                            <?php
+                            $statement = $pdo->prepare("SELECT * FROM top_category ORDER BY tcat_name ASC");
+                            $statement->execute();
+                            $categories = $statement->fetchAll(PDO::FETCH_ASSOC);
+                            foreach ($categories as $category) {
+                                echo "<option value='{$category['tcat_id']}'>{$category['tcat_name']}</option>";
+                            }
+                            ?>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="mcat_name">Mid Level Category Name</label>
+                        <input type="text" name="mcat_name" class="form-control" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" name="form1" class="btn btn-success">Add</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="editCategoryModal" tabindex="-1" role="dialog" aria-labelledby="editCategoryLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form action="" method="post">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editCategoryLabel">Edit Category</h5>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" name="mcat_id" id="edit_mcat_id">
+                    <div class="form-group">
+                        <label for="tcat_id">Top Level Category</label>
+                        <select name="tcat_id" id="edit_tcat_id" class="form-control">
+                            <?php
+                            foreach ($categories as $category) {
+                                echo "<option value='{$category['tcat_id']}'>{$category['tcat_name']}</option>";
+                            }
+                            ?>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="mcat_name">Mid Level Category Name</label>
+                        <input type="text" name="mcat_name" id="edit_mcat_name" class="form-control" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" name="form2" class="btn btn-success">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
         </section>
     </div>
+
+    <script>
+        $(document).on('click', '[data-target="#editCategoryModal"]', function() {
+    let id = $(this).data('id');
+    let name = $(this).data('name');
+    let tcat = $(this).data('tcat');
+    
+    $('#edit_mcat_id').val(id);
+    $('#edit_mcat_name').val(name);
+    $('#edit_tcat_id').val(tcat);
+});
+
+    </script>
 </body>
 
 

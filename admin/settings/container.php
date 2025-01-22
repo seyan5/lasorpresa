@@ -336,7 +336,7 @@ if(isset($_POST['editContainer'])) {
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                     <button type="submit" class="btn btn-primary" name="addContainer">Add Container</button>
                 </div>
             </form>
@@ -365,11 +365,10 @@ if(isset($_POST['editContainer'])) {
                     <div class="mb-3">
                         <label for="container_image" class="form-label">Container Image</label>
                         <input type="file" class="form-control" name="container_image" id="editContainerImage">
-                        <img id="existingContainerImage" style="width: 80px; height: 80px; margin-top: 10px;">
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                     <button type="submit" class="btn btn-primary" name="editContainer">Update Container</button>
                 </div>
             </form>
