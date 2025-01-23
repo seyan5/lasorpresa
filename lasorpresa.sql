@@ -28,13 +28,12 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE `chat_messages` (
-  `message_id` int(11) NOT NULL AUTO_INCREMENT,
+  `message_id` int(11) NOT NULL,
   `sender_id` int(11) NOT NULL,
   `sender_type` enum('customer','admin') NOT NULL,
   `message` text NOT NULL,
-  `timestamp` datetime DEFAULT CURRENT_TIMESTAMP,
-  `read_status` enum('unread','read') DEFAULT 'unread',
-  PRIMARY KEY (`message_id`)
+  `timestamp` datetime DEFAULT current_timestamp(),
+  `read_status` enum('unread','read') DEFAULT 'unread'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
