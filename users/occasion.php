@@ -79,6 +79,7 @@ $result = $statement->fetchAll(PDO::FETCH_ASSOC);
         <li>Next Page</li>  
    </ul>
 </section>
+<?php include('footers.php'); ?>
 <?php include('../loading.php'); ?>
 
 <script>

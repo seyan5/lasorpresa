@@ -92,7 +92,7 @@
             <div class="user-dropdown">
     <a href="#" class="fas fa-user" onclick="toggleDropdown()">
         <?php if (isset($_SESSION['customer'])): ?>
-            <span class="indicator"></span> <!-- Green circle when logged in -->
+            <span class="greenindicator"></span> <!-- Green circle when logged in -->
         <?php endif; ?>
     </a>
     <div class="dropdown-menu" id="userDropdown">
@@ -305,7 +305,7 @@ document.addEventListener('click', (event) => {
 
 <style>
     .user-dropdown {
-        position: relative;
+        position: relative; 
         display: inline-block;
     }
 
@@ -314,8 +314,8 @@ document.addEventListener('click', (event) => {
         color: #333;
     }
 
-    .indicator {
-        position: absolute;
+    .greenindicator {
+        position: absolute ;
         top: -6;
         right: -6;
         width: 8px;
