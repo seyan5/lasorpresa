@@ -150,6 +150,9 @@ if (isset($_POST['register'])) {
         </head>
         <body>
             <div class='container'>
+                    <div class='logo'>
+                        <img src='http://localhost/lasorpresa/images/logo.png' alt='Logo'>
+                    </div>
                 <h1>Email Verification</h1>
                 <p>Hi $cust_name,</p>
                 <p>Please click the link below to verify your email address:</p>
