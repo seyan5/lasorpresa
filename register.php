@@ -1,5 +1,4 @@
 <?php
-ob_start();
 session_start();
 include("admin/inc/config.php");
 include("admin/inc/functions.php");
@@ -29,8 +28,28 @@ if (isset($_POST['register'])) {
         $email_exists = $stmt_check->fetchColumn();
 
         if ($email_exists > 0) {
-            throw new Exception("Email address already registered. Please use a different email.");
+            // End PHP processing and output HTML/JavaScript
+            echo "<!DOCTYPE html>
+            <html lang='en'>
+            <head>
+                <script src='https://cdn.jsdelivr.net/npm/sweetalert2@11'></script>
+            </head>
+            <body>
+                <script>
+                    Swal.fire({
+                        title: 'Email Already Registered!',
+                        text: 'Please use a different email address.',
+                        icon: 'warning',
+                        confirmButtonText: 'OK'
+                    }).then(() => {
+                        window.location.href = 'register.php'; // Redirect to the registration page
+                    });
+                </script>
+            </body>
+            </html>";
+            exit; // Stop further script execution
         }
+        
 
         // Generate a unique verification token
         $token = bin2hex(random_bytes(16));
@@ -75,10 +94,29 @@ if (isset($_POST['register'])) {
 
         $mail->isHTML(true);
         $mail->Subject = 'Verify Your Email Address';
-        $mail->Body    = "Hi $cust_name,<br><br>Please click the link below to verify your email address:<br><br><a href='http://localhost/lasorpresa/verify-email.php?token=$token'>Verify Email</a><br><br>Thank you!";
+        $mail->Body    = "Hi $cust_name,<br><br>Please click the link below to verify your email address:<br><br><a href='http://localhost/lasorpresa/users/verify-email.php?token=$token'>Verify Email</a><br><br>Thank you!";
 
-        $mail->send();
-        echo "Registration successful! Please check your email to verify your account.";
+            try {
+                $mail->send();
+                echo "Email sent successfully.<br>"; // Debug statement
+            } catch (Exception $e) {
+                echo "Mailer Error: " . $mail->ErrorInfo . "<br>";
+                exit; // Exit if there's an issue with email sending
+            }
+        echo "
+        <script src='https://cdn.jsdelivr.net/npm/sweetalert2@11'></script>
+        <script>
+            Swal.fire({
+                title: 'Registration Successful!',
+                text: 'Please check your email to verify your account.',
+                icon: 'success',
+                confirmButtonText: 'OK'
+            }).then(() => {
+                window.location.href = 'login.php'; // Redirect to the login page after the alert
+            });
+        </script>
+    ";
+
     } catch (Exception $e) {
         echo "Error: " . $e->getMessage();
     }
