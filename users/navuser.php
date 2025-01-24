@@ -21,7 +21,7 @@
     <!-- css -->
      <link rel="stylesheet" href="../css/footer.css">
     <link rel="stylesheet" href="../css/dropdown.css?">
-    <link rel="stylesheet" href="../css/main.css?">
+    <link rel="stylesheet" href="../css/main.css">
 </head>
 
 
@@ -37,6 +37,7 @@
     <img src="../images/logo.png" alt="" class="logos">
 </a>
         <nav class="navbar">
+            <a href="index.php">Home</a>
             <a href="products.php">Flowers</a>
             <a href="occasion.php">Occasion</a>
             <a href="addons.php">Addons</a>

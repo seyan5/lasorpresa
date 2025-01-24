@@ -214,7 +214,7 @@ if (isset($_SESSION['customer'])) {
             <p class="copyright">La Sorpresa by J & B © 2021</p>
         </footer>
     </div>
-    <?php include('../loading.php'); ?>
+    <?php include('../loading.php'); ?> 
 </body>
 
 
