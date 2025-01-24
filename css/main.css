@@ -1,6 +1,9 @@
 @import url(https://db.onlinewebfonts.com/c/90ac3b18aaef9f2db3ac8e062c7a033b?family=NudMotoya+Maru+W55+W5);
 @import url('https://fonts.googleapis.com/css2?family=Caveat&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Quattrocento:wght@400;700&family=Yeseva+One&display=swap');:root{
     --pink: #e84393;
+    --main: #d0bcb3;
+    --font: #d18276;
+    --button: #d6a98f;
 }
 
 *{
@@ -31,11 +34,11 @@ section{
     color: #333;
     padding: 1rem;
     margin: 2rem 0;
-    background: rgba(225, 51, 153, .05);
+    background: rgba(225, 135, 51, 0.05);
 }
 
 .heading span{
-    color: var(--pink);
+    color: var(--font);
 }
 
 .btn{
@@ -73,8 +76,8 @@ section{
 
 
 .notification-dropdown .btn:hover {
-    background: var(--pink); /* Slightly lighter background on hover */
-    color: #ddd; /* Softer text color */
+    background: var(--button); /* Slightly lighter background on hover */
+    color: #ffffff; /* Softer text color */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add subtle shadow on hover */
 }
 
@@ -274,7 +277,7 @@ section{
 
 
 .btn:hover{
-    background: var(--pink);
+    background: var(--button);
 }
 
 .search-container {
@@ -347,7 +350,7 @@ header .logo{
 }
 
 header .logo span{
-    color: var(--pink);
+    color: var(--font);
 }
 
 header .navbar a{
@@ -357,7 +360,7 @@ header .navbar a{
 }
 
 header .navbar a:hover{
-    color: var(--pink);
+    color: var(--font);
 }
 
 header .icons {
@@ -447,7 +450,7 @@ header .fa-bars{
 
 .home .content span{
     font-size: 3.5rem;
-    color: var(--pink);
+    color: var(--font);
     padding: 1rem 0;
     line-height: 1.5;
 }
@@ -569,7 +572,7 @@ icons-container .icons span{
     left: 1rem;
     padding: .7rem 1rem;
     font-size: 2rem;
-    color: var(--pink);
+    color: var(--font);
     background: rgba(225, 51, 153, .05);
     z-index: 1;
     border-radius: .5rem;
@@ -607,7 +610,7 @@ icons-container .icons span{
     line-height: 5rem;
     font-size: 2rem;
     width: 50%;
-    background: var(--pink);
+    background: #333;
     color: #fff;
 }
 
@@ -618,7 +621,7 @@ icons-container .icons span{
 }
 
 .products .box-container .box .image .icons a:hover{
-    background: #333;
+    background: var(--button);
 }
 
 .products .box-container .box .content{
@@ -634,7 +637,7 @@ icons-container .icons span{
 
 .products .box-container .box .content .price{
     font-size: 1.8rem;
-    color: var(--pink);
+    color: var(--font);
     font-weight: bolder;
     padding-top: 1rem;
 }
@@ -712,7 +715,7 @@ icons-container .icons span{
 }
 
 .cart-count {
-    background-color: var(--pink);
+    background-color: var(--button);
     color: white;
     border-radius: 50%;
     padding: 2px 5px; /* Smaller padding */
@@ -804,7 +807,7 @@ icons-container .icons span{
 }
 
 .view-shopping-cart-button:hover {
-    background: var(--pink); /* Slightly lighter background on hover */
+    background: var(--button); /* Slightly lighter background on hover */
     color: #ddd; /* Softer text color */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add subtle shadow on hover */
 }
