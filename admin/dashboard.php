@@ -266,7 +266,7 @@ try {
                         <?php foreach ($recentOrders as $order) { ?>
                             <tr>
                                 <td><?= htmlspecialchars($order['product_name']) ?></td>
-                                <td>P <?= number_format($order['current_price'], 2) ?></td>
+                                <td>₱ <?= number_format($order['current_price'], 2) ?></td>
                                 <td><?= ucfirst(htmlspecialchars($order['payment_status'])) ?></td>
                                 <td>
                                     <span class="status 

@@ -30,7 +30,7 @@ $result = $statement->fetchAll(PDO::FETCH_ASSOC);
 
 <div class="filter-condition">
     <select name="" id="select">
-        <option value="Default">Default</option>
+        <option value="Default">Sort Price</option>
         <option value="LowToHigh">Low to High</option>
         <option value="HighToLow">High to Low</option>
     </select>

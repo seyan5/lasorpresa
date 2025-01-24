@@ -1,4 +1,5 @@
 <?php
+ob_start();
 session_start();
 include("../admin/inc/config.php");
 include("../admin/inc/functions.php");
@@ -35,16 +36,46 @@ if (isset($_POST['login'])) {
                     header("Location: index.php");
                     exit;
                 } else {
-                    $error = "Your account is not verified yet. Please check your email to verify your account.";
+                    echo "<script src='https://cdn.jsdelivr.net/npm/sweetalert2@11'></script>
+                    <script>
+                        document.addEventListener('DOMContentLoaded', function() {
+                            Swal.fire({
+                                title: 'Account Not Verified!',
+                                text: 'Your account is not verified yet. Please check your email to verify your account.',
+                                icon: 'warning',
+                                confirmButtonText: 'OK'
+                            });
+                        });
+                    </script>";
                 }
             } else {
-                $error = "Incorrect password. Please try again.";
+                echo "<script src='https://cdn.jsdelivr.net/npm/sweetalert2@11'></script>
+                <script>
+                    document.addEventListener('DOMContentLoaded', function() {
+                        Swal.fire({
+                            title: 'Incorrect Password!',
+                            text: 'Please try again.',
+                            icon: 'error',
+                            confirmButtonText: 'OK'
+                        });
+                    });
+                </script>";
             }
         } else {
-            $error = "No account found with that email address.";
+            echo "<script src='https://cdn.jsdelivr.net/npm/sweetalert2@11'></script>
+            <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    Swal.fire({
+                        title: 'No Account Found!',
+                        text: 'No account found with that email address.',
+                        icon: 'error',
+                        confirmButtonText: 'OK'
+                    });
+                });
+            </script>";
         }
     } catch (Exception $e) {
-        $error = "Error: " . $e->getMessage();
+        echo "Error: " . $e->getMessage();
     }
 }
 ?>
@@ -70,9 +101,6 @@ if (isset($_POST['login'])) {
 
     <h2>Login</h2>
     <form action="login.php" method="POST">
-        <?php if (!empty($error)): ?>
-            <p style="color: red; text-align: center;"><?php echo htmlspecialchars($error); ?></p>
-        <?php endif; ?>
         <div class="infield">
             <label for="cust_email">Email:</label>
             <input placeholder="Email" type="email" id="cust_email" name="cust_email" required><br>
@@ -88,5 +116,7 @@ if (isset($_POST['login'])) {
         <button type="submit" name="login">Login</button>
     </form>
 
+    <!-- SweetAlert Script -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </body>
 </html>

@@ -1,6 +1,111 @@
-<?php 
-require("../header.php");
+<?php
+require_once("../header.php");
 require_once '../auth.php';
+
+// Initialize messages
+$error_message = '';
+$success_message = '';
+
+// Add Container Logic
+if(isset($_POST['addContainer'])) {
+    $valid = 1;
+
+    // Validate Container Name
+    if(empty($_POST['container_name'])) {
+        $valid = 0;
+        $error_message .= "Container Name cannot be empty<br>";
+    } else {
+        // Check for duplicate container name
+        $statement = $pdo->prepare("SELECT * FROM container WHERE container_name=?");
+        $statement->execute(array($_POST['container_name']));
+        if($statement->rowCount() > 0) {
+            $valid = 0;
+            $error_message .= "Container Name already exists<br>";
+        }
+    }
+
+    // Validate Container Price
+    if(empty($_POST['container_price']) || !is_numeric($_POST['container_price'])) {
+        $valid = 0;
+        $error_message .= "Valid price is required<br>";
+    }
+
+    // Validate and handle Container Image
+    if(empty($_FILES['container_image']['name'])) {
+        $valid = 0;
+        $error_message .= "Container Image cannot be empty<br>";
+    } else {
+        $path = $_FILES['container_image']['name'];
+        $path_tmp = $_FILES['container_image']['tmp_name'];
+        $ext = pathinfo($path, PATHINFO_EXTENSION);
+        $allowed_ext = array('jpg', 'jpeg', 'png', 'gif');
+        if(!in_array($ext, $allowed_ext)) {
+            $valid = 0;
+            $error_message .= "You must upload a valid image file (jpg, jpeg, png, gif)<br>";
+        } else {
+            $final_name = 'container_' . time() . '.' . $ext;
+            move_uploaded_file($path_tmp, '../uploads/' . $final_name);
+        }
+    }
+
+    if($valid == 1) {
+        $statement = $pdo->prepare("INSERT INTO container (container_name, price, container_image) VALUES (?, ?, ?)");
+        $statement->execute(array($_POST['container_name'], $_POST['container_price'], $final_name));
+        $success_message = 'Container is added successfully.';
+    }
+}
+
+// Edit Container Logic
+if(isset($_POST['editContainer'])) {
+    $valid = 1;
+
+    // Validate Container Name
+    if(empty($_POST['container_name'])) {
+        $valid = 0;
+        $error_message .= "Container Name cannot be empty<br>";
+    } else {
+        // Check for duplicate container name
+        $statement = $pdo->prepare("SELECT * FROM container WHERE container_name=? AND container_id!=?");
+        $statement->execute(array($_POST['container_name'], $_POST['container_id']));
+        if($statement->rowCount() > 0) {
+            $valid = 0;
+            $error_message .= "Container Name already exists<br>";
+        }
+    }
+
+    // Validate Container Price
+    if(empty($_POST['container_price']) || !is_numeric($_POST['container_price'])) {
+        $valid = 0;
+        $error_message .= "Valid price is required<br>";
+    }
+
+    // Validate and handle Container Image
+    $image_file_name = '';
+    if(!empty($_FILES['container_image']['name'])) {
+        $path = $_FILES['container_image']['name'];
+        $path_tmp = $_FILES['container_image']['tmp_name'];
+        $ext = pathinfo($path, PATHINFO_EXTENSION);
+        $allowed_ext = array('jpg', 'jpeg', 'png', 'gif');
+        if(!in_array($ext, $allowed_ext)) {
+            $valid = 0;
+            $error_message .= "You must upload a valid image file (jpg, jpeg, png, gif)<br>";
+        } else {
+            $image_file_name = 'container_' . time() . '.' . $ext;
+            move_uploaded_file($path_tmp, '../uploads/' . $image_file_name);
+        }
+    }
+
+    if($valid == 1) {
+        if($image_file_name != '') {
+            $statement = $pdo->prepare("UPDATE container SET container_name=?, price=?, container_image=? WHERE container_id=?");
+            $statement->execute(array($_POST['container_name'], $_POST['container_price'], $image_file_name, $_POST['container_id']));
+        } else {
+            $statement = $pdo->prepare("UPDATE container SET container_name=?, price=? WHERE container_id=?");
+            $statement->execute(array($_POST['container_name'], $_POST['container_price'], $_POST['container_id']));
+        }
+        $success_message = 'Container is updated successfully.';
+    }
+}
 ?>
 
 <!DOCTYPE html>
@@ -166,7 +271,8 @@ require_once '../auth.php';
                     <?php endif; ?>
                 </td>
                 <td>
-                    <a href="../settings/container-edit.php?id=<?php echo $row['container_id']; ?>" class="btn btn-primary btn-xs">Edit</a>
+                    <a href="#" class="btn btn-primary btn-xs" data-toggle="modal" data-target="#editContainerModal" data-id="<?php echo $row['container_id']; ?>" data-name="<?php echo $row['container_name']; ?>">Edit</a>
+
                     <a href="#" class="btn btn-danger btn-xs" data-href="container-delete.php?id=<?php echo $row['container_id']; ?>" data-toggle="modal" data-target="#confirm-delete">Delete</a>
                 </td>
             </tr>
@@ -179,7 +285,7 @@ require_once '../auth.php';
     </div>
     <section class="content-header" style="background-color: white !important;">
         <div class="content-header-right">    
-            <a href="../settings/container-add.php" class="btn btn-primary btn-sm">Add New</a>
+        <a href="#" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#addContainerModal">Add New</a>
         </div>
     </section>       
 </div>
@@ -205,8 +311,97 @@ require_once '../auth.php';
         </div>
     </div>
 </div>
+
+<!-- Add/Edit Container Modals -->
+<div class="modal fade" id="addContainerModal" tabindex="-1" aria-labelledby="addContainerLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form action="" method="post" enctype="multipart/form-data">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addContainerLabel">Add New Container</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="container_name" class="form-label">Container Name</label>
+                        <input type="text" class="form-control" name="container_name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="container_price" class="form-label">Container Price</label>
+                        <input type="number" class="form-control" name="container_price" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="container_image" class="form-label">Container Image</label>
+                        <input type="file" class="form-control" name="container_image" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary" name="addContainer">Add Container</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="editContainerModal" tabindex="-1" aria-labelledby="editContainerLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form action="" method="post" enctype="multipart/form-data">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editContainerLabel">Edit Container</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" name="container_id" id="editContainerId">
+                    <div class="mb-3">
+                        <label for="container_name" class="form-label">Container Name</label>
+                        <input type="text" class="form-control" name="container_name" id="editContainerName" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="container_price" class="form-label">Container Price</label>
+                        <input type="number" class="form-control" name="container_price" id="editContainerPrice" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="container_image" class="form-label">Container Image</label>
+                        <input type="file" class="form-control" name="container_image" id="editContainerImage">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary" name="editContainer">Update Container</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
         </section>
     </div>
+
+    <script>
+    $('#editContainerModal').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget); // Triggered by 'Edit' button
+        var containerId = button.data('id');
+        var containerName = button.data('name');
+        var containerPrice = button.data('price');
+        var containerImage = button.data('image');
+
+        var modal = $(this);
+        modal.find('#editContainerId').val(containerId);
+        modal.find('#editContainerName').val(containerName);
+        modal.find('#editContainerPrice').val(containerPrice);
+
+        if (containerImage) {
+            modal.find('#editContainerImage').val(containerImage);
+        }
+    });
+    
+</script>
+
+
 </body>
 
 
