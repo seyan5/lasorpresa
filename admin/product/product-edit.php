@@ -27,10 +27,7 @@ if (isset($_POST['form1'])) {
         $valid = 0;
         $error_message .= "Current price cannot be empty.<br>";
     }
-    if (empty($_POST['quantity'])) {
-        $valid = 0;
-        $error_message .= "Quantity cannot be empty.<br>";
-    }
+   
 
     // File Handling
     if (isset($_FILES['product_photo']['name']) && $_FILES['product_photo']['name'] !== '') {
