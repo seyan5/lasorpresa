@@ -1,4 +1,5 @@
 <?php
+ob_start();
 session_start();
 include("../admin/inc/config.php");
 include("../admin/inc/functions.php");
@@ -117,6 +118,7 @@ if (isset($_SESSION['customer'])) {
 
 </style>
 
+
 <div class="container">
   <div class="wishlist">
     <h3>Your Wishlist</h3>
@@ -137,16 +139,25 @@ if (isset($_SESSION['customer'])) {
             ₱<?php echo number_format($item['current_price'], 2); ?>
           </div>
 
+          <!-- Add to Cart Button -->
+          <form method="POST" action="" id="add-to-cart-form-<?php echo $index; ?>">
+          <button id="addToCartButton" 
+            data-id="<?php echo $item['p_id']; ?>" 
+            data-name="<?php echo htmlspecialchars($item['name']); ?>" 
+            data-price="<?php echo $item['current_price']; ?>">
+            <ion-icon name="cart"></ion-icon> Add to Cart
+        </button>
+
           <!-- Remove Button -->
           <form method="POST" action="wishlist-remove.php" id="remove-form-<?php echo $index; ?>">
             <input type="hidden" name="item_id" value="<?php echo $item['id']; ?>"> <!-- Assuming `id` is the primary key -->
             <button type="button" class="remove" onclick="confirmRemove(<?php echo $index; ?>)">🗑️</button>
           </form>
 
-          <!-- Add to Cart Button -->
-          <form method="POST" action="wishlist-add-to-cart.php" id="add-to-cart-form-<?php echo $index; ?>">
-            <input type="hidden" name="item_id" value="<?php echo $item['id']; ?>"> <!-- Pass the product ID to add to the cart -->
-            <button type="submit" class="add-to-cart">Add to Cart</button>
+          
+
+
+
           </form>
         </div>
       <?php endforeach; ?>
@@ -174,8 +185,63 @@ if (isset($_SESSION['customer'])) {
   }
 </script>
 
+<script>
+  // Updated addToCart function to take dynamic product details
+  function addToCart(productId, productName, productPrice) {
+    console.log('addToCart function called with:', productId, productName, productPrice); // Check if it's triggered
+    Swal.fire({
+        title: 'Product added to cart!',
+        text: `Do you want to go to your cart to review your items?`,
+        icon: 'success',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, go to cart',
+        cancelButtonText: 'No, continue shopping'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            window.location.href = 'shopcart.php';  // Redirect to cart
+        }
+    });
+
+    // Send AJAX request to add product to cart
+    fetch('cart-handler.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: `product_id=${productId}&product_name=${encodeURIComponent(productName)}&product_price=${productPrice}`
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            console.log('Cart:', data.cart); // Debugging: Log cart content
+        } else {
+            alert(data.message);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+}
 
 
-<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+// Ensure the add to cart button works for each product in the wishlist
+document.querySelectorAll('#addToCartButton').forEach(button => {
+    button.addEventListener('click', function(event) {
+        event.preventDefault();  // Prevent page reload or form submission
+
+        const productId = this.getAttribute('data-id');
+        const productName = this.getAttribute('data-name');
+        const productPrice = this.getAttribute('data-price');
+
+        console.log(`Product ID: ${productId}, Name: ${productName}, Price: ${productPrice}`);  // Debugging the data passed
+
+        addToCart(productId, productName, productPrice);  // Call addToCart with product data
+    });
+});
+
+</script>
+
+
+
 </body>
 </html>
