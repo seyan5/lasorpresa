@@ -69,18 +69,32 @@ $reviews = $reviewStmt->fetchAll(PDO::FETCH_ASSOC);
                     <span>₱<?php echo number_format($product['current_price'], 2); ?></span>
                 </div>
 
+                <button id="addToWishlistButton" data-id="<?php echo $product['p_id']; ?>"
+                    data-name="<?php echo htmlspecialchars($product['name']); ?>"
+                    data-price="<?php echo htmlspecialchars($product['current_price']); ?>"
+                    onclick="addToWishlist(<?php echo $product['p_id']; ?>)"><ion-icon name="heart"></ion-icon>
+                    Add to Wishlist
+                </button><br><br>
+
 
                 <button id="addToCartButton" data-id="<?php echo $product['p_id']; ?>"
-        data-name="<?php echo htmlspecialchars($product['name']); ?>"
-        data-price="<?php echo htmlspecialchars($product['current_price']); ?>"
-        onclick="addToCart(<?php echo $product['p_id']; ?>)"
-        <?php if ($product_quantity == 0) echo 'disabled'; ?>>
-    Add to Cart
-</button>
+                    data-name="<?php echo htmlspecialchars($product['name']); ?>"
+                    data-price="<?php echo htmlspecialchars($product['current_price']); ?>"
+                    onclick="addToCart(<?php echo $product['p_id']; ?>)"
+                    <?php if ($product_quantity == 0) echo 'disabled'; ?>>
+                    Add to Cart
+                </button>
 
-<?php if ($product_quantity == 0): ?>
-    <p>This product is out of stock.</p>
-<?php endif; ?>
+                <?php if ($product_quantity == 0): ?>
+                <script>
+                    Swal.fire({
+                        title: 'Out of Stock',
+                        text: 'Sorry, this product is currently unavailable.',
+                        icon: 'error',
+                        confirmButtonText: 'Okay'
+                    });
+                </script>
+            <?php endif; ?>
 
             </div>
         </main>
@@ -109,7 +123,12 @@ $reviews = $reviewStmt->fetchAll(PDO::FETCH_ASSOC);
         
         if (productQuantity === 0) {
             addToCartButton.disabled = true;
-            alert('This product is out of stock!');
+            Swal.fire({
+                title: 'Out of Stock',
+                text: 'This product is currently unavailable!',
+                icon: 'error',
+                confirmButtonText: 'Okay'
+            });
         }
     });
 
@@ -158,155 +177,42 @@ $reviews = $reviewStmt->fetchAll(PDO::FETCH_ASSOC);
         });
     </script>
 
+<script>
+    function addToWishlist(productId) {
+    const productName = document.getElementById('addToWishlistButton').getAttribute('data-name');
+    const productPrice = document.getElementById('addToWishlistButton').getAttribute('data-price');
+
+    // Send AJAX request to add product to wishlist
+    fetch('wishlist-handler.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: `p_id=${productId}&name=${encodeURIComponent(productName)}&current_price=${productPrice}`
+    })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                Swal.fire({
+                    title: 'Added to Wishlist!',
+                    text: `${productName} has been added to your wishlist.`,
+                    icon: 'success'
+                });
+            } else {
+                alert(data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+}
+</script>
+
 </body>
 
 <style>
-    /* General Reset */
-    * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-    }
-
-    body {
-        font-family: 'Poppins', sans-serif;
-        background-color: #f9f9f9;
-        /* Light background */
-        color: #333;
-        /* Dark text for contrast */
-        margin: 0;
-        padding: 0;
-    }
-
-    header {
-        background-color: #ffffff;
-        padding: 15px 50px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        border-bottom: 1px solid #ddd;
-    }
-
-    header a {
-        text-decoration: none;
-        color: #ff6f61;
-        font-size: 16px;
-    }
-
-    main {
-        display: flex;
-        justify-content: center;
-        align-items: flex-start;
-        padding: 50px;
-        gap: 30px;
-    }
-
-    .product-details {
-        display: flex;
-        flex-direction: column;
-        max-width: 400px;
-        text-align: left;
-        background-color: #ffffff;
-        padding: 20px;
-        border-radius: 10px;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    }
-
-    .product-details img {
-        width: 100%;
-        border-radius: 10px;
-        margin-bottom: 20px;
-    }
-
-    .product-details h1 {
-        font-size: 24px;
-        margin-bottom: 10px;
-        color: #333;
-    }
-
-    .product-details p {
-        font-size: 16px;
-        color: #666;
-        margin-bottom: 20px;
-    }
-
-    .sidebar {
-        display: flex;
-        flex-direction: column;
-        max-width: 350px;
-        padding: 20px;
-        background-color: #fff;
-        border-radius: 10px;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    }
-
-    .sidebar h2 {
-        font-size: 18px;
-        color: #333;
-        margin-bottom: 20px;
-    }
-
-    .sidebar .cart-item {
-        display: flex;
-        align-items: center;
-        margin-bottom: 15px;
-        padding-bottom: 15px;
-        border-bottom: 1px solid #eee;
-    }
-
-    .cart-item img {
-        width: 60px;
-        height: 60px;
-        border-radius: 10px;
-        margin-right: 15px;
-    }
-
-    .cart-item h4 {
-        font-size: 16px;
-        color: #333;
-    }
-
-    .cart-item .price {
-        font-size: 14px;
-        color: #666;
-        margin-left: auto;
-    }
-
-    .sidebar .addons {
-        margin-bottom: 20px;
-    }
-
-    .sidebar select {
-        width: 100%;
-        padding: 10px;
-        font-size: 16px;
-        border: 1px solid #ddd;
-        border-radius: 5px;
-    }
-
-    .sidebar .total {
-        display: flex;
-        justify-content: space-between;
-        font-size: 16px;
-        color: #333;
-        margin-top: 20px;
-        font-weight: 600;
-    }
-
-    .sidebar button {
-        width: 100%;
-        padding: 15px;
-        font-size: 16px;
-        background-color: #ff6f61;
-        color: #fff;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-        margin-top: 20px;
-    }
-
-    .sidebar button:hover {
-        background-color: #e65a50;
+    #addToCartButton:disabled {
+        cursor: not-allowed;
     }
 </style>
 

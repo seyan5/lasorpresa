@@ -1,9 +1,12 @@
 <?php
 require 'header.php';  // Ensure session_start() is called here
 
+// Set content-type to JSON
+header('Content-Type: application/json');
+
 // Retrieve product details from the request
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $product_id = isset($_POST['product_id']) ? (int)$_POST['product_id'] : 0;
+    $product_id = isset($_POST['product_id']) ? filter_var($_POST['product_id'], FILTER_SANITIZE_NUMBER_INT) : 0;
     $product_name = isset($_POST['product_name']) ? htmlspecialchars($_POST['product_name']) : ''; // Sanitize product name
     $product_price = isset($_POST['product_price']) ? (float)$_POST['product_price'] : 0.0;
 

@@ -94,10 +94,9 @@ try {
         color: #6c757d;
     }
 
-    /* Grey out out-of-stock products */
+    /* Grey out out-of-stock products for visual indication */
     .out-of-stock {
-        opacity: 0.5;
-        pointer-events: none;
+        opacity: 0.5; /* Greyed-out appearance */
         background-color: #f0f0f0;
     }
 
@@ -109,12 +108,15 @@ try {
         font-size: 14px;
     }
 
+    /* Out-of-stock products should still be clickable */
     .out-of-stock a {
-        pointer-events: none;
-        color: #888;
+        pointer-events: auto; /* Allow clicking */
+        color: inherit; /* Maintain default link color */
     }
 
     .out-of-stock .price {
         color: #888;
     }
 </style>
+
+
