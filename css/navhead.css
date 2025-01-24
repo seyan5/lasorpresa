@@ -2,6 +2,10 @@
 
 :root{
     --pink: #e84393;
+    --pink: #e84393;
+    --main: #d0bcb3;
+    --font: #d18276;
+    --button: #d6a98f;
 }
 
 *{
@@ -49,7 +53,7 @@ header .logo{
 }
 
 header .logo span{
-    color: var(--pink);
+    color: var(--font);
 }
 
 header .navbar a{
@@ -59,7 +63,7 @@ header .navbar a{
 }
 
 header .navbar a:hover{
-    color: var(--pink);
+    color: var(--font);
 }
 
 header .icons {
@@ -247,13 +251,13 @@ header .fa-bars{
  }
  
  .container .products-container .product:hover h3 {
-    color: var(--pink);
+    color: var(--font);
     text-decoration: none; /* Remove underline */
  }
  
  .container .products-container .product .price {
     font-size: 1.2rem;
-    color: var(--pink);
+    color: var(--font);
     font-weight: bold;
  }
  
@@ -288,12 +292,12 @@ header .fa-bars{
  
  /* Active class styling */
  .indicator li.active a {
-    color: var(--pink); /* Active text color (pink) */
+    color: var(--font); /* Active text color (pink) */
  }
  
  /* Hover effect for links */
  .indicator li a:hover {
-    color: var(--pink); /* Hover text color (pink) */
+    color: var(--font); /* Hover text color (pink) */
  }
  
  /* Fallback message styling */
@@ -321,7 +325,7 @@ header .fa-bars{
     border: none;
     outline: none;
     font-weight: bold;
-    color: var(--pink);
+    color: var(--font);
     background: transparent;
     cursor: pointer;
     border-top-left-radius: 5px; /* Rounded corners for the select box */
