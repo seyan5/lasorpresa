@@ -14,7 +14,7 @@ if (isset($_SESSION['customer'])) {
 
 ?>
 <?php include('navuser.php'); ?>
-<link rel="stylesheet" href="../css/navhead.css"> 
+<link rel="stylesheet" href="../css/navhead.css?"> 
 
 <section>
    <div class="container">
@@ -36,7 +36,27 @@ $statement->execute();
 $result = $statement->fetchAll(PDO::FETCH_ASSOC);
 
 ?>
+<!-- back button style -->
+<style>
+    .btn-secondary {
+    position: fixed; /* Sticks the button to a fixed position */
+    top: 4rem; /* Positions it 20px from the bottom of the screen */
+    left: 27rem; /* Positions it 20px from the left of the screen */
+    background-color: #333; /* Secondary button color */
+    color: #ffffff; /* White text */
+    border: none; /* Removes border */
+    border-radius: 5px; /* Smooth corners */
+    padding: 10px 20px; /* Adds padding for a comfortable size */
+    font-size: 16px; /* Adjusts text size */
+    cursor: pointer; /* Changes cursor to pointer on hover */
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Adds a subtle shadow */
+    transition: background-color 0.3s ease; /* Smooth hover effect */
+}
 
+.btn-secondary:hover {
+    background-color: #d6a98f; /* Slightly darker color on hover */
+}
+</style>
 
 <button onclick="history.back()" class="btn btn-secondary">Back</button>
 
@@ -120,17 +140,7 @@ $result = $statement->fetchAll(PDO::FETCH_ASSOC);
         <li>Next Page</li>
    </ul>
 </section>
-    <div class="footer-basic">
-        <footer>
-            <div class="social">
-                <a href="https://www.instagram.com/lasorpresaflowershop/">
-                    <i class="icon ion-social-instagram"></i></a><a href="https://www.facebook.com/messages/t/105108568239439">
-                        <i class="icon ion-android-textsms"></i></a><a href="https://www.facebook.com/lasorpresabyjb">
-                            <i class="icon ion-social-facebook"></i></a></div>
-            <p class="copyright">La Sorpresa by J & B © 2021</p>
-        </footer>
-    </div>
-    <?php include('../loading.php'); ?>
+    <?php include('footers.php'); ?>
 </body>
 
 <?php include('../loading.php'); ?>
