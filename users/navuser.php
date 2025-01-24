@@ -90,18 +90,22 @@
 
 
             <div class="user-dropdown">
-                <a href="#" class="fas fa-user" onclick="toggleDropdown()"></a>
-                <div class="dropdown-menu" id="userDropdown">
-                    <?php if (isset($_SESSION['customer'])): ?>
-                        <p>Welcome, <?php echo htmlspecialchars($_SESSION['customer']['cust_name']); ?></p>
-                        <hr>
-                        <a href="customer-profile-update.php">Profile</a>
-                        <a href="logout.php">Logout</a>
-                    <?php else: ?>
-                        <a href="login.php">Login</a>
-                    <?php endif; ?>
-                </div>
-            </div>
+    <a href="#" class="fas fa-user" onclick="toggleDropdown()">
+        <?php if (isset($_SESSION['customer'])): ?>
+            <span class="indicator"></span> <!-- Green circle when logged in -->
+        <?php endif; ?>
+    </a>
+    <div class="dropdown-menu" id="userDropdown">
+        <?php if (isset($_SESSION['customer'])): ?>
+            <p>Welcome, <?php echo htmlspecialchars($_SESSION['customer']['cust_name']); ?></p>
+            <hr>
+            <a href="customer-profile-update.php">Profile</a>
+            <a href="logout.php">Logout</a>
+        <?php else: ?>
+            <a href="login.php">Login</a>
+        <?php endif; ?>
+    </div>
+</div>
 
 
             <div class="notification-dropdown">
@@ -297,4 +301,59 @@ document.addEventListener('click', (event) => {
             }
         }
     });
+</script>
+
+<style>
+    .user-dropdown {
+        position: relative;
+        display: inline-block;
+    }
+
+    .fas.fa-user {
+        font-size: 24px; /* Adjust the icon size */
+        color: #333;
+    }
+
+    .indicator {
+        position: absolute;
+        top: -6;
+        right: -6;
+        width: 8px;
+        height: 8px;
+        background-color: green;
+        border-radius: 50%;
+        border: 2px solid white;
+    }
+
+    .dropdown-menu {
+        display: none;
+        position: absolute;
+        background-color: white;
+        box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+        min-width: 160px;
+        z-index: 1;
+    }
+
+    .user-dropdown:hover .dropdown-menu {
+        display: block;
+    }
+
+    /* Optional: Adjust hover effect on menu items */
+    .dropdown-menu a {
+        padding: 10px;
+        text-decoration: none;
+        display: block;
+        color: #333;
+    }
+
+    .dropdown-menu a:hover {
+        background-color: #f1f1f1;
+    }
+</style>
+
+<script>
+    function toggleDropdown() {
+        var dropdown = document.getElementById("userDropdown");
+        dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
+    }
 </script>
