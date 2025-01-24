@@ -208,7 +208,12 @@ if (isset($_SESSION['customer'])) {
 
     <!-- review -->
 
-    <?php include('footers.php'); ?>
+    <div class="footer-basic">
+        <footer>
+            <div class="social"><a href="https://www.instagram.com/lasorpresaflowershop/"><i class="icon ion-social-instagram"></i></a><a href="https://www.facebook.com/messages/t/105108568239439"><i class="icon ion-android-textsms"></i></a><a href="https://www.facebook.com/lasorpresabyjb"><i class="icon ion-social-facebook"></i></a></div>
+            <p class="copyright">La Sorpresa by J & B © 2021</p>
+        </footer>
+    </div>
     <?php include('../loading.php'); ?>
 </body>
 
