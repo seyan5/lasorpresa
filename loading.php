@@ -128,16 +128,16 @@
     $(window).on('load', function () {
       // Keep the loading screen for a short duration before fading it out
       setTimeout(function () {
-        $(".loading-screen").fadeOut(1000, function () {
-          $("#content").fadeIn(1000);
+        $(".loading-screen").fadeOut(500, function () {
+          $("#content").fadeIn(500);
         });
-      }, 1000);
+      }, 500);
     });
 
     $(document).ajaxStart(function () {
-      $(".loading-screen").fadeIn(1000);
+      $(".loading-screen").fadeIn(500);
     }).ajaxStop(function () {
-      $(".loading-screen").fadeOut(1000);
+      $(".loading-screen").fadeOut(500);
     });
   </script>
 </body>

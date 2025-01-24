@@ -1,4 +1,5 @@
 <?php
+ob_start();
 session_start();
 include("../admin/inc/config.php");
 include("../admin/inc/functions.php");
@@ -10,14 +11,20 @@ include("../admin/inc/CSRF_Protect.php");
 // Fetch wishlist items for the logged-in customer
 if (isset($_SESSION['customer'])) {
     $cust_id = $_SESSION['customer']['cust_id'];
-    $stmt = $pdo->prepare("SELECT w.*, p.name, p.featured_photo, p.current_price FROM wishlist w
-                           JOIN product p ON w.p_id = p.p_id
-                           WHERE w.cust_id = :cust_id");
+    $stmt = $pdo->prepare("SELECT w.*, p.name, p.featured_photo, p.current_price, p.quantity FROM wishlist w
+  JOIN product p ON w.p_id = p.p_id
+  WHERE w.cust_id = :cust_id");
     $stmt->execute(['cust_id' => $cust_id]);
     $wishlistItems = $stmt->fetchAll(PDO::FETCH_ASSOC);
 } else {
     $wishlistItems = []; // No items if no customer is logged in
 }
+?>
+
+<?php
+
+  
+
 ?>
 
 <style>
@@ -117,6 +124,7 @@ if (isset($_SESSION['customer'])) {
 
 </style>
 
+
 <div class="container">
   <div class="wishlist">
     <h3>Your Wishlist</h3>
@@ -126,29 +134,32 @@ if (isset($_SESSION['customer'])) {
 
       <?php foreach ($wishlistItems as $index => $item): ?>
         <div class="wishlist-item">
-          <img src="../admin/uploads/<?php echo !empty($item['featured_photo']) ? htmlspecialchars($item['featured_photo']) : 'default-image.jpg'; ?>" 
-               alt="<?php echo htmlspecialchars($item['name']); ?>" width="50">
-          
-          <div>
-            <p><?php echo htmlspecialchars($item['name']); ?></p>
-          </div>
+  <img src="../admin/uploads/<?php echo !empty($item['featured_photo']) ? htmlspecialchars($item['featured_photo']) : 'default-image.jpg'; ?>" 
+       alt="<?php echo htmlspecialchars($item['name']); ?>" width="50">
+  
+  <div>
+    <p><?php echo htmlspecialchars($item['name']); ?></p>
+  </div>
 
-          <div class="price">
-            ₱<?php echo number_format($item['current_price'], 2); ?>
-          </div>
+  <div class="price">
+    ₱<?php echo number_format($item['current_price'], 2); ?>
+  </div>
 
-          <!-- Remove Button -->
-          <form method="POST" action="wishlist-remove.php" id="remove-form-<?php echo $index; ?>">
-            <input type="hidden" name="item_id" value="<?php echo $item['id']; ?>"> <!-- Assuming `id` is the primary key -->
-            <button type="button" class="remove" onclick="confirmRemove(<?php echo $index; ?>)">🗑️</button>
-          </form>
+  <!-- Add to Cart Button -->
+  <button id="addToCartButton" 
+          data-id="<?php echo $item['p_id']; ?>" 
+          data-name="<?php echo htmlspecialchars($item['name']); ?>" 
+          data-price="<?php echo $item['current_price']; ?>"
+          data-stock="<?php echo $item['quantity']; ?>"> 
+    <ion-icon name="cart"></ion-icon> Add to Cart
+  </button>
 
-          <!-- Add to Cart Button -->
-          <form method="POST" action="wishlist-add-to-cart.php" id="add-to-cart-form-<?php echo $index; ?>">
-            <input type="hidden" name="item_id" value="<?php echo $item['id']; ?>"> <!-- Pass the product ID to add to the cart -->
-            <button type="submit" class="add-to-cart">Add to Cart</button>
-          </form>
-        </div>
+  <!-- Remove Button -->
+  <form method="POST" action="wishlist-remove.php" id="remove-form-<?php echo $index; ?>">
+    <input type="hidden" name="item_id" value="<?php echo $item['id']; ?>"> <!-- Assuming `id` is the primary key -->
+    <button type="button" class="remove" onclick="confirmRemove(<?php echo $index; ?>)">🗑️</button>
+  </form>
+</div>
       <?php endforeach; ?>
     <?php else: ?>
       <p>Your wishlist is empty.</p>
@@ -174,8 +185,74 @@ if (isset($_SESSION['customer'])) {
   }
 </script>
 
+<script>
+  // Updated addToCart function to take dynamic product details
+  function addToCart(productId, productName, productPrice, productStock) {
+  if (typeof productStock === 'undefined' || productStock === null || productStock <= 0) {
+    Swal.fire({
+      title: 'Out of Stock!',
+      text: `Sorry, the product "${productName}" is currently out of stock.`,
+      icon: 'error',
+      confirmButtonText: 'Okay'
+    });
+    return; // Prevent adding to the cart
+  }
+
+  // Proceed with adding to cart
+  Swal.fire({
+    title: 'Product added to cart!',
+    text: `Do you want to go to your cart to review your items?`,
+    icon: 'success',
+    showCancelButton: true,
+    confirmButtonText: 'Yes, go to cart',
+    cancelButtonText: 'No, continue shopping'
+  }).then((result) => {
+    if (result.isConfirmed) {
+      window.location.href = 'shopcart.php';  // Redirect to cart
+    }
+  });
+
+  // Send AJAX request to add product to cart
+  fetch('cart-handler.php', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    body: `product_id=${productId}&product_name=${encodeURIComponent(productName)}&product_price=${productPrice}`
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.success) {
+      console.log('Cart:', data.cart); // Debugging: Log cart content
+    } else {
+      alert(data.message);
+    }
+  })
+  .catch(error => {
+    console.error('Error:', error);
+  });
+}
 
 
-<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+// Ensure the add to cart button works for each product in the wishlist
+document.querySelectorAll('#addToCartButton').forEach(button => {
+    button.addEventListener('click', function(event) {
+        event.preventDefault();  // Prevent page reload or form submission
+
+        const productId = this.getAttribute('data-id');
+        const productName = this.getAttribute('data-name');
+        const productPrice = this.getAttribute('data-price');
+        const productStock = this.getAttribute('data-stock');  // Stock quantity from data-attribute
+
+        console.log(`Product ID: ${productId}, Name: ${productName}, Price: ${productPrice}, Stock: ${productStock}`);  // Debugging the data passed
+
+        addToCart(productId, productName, productPrice, productStock);  // Call addToCart with product data
+    });
+});
+
+</script>
+
+
+
 </body>
 </html>

@@ -207,7 +207,9 @@ if (isset($_SESSION['customer'])) {
 
 
     <!-- review -->
+
     <?php include('footers.php'); ?>
+
     <?php include('../loading.php'); ?>
 </body>
 

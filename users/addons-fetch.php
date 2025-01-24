@@ -4,53 +4,74 @@ require 'conn.php'; // Include database connection
 // Check if ecat_id is passed
 $ecat_id = isset($_GET['ecat_id']) ? (int)$_GET['ecat_id'] : 'all';
 
+// Check for sorting order parameter
+$sort_order = isset($_GET['sort']) ? $_GET['sort'] : 'Default';
+$order_by_clause = "";
+
+if ($sort_order === 'LowToHigh') {
+    $order_by_clause = "ORDER BY current_price ASC";
+} elseif ($sort_order === 'HighToLow') {
+    $order_by_clause = "ORDER BY current_price DESC";
+} else {
+    // Default sorting: out-of-stock products will be listed last
+    $order_by_clause = "ORDER BY quantity DESC, p_id DESC";  // Sort by quantity (in-stock first), then by p_id
+}
+
 try {
     // Prepare SQL query based on whether 'all' or a specific category is selected
     if ($ecat_id === 'all') {
-        // Fetch all products for ecat_id that is linked to mcat_id = 3
         $statement = $pdo->prepare("
-            SELECT p_id, name, featured_photo, current_price 
+            SELECT p_id, name, featured_photo, current_price, quantity 
             FROM product
             WHERE is_active = 1 AND ecat_id IN (
                 SELECT ecat_id 
                 FROM end_category 
                 WHERE mcat_id = 19
             )
-            ORDER BY p_id DESC
+            $order_by_clause
         ");
     } else {
-        // Fetch products for the selected category within mcat_id = 3
         $statement = $pdo->prepare("
-            SELECT p_id, name, featured_photo, current_price 
+            SELECT p_id, name, featured_photo, current_price, quantity 
             FROM product
             WHERE is_active = 1 AND ecat_id = :ecat_id AND ecat_id IN (
                 SELECT ecat_id 
                 FROM end_category 
                 WHERE mcat_id = 19
             )
-            ORDER BY p_id DESC
+            $order_by_clause
         ");
         $statement->bindParam(':ecat_id', $ecat_id, PDO::PARAM_INT);
     }
 
-    // Execute the query and fetch products
     $statement->execute();
     $products = $statement->fetchAll(PDO::FETCH_ASSOC);
 
-    // Output the products or a message if no products are found
     if ($products) {
         foreach ($products as $product) {
+            // Check if product is out of stock
+            $isOutOfStock = $product['quantity'] == 0;
+            
+            // Add class if the product is out of stock
+            $outOfStockClass = $isOutOfStock ? 'out-of-stock' : '';
+
             echo '
-            <div class="product" data-id="' . htmlspecialchars($product['p_id']) . '">
+            <div class="product ' . $outOfStockClass . '" data-id="' . htmlspecialchars($product['p_id']) . '">
                 <a href="addons-details.php?p_id=' . htmlspecialchars($product['p_id']) . '">
                     <img src="../admin/uploads/' . htmlspecialchars($product['featured_photo']) . '" alt="' . htmlspecialchars($product['name']) . '">
                     <h3>' . htmlspecialchars($product['name']) . '</h3>
                     <div class="price">₱' . number_format($product['current_price'], 2) . '</div>
-                </a>
-            </div>';
+                </a>';
+    
+                // Show out of stock message if the product is out of stock
+                if ($isOutOfStock) {
+                    echo '<p class="out-of-stock-text">Out of Stock</p>';
+                }
+    
+            echo '</div>';
         }
     } else {
-        // Fallback if no products found for the selected category
+        // Enhanced message design for no products found
         echo '
         <div class="no-products text-center p-4 my-4">
             <i class="fas fa-box-open fa-3x text-secondary mb-3"></i>
@@ -59,11 +80,8 @@ try {
         </div>';
     }
 } catch (Exception $e) {
-    // Error handling for database connection or query issues
     echo "<p>Error loading products: " . htmlspecialchars($e->getMessage()) . "</p>";
 }
-
-
 ?>
 
 <style>
@@ -76,10 +94,9 @@ try {
         color: #6c757d;
     }
 
-    /* Grey out out-of-stock products */
+    /* Grey out out-of-stock products for visual indication */
     .out-of-stock {
-        opacity: 0.5;
-        pointer-events: none;
+        opacity: 0.5; /* Greyed-out appearance */
         background-color: #f0f0f0;
     }
 
@@ -91,12 +108,15 @@ try {
         font-size: 14px;
     }
 
+    /* Out-of-stock products should still be clickable */
     .out-of-stock a {
-        pointer-events: none;
-        color: #888;
+        pointer-events: auto; /* Allow clicking */
+        color: inherit; /* Maintain default link color */
     }
 
     .out-of-stock .price {
         color: #888;
     }
 </style>
+
+

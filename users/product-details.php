@@ -57,19 +57,13 @@ $reviews = $reviewStmt->fetchAll(PDO::FETCH_ASSOC);
                 alt="<?php echo htmlspecialchars($product['name']); ?>">
             <h1><?php echo htmlspecialchars($product['name']); ?></h1>
             <p><?php echo htmlspecialchars($product['description']); ?></p>
-    
         </div>
 
         <!-- Reviews Section -->
                 
         <main>
-
-        
-
             <!-- Right Sidebar -->
-            <div class="sidebar">
-
-            
+            <div class="sidebar">          
                 <h2>Cart</h2>
                 <div class="cart-item">
                     <img src="../admin/uploads/<?php echo htmlspecialchars($product['featured_photo']); ?>"
@@ -85,28 +79,36 @@ $reviews = $reviewStmt->fetchAll(PDO::FETCH_ASSOC);
                 </div><br><br>
 
                 <button id="addToWishlistButton" data-id="<?php echo $product['p_id']; ?>"
-        data-name="<?php echo htmlspecialchars($product['name']); ?>"
-        data-price="<?php echo htmlspecialchars($product['current_price']); ?>"
-        onclick="addToWishlist(<?php echo $product['p_id']; ?>)"><ion-icon name="heart"></ion-icon>
-    Add to Wishlist
-</button><br><br>
+                        data-name="<?php echo htmlspecialchars($product['name']); ?>"
+                        data-price="<?php echo htmlspecialchars($product['current_price']); ?>"
+                        onclick="addToWishlist(<?php echo $product['p_id']; ?>)"><ion-icon name="heart"></ion-icon>
+                    Add to Wishlist
+                </button><br><br>
 
 
-<button id="addToCartButton" 
-        data-id="<?php echo $product['p_id']; ?>" 
-        data-name="<?php echo htmlspecialchars($product['name']); ?>" 
-        data-price="<?php echo htmlspecialchars($product['current_price']); ?>" 
-        onclick="addToCart(<?php echo $product['p_id']; ?>)"
-        <?php if ($product_quantity == 0) echo 'disabled'; ?>>
-    <ion-icon name="cart"></ion-icon>
-    Add to Cart
-</button>
+                <button id="addToCartButton" 
+                        data-id="<?php echo $product['p_id']; ?>" 
+                        data-name="<?php echo htmlspecialchars($product['name']); ?>" 
+                        data-price="<?php echo htmlspecialchars($product['current_price']); ?>" 
+                        onclick="addToCart(<?php echo $product['p_id']; ?>)"
+                        <?php if ($product_quantity == 0) echo 'disabled'; ?>>
+                    <ion-icon name="cart"></ion-icon>
+                    Add to Cart
+                </button>
 
 
 
             <?php if ($product_quantity == 0): ?>
-                <p>This product is out of stock.</p>
+                <script>
+                    Swal.fire({
+                        title: 'Out of Stock',
+                        text: 'Sorry, this product is currently unavailable.',
+                        icon: 'error',
+                        confirmButtonText: 'Okay'
+                    });
+                </script>
             <?php endif; ?>
+
 
             </div>
         </main>
@@ -132,14 +134,19 @@ $reviews = $reviewStmt->fetchAll(PDO::FETCH_ASSOC);
     
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-    const productQuantity = <?php echo $product_quantity; ?>;
-    const addToCartButton = document.getElementById('addToCartButton');
-    
-    if (productQuantity === 0) {
-        addToCartButton.disabled = true;
-        alert('This product is out of stock!');
-    }
-});
+        const productQuantity = <?php echo $product_quantity; ?>;
+        const addToCartButton = document.getElementById('addToCartButton');
+
+        if (productQuantity === 0) {
+            addToCartButton.disabled = true;
+            Swal.fire({
+                title: 'Out of Stock',
+                text: 'This product is currently unavailable!',
+                icon: 'error',
+                confirmButtonText: 'Okay'
+            });
+        }
+    });
 
 function addToCart(productName) {
     Swal.fire({
@@ -217,6 +224,12 @@ document.getElementById('addToCartButton').addEventListener('click', function ()
 }
 
 </script>
+
+<style>
+    #addToCartButton:disabled {
+        cursor: not-allowed;
+    }
+</style>
 </body>
 
 
