@@ -5,7 +5,14 @@ include("../admin/inc/functions.php");
 include("../admin/inc/CSRF_Protect.php");
 ?>
 <?php include('navuser.php'); ?>
+<?php include('back.php'); ?>
 <style>
+  :root{
+    --pink: #e84393;
+    --main: #d0bcb3;
+    --font: #d18276;
+    --button: #d6a98f;
+  }
   .container {
   display: flex;
   max-width: 1600px; /* Increased max-width for larger layout */
@@ -21,13 +28,13 @@ include("../admin/inc/CSRF_Protect.php");
 }
 
 .cart {
-  flex: 3; /* Occupies more space for emphasis */
+  flex: 3;
   margin-top: -5rem;
-  max-height: calc(100vh - 10rem); /* Adjust height dynamically based on viewport */
-  overflow-y: auto; /* Enables vertical scrolling when content exceeds max height */
-  padding-right: 10px; /* Optional: Add padding to avoid cutting off content */
-  scrollbar-width: thin; /* Optional: Slim scrollbar for modern browsers */
-  scrollbar-color: #ccc transparent; /* Optional: Custom scrollbar colors */
+  max-height: 50vh; /* Set a max height to limit the cart size */
+  overflow-y: auto; /* Enable vertical scrolling */
+  padding-right: 10px;
+  scrollbar-width: thin; /* Slim scrollbar */
+  scrollbar-color: #ccc transparent; /* Custom scrollbar color */
 }
 
 /* Optional: Custom scrollbar styles for Webkit browsers (e.g., Chrome, Edge, Safari) */
@@ -58,7 +65,7 @@ include("../admin/inc/CSRF_Protect.php");
 .payment {
   width: 400px; /* Fixed width for consistent size */
   max-width: 100%; /* Ensures it doesn’t overflow the container on smaller screens */
-  background-color: #f5e6ec; /* Slightly lighter shade for contrast */
+  background-color:rgb(233, 221, 204); /* Slightly lighter shade for contrast */
   border-radius: 12px; /* Smooth corners */
   padding: 30px; /* Ample padding for content spacing */
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for better visibility */
@@ -123,17 +130,23 @@ include("../admin/inc/CSRF_Protect.php");
   font-size: 16px; /* Larger font size */
 }
 
+/* Delete button styles */
 .delete {
   background: none;
   border: none;
-  font-size: 18px; /* Larger font size */
-  color: #aaa; /* Softer color */
   cursor: pointer;
+  color: #aaa; /* Default icon color */
+  font-size: 25px; /* Icon size */
+  padding: 8px; /* Add some padding for better clickability */
+  border-radius: 4px; /* Optional: rounded corners */
+  transition: color 0.3s ease, background-color 0.3s ease; /* Smooth transitions */
+  margin-right: 5rem;
 }
 
 .delete:hover {
-  color: #ff0000; /* Highlight on hover */
+  color: #ff0000; /* Change to red on hover */
 }
+
 
 .payment-options {
   display: flex;
@@ -183,7 +196,7 @@ form input:focus {
 
 .checkout {
   width: 100%;
-  background-color: #4caf50;
+  background-color: #333;
   color: #fff;
   padding: 15px; /* Larger button */
   font-size: 18px; /* Larger font size */
@@ -193,7 +206,7 @@ form input:focus {
 }
 
 .checkout:hover {
-  background-color: #3b8b40; /* Darker green for hover effect */
+  background-color: var(--button); /* Darker green for hover effect */
 }
 
 </style>
@@ -241,7 +254,9 @@ form input:focus {
                 <!-- Delete Item Form -->
                 <form method="POST" action="cart-delete.php" id="delete-form-<?php echo $index; ?>">
                   <input type="hidden" name="item_index" value="<?php echo $index; ?>">
-                  <button type="button" class="delete" onclick="confirmDelete(<?php echo $index; ?>)">🗑️</button>
+                  <button type="button" class="delete" onclick="confirmDelete(<?php echo $index; ?>)">
+                  <i class="fa fa-trash"></i>
+                </button>                
                 </form>
               </div>
               
@@ -273,6 +288,7 @@ form input:focus {
           <button class="checkout" onclick="checkout()">Checkout &gt;</button>
         </div>
       </div>
+      
 
   <script>
     // Check if the user is logged in

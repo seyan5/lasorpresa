@@ -51,7 +51,7 @@
         $count = count($cart);
         ?>
         <div class="cart-container">
-    <a href="#" class="cart-icon">
+    <a href="shopcart.php" class="cart-icon">
         <i class="fas fa-shopping-cart"></i>
         <span class="cart-count"><?php echo $count; ?></span>
     </a>
