@@ -70,9 +70,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['selected_customizatio
             $container_price = $container['price'] ?? 0;
             $customization_total_price = $container_price;
 
+            $stmt = $pdo->prepare("SELECT color_name FROM color WHERE color_id = :color_id");
+            $stmt->execute(['color_id' => $customization['container_color']]);
+            $color = $stmt->fetch(PDO::FETCH_ASSOC);
+            $color_name = $color['color_name'] ?? 'Unknown';
+
             $flower_details = [];
             foreach ($customization['flowers'] as $flower) {
-                $stmt = $pdo->prepare("SELECT name, price FROM flowers WHERE id = :flower_id");
+                $stmt = $pdo->prepare("SELECT name, price, quantity FROM flowers WHERE id = :flower_id");
                 $stmt->execute(['flower_id' => $flower['flower_type']]);
                 $flower_data = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -84,6 +89,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['selected_customizatio
                 $customization_total_price += $flower_total_price;
 
                 $flower_details[] = "{$num_flowers}x {$flower_name} (₱{$flower_total_price})";
+
+                // Deduct the ordered quantity from the flowers table
+                if ($flower_data) {
+                    $new_quantity = $flower_data['quantity'] - $num_flowers;
+                    if ($new_quantity < 0) {
+                        throw new Exception("Insufficient stock for flower: {$flower_name}");
+                    }
+
+                    $stmt = $pdo->prepare("UPDATE flowers SET quantity = :new_quantity WHERE id = :flower_id");
+                    $stmt->execute(['new_quantity' => $new_quantity, 'flower_id' => $flower['flower_type']]);
+                }
             }
 
             $flower_details_string = implode(", ", $flower_details);
@@ -97,7 +113,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['selected_customizatio
                 'order_id' => $order_id,
                 'flower_details' => $flower_details_string,
                 'container_type' => $container_name,
-                'container_color' => $customization['container_color'],
+                'container_color' => $color_name, // Use color name here
                 'flower_price' => $customization_total_price - $container_price,
                 'container_price' => $container_price,
                 'total_price' => $customization_total_price,
