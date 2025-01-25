@@ -1,308 +1,342 @@
+<?php 
+session_start();
+include("../admin/inc/config.php");
+include("../admin/inc/functions.php");
+include("../admin/inc/CSRF_Protect.php");
+?>
+<?php include('navuser.php'); ?>
+<?php include('back.php'); ?>
+
 <?php
-require_once('conn.php');
+  $stmt = $pdo->prepare("SELECT container_name, price FROM container WHERE container_id = ?");
+  $stmt->execute([$customization['container_type']]);
+  $container = $stmt->fetch(PDO::FETCH_ASSOC);
 
-// Database connection using PDO (already in your code)
+  $stmt = $pdo->prepare("SELECT color_name FROM color WHERE color_id = ?");
+  $stmt->execute([$customization['container_color']]);
+  $color = $stmt->fetch(PDO::FETCH_ASSOC);
 
-// Fetch container types from the 'container' table
-$container_types = [];
-$container_query = $pdo->prepare("SELECT * FROM `container`");
-$container_query->execute();
-$container_types = $container_query->fetchAll(PDO::FETCH_ASSOC);
+  $container_name = $container['container_name'] ?? "Unknown Container";
+  $container_price = $container['price'] ?? 0;
+  $color_name = $color['color_name'] ?? "Unknown Color";
 
-// Fetch container colors from the 'color' table
-$container_colors = [];
-$color_query = $pdo->prepare("SELECT * FROM `color`");
-$color_query->execute();
-$container_colors = $color_query->fetchAll(PDO::FETCH_ASSOC);
+  $customization_total = $container_price;
 
-// Fetch flower types from the 'flowers' table
-$flower_types = [];
-$flower_query = $pdo->prepare("SELECT * FROM `flowers`");
-$flower_query->execute();
-$flower_types = $flower_query->fetchAll(PDO::FETCH_ASSOC);
+ foreach ($customization['flowers'] as $flower) {
+    $stmt = $pdo->prepare("SELECT name, price FROM flowers WHERE id = ?");
+    $stmt->execute([$flower['flower_type']]);
+    $flower_data = $stmt->fetch(PDO::FETCH_ASSOC);
 
-// Check if the form was submitted and handle form data
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Make sure data is set before accessing
-    $container_type = isset($_POST['container_type']) ? $_POST['container_type'] : 'Not selected';
-    $container_color = isset($_POST['container_color']) ? $_POST['container_color'] : 'Not selected';
-
-    // Flower data handling: This may be an array, so loop through them
-    $flower_types_selected = isset($_POST['flower_type']) ? $_POST['flower_type'] : [];
-    $num_flowers = isset($_POST['num_flowers']) ? $_POST['num_flowers'] : [];
-} else {
-    // Default values when form is not yet submitted
-    $container_type = 'Not selected';
-    $container_color = 'Not selected';
-    $flower_types_selected = [];
-    $num_flowers = [];
-}
-
-if (!isset($_SESSION['customization'])) {
-    echo "No customization found. Please go back and customize your arrangement.";
-    exit;
-}
-
-$customization = $_SESSION['customization'];
+    $flower_price = $flower_data['price'] ?? 0;
+    $flower_quantity = $flower['num_flowers'] ?? 0;
+    $customization_total += $flower_price * $flower_quantity;
+ }
 ?>
 
-<!-- Include Bootstrap CSS -->
-<link rel="stylesheet" href="../css/customize.css?v=1.2">
+<?php
+                            $stmt = $pdo->prepare("SELECT name, price FROM flowers WHERE id = ?");
+                            $stmt->execute([$flower['flower_type']]);
+                            $flower_data = $stmt->fetch(PDO::FETCH_ASSOC);
 
-<header>
-        <a href="index.php" class="back">← Back to Home Page</a>
-        <a href="customize-checkout.php" class="back">Check Out Cart</a>
+                            $flower_name = $flower_data['name'] ?? "Unknown Flower";
+                            $flower_price = $flower_data['price'] ?? 0;
+                            $flower_quantity = $flower['num_flowers'] ?? 0;
+                            ?>
 
-    </header>
 
-<div class="page">
-    <div class="container">
-        <div class="row">
-            <div class="col-md-12">
-                <h2>Customize Your Floral Arrangement</h2>
-                <form id="floral-customization-form" action="customization-submit.php" method="POST">
-                    <!-- Container Customization Section -->
-                    <div class="section">
-                        <h4>Container Customization</h4>
-                        <div class="form-group">
-                            <label for="container_type">Choose Container Type:</label>
-                            <select id="container_type" name="container_type" class="form-control" required>
-                                <?php foreach ($container_types as $container): ?>
-                                    <option value="<?= $container['container_id'] ?>" <?= ($container_type == $container['container_id']) ? 'selected' : ''; ?>>
-                                        <?= htmlspecialchars($container['container_name']) ?>
-                                    </option>
-                                <?php endforeach; ?>
-                            </select>
-                        </div>
+<style>
+  :root{
+    --pink: #e84393;
+    --main: #d0bcb3;
+    --font: #d18276;
+    --button: #d6a98f;
+  }
+  .container {
+  display: flex;
+  max-width: 1600px; /* Increased max-width for larger layout */
+  margin: 40px auto; /* Larger margin for spacing */
+  gap: 30px; /* Increased gap between cart and payment sections */
+  margin-top: 25rem; /* Adjusted margin-top for better alignment */
+}
 
-                        <div class="form-group">
-                            <label for="container_color">Choose Container Color:</label>
-                            <select id="container_color" name="container_color" class="form-control" required>
-                                <?php foreach ($container_colors as $color): ?>
-                                    <option value="<?= $color['color_id'] ?>" <?= ($container_color == $color['color_id']) ? 'selected' : ''; ?>>
-                                        <?= htmlspecialchars($color['color_name']) ?>
-                                    </option>
-                                <?php endforeach; ?>
-                            </select>
-                        </div>
-                    </div>
+.cart, .payment {
+  border-radius: 12px; /* Smoother corners */
+  padding: 30px; /* Larger padding for better spacing */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Added shadow for both */
+}
 
-                    <!-- Flower Customization Section -->
-                    <div id="flower-container">
-                        <h4>Flower Customization</h4>
-                        <?php foreach ($flower_types_selected as $index => $flower_type): ?>
-                            <div class="flower-item" id="flower-item-<?php echo $index + 1; ?>">
-                                <div class="form-group">
-                                    <label for="flower_type_<?php echo $index + 1; ?>">Choose Flower Type:</label>
-                                    <select id="flower_type_<?php echo $index + 1; ?>" name="flower_type[]" class="form-control" required>
-                                        <?php foreach ($flower_types as $flower): ?>
-                                            <option value="<?= $flower['id'] ?>" <?= ($flower_type == $flower['id']) ? 'selected' : ''; ?>>
-                                                <?= htmlspecialchars($flower['name']) ?>
-                                            </option>
-                                        <?php endforeach; ?>
-                                    </select>
-                                </div>
+.cart {
+  flex: 3;
+  margin-top: -5rem;
+  max-height: 50vh; /* Set a max height to limit the cart size */
+  overflow-y: auto; /* Enable vertical scrolling */
+  padding-right: 10px;
+  scrollbar-width: thin; /* Slim scrollbar */
+  scrollbar-color: #ccc transparent; /* Custom scrollbar color */
+}
 
-                                <div class="form-group">
-                                    <label for="num_flowers_<?php echo $index + 1; ?>">Number of Flowers:</label>
-                                    <input type="number" id="num_flowers_<?php echo $index + 1; ?>" name="num_flowers[]" class="form-control" min="1" max="100" value="<?php echo isset($num_flowers[$index]) ? $num_flowers[$index] : 1; ?>" required>
-                                </div>
-                            </div>
-                        <?php endforeach; ?>
-                    </div>
+/* Optional: Custom scrollbar styles for Webkit browsers (e.g., Chrome, Edge, Safari) */
+.cart::-webkit-scrollbar {
+  width: 8px; /* Scrollbar width */
+}
 
-                    <!-- Button to add more flowers -->
-                    <button type="button" class="btn btn-secondary" id="add-flower-btn">Add Another Flower</button>
+.cart::-webkit-scrollbar-thumb {
+  background: #ccc; /* Scrollbar thumb color */
+  border-radius: 4px; /* Rounded corners */
+}
 
-                    <!-- Real-time Selections -->
-                    <div class="section">
-                        <h4>Your Selections</h4>
-                        <?php 
-    $total_price = 0; // Initialize total price for display
-    foreach ($customization as $index => $item): 
-        // Fetch flower details using flower_type ID
-        $stmt = $pdo->prepare("SELECT name, price FROM flowers WHERE id = :flower_id");
-        $stmt->execute(['flower_id' => $item['flower_type']]);
-        $flower = $stmt->fetch(PDO::FETCH_ASSOC);
-        if ($flower) {
-            $flower_name = $flower['name'];
-            $flower_price = $flower['price'];
-        } else {
-            $flower_name = "Unknown Flower"; // Default value
-            $flower_price = 0; // Default price
-        }
+.cart::-webkit-scrollbar-thumb:hover {
+  background: #aaa; /* Hover color */
+}
 
-        // Fetch container details using container_type ID
-        $stmt = $pdo->prepare("SELECT container_name, price FROM container WHERE container_id = :container_id");
-        $stmt->execute(['container_id' => $item['container_type']]);
-        $container = $stmt->fetch(PDO::FETCH_ASSOC);
-        if ($container) {
-            $container_name = $container['container_name'];
-            $container_price = $container['price'];
-        } else {
-            $container_name = "Unknown Container"; // Default value
-            $container_price = 0; // Default price
-        }
+.cart::-webkit-scrollbar-track {
+  background: transparent; /* Scrollbar track color */
+}
 
-        // Fetch color details using container_color ID
-        $stmt = $pdo->prepare("SELECT color_name FROM color WHERE color_id = :color_id");
-        $stmt->execute(['color_id' => $item['container_color']]);
-        $color = $stmt->fetch(PDO::FETCH_ASSOC);
-        if ($color) {
-            $color_name = $color['color_name'];
-            $color_price = 0; // No extra cost for color
-        } else {
-            $color_name = "Unknown Color"; // Default value
-            $color_price = 0; // No extra cost
-        }
 
-        // Calculate total price for this flower set
-        $item_total_price = ($flower_price * $item['num_flowers']) + $container_price + $color_price;
-        $total_price += $item_total_price;
+.cart p{
+  font-size: 15px; /* Larger font size */
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  font-style: italic;
+}
 
-        // Preview images array
-        $preview_images = [
-            2 => [ // Flower type 2 (e.g., Rose)
-                1 => [
-                    1 => "../images/previews/rose_red_basket.jpg", // 1 flower, basket, color 1
-                    2 => "../images/previews/rose_red_wrapper.jpg", // 1 flower, wrapper, color 1
-                    4 => "../images/previews/rose_red_vase.jpg", // 1 flower, vase, color 1
-                ],
-                2 => [
-                    1 => "../images/previews/rose_red_basket2.jpg", // 2 flowers, basket, color 1
-                    2 => "../images/previews/rose_red_wrapper2.jpg", // 2 flowers, wrapper, color 1
-                    4 => "../images/previews/rose_red_vase2.jpg", // 2 flowers, vase, color 1
-                ],
-                3 => [
-                    1 => "../images/previews/rose_red_basket3.jpg", // 3 flowers, basket, color 1
-                    2 => "../images/previews/rose_red_wrapper3.jpg", // 3 flowers, wrapper, color 1
-                    4 => "../images/previews/rose_red_vase3.jpg", // 3 flowers, vase, color 1
-                ]
-            ],
-            3 => [ // Flower type 3 (e.g., Tulip)
-                1 => [
-                    1 => "../images/previews/tulip_red_basket.jpg", // 1 flower, basket, color 1
-                    2 => "../images/previews/tulip_red_wrapper.jpg", // 1 flower, wrapper, color 1
-                    4 => "../images/previews/tulip_red_vase.jpg", // 1 flower, vase, color 1
-                ],
-                2 => [
-                    1 => "../images/previews/tulip_red_basket2.jpg", // 2 flowers, basket, color 1
-                    2 => "../images/previews/tulip_red_wrapper2.jpg", // 2 flowers, wrapper, color 1
-                    4 => "../images/previews/tulip_red_vase2.jpg", // 2 flowers, vase, color 1
-                ],
-                3 => [
-                    1 => "../images/previews/tulip_red_basket3.jpg", // 3 flowers, basket, color 1
-                    2 => "../images/previews/tulip_red_wrapper3.jpg", // 3 flowers, wrapper, color 1
-                    4 => "../images/previews/tulip_red_vase3.jpg", // 3 flowers, vase, color 1
-                ]
-            ]
-        ];
+.payment {
+  width: 400px; /* Fixed width for consistent size */
+  max-width: 100%; /* Ensures it doesn’t overflow the container on smaller screens */
+  background-color:rgb(233, 221, 204); /* Slightly lighter shade for contrast */
+  border-radius: 12px; /* Smooth corners */
+  padding: 30px; /* Ample padding for content spacing */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for better visibility */
+  align-self: flex-start; /* Aligns with the top of the container */
+  position: sticky; /* Optional: keeps it visible on scroll */
+  top: 20px; /* Ensures it sticks from the top */
+}
 
-        // Determine the preview image based on customization
-        $preview_image = "../images/previews/default.jpg"; // Default preview
-        // Check if flower type, number of flowers, and container type are set
-        if (isset($preview_images[$item['flower_type']][$item['num_flowers']][$item['container_type']])) {
-            // Set the preview image based on the condition
-            $preview_image = $preview_images[$item['flower_type']][$item['num_flowers']][$item['container_type']];
-        }
-    ?>
-        <div class="customization-item">
-            <h4>Flower Set <?php echo $index + 1; ?>:</h4>
-            <!-- Preview Image -->
-            <img src="<?php echo htmlspecialchars($preview_image); ?>" alt="Customization Preview" class="preview-img" style="width: 500px; height: auto;">
+.cart h2, .cart h3, .payment h3 {
+  margin: 0;
+  font-size: 25px; /* Increased font size */
+  color: #333; /* Darker color for emphasis */
+}
 
-            <p><strong>Flower Type:</strong> <?php echo htmlspecialchars($flower_name); ?> ($<?php echo number_format($flower_price, 2); ?> per flower)</p>
-            <p><strong>Number of Flowers:</strong> <?php echo htmlspecialchars($item['num_flowers']); ?></p>
-            <p><strong>Container Type:</strong> <?php echo htmlspecialchars($container_name); ?> ($<?php echo number_format($container_price, 2); ?>)</p>
-            <p><strong>Container Color:</strong> <?php echo htmlspecialchars($color_name); ?> (No extra cost)</p>
-            <p><strong>Item Total Price:</strong> $<?php echo number_format($item_total_price, 2); ?></p>
-        </div>
-        <hr>
-    <?php endforeach; ?>
+.cart a{
+  font-size: 15px; /* Larger font size */
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  font-style: italic;
+}
 
-    <!-- Total Price -->
-    <p><strong>Total Price:</strong> $<?php echo number_format($total_price, 2); ?></p>
-                        <div id="selected-selections">
-                            <!-- This will show the real-time selections of flowers -->
-                        </div>
-                    </div>
+.cart-item {
+  display: flex;
+  align-items: center;
+  margin-top: 20px;
+  border-bottom: 2px solid #ddd; /* Thicker border for clarity */
+  padding-bottom: 15px; /* Extra padding for spacing */
+}
 
-                    <button type="submit" class="btn btn-primary">Submit Your Customization</button>
+.cart-item img {
+  width: 100px; /* Larger image size */
+  height: 100px; /* Larger image size */
+  object-fit: cover;
+  border-radius: 10px; /* Adjusted for a modern look */
+}
+
+.cart-item div {
+  margin-left: 15px; /* Increased spacing */
+  flex: 1;
+}
+
+.cart-item h4 {
+  margin: 0;
+  font-size: 15px; /* Increased font size */
+}
+
+.cart-item p {
+  margin: 8px 0 0; /* Adjusted spacing */
+  font-size: 20px; /* Larger font size */
+  color: #666; /* Slightly lighter color */
+}
+
+.cart-item .price{
+  font-size: 15px; /* Larger font size */
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  font-style: italic;
+  font-weight: 900;
+}
+
+.quantity input {
+  width: 60px; /* Wider input field */
+  text-align: center;
+  font-size: 16px; /* Larger font size */
+}
+
+/* Delete button styles */
+.delete {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #aaa; /* Default icon color */
+  font-size: 25px; /* Icon size */
+  padding: 8px; /* Add some padding for better clickability */
+  border-radius: 4px; /* Optional: rounded corners */
+  transition: color 0.3s ease, background-color 0.3s ease; /* Smooth transitions */
+  margin-right: 5rem;
+}
+
+.delete:hover {
+  color: #ff0000; /* Change to red on hover */
+}
+
+
+.payment-options {
+  display: flex;
+  align-items: center;
+  gap: 20px; /* Increased gap for better spacing */
+  margin-bottom: 30px; /* More spacing from other sections */
+}
+
+.payment-options img {
+  width: 60px; /* Larger icons */
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px; /* Increased gap for better spacing */
+}
+
+form label {
+  font-size: 16px; /* Larger font size */
+  color: #444; /* Slightly darker color */
+}
+
+form input {
+  padding: 12px; /* Increased padding */
+  border: 2px solid #ccc; /* Thicker border */
+  border-radius: 6px; /* Smoother corners */
+  font-size: 16px; /* Larger font size */
+}
+
+form input:focus {
+  border-color: #4caf50; /* Highlight border on focus */
+  outline: none;
+}
+
+.summary {
+  margin-top: 30px; /* Larger margin */
+}
+
+.summary p {
+  display: flex;
+  justify-content: space-between;
+  margin: 15px 0; /* Larger spacing between rows */
+  font-size: 16px; /* Larger font size */
+  font-weight: bold; /* Bold text for emphasis */
+}
+
+.checkout {
+  width: 100%;
+  background-color: #333;
+  color: #fff;
+  padding: 15px; /* Larger button */
+  font-size: 18px; /* Larger font size */
+  border: none;
+  border-radius: 6px; /* Smoother corners */
+  cursor: pointer;
+}
+
+.checkout:hover {
+  background-color: var(--button); /* Darker green for hover effect */
+}
+
+</style>
+
+
+      <div class="container">
+        
+        <div class="cart">
+          <hr>
+          <h3>Shopping Cart</h3>
+          
+          <?php if (isset($_SESSION['cart']) && count($_SESSION['cart']) > 0): ?>
+            <p>You have <?php echo count($_SESSION['cart']); ?> items in your cart.</p>
+
+            <?php foreach ($_SESSION['cart'] as $index => $item): ?>
+              <div class="cart-item">
+              <input type="checkbox" name="selected_customizations[]" value="<?php echo $index; ?>" id="customization-<?php echo $index; ?>" 
+                        onchange="updateTotalPrice()">
+                    <label for="customization-<?php echo $index; ?>">
+                        <h4>Customization #<?php echo $index + 1; ?></h4>
+                    </label>
+                <!-- Product Image -->
+                <img src="<?php echo htmlspecialchars(!empty($customization['expected_image']) ? 'uploads/' . $customization['expected_image'] : '/lasorpresa/images/default-image.jpg'); ?>" 
+                  alt="<?php echo htmlspecialchars($item['name']); ?>" 
+                  width="50">
+
+                <div>
+                  <!-- Product Name -->
+                  <p>Container Type: <?php echo htmlspecialchars($container_name); ?> (₱<?php echo number_format($container_price, 2); ?>)</p>
+                  <!-- Product Quantity -->
+                  <p>Container Color:<?php echo htmlspecialchars($color_name); ?></p>
+                  <p>Remarks: <?php echo htmlspecialchars($customization['remarks'] ?? 'None'); ?></p>
+                </div>
+
+                <!-- Quantity Controls -->
+
+                <!-- Product Price -->
+                <div class="price">
+                  <p>Subtotal: ₱<span class="subtotal" data-price="<?php echo $customization_total; ?>"><?php echo number_format($customization_total, 2); ?></span></p>
+                </div>
+
+                <!-- Delete Item Form -->
+                <form method="POST" action="cart-delete.php" id="delete-form-<?php echo $index; ?>">
+                  <input type="hidden" name="item_index" value="<?php echo $index; ?>">
+                  <button type="button" class="delete" onclick="confirmDelete(<?php echo $index; ?>)">
+                  <i class="fa fa-trash"></i>
+                </button>                
                 </form>
-            </div>
+              </div>
+              
+
+            <?php endforeach; ?>
+          <?php else: ?>
+            <p>Your cart is empty.</p>
+          <?php endif; ?>
         </div>
-    </div>
-</div>
-
-<script>
-    let flowerCount = 1; // Track the number of flower sections added
-    const addFlowerBtn = document.getElementById('add-flower-btn');
-    const flowerContainer = document.getElementById('flower-container');
-    const selectedSelections = document.getElementById('selected-selections');
-
-    // Update selection summary in real-time
-    function updateSelection() {
-        selectedSelections.innerHTML = ''; // Clear previous selections
-        const flowerTypes = document.querySelectorAll('[id^="flower_type_"]');
-        const numFlowers = document.querySelectorAll('[id^="num_flowers_"]');
-        const containerType = document.getElementById('container_type').value;
-        const containerColor = document.getElementById('container_color').value;
-
-        selectedSelections.innerHTML = `
-            <p><strong>Container Type:</strong> ${containerType}</p>
-            <p><strong>Container Color:</strong> ${containerColor}</p>
-            <hr>
-        `;
         
-        flowerTypes.forEach((flowerType, index) => {
-            const numFlower = numFlowers[index].value;
 
-            const selectionSummary = `
-                <p><strong>Flower ${index + 1}</strong></p>
-                <p>Flower Type: ${flowerType.options[flowerType.selectedIndex].text}</p>
-                <p>Number of Flowers: ${numFlower}</p>
-                <hr>
-            `;
-            selectedSelections.innerHTML += selectionSummary;
+        <div class="payment">
+          <h3>Summary</h3>
+          <hr>
+          <div class="summary">
+          <p>Total Price: <span id="total-price">0.00</span></p>
+          </div>
+
+          <button type="submit" class="checkout">Proceed To Checkout</button>
+        </div>
+      </div>
+      
+
+      <script>
+    function updateTotalPrice() {
+        const checkboxes = document.querySelectorAll('input[name="selected_customizations[]"]:checked');
+        let totalPrice = 0;
+
+        checkboxes.forEach(checkbox => {
+            const cartItem = checkbox.closest('.cart-item');
+            const subtotalElement = cartItem.querySelector('.subtotal');
+            const subtotal = parseFloat(subtotalElement.getAttribute('data-price'));
+            totalPrice += subtotal;
         });
+
+        document.getElementById('total-price').textContent = totalPrice.toLocaleString('en-PH', {
+            style: 'currency',
+            currency: 'PHP'
+        }).replace('PHP', '');
     }
-
-    // Add another flower option to the same container
-    addFlowerBtn.addEventListener('click', () => {
-        flowerCount++;
-
-        const flowerItem = document.createElement('div');
-        flowerItem.classList.add('flower-item');
-        flowerItem.id = `flower-item-${flowerCount}`;
-        
-        // Generate new flower customization form fields
-        flowerItem.innerHTML = `
-            <div class="form-group">
-                <label for="flower_type_${flowerCount}">Choose Flower Type:</label>
-                <select id="flower_type_${flowerCount}" name="flower_type[]" class="form-control" required>
-                    <?php foreach ($flower_types as $flower): ?>
-                        <option value="<?= $flower['id'] ?>"><?= htmlspecialchars($flower['name']) ?></option>
-                    <?php endforeach; ?>
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label for="num_flowers_${flowerCount}">Number of Flowers:</label>
-                <input type="number" id="num_flowers_${flowerCount}" name="num_flowers[]" class="form-control" min="1" max="100" value="1" required>
-            </div>
-        `;
-
-        // Append the new flower item
-        flowerContainer.appendChild(flowerItem);
-
-        // Update selection summary
-        updateSelection();
-    });
-
-    // Listen to the form inputs to update the selection in real-time
-    flowerContainer.addEventListener('input', updateSelection);
-    flowerContainer.addEventListener('change', updateSelection);
-
-    // Initial update on page load
-    updateSelection();
 </script>
+
+</body>
+
+</style>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+</html>
