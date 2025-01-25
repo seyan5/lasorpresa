@@ -2,6 +2,9 @@
 
 :root{
   --pink: #e84393;
+    --main: #d0bcb3;
+    --font: #d18276;
+    --button: #d6a98f;
 }
 
 /* General Styles */
@@ -161,35 +164,35 @@ button {
 
 
 button[type="submit"] {
-  background-color: var(--pink);
+  background-color: #333;
   color: #fff;
 }
 
 button[type="submit"]:hover {
-  background-color: #333;
+  background-color: var(--button);
 }
 
 .btn-primary {
-  background-color: var(--pink);
+  background-color: #333;
   color: #fff;
   font-family: "NudMotoya Maru W55 W5";
 }
 
 .btn-primary:hover {
-  background-color: #333;
+  background-color:var(--button)
 }
 
 button.btn-secondary {
-  background-color: var(--pink);
+  background-color: #333;
   color: #fff;
 }
 
 button.btn-secondary:hover {
-  background-color: #333;
+  background-color: var(--button);
 }
 
 button.btn-danger {
-  background-color: var(--pink); /* Uses the custom pink color variable */
+  background-color: #333; /* Uses the custom pink color variable */
   color: #fff;                  /* Sets the text color to white for contrast */
   padding: 10px 15px;           /* Adds comfortable padding */
   border: none;                 /* Removes default border */
@@ -201,12 +204,12 @@ button.btn-danger {
 
 /* Hover effect for the button */
 button.btn-danger:hover {
-  background-color: #ff5a5f;    /* Slightly darker shade of pink on hover */
+  background-color: var(--button);    /* Slightly darker shade of pink on hover */
 }
 
 
 button.btn-danger:hover {
-  background-color: #333;
+  background-color: var(--button);
 }
 
 /* Image Preview */
@@ -220,14 +223,14 @@ img {
 #selected-selections {
   margin-top: 20px;
   padding: 40px;
-  border: 1px dashed var(--pink);
+  border: 1px dashed var(--button);
   background: #faf8fc;
   border-radius: 5px;
 }
 
 #selected-selections p {
   margin: 10px 0;
-  color: var(--pink);
+  color: #333;
   font-weight: bold;
   font-family: "NudMotoya Maru W55 W5";
 }

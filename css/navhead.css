@@ -217,7 +217,7 @@ header .fa-bars{
     outline: .05rem solid #ccc; /* Reduce outline thickness */
     outline-offset: -1rem; /* Reduce outline offset */
     cursor: pointer;
-    font-size: 0.2rem; /* Optionally reduce font size */
+    font-size: 1.3rem; /* Optionally reduce font size */
     margin: 20px; /* Adjust margins */
  }
  
@@ -238,7 +238,7 @@ header .fa-bars{
  
  .container .products-container .product h3 {
     padding: 0.5rem 0;
-    font-size: 1.2rem;
+    font-size: 1.7rem;
     color: #444;
     font-weight: bold; /* Bold text */
     font-family: "NudMotoya Maru W55 W5";
@@ -256,7 +256,7 @@ header .fa-bars{
  }
  
  .container .products-container .product .price {
-    font-size: 1.2rem;
+    font-size: 1.6rem;
     color: var(--font);
     font-weight: bold;
  }
@@ -284,7 +284,7 @@ header .fa-bars{
     text-decoration: none; /* Remove underline */
     padding: 10px 15px; /* Add spacing inside links */
     color: #333; /* Default text color */
-    font-size: 14px; /* Font size */
+    font-size: 1.7rem; /* Font size */
     font-weight: bold; /* Bold text */
     border-radius: 3px; /* Rounded corners */
     transition: color 0.3s; /* Smooth text color transition */
@@ -311,7 +311,7 @@ header .fa-bars{
  .filter-condition {
     padding: 20px;
     height: 100px;
-    font-size: 15px;
+    font-size: 1.7rem;
     font-weight: bold;
     margin-left: -100rem; /* Move it to the left side */
     margin-top: 20px; /* Optional: space from the top */
@@ -320,12 +320,13 @@ header .fa-bars{
  }
  
  .filter-condition select {
-    width: 120px;
+    width: 150px;
     padding: 0 0 0 10px;
+    font-size: 1.7rem;
     border: none;
     outline: none;
     font-weight: bold;
-    color: var(--font);
+    color: var(--font); 
     background: transparent;
     cursor: pointer;
     border-top-left-radius: 5px; /* Rounded corners for the select box */

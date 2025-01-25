@@ -1,27 +1,12 @@
 :root {
     --pink: #e84393;
+    --pink: #e84393;
+    --main: #d0bcb3;
+    --font: #d18276;
+    --button: #d6a98f;
+    --bg: rgb(233, 221, 204);
 }
 
-* {
-    margin: 0;
-    padding: 0;
-    font-family: Verdana, Geneva, Tahoma, sans-serif;
-    outline: none;
-    border: none;
-    text-decoration: none;
-    text-transform: capitalize;
-    transition: 0.2s linear;
-    box-sizing: border-box;
-}
-
-.header {
-    margin: 10rem 0 20px 20rem;
-    font-family: 'Poppins', sans-serif; /* Modern, elegant font */
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-size: 1.5rem;
-}
 
 .header a {
     text-decoration: none;
@@ -47,6 +32,7 @@
     margin: 2rem auto 20px;
     gap: 20px;
     justify-content: flex-start; /* Aligns items to the left */
+    margin-top: 17rem;
 }
 
 .cart, .payment {
@@ -57,11 +43,12 @@
 .cart {
     flex: 2;
     margin-left: -100px; /* Moves the cart section 20px to the left */
+    margin-bottom: 5rem;
 }
 
 .cart h3 {
-    font-size: 20px;
-    margin-bottom: 20px;
+    font-size: 2rem;
+    margin-bottom: 3rem;
     color: #333;
     align-items: center;
 }
@@ -74,8 +61,9 @@
 
 .payment {
     flex: 1;
-    background-color: #eac5d8;
+    background-color: var(--bg);
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    height: 65rem;
 }
 
 .payment h3 {
@@ -165,7 +153,7 @@ form input {
 
 .checkout {
     width: 100%;
-    background-color: var(--pink);
+    background-color: #333;
     color: #fff;
     padding: 10px;
     font-size: 16px;
@@ -176,7 +164,7 @@ form input {
 }
 
 .checkout:hover {
-    background-color: #333;
+    background-color: var(--button);
 }
 
 .custom-item {

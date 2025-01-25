@@ -40,7 +40,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 <!-- Include Bootstrap CSS -->
 <?php include('navuser.php'); ?>
-<link rel="stylesheet" href="../css/customize.css?">
+<?php include('back.php'); ?>
+<link rel="stylesheet" href="../css/customize.css">
 <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&display=swap" rel="stylesheet">
 <h2>Customize Your Floral Arrangement</h2>
 
@@ -121,7 +122,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     </div>
 
                     <!-- Button to add more flowers -->
-                    <button type="button" class="btn btn-secondary" id="add-flower-btn">Add Flower</button>
+                    <button type="button" class="btn btn-secondarys" id="add-flower-btn">Add Flower</button>
                     <label for="remarks" class="remarks-label">Remarks:</label>
                     <div class="form-group">
                         <textarea id="remarks" name="remarks" class="form-control"

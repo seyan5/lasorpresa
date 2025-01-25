@@ -1,21 +1,13 @@
 :root{
     --pink: #e84393;
+    --pink: #e84393;
+    --main: #d0bcb3;
+    --font: #d18276;
+    --button: #d6a98f;
+    --bg: rgb(233, 221, 204);
 }
 
 /* General Reset */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-body {
-    font-family: 'Poppins', sans-serif;
-    background-color: #f4f4f9;
-    color: #333;
-    margin: 0;
-    padding: 0;
-}
 
 .container {
     display: flex;
@@ -45,7 +37,7 @@ body {
     margin-top: -40px; /* Reduced top margin to move it up */
     margin-bottom: 50px; /* Increased bottom margin */
     width: 100%;
-    overflow-y: auto; /* Allow scrolling if content overflows */
+
 }
 
 .cart h3{
@@ -63,8 +55,8 @@ body {
     border-bottom: 1px solid #ccc;
     padding: 30px; /* Increased padding */
     margin-bottom: 25px; /* Increased margin between items */
-
     width: 100%;
+    box-sizing: border-box; /* Ensure padding doesn't affect width */
 }
 
 .cart-item img {
@@ -74,6 +66,7 @@ body {
     width: auto;
     border-radius: 15px; /* Round the corners */
     transition: transform 0.3s ease-in-out; /* Add a smooth zoom effect */
+    margin-right: 20px; /* Add some space between image and text */
 }
 
 /* Optional hover effect to zoom image */
@@ -81,12 +74,11 @@ body {
     transform: scale(1.1); /* Slight zoom effect on hover */
 }
 
-
-
 .cart-item div {
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    justify-content: center; /* Center content vertically */
+    align-items: center; /* Center content horizontally */
     flex-grow: 1;
 }
 
@@ -94,6 +86,7 @@ body {
     margin: 5px 0;
     font-size: 14px;
     color: #333;
+    text-align: center; /* Ensure text is centered */
 }
 
 .cart-item p strong {
@@ -104,17 +97,19 @@ body {
 .cart-item .price {
     color: #007bff;
     font-size: 16px;
+    text-align: center; /* Ensure price is centered */
 }
 
 .cart-item .remarks {
     font-size: 12px;
     color: #888;
     margin-top: 10px;
+    text-align: center; /* Ensure remarks are centered */
 }
 
 .payment {
     width: 400px;
-    background-color: #ffffff;
+    background-color: var(--bg);
     align-self: flex-start;
     position: sticky;
     top: 20px;
@@ -146,7 +141,7 @@ body {
 }
 
 .checkout:hover {
-    background-color: var(--pink)
+    background-color: var(--button)
 }
 
 /* Modal Custom Styles */
