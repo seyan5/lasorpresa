@@ -72,67 +72,91 @@ if (empty($grouped_customization)) {
     exit;
 }
 ?>
-
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <link rel="stylesheet" href="../css/customize-checkout.css">
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-</head>
-
+<?php include('navuser.php'); ?>
+<?php include('back.php'); ?>
+<link rel="stylesheet" href="../css/shopcart.css">
 <body>
-    <div class="header">
-        <a href="customize-cart.php" class="back-link">
-            <span class="back-arrow">&lt;</span> Back to Cart
-        </a>
-    </div>
     <div class="container">
-        <div class="summary">
+        <div class="cart">
+            <hr>
             <h3>Order Summary</h3>
-            <ul>
+
+            <?php if (isset($_SESSION['cart']) && count($_SESSION['cart']) > 0): ?>
+                <p>You have <?php echo count($_SESSION['cart']); ?> items in your cart</p>
+
                 <?php foreach ($grouped_customization as $customization): ?>
-                    <li>
-                        <p><strong>Container Type:</strong>
-                            <?php echo htmlspecialchars($customization['container_name']); ?>
+                    <div class="cart-item">
+                        <?php if (isset($customization['expected_image']) && $customization['expected_image']): ?>
+                            <img src="uploads/<?php echo htmlspecialchars($customization['expected_image']); ?>"
+                                alt="<?php echo htmlspecialchars($customization['container_name']); ?>" width="50">
+                        <?php else: ?>
+                            <img src="path/to/default-image.jpg" alt="No image available" width="50">
+                        <?php endif; ?>
+
+                        <div>
+                            <p>Container Type: <?php echo htmlspecialchars($customization['container_name']); ?>
                             (₱<?php echo number_format($customization['container_price'], 2); ?>)</p>
-                        <p><strong>Flowers:</strong>
-                        <ul>
-                            <?php foreach ($customization['flower_details'] as $flower): ?>
-                                <li><?php echo htmlspecialchars($flower); ?></li>
-                            <?php endforeach; ?>
-                        </ul>
-                        </p>
-                        <p><strong>Remarks:</strong> <?php echo htmlspecialchars($customization['remarks']); ?></p>
-                        <p><strong>Subtotal:</strong> ₱<?php echo number_format($customization['total_price'], 2); ?></p>
-                        <p><strong>Expected Image:</strong></p>
-                        <div class="image-preview">
-                            <img src="uploads/<?php echo htmlspecialchars($customization['expected_image']); ?>" alt="Expected Output" style="width: 200px; height: auto;">
+                            <p>Flowers:
+                                <?php foreach ($customization['flower_details'] as $flower): ?>
+                                <?php echo htmlspecialchars($flower); ?>
+                                <?php endforeach; ?>
+                            </p>
+                            <p>Remarks: <?php echo htmlspecialchars($customization['remarks']); ?></p>
                         </div>
-                    </li>
+
+                        <div class="quantity">
+                            <?php echo $item['quantity']; ?>
+                        </div>
+
+                        <div class="price">
+                            ₱<?php echo number_format($customization['total_price'], 2); ?>
+                        </div>
+                    </div>
                 <?php endforeach; ?>
-            </ul>
-            <p><strong>Total Price:</strong> ₱<?php echo number_format($total_price, 2); ?></p>
+            <?php else: ?>
+                <p>Your cart is empty.</p>
+            <?php endif; ?>
         </div>
-
-        <div class="customer-info">
+        <div class="payment">
             <h3>Shipping Information</h3>
-            <p><strong>Full Name:</strong> <?php echo htmlspecialchars($customer['cust_name']); ?></p>
-            <p><strong>Phone Number:</strong> <?php echo htmlspecialchars($customer['cust_phone']); ?></p>
-            <p><strong>Address:</strong> <?php echo htmlspecialchars($customer['cust_address']); ?></p>
-
             <form id="checkout-form" action="customize-checkout.php" method="POST">
+                <label for="cust_name">Full Name: </label>
+                <span id="cust_name"><?php echo htmlspecialchars($customer['cust_name']); ?></span>
+
+                <label for="cust_phone">Phone Number: </label>
+                <span id="cust_phone"><?php echo htmlspecialchars($customer['cust_phone']); ?></span>
+
+                <label for="address">Address: </label>
+                <span id="cust_address"><?php echo htmlspecialchars($customer['cust_address']); ?></span>
+
                 <input type="hidden" name="selected_customizations"
-                    value="<?php echo htmlspecialchars(json_encode($selected_indices)); ?>">
+                value="<?php echo htmlspecialchars(json_encode($selected_indices)); ?>"> 
                 <label for="payment_method">Mode of Payment:</label>
-                <div>
-                    <input type="radio" name="payment_method" value="gcash" id="gcash" required>
-                    <label for="gcash">GCash</label>
-                    <input type="radio" name="payment_method" value="cop" id="cop" required>
-                    <label for="cop">Cash on Pickup</label>
+                <div class="pradio">
+                    <input type="radio" id="gcash" name="payment_method" value="gcash" required>
+                    <label for="gcash">
+                        <img src="../images/Gcash.png" alt="GCash" width="50">
+                        GCash
+                    </label>
                 </div>
-                <button type="button" class="checkout" id="proceed-payment">Checkout</button>
+                <div class="pradio">
+                    <input type="radio" id="cop" name="payment_method" value="cop" required>
+                    <label for="cop">
+                        <img src="../images/cop.png" alt="Cash on PickUp" width="50">
+                        Cash on Pickup
+                    </label>
+                </div>
             </form>
+
+            <hr>
+            <div class="summary">
+                <p>Subtotal <span>₱<?php echo number_format($customization['total_price'], 2); ?></span></p>
+                <p>
+                    <strong>Total:</strong>
+                    ₱<?php echo number_format($total_price, 2); ?>
+                </p>
+            </div>
+            <button class="checkout" type="button" onclick="handleCheckout()" disabled>Checkout</button>
         </div>
     </div>
 
@@ -182,24 +206,110 @@ if (empty($grouped_customization)) {
             </div>
         </div>
     </div>
-
-    <script>
-        $(document).ready(function () {
-            $('#proceed-payment').on('click', function () {
-                if ($('#gcash').is(':checked')) {
-                    $('#gcashModal').fadeIn();
-                } else if ($('#cop').is(':checked')) {
-                    $('#copModal').fadeIn();
-                } else {
-                    alert('Please select a payment method.');
-                }
-            });
-
-            $('.modal-close').on('click', function () {
-                $(this).closest('.modal').fadeOut();
-            });
-        });
-    </script>
 </body>
 
-</html>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const formFields = document.querySelectorAll('#checkout-form input, #checkout-form textarea, #checkout-form input[name="payment_method"]');
+        formFields.forEach(field => {
+            field.addEventListener('input', validateForm);
+        });
+    });
+
+    function validateForm() {
+        const paymentMethod = document.querySelector('input[name="payment_method"]:checked');
+        const checkoutButton = document.querySelector('.checkout');
+        checkoutButton.disabled = !paymentMethod;
+    }
+
+    function handleCheckout() {
+        const paymentMethod = document.querySelector('input[name="payment_method"]:checked');
+        if (!paymentMethod) {
+            alert('Please select a payment method.');
+            return;
+        }
+        if (paymentMethod.value === 'gcash') {
+            document.getElementById('gcashModal').style.display = 'block';
+        } else if (paymentMethod.value === 'cop') {
+            document.getElementById('copModal').style.display = 'block';
+        }
+    }
+
+    window.onclick = function (event) {
+        if (event.target === document.getElementById('gcashModal')) {
+            document.getElementById('gcashModal').style.display = 'none';
+        }
+        if (event.target === document.getElementById('copModal')) {
+            document.getElementById('copModal').style.display = 'none';
+        }
+    };
+</script>
+
+<style>
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 1;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0, 0, 0, 0.4);
+    }
+    .modal-dialog {
+        background-color: #fefefe;
+        margin: 10% auto;
+        padding: 20px;
+        border: 1px solid #888;
+        width: 80%;
+        max-width: 500px;
+        border-radius: 8px;
+        text-align: center;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+    .modal-close {
+        font-size: 28px;
+        font-weight: bold;
+        cursor: pointer;
+        color: #aaa;
+    }
+    .modal-close:hover,
+    .modal-close:focus {
+        color: black;
+    }
+    .modal img {
+        max-width: 100%;
+        height: auto;
+    }
+    .modal-content label {
+        display: block;
+        margin-bottom: 5px;
+        font-size: 1rem;
+        font-weight: bold;
+        text-align: left;
+    }
+    .modal-content input {
+        width: calc(100% - 20px);
+        padding: 10px;
+        margin-bottom: 15px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        font-size: 1rem;
+        box-sizing: border-box;
+    }
+    .modal-content button {
+        display: inline-block;
+        padding: 10px 20px;
+        font-size: 1rem;
+        color: white;
+        background-color: #28a745;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+    .modal-content button:hover {
+        background-color: #218838;
+    }
+</style>
