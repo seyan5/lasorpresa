@@ -109,65 +109,67 @@
 </div>
 
 
-            <div class="notification-dropdown">
-                <a href="#" class="fas fa-bell" onclick="toggleNotificationDropdown()"></a>
-                <div class="dropdown-menu" id="notificationDropdown">
-                    <?php 
-                    // Check if a customer is logged in
-                    if (isset($_SESSION['customer']) && isset($_SESSION['customer']['cust_id'])) {
-                        $customerId = $_SESSION['customer']['cust_id']; // Get the logged-in customer's ID
+<div class="notification-dropdown">
+    <a href="#" class="fas fa-bell" onclick="toggleNotificationDropdown()"></a>
+    <div class="dropdown-menu" id="notificationDropdown">
+        <?php 
+        // Check if a customer is logged in
+        if (isset($_SESSION['customer']) && isset($_SESSION['customer']['cust_id'])) {
+            $customerId = $_SESSION['customer']['cust_id']; // Get the logged-in customer's ID
 
-                        // Fetch payments for the logged-in customer with the necessary conditions
-                        $statement = $pdo->prepare("
-                            SELECT p.*, oi.product_id, pr.name
-                            FROM payment p
-                            JOIN order_items oi ON p.order_id = oi.order_id
-                            JOIN product pr ON oi.product_id = pr.p_id
-                            WHERE p.cust_id = :cust_id
-                            AND (p.payment_status = 'pending' OR p.shipping_status != 'delivered') 
-                            ORDER BY p.created_at DESC
-                        ");
-                        $statement->execute(['cust_id' => $customerId]);
-                        $payments = $statement->fetchAll(PDO::FETCH_ASSOC);
+            // Fetch payments for the logged-in customer (include all statuses)
+            $statement = $pdo->prepare("
+                SELECT p.*, oi.product_id, pr.name
+                FROM payment p
+                JOIN order_items oi ON p.order_id = oi.order_id
+                JOIN product pr ON oi.product_id = pr.p_id
+                WHERE p.cust_id = :cust_id
+                ORDER BY p.created_at DESC
+            ");
+            $statement->execute(['cust_id' => $customerId]);
+            $payments = $statement->fetchAll(PDO::FETCH_ASSOC);
 
-                        if (!empty($payments)): 
-                    ?>
-                    
-                        <p>Notifications</p>
-                        <hr>
-                        <?php foreach ($payments as $payment): ?>
-                            <?php 
-                            // Determine payment status message and shipping status message
-                            $paymentStatus = ($payment['payment_status'] == 'pending') ? 'Payment Pending' : ($payment['payment_status'] == 'paid' ? 'Paid' : 'Payment Failed');
-                            $shippingStatus = ($payment['shipping_status'] == 'pending') ? 'Shipping Pending' : ($payment['shipping_status'] == 'shipped' ? 'Shipped' : 'Delivered');
-                            ?>
-                            <li class="dropdown-item d-flex align-items-center">
-                                <i class="fa fa-credit-card me-2 <?php echo $payment['payment_status'] == 'pending' ? 'bg-warning' : 'bg-success'; ?>" style="padding: 5px; border-radius: 50%;"></i>
-                                <div>
-                                    <a href="order-details.php?order_id=<?php echo $payment['order_id']; ?>&product_id=<?php echo $payment['product_id']; ?>" style="text-decoration: none;">
-                                        <strong>Product: <?php echo $payment['name']; ?></strong>
-                                        <div class="text-muted small"><?php echo $paymentStatus; ?></div>
-                                        <div class="text-muted small"><?php echo $shippingStatus; ?></div>
-                                    </a>
-                                </div>
-                            </li>
-                        <?php endforeach; ?>
-                        <hr>
-                        <a href="notifications.php" class="btn btn-link">View All</a>
-                    <?php else: ?>
-                        <li>
-                            <span class="dropdown-item text-center text-muted">No new notifications</span>
-                        </li>
-                    <?php endif; ?>
-                    <?php 
-                    } else { 
-                    ?>
-                        <li>
-                            <span class="dropdown-item text-center text-muted">No customer logged in</span>
-                        </li>
-                    <?php } ?>
-                </div>
-            </div>
+            if (!empty($payments)): 
+        ?>
+            <p>Notifications</p>
+            <hr>
+            <?php foreach ($payments as $payment): ?>
+                <?php 
+                // Determine payment and shipping statuses
+                $paymentStatus = ($payment['payment_status'] == 'pending') ? 'Payment Pending' : ($payment['payment_status'] == 'paid' ? 'Paid' : 'Payment Failed');
+                $shippingStatus = ($payment['shipping_status'] == 'pending') ? 'Shipping Pending' : ($payment['shipping_status'] == 'shipped' ? 'Shipped' : 'Delivered');
+                $isDelivered = $payment['shipping_status'] == 'delivered';
+                ?>
+                <li class="dropdown-item d-flex align-items-center <?php echo $isDelivered ? 'delivered-item' : ''; ?>">
+                    <i class="fa fa-credit-card me-2 <?php echo $isDelivered ? 'bg-delivered' : ($payment['payment_status'] == 'pending' ? 'bg-warning' : 'bg-success'); ?>" style="padding: 5px; border-radius: 50%;"></i>
+                    <div>
+                        <a href="order-details.php?order_id=<?php echo $payment['order_id']; ?>&product_id=<?php echo $payment['product_id']; ?>" style="text-decoration: none;">
+                            <strong>Product: <?php echo htmlspecialchars($payment['name']); ?></strong>
+                            <div class="text-muted small"><?php echo $paymentStatus; ?></div>
+                            <div class="text-muted small"><?php echo $shippingStatus; ?></div>
+                        </a>
+                    </div>
+                </li>
+            <?php endforeach; ?>
+            <hr>
+            <a href="notifications.php" class="btn btn-link">View All</a>
+        <?php else: ?>
+            <li>
+                <span class="dropdown-item text-center text-muted">No notifications available</span>
+            </li>
+        <?php endif; ?>
+        <?php 
+        } else { 
+        ?>
+            <li>
+                <span class="dropdown-item text-center text-muted">No customer logged in</span>
+            </li>
+        <?php } ?>
+    </div>
+</div>
+
+
+            
         </div>
         </div>
     </div>
@@ -285,7 +287,7 @@ document.addEventListener('click', (event) => {
                     icon: '../images/logo.png',
                     tag: `payment-shipping-${payment.id}`
                 };
-                new Notification(`Product ${payment.id}`, options);
+                new Notification(`Product: ${payment.id}`, options);
             }
 
             // Display notifications at intervals (2 seconds)
@@ -333,6 +335,12 @@ document.addEventListener('click', (event) => {
         box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
         min-width: 160px;
         z-index: 1;
+    }
+
+    
+
+    .bg-delivered {
+        color: #3498db; /* Blue color for delivered status */
     }
 
     .user-dropdown:hover .dropdown-menu {

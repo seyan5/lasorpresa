@@ -46,6 +46,17 @@ if ($order_id && $product_id) {
 }
 ?>
 
+<?php
+if (isset($_GET['order_id'])) {
+    $orderId = $_GET['order_id'];
+
+    // Update the viewed status for this notification
+    $updateStatement = $pdo->prepare("UPDATE payment SET viewed = 1 WHERE order_id = :order_id");
+    $updateStatement->execute(['order_id' => $orderId]);
+}
+?>
+
+
 <?php include('navuser.php'); ?>
 <style>
 @import url(https://db.onlinewebfonts.com/c/90ac3b18aaef9f2db3ac8e062c7a033b?family=NudMotoya+Maru+W55+W5);
@@ -146,6 +157,7 @@ h2 {
 
 </style>
 <body>
+<?php include('back.php'); ?>
     <h1>Order Details</h1>
 
     <?php if ($orderDetails): ?>
@@ -153,7 +165,6 @@ h2 {
         <table class="table">
         <thead>
           <tr>
-            <th>Customer</th>
             <th>Product Details</th>
             <th>Payment Information</th>
             <th>Paid Amount</th>
@@ -163,13 +174,13 @@ h2 {
         </thead>
         <tbody>
               <tr>
-                <td>
-                  <strong>Id:</strong> <?php echo htmlspecialchars($customerId); ?><br>
-                  <strong>Name:</strong> <?php echo htmlspecialchars($fullName); ?><br>
-                </td>
                 <td class="image">        
                     <img src="../admin/uploads/<?php echo htmlspecialchars($productImage); ?>" alt="<?php echo htmlspecialchars($productName); ?>"><br>
-                    <strong>Product:</strong> <?php echo htmlspecialchars($productName); ?><br>
+                    <strong>Product:</strong> 
+<a href="product-details.php?product_id=<?= urlencode($productId) ?>">
+    <?= htmlspecialchars($productName) ?>
+</a><br>
+
                     <strong>Quantity:</strong> <?php echo htmlspecialchars($quantity); ?><br>
                     <strong>Unit Price:</strong> ₱<?php echo number_format($price, 2); ?>
                 </td>
