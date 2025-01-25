@@ -1,14 +1,6 @@
 <?php
 require_once ('conn.php'); // Include database connection
 
-
-
-if (isset($_SESSION['customer'])) {
-    echo "Welcome, " . $_SESSION['customer']['cust_name'];
-} else {
-    echo "You are not logged in.";
-}
-
 // Get the product ID from the query parameter
 $p_id = isset($_GET['p_id']) ? (int) $_GET['p_id'] : 0;
 

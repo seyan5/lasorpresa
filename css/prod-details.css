@@ -42,11 +42,12 @@ main {
 
 .pic img {
     width: 100%;
+    height: 500px; /* Set a fixed height */
+    object-fit: cover; /* Ensures the image scales proportionally and fills the area */
     border-radius: 10px;
     margin-bottom: 20px;
     transition: transform 0.3s;
 }
-
 .pic img:hover {
     transform: scale(1.05);
 }
@@ -83,7 +84,7 @@ main {
     color: #333;
 }
 
-.review {
+.reviews {
     margin-bottom: 20px;
     padding: 20px;
     background-color: #f9f9f9;
@@ -91,13 +92,13 @@ main {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.review p {
+.reviews p {
     margin-bottom: 10px;
     color: #555;
     font-size: 16px;
 }
 
-.review small {
+.reviews small {
     font-size: 14px;
     color: #888;
 }

@@ -717,7 +717,7 @@ icons-container .icons span{
 
 .cart-count {
     background-color: var(--button);
-    color: white;
+    color: rgb(0, 0, 0);
     border-radius: 50%;
     padding: 2px 5px; /* Smaller padding */
     font-size: 10px; /* Smaller font */
@@ -775,7 +775,7 @@ icons-container .icons span{
 
 .product-price {
     font-size: 14px; /* Reduced font size */
-    color: var(--pink);
+    color: var(--font);
 }
 
 .empty-cart {

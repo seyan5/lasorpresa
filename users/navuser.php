@@ -77,7 +77,7 @@
             ?>
         </ul>
         <?php if (count($cart) > 5): ?>
-        <a href="shopcart.php" class="view-cart-link">View <?php echo count($cart) - 5; ?> More Products In Cart</a>
+        <a href="shopcart.php" class="view-cart-link" style="font-size: 1.3rem;">View <?php echo count($cart) - 5; ?> More Products In Cart</a>
         <?php endif; ?>
         <a href="shopcart.php" class="view-shopping-cart-button">View My Shopping Cart</a>
     </div>
