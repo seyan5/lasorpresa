@@ -213,8 +213,7 @@ if (isset($_SESSION['customer'])) {
     <?php include('../loading.php'); ?>
 </body>
 
-
-                
+  
 <script>
     function toggleDropdown() {
         const dropdown = document.getElementById('userDropdown');
