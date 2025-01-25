@@ -9,36 +9,6 @@ if (!isset($_SESSION['customization']) || empty($_SESSION['customization'])) {
 
 $customizations = $_SESSION['customization'];
 ?>
-<?php include('navuser.php'); ?>
-<!-- jQuery and Bootstrap JS -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
-<!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/css/bootstrap.min.css"> -->
-<link rel="stylesheet" href="../css/customize-cart.css?">
-<?php include('back.php'); ?>
-<div class="container">
-  <div class="cart">
-    <h3>Your Floral Arrangement Customization</h3>
-    <?php foreach ($grouped_customization as $key => $group): ?>
-      <?php
-      $stmt = $pdo->prepare("SELECT container_name FROM container WHERE container_id = :container_id");
-      $stmt->execute(['container_id' => $group['container_type']]);
-      $container = $stmt->fetch(PDO::FETCH_ASSOC);
-      $container_name = $container['container_name'] ?? "Unknown Container";
-
-      $stmt = $pdo->prepare("SELECT color_name FROM color WHERE color_id = :color_id");
-      $stmt->execute(['color_id' => $group['container_color']]);
-      $color = $stmt->fetch(PDO::FETCH_ASSOC);
-      $color_name = $color['color_name'] ?? "Unknown Color";
-
-      $expected_image = $group['expected_image'];
-      ?>
-
-
-<div class="cart-item">
-    <img src="<?php echo htmlspecialchars(empty($expected_image) ? '/lasorpresa/images/default-image.jpg' : (strpos($expected_image, '/') === 0 ? $expected_image : 'uploads/' . $expected_image)); ?>" alt="Customization Preview">
-</div>
-
 
 <div class="container">
     <form action="customize-checkout-details.php" method="POST">
