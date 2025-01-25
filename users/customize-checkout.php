@@ -183,7 +183,7 @@ $_SESSION['total_price'] = $total_price;
 ?>
 
 <?php include('navuser.php'); ?>
-<link rel="stylesheet" href="../css/customize-checkout.css?">
+<link rel="stylesheet" href="../css/customize-checkout.css">
 
 
 <style>
@@ -196,10 +196,21 @@ $_SESSION['total_price'] = $total_price;
         top: 0;
         width: 100%;
         height: 100%;
-        overflow: auto;
         background-color: rgba(0, 0, 0, 0.4);
     }
 
+    /* Show the modal when the class 'show' is added */
+    .modal::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5); /* Darken the background */
+    backdrop-filter: blur(10px); /* Apply blur effect */
+    z-index: -1; /* Ensure this is behind the modal content */
+}
     /* Modal Content */
     .modal-dialog {
         background-color: #fefefe;
@@ -235,6 +246,11 @@ $_SESSION['total_price'] = $total_price;
         font-size: 18px;
         font-weight: bold;
     }
+    .modal-body p {
+    margin-bottom: 20px;
+    line-height: 1.5;
+}
+
 
     /* Modal Body */
     .modal-body {
@@ -293,11 +309,7 @@ $_SESSION['total_price'] = $total_price;
 
 <body>
 
-    <div class="header">
-        <a href="customize-cart.php" class="back-link">
-            <span class="back-arrow">&lt;</span> Back to Customize Cart
-        </a>
-    </div>
+<?php include('back.php'); ?>
     <div class="container">
         <!-- Left Side: Cart/Items -->
         <div class="cart">
@@ -407,7 +419,7 @@ $_SESSION['total_price'] = $total_price;
                     <input type="hidden" name="amount_paid" value="<?php echo $total_price; ?>">
                     <button type="submit" class="btn btn-success">Confirm</button>
                 </form>
-            </div>
+            </div> 
         </div>
     </div>
     </div>

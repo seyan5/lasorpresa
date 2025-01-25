@@ -6,12 +6,6 @@ include("../admin/inc/config.php");
 include("../admin/inc/functions.php");
 include("../admin/inc/CSRF_Protect.php");
 
-if (isset($_SESSION['customer'])) {
-    echo "Welcome, " . $_SESSION['customer']['cust_name'];
-} else {
-    echo "You are not logged in.";
-}
-
 ?>
 <?php include('navuser.php'); ?>
     <!-- lheader -->

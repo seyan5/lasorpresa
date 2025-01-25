@@ -102,7 +102,8 @@ $_SESSION['total_price'] = $total_price;
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
 <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/css/bootstrap.min.css"> -->
-<link rel="stylesheet" href="../css/customize-cart.css">
+<link rel="stylesheet" href="../css/customize-cart.css?">
+<?php include('back.php'); ?>
 <div class="container">
   <div class="cart">
     <h3>Your Floral Arrangement Customization</h3>
