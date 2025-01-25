@@ -16,6 +16,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     try {
+        // Start a transaction
+        $pdo->beginTransaction();
+
+        // Delete from custom_images
+        $stmt = $pdo->prepare("DELETE FROM custom_images WHERE order_id = :order_id");
+        $stmt->execute(['order_id' => $orderId]);
+
+        // Delete from custom_finalimages
+        $stmt = $pdo->prepare("DELETE FROM custom_finalimages WHERE order_id = :order_id");
+        $stmt->execute(['order_id' => $orderId]);
+
         // Delete from custom_orderitems
         $stmt = $pdo->prepare("DELETE FROM custom_orderitems WHERE order_id = :order_id");
         $stmt->execute(['order_id' => $orderId]);
@@ -28,8 +39,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt = $pdo->prepare("DELETE FROM custom_order WHERE order_id = :order_id");
         $stmt->execute(['order_id' => $orderId]);
 
+        // Commit the transaction
+        $pdo->commit();
+
         echo json_encode(["success" => true, "message" => "Order deleted successfully."]);
     } catch (Exception $e) {
+        // Rollback the transaction on error
+        $pdo->rollBack();
         echo json_encode(["success" => false, "message" => "Failed to delete order: " . $e->getMessage()]);
     }
 } else {
