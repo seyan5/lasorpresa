@@ -118,7 +118,7 @@ if (empty($grouped_customization)) {
             <?php endif; ?>
         </div>
         <div class="payment">
-            <h3>Shipping Information</h3>
+            <h3>Payment</h3>
             <form id="checkout-form" action="customize-checkout.php" method="POST">
                 <label for="cust_name">Full Name: </label>
                 <span id="cust_name"><?php echo htmlspecialchars($customer['cust_name']); ?></span>
