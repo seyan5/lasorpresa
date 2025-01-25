@@ -117,12 +117,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 ?>
 <?php include('navuser.php'); ?>
-<link rel="stylesheet" href="../css/shopcart.css?">
-    <body>
-        <div class="header">
-            <a href="shopcart.php" class="back-link">
-                <span class="back-arrow">&lt;</span> Back to Cart
-            </a>
+<?php include('back.php'); ?>
+<link rel="stylesheet" href="../css/shopcart.css">
+    <body>>
         </div>
 
         <div class="container">

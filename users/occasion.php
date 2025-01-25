@@ -28,6 +28,7 @@ $statement->execute();
 $result = $statement->fetchAll(PDO::FETCH_ASSOC);
 
 ?>
+<?php include('back.php'); ?>
 
 <div class="filter-condition">
     <select name="" id="select">
@@ -79,6 +80,7 @@ $result = $statement->fetchAll(PDO::FETCH_ASSOC);
         <li>Next Page</li>  
    </ul>
 </section>
+<?php include('footers.php'); ?>
 <?php include('../loading.php'); ?>
 
 <script>

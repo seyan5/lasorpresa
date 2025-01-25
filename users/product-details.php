@@ -50,7 +50,7 @@ $reviews = $reviewStmt->fetchAll(PDO::FETCH_ASSOC);
 
 <script src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js" type="module"></script>
 <script src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js" nomodule></script>
-<link rel="stylesheet" href="../css/prod-details.css?">
+<link rel="stylesheet" href="../css/prod-details.css">
     <main>
         <div class="pic">
             <img src="../admin/uploads/<?php echo htmlspecialchars($product['featured_photo']); ?>"
