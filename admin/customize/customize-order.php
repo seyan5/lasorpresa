@@ -17,7 +17,7 @@ $total_orders = $total_query->fetchColumn();
 $total_pages = ceil($total_orders / $results_per_page);
 
 // Get the current page number from the query string, default is 1
-$current_page = isset($_GET['page']) && is_numeric($_GET['page']) ? (int)$_GET['page'] : 1;
+$current_page = isset($_GET['page']) && is_numeric($_GET['page']) ? (int) $_GET['page'] : 1;
 
 // Prevent out-of-range page numbers
 $current_page = max(1, min($current_page, $total_pages));
@@ -33,8 +33,8 @@ $query = $pdo->prepare(
         co.customer_email,
         co.shipping_address,
         co.order_date,
-        GROUP_CONCAT(DISTINCT CONCAT(coi.flower_type, ' (', coi.num_flowers, ')') SEPARATOR '<br>') AS product_details,
-        GROUP_CONCAT(DISTINCT coi.container_type SEPARATOR ', ') AS container_types,
+        GROUP_CONCAT(DISTINCT coi.flower_details SEPARATOR '<br>') AS product_details,
+        GROUP_CONCAT(DISTINCT CONCAT(coi.container_type, ' (₱', coi.container_price, ')') SEPARATOR ', ') AS container_types,
         GROUP_CONCAT(DISTINCT coi.container_color SEPARATOR ', ') AS container_colors,
         GROUP_CONCAT(DISTINCT coi.remarks SEPARATOR '<br>') AS remarks,
         cp.payment_method,
@@ -57,6 +57,7 @@ $query->bindValue(':starting_limit', $starting_limit, PDO::PARAM_INT);
 $query->bindValue(':results_per_page', $results_per_page, PDO::PARAM_INT);
 $query->execute();
 $orders = $query->fetchAll(PDO::FETCH_ASSOC);
+
 ?>
 
 <!DOCTYPE html>
@@ -68,137 +69,204 @@ $orders = $query->fetchAll(PDO::FETCH_ASSOC);
     <title>Custom Order Dashboard</title>
     <style>
         /* Keep the existing CSS you provided */
-@import url(https://db.onlinewebfonts.com/c/90ac3b18aaef9f2db3ac8e062c7a033b?family=NudMotoya+Maru+W55+W5);
+        @import url(https://db.onlinewebfonts.com/c/90ac3b18aaef9f2db3ac8e062c7a033b?family=NudMotoya+Maru+W55+W5);
 
-:root {
-    --pink: #e84393;
-}
+        :root {
+            --pink: #e84393;
+        }
 
-body {
-    font-family: "NudMotoya Maru W55 W5", sans-serif;
-    background-color: #f9f9f9;
-    color: #333;
-    margin: 15px; /* Reduced margin */
-    line-height: 1.4; /* Slightly reduced line height */
-}
+        body {
+            font-family: "NudMotoya Maru W55 W5", sans-serif;
+            background-color: #f9f9f9;
+            color: #333;
+            margin: 15px;
+            /* Reduced margin */
+            line-height: 1.4;
+            /* Slightly reduced line height */
+        }
 
-h3 {
-    text-align: center;
-    margin-bottom: 15px; /* Reduced margin */
-    color: #444;
-    font-size: 2.5rem; /* Slightly smaller font size */
-}
+        h3 {
+            text-align: center;
+            margin-bottom: 15px;
+            /* Reduced margin */
+            color: #444;
+            font-size: 2.5rem;
+            /* Slightly smaller font size */
+        }
 
-.container {
-    width: 85%; /* Reduced width slightly */
-    margin: auto;
-}
+        .container {
+            width: 85%;
+            /* Reduced width slightly */
+            margin: auto;
+        }
 
-.custom-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 15px; /* Reduced margin */
-    background-color: #fff;
-    border-radius: 8px;
-    overflow: hidden;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Reduced shadow */
-    font-family: "NudMotoya Maru W55 W5", sans-serif;
-}
+        .custom-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+            /* Reduced margin */
+            background-color: #fff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            /* Reduced shadow */
+            font-family: "NudMotoya Maru W55 W5", sans-serif;
+        }
 
-.custom-table th,
-.custom-table td {
-    padding: 12px; /* Reduced padding */
-    text-align: center;
-}
+        .custom-table th,
+        .custom-table td {
+            padding: 12px;
+            /* Reduced padding */
+            text-align: center;
+        }
 
-.custom-table th {
-    background-color: var(--pink);
-    color: #fff;
-    text-transform: uppercase;
-    font-size: 0.85rem; /* Slightly smaller font size */
-    letter-spacing: 0.8px; /* Slightly reduced letter spacing */
-}
+        .custom-table th {
+            background-color: var(--pink);
+            color: #fff;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            /* Slightly smaller font size */
+            letter-spacing: 0.8px;
+            /* Slightly reduced letter spacing */
+        }
 
-.custom-table tr:nth-child(odd) {
-    background-color: #f9f9f9;
-}
+        .custom-table tr:nth-child(odd) {
+            background-color: #f9f9f9;
+        }
 
-.custom-table tr:nth-child(even) {
-    background-color: #fff;
-}
+        .custom-table tr:nth-child(even) {
+            background-color: #fff;
+        }
 
-.custom-table tr:hover {
-    background-color: #f1f1f1;
-}
+        .custom-table tr:hover {
+            background-color: #f1f1f1;
+        }
 
-.btn {
-    padding: 6px 12px; /* Reduced padding */
-    font-size: 0.8rem; /* Smaller font size */
-    border-radius: 4px;
-    cursor: pointer;
-    text-decoration: none;
-}
+        .btn {
+            padding: 6px 12px;
+            /* Reduced padding */
+            font-size: 0.8rem;
+            /* Smaller font size */
+            border-radius: 4px;
+            cursor: pointer;
+            text-decoration: none;
+        }
 
-.btn-secondary {
-    background-color: #555;
-    color: #fff;
-}
+        .btn-secondary {
+            background-color: #555;
+            color: #fff;
+        }
 
-.btn-secondary:hover {
-    background-color: #444;
-}
+        .btn-secondary:hover {
+            background-color: #444;
+        }
 
-.btn-info {
-    background-color: #007bff;
-    color: #fff;
-}
+        .btn-info {
+            background-color: #007bff;
+            color: #fff;
+        }
 
-.btn-info:hover {
-    background-color: #0056b3;
-}
+        .btn-info:hover {
+            background-color: #0056b3;
+        }
 
-.btn-danger {
-    background-color: #dc3545;
-    color: #fff;
-}
+        .btn-danger {
+            background-color: #dc3545;
+            color: #fff;
+        }
 
-.btn-danger:hover {
-    background-color: #a71d2a;
-}
+        .btn-danger:hover {
+            background-color: #a71d2a;
+        }
 
-.form-control {
-    padding: 4px 8px; /* Reduced padding */
-    font-size: 0.85rem; /* Slightly smaller font size */
-    font-family: "NudMotoya Maru W55 W5", sans-serif;
-}
+        .form-control {
+            padding: 4px 8px;
+            /* Reduced padding */
+            font-size: 0.85rem;
+            /* Slightly smaller font size */
+            font-family: "NudMotoya Maru W55 W5", sans-serif;
+        }
 
-.form-control select {
-    width: 100%;
-}
+        .form-control select {
+            width: 100%;
+        }
 
-/* Pagination Styles */
-.pagination {
-    text-align: center;
-    margin-top: 15px; /* Reduced margin */
-}
+        /* Pagination Styles */
+        .pagination {
+            text-align: center;
+            margin-top: 15px;
+            /* Reduced margin */
+        }
 
-.pagination a {
-    margin: 0 4px; /* Reduced margin */
-    padding: 6px 10px; /* Reduced padding */
-    background-color: #ddd;
-    color: #333;
-    text-decoration: none;
-    border-radius: 4px;
-}
+        .pagination a {
+            margin: 0 4px;
+            /* Reduced margin */
+            padding: 6px 10px;
+            /* Reduced padding */
+            background-color: #ddd;
+            color: #333;
+            text-decoration: none;
+            border-radius: 4px;
+        }
 
-.pagination a:hover {
-    background-color: #ccc;
-}
+        .pagination a:hover {
+            background-color: #ccc;
+        }
 
-.pagination .active {
-    background-color: #007bff;
-    color: white;
-}
+        .pagination .active {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-content {
+            background-color: #fff;
+            margin: 10% auto;
+            padding: 20px;
+            border: 1px solid #ddd;
+            width: 60%;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover {
+            color: #000;
+        }
+
+        img {
+            max-width: 100px;
+            margin: 10px;
+        }
+
+        .modal-images {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .modal-header h4 {
+            margin: 0;
+        }
     </style>
 </head>
 
@@ -234,8 +302,8 @@ h3 {
                         </td>
                         <td><?= $order['product_details'] ?? 'N/A'; ?></td>
                         <td>
-                            <strong>Type:</strong> <?= htmlspecialchars($order['container_types'] ?? 'N/A'); ?><br>
-                            <strong>Color:</strong> <?= htmlspecialchars($order['container_colors'] ?? 'N/A'); ?>
+                            <?= htmlspecialchars($order['container_types'] ?? 'N/A'); ?><br>
+                            <strong>Colors:</strong> <?= htmlspecialchars($order['container_colors'] ?? 'N/A'); ?>
                         </td>
                         <td><?= htmlspecialchars($order['remarks'] ?? 'N/A'); ?></td>
                         <td>
@@ -244,31 +312,40 @@ h3 {
                         </td>
                         <td>₱<?= number_format($order['amount_paid'] ?? 0, 2); ?></td>
                         <td>
-                            <select class="form-control change-status" data-order-id="<?= $order['order_id']; ?>" data-field="payment_status">
-                                <option value="Pending" <?= $order['payment_status'] == 'Pending' ? 'selected' : ''; ?>>Pending</option>
+                            <select class="form-control change-status" data-order-id="<?= $order['order_id']; ?>"
+                                data-field="payment_status">
+                                <option value="Pending" <?= $order['payment_status'] == 'Pending' ? 'selected' : ''; ?>>Pending
+                                </option>
                                 <option value="Paid" <?= $order['payment_status'] == 'Paid' ? 'selected' : ''; ?>>Paid</option>
-                                <option value="Failed" <?= $order['payment_status'] == 'Failed' ? 'selected' : ''; ?>>Failed</option>
+                                <option value="Failed" <?= $order['payment_status'] == 'Failed' ? 'selected' : ''; ?>>Failed
+                                </option>
                             </select>
                         </td>
                         <td>
-                            <select class="form-control change-status" data-order-id="<?= $order['order_id']; ?>" data-field="shipping_status">
-                                <option value="Pending" <?= $order['shipping_status'] == 'Pending' ? 'selected' : ''; ?>>Pending</option>
-                                <option value="Shipped" <?= $order['shipping_status'] == 'Shipped' ? 'selected' : ''; ?>>Shipped</option>
-                                <option value="Delivered" <?= $order['shipping_status'] == 'Delivered' ? 'selected' : ''; ?>>Delivered</option>
-                                <option value="Cancelled" <?= $order['shipping_status'] == 'Cancelled' ? 'selected' : ''; ?>>Cancelled</option>
+                            <select class="form-control change-status" data-order-id="<?= $order['order_id']; ?>"
+                                data-field="shipping_status">
+                                <option value="Pending" <?= $order['shipping_status'] == 'Pending' ? 'selected' : ''; ?>>
+                                    Pending</option>
+                                <option value="Shipped" <?= $order['shipping_status'] == 'Shipped' ? 'selected' : ''; ?>>
+                                    Shipped</option>
+                                <option value="Delivered" <?= $order['shipping_status'] == 'Delivered' ? 'selected' : ''; ?>>
+                                    Delivered</option>
+                                <option value="Cancelled" <?= $order['shipping_status'] == 'Cancelled' ? 'selected' : ''; ?>>
+                                    Cancelled</option>
                                 <option value="ReadyForPickup" <?= $order['shipping_status'] == 'ReadyForPickup' ? 'selected' : ''; ?>>Ready For Pickup</option>
                             </select>
                         </td>
+
                         <td>
-                            <button class="btn btn-info btn-sm view-images" data-order-id="<?= $order['order_id']; ?>"
-                                data-expected-images="<?= htmlspecialchars($order['expected_images']); ?>"
-                                data-final-images="<?= htmlspecialchars($order['final_images']); ?>">
+                            <button class="btn btn-info btn-sm"
+                                onclick="viewImages(<?= $order['order_id']; ?>, '<?= htmlspecialchars($order['expected_images'] ?? ''); ?>', '<?= htmlspecialchars($order['final_images'] ?? ''); ?>')">
                                 View Pictures
                             </button>
-                            <button class="btn btn-danger btn-sm delete-order" data-order-id="<?= $order['order_id']; ?>">
-                                Delete
+                            <button class="btn btn-danger btn-sm" onclick="deleteOrder(<?= $order['order_id']; ?>)">
+                                Delete Order
                             </button>
                         </td>
+
                     </tr>
                 <?php endforeach; ?>
             </tbody>
@@ -291,6 +368,224 @@ h3 {
             <?php endif; ?>
         </div>
     </div>
+
+    <!-- Modal -->
+    <div id="imageModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <div class="modal-header">
+                <h4>Order Images</h4>
+            </div>
+            <h5>Expected Images</h5>
+            <div id="expectedImagesContainer" class="modal-images"></div>
+
+            <h5>Final Images</h5>
+            <div id="finalImagesContainer" class="modal-images"></div>
+
+            <form id="addFinalImageForm" enctype="multipart/form-data">
+                <input type="hidden" id="orderIdInput" name="order_id">
+                <input type="file" name="final_image" required>
+                <button type="submit" class="btn btn-info">Add Final Image</button>
+            </form>
+
+            <div id="finalImageStatus" style="margin-top: 10px; color: green;"></div>
+        </div>
+    </div>
+
+    </div>
+
+
+
+    <script>
+        function viewImages(orderId, expectedImages = null, finalImages = null) {
+            const modal = document.getElementById("imageModal");
+            const expectedContainer = document.getElementById("expectedImagesContainer");
+            const finalContainer = document.getElementById("finalImagesContainer");
+            const orderIdInput = document.getElementById("orderIdInput");
+
+            // Set the order ID for the add-final-image form
+            orderIdInput.value = orderId;
+
+            // Fetch updated data from the server
+            fetch(`get-order-images.php?order_id=${orderId}`)
+                .then((response) => response.json())
+                .then((data) => {
+                    // Clear existing images
+                    expectedContainer.innerHTML = "";
+                    finalContainer.innerHTML = "";
+
+                    // Populate Expected Images
+                    if (data.expected_images && data.expected_images.length) {
+                        data.expected_images.forEach((img) => {
+                            const imgElement = document.createElement("img");
+                            imgElement.src = `../../users/uploads/${img.trim()}`;
+                            imgElement.alt = "Expected Image";
+                            expectedContainer.appendChild(imgElement);
+                        });
+                    } else {
+                        expectedContainer.textContent = "No expected images available.";
+                    }
+
+                    // Populate Final Images with Remove Button
+                    if (data.final_images && data.final_images.length) {
+                        data.final_images.forEach((img) => {
+                            const imgWrapper = document.createElement("div");
+                            imgWrapper.style.display = "inline-block";
+                            imgWrapper.style.margin = "10px";
+
+                            const imgElement = document.createElement("img");
+                            imgElement.src = `final_image_uploads/${img.trim()}`;
+                            imgElement.alt = "Final Image";
+                            imgElement.style.display = "block";
+                            imgElement.style.marginBottom = "5px";
+
+                            const removeButton = document.createElement("button");
+                            removeButton.textContent = "Remove";
+                            removeButton.classList.add("btn", "btn-danger", "btn-sm");
+                            removeButton.onclick = function () {
+                                removeFinalImage(orderId, img.trim(), imgWrapper);
+                            };
+
+                            imgWrapper.appendChild(imgElement);
+                            imgWrapper.appendChild(removeButton);
+                            finalContainer.appendChild(imgWrapper);
+                        });
+                    } else {
+                        finalContainer.textContent = "No final images available.";
+                    }
+
+                    // Display the modal
+                    modal.style.display = "block";
+                })
+                .catch((error) => {
+                    console.error("Error:", error);
+                    alert("Failed to load images.");
+                });
+        }
+
+        function removeFinalImage(orderId, imageName, imgWrapper) {
+            if (confirm("Are you sure you want to remove this image?")) {
+                fetch("remove-final-image.php", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ order_id: orderId, image_name: imageName }),
+                })
+                    .then((response) => response.json())
+                    .then((data) => {
+                        if (data.success) {
+                            imgWrapper.remove(); // Remove the image element from the modal
+                            alert(data.message);
+                        } else {
+                            alert(data.message);
+                        }
+                    })
+                    .catch((error) => {
+                        console.error("Error:", error);
+                        alert("Failed to remove the image.");
+                    });
+            }
+        }
+
+        document.getElementById("addFinalImageForm").addEventListener("submit", function (e) {
+            e.preventDefault(); // Prevent default form submission
+
+            const form = e.target;
+            const formData = new FormData(form);
+            const orderId = document.getElementById("orderIdInput").value;
+
+            fetch("add-final-image.php", {
+                method: "POST",
+                body: formData,
+            })
+                .then((response) => response.json())
+                .then((data) => {
+                    if (data.success) {
+                        alert(data.message);
+
+                        // Refresh final images in the modal
+                        viewImages(orderId); // Reload modal content
+                    } else {
+                        alert(data.message);
+                    }
+                })
+                .catch((error) => {
+                    console.error("Error:", error);
+                    alert("Failed to upload the image.");
+                });
+        });
+
+        function closeModal() {
+            const modal = document.getElementById("imageModal");
+            modal.style.display = "none"; // Hide modal
+            document.getElementById("expectedImagesContainer").innerHTML = ""; // Clear containers
+            document.getElementById("finalImagesContainer").innerHTML = "";
+            document.getElementById("finalImageStatus").textContent = ""; // Clear status message
+        }
+
+        document.querySelectorAll(".change-status").forEach((dropdown) => {
+            dropdown.addEventListener("change", function () {
+                const orderId = this.dataset.orderId; // Order ID
+                const field = this.dataset.field; // Field to update (payment_status or shipping_status)
+                const value = this.value; // New value selected
+
+                // Send the POST request to customize-order-change-status.php
+                fetch("customize-order-change-status.php", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/x-www-form-urlencoded", // Form URL encoding
+                    },
+                    body: new URLSearchParams({
+                        order_id: orderId,
+                        field: field,
+                        value: value,
+                    }),
+                })
+                    .then((response) => response.json())
+                    .then((data) => {
+                        if (data.success) {
+                            alert(data.message); // Success message
+                        } else {
+                            alert(data.message); // Error message
+                        }
+                    })
+                    .catch((error) => {
+                        console.error("Error:", error);
+                        alert("Failed to update the status.");
+                    });
+            });
+        });
+
+        function deleteOrder(orderId) {
+            if (confirm("Are you sure you want to delete this order? This action cannot be undone.")) {
+                fetch("customize-order-delete.php", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/x-www-form-urlencoded",
+                    },
+                    body: new URLSearchParams({
+                        order_id: orderId,
+                    }),
+                })
+                    .then((response) => response.json())
+                    .then((data) => {
+                        if (data.success) {
+                            alert(data.message); // Show success message
+                            location.reload(); // Reload the page to reflect changes
+                        } else {
+                            alert(data.message); // Show error message
+                        }
+                    })
+                    .catch((error) => {
+                        console.error("Error:", error);
+                        alert("Failed to delete the order.");
+                    });
+            }
+        }
+
+
+    </script>
+
+
 </body>
 
 </html>
