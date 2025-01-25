@@ -108,7 +108,6 @@ include("../admin/inc/CSRF_Protect.php");
         <div class="row">
             <div class="video-container">
                 <video src="../ivd/vid.mp4" loop autoplay muted></video>
-                <h3>Best flower sellers</h3>
             </div>
 
 

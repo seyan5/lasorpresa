@@ -51,12 +51,16 @@ foreach ($selected_indices as $index) {
 
         $total_price += $customization_price;
 
+        // Fetch expected image
+        $expected_image = !empty($customization['expected_image']) ? $customization['expected_image'] : 'default-image.jpg';
+
         $grouped_customization[] = [
             'container_name' => $container_name,
             'container_price' => $container_price,
             'flower_details' => $flower_details,
             'remarks' => $customization['remarks'] ?? 'None',
             'total_price' => $customization_price,
+            'expected_image' => $expected_image, // Include expected image
         ];
     }
 }
@@ -101,6 +105,10 @@ if (empty($grouped_customization)) {
                         </p>
                         <p><strong>Remarks:</strong> <?php echo htmlspecialchars($customization['remarks']); ?></p>
                         <p><strong>Subtotal:</strong> ₱<?php echo number_format($customization['total_price'], 2); ?></p>
+                        <p><strong>Expected Image:</strong></p>
+                        <div class="image-preview">
+                            <img src="uploads/<?php echo htmlspecialchars($customization['expected_image']); ?>" alt="Expected Output" style="width: 200px; height: auto;">
+                        </div>
                     </li>
                 <?php endforeach; ?>
             </ul>

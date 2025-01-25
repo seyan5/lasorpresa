@@ -61,7 +61,50 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['selected_customizatio
         $total_price = 0;
 
         foreach ($selected_customizations as $customization) {
-            // Fetch container and flower details, calculate total price...
+            // Fetch container and flower details, calculate total price
+            $stmt = $pdo->prepare("SELECT container_name, price FROM container WHERE container_id = :container_id");
+            $stmt->execute(['container_id' => $customization['container_type']]);
+            $container = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            $container_name = $container['container_name'] ?? 'Unknown';
+            $container_price = $container['price'] ?? 0;
+            $customization_total_price = $container_price;
+
+            $flower_details = [];
+            foreach ($customization['flowers'] as $flower) {
+                $stmt = $pdo->prepare("SELECT name, price FROM flowers WHERE id = :flower_id");
+                $stmt->execute(['flower_id' => $flower['flower_type']]);
+                $flower_data = $stmt->fetch(PDO::FETCH_ASSOC);
+
+                $flower_name = $flower_data['name'] ?? 'Unknown';
+                $flower_price = $flower_data['price'] ?? 0;
+                $num_flowers = $flower['num_flowers'] ?? 0;
+
+                $flower_total_price = $flower_price * $num_flowers;
+                $customization_total_price += $flower_total_price;
+
+                $flower_details[] = "{$num_flowers}x {$flower_name} (₱{$flower_total_price})";
+            }
+
+            $flower_details_string = implode(", ", $flower_details);
+
+            // Insert into `custom_orderitems` (with remarks)
+            $stmt = $pdo->prepare("
+                INSERT INTO custom_orderitems (order_id, flower_details, container_type, container_color, flower_price, container_price, total_price, remarks)
+                VALUES (:order_id, :flower_details, :container_type, :container_color, :flower_price, :container_price, :total_price, :remarks)
+            ");
+            $stmt->execute([
+                'order_id' => $order_id,
+                'flower_details' => $flower_details_string,
+                'container_type' => $container_name,
+                'container_color' => $customization['container_color'],
+                'flower_price' => $customization_total_price - $container_price,
+                'container_price' => $container_price,
+                'total_price' => $customization_total_price,
+                'remarks' => $customization['remarks'] ?? 'None',
+            ]);
+
+            $total_price += $customization_total_price;
 
             // Insert expected image into `custom_images`
             if (!empty($customization['expected_image'])) {
@@ -90,7 +133,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['selected_customizatio
             'customer_name' => $customer['cust_name'],
             'customer_email' => $customer['cust_email'],
             'reference_number' => $reference_number,
-            'amount_paid' => $amount_paid, // Use POST amount paid for both payment methods
+            'amount_paid' => $amount_paid,
             'payment_method' => $payment_method,
             'payment_status' => $payment_method === 'gcash' ? 'Paid' : 'Pending',
             'shipping_status' => 'Pending',
