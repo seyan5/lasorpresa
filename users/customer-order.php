@@ -59,8 +59,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <table class="table table-bordered table-hover">
           <thead>
             <tr>
-              <th>#</th>
-              <th>Customer</th>
+            
               <th>Product Details</th>
               <th>Payment Information</th>
               <th>Paid Amount</th>
@@ -111,14 +110,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
               foreach ($orders as $index => $order) {
                 ?>
                 <tr>
-                  <td><?= $index + 1 ?></td>
+                  
                   <td>
-                    <strong>Id:</strong> <?= $order['cust_id'] ?><br>
-                    <strong>Name:</strong> <?= htmlspecialchars($order['cust_name']) ?><br>
-                    <strong>Email:</strong> <?= htmlspecialchars($order['cust_email']) ?>
-                  </td>
-                  <td>
-                    <strong>Product:</strong> <?= htmlspecialchars($order['product_name']) ?><br>
+                    <strong>Product:</strong> 
+                    <a href="product-details.php?p_id=<?= urlencode($order['p_id']) ?>">
+                        <?= htmlspecialchars($order['product_name']) ?>
+                    </a><br>
                     <strong>Quantity:</strong> <?= $order['quantity'] ?><br>
                     <strong>Unit Price:</strong> <?= $order['unit_price'] ?>
                   </td>

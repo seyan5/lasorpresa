@@ -207,8 +207,7 @@ include("../admin/inc/CSRF_Protect.php");
     <?php include('../loading.php'); ?>
 </body>
 
-
-                
+  
 <script>
     function toggleDropdown() {
         const dropdown = document.getElementById('userDropdown');
