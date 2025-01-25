@@ -1,342 +1,479 @@
-<?php 
-session_start();
-include("../admin/inc/config.php");
-include("../admin/inc/functions.php");
-include("../admin/inc/CSRF_Protect.php");
+<?php
+require("conn.php");
+
+// Check if customization session data and POST data exist
+if (!isset($_SESSION['customization']) || empty($_POST['selected_customizations'])) {
+    echo "No customizations selected. Redirecting to cart...";
+    header("refresh:3;url=customize-cart.php");
+    exit;
+}
+
+// Retrieve customization and customer data
+$all_customizations = $_SESSION['customization'];
+$selected_indices = $_POST['selected_customizations'];
+$customer = $_SESSION['customer'];
+
+// Filter selected customizations
+$grouped_customization = [];
+$total_price = 0;
+
+foreach ($selected_indices as $index) {
+    if (isset($all_customizations[$index])) {
+        $customization = $all_customizations[$index];
+
+        // Calculate total price for this customization
+        $customization_price = 0;
+
+        // Add container price
+        $stmt = $pdo->prepare("SELECT container_name, price FROM container WHERE container_id = ?");
+        $stmt->execute([$customization['container_type']]);
+        $container = $stmt->fetch(PDO::FETCH_ASSOC);
+        $container_name = $container['container_name'] ?? "Unknown Container";
+        $container_price = $container['price'] ?? 0;
+        $customization_price += $container_price;
+
+        // Add flower prices
+        $flower_details = [];
+        foreach ($customization['flowers'] as $flower) {
+            $stmt = $pdo->prepare("SELECT name, price FROM flowers WHERE id = ?");
+            $stmt->execute([$flower['flower_type']]);
+            $flower_data = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            $flower_name = $flower_data['name'] ?? "Unknown Flower";
+            $flower_price = $flower_data['price'] ?? 0;
+            $flower_quantity = $flower['num_flowers'] ?? 0;
+
+            $flower_total = $flower_price * $flower_quantity;
+            $customization_price += $flower_total;
+
+            $flower_details[] = "{$flower_quantity}x {$flower_name} (₱{$flower_total})";
+        }
+
+        $total_price += $customization_price;
+
+        // Fetch expected image
+        $expected_image = !empty($customization['expected_image']) ? $customization['expected_image'] : 'default-image.jpg';
+
+        $grouped_customization[] = [
+            'container_name' => $container_name,
+            'container_price' => $container_price,
+            'flower_details' => $flower_details,
+            'remarks' => $customization['remarks'] ?? 'None',
+            'total_price' => $customization_price,
+            'expected_image' => $expected_image, // Include expected image
+        ];
+    }
+}
+
+// Check if valid customizations exist
+if (empty($grouped_customization)) {
+    echo "No valid customizations found. Redirecting to cart...";
+    header("refresh:3;url=customize-cart.php");
+    exit;
+}
 ?>
 <?php include('navuser.php'); ?>
 <?php include('back.php'); ?>
+<link rel="stylesheet" href="../css/shopcart.css">
+    <body>>
+        </div>
 
-<?php
-  $stmt = $pdo->prepare("SELECT container_name, price FROM container WHERE container_id = ?");
-  $stmt->execute([$customization['container_type']]);
-  $container = $stmt->fetch(PDO::FETCH_ASSOC);
+        <div class="container">
+            <div class="cart">
+                <hr>
+                <h3>Order Summary</h3>
 
-  $stmt = $pdo->prepare("SELECT color_name FROM color WHERE color_id = ?");
-  $stmt->execute([$customization['container_color']]);
-  $color = $stmt->fetch(PDO::FETCH_ASSOC);
+                <?php if (isset($_SESSION['cart']) && count($_SESSION['cart']) > 0): ?>
+                    <p>You have <?php echo count($_SESSION['cart']); ?> items in your cart</p>
 
-  $container_name = $container['container_name'] ?? "Unknown Container";
-  $container_price = $container['price'] ?? 0;
-  $color_name = $color['color_name'] ?? "Unknown Color";
+                    <?php foreach ($grouped_customization as $customization): ?>
+                        <div class="cart-item">
+                            <?php if (isset($item['image']) && $item['image']): ?>
+                              <img src="uploads/<?php echo htmlspecialchars($customization['expected_image']); ?>"
+                                    alt="<?php echo htmlspecialchars($item['name']); ?>" width="50">
+                            <?php else: ?>
+                                <img src="path/to/default-image.jpg" alt="No image available" width="50">
+                            <?php endif; ?>
 
-  $customization_total = $container_price;
+                            <div>
+                            <p>Container Type:
+                            <?php echo htmlspecialchars($customization['container_name']); ?>
+                            (₱<?php echo number_format($customization['container_price'], 2); ?>)</p>
+                            <p><strong>Flowers:</strong>
+                            <?php foreach ($customization['flower_details'] as $flower): ?>
+                                <li><?php echo htmlspecialchars($flower); ?></li>
+                            <?php endforeach; ?>
+                        </p>                                <p>Remarks: <?php echo htmlspecialchars($customization['remarks']); ?></p>
+                            </div>
 
- foreach ($customization['flowers'] as $flower) {
-    $stmt = $pdo->prepare("SELECT name, price FROM flowers WHERE id = ?");
-    $stmt->execute([$flower['flower_type']]);
-    $flower_data = $stmt->fetch(PDO::FETCH_ASSOC);
+                            <div class="quantity">
+                                <?php echo $item['quantity']; ?>
+                            </div>
 
-    $flower_price = $flower_data['price'] ?? 0;
-    $flower_quantity = $flower['num_flowers'] ?? 0;
-    $customization_total += $flower_price * $flower_quantity;
- }
-?>
+                            <div class="price">
+                              ₱<?php echo number_format($customization['total_price'], 2); ?>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <p>Your cart is empty.</p>
+                <?php endif; ?>
+            </div>
+            <div class="payment">
+                <h3>Shipping Information</h3>
+                <form id="checkout-form" action="customize-checkout.php" method="POST">
+                    <label for="cust_name">Full Name: </label>
+                    <span id="cust_name"><?php echo htmlspecialchars($customer['cust_name']); ?></span>
 
-<?php
-                            $stmt = $pdo->prepare("SELECT name, price FROM flowers WHERE id = ?");
-                            $stmt->execute([$flower['flower_type']]);
-                            $flower_data = $stmt->fetch(PDO::FETCH_ASSOC);
+                    <label for="cust_phone">Phone Number: </label>
+                    <span id="cust_phone"><?php echo htmlspecialchars($customer['cust_phone']); ?></span>
 
-                            $flower_name = $flower_data['name'] ?? "Unknown Flower";
-                            $flower_price = $flower_data['price'] ?? 0;
-                            $flower_quantity = $flower['num_flowers'] ?? 0;
-                            ?>
+                    <label for="address">Address: </label>
+                    <span id="cust_address"><?php echo htmlspecialchars($customer['cust_address']); ?></span>
 
-
-<style>
-  :root{
-    --pink: #e84393;
-    --main: #d0bcb3;
-    --font: #d18276;
-    --button: #d6a98f;
-  }
-  .container {
-  display: flex;
-  max-width: 1600px; /* Increased max-width for larger layout */
-  margin: 40px auto; /* Larger margin for spacing */
-  gap: 30px; /* Increased gap between cart and payment sections */
-  margin-top: 25rem; /* Adjusted margin-top for better alignment */
-}
-
-.cart, .payment {
-  border-radius: 12px; /* Smoother corners */
-  padding: 30px; /* Larger padding for better spacing */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Added shadow for both */
-}
-
-.cart {
-  flex: 3;
-  margin-top: -5rem;
-  max-height: 50vh; /* Set a max height to limit the cart size */
-  overflow-y: auto; /* Enable vertical scrolling */
-  padding-right: 10px;
-  scrollbar-width: thin; /* Slim scrollbar */
-  scrollbar-color: #ccc transparent; /* Custom scrollbar color */
-}
-
-/* Optional: Custom scrollbar styles for Webkit browsers (e.g., Chrome, Edge, Safari) */
-.cart::-webkit-scrollbar {
-  width: 8px; /* Scrollbar width */
-}
-
-.cart::-webkit-scrollbar-thumb {
-  background: #ccc; /* Scrollbar thumb color */
-  border-radius: 4px; /* Rounded corners */
-}
-
-.cart::-webkit-scrollbar-thumb:hover {
-  background: #aaa; /* Hover color */
-}
-
-.cart::-webkit-scrollbar-track {
-  background: transparent; /* Scrollbar track color */
-}
-
-
-.cart p{
-  font-size: 15px; /* Larger font size */
-  font-family: Verdana, Geneva, Tahoma, sans-serif;
-  font-style: italic;
-}
-
-.payment {
-  width: 400px; /* Fixed width for consistent size */
-  max-width: 100%; /* Ensures it doesn’t overflow the container on smaller screens */
-  background-color:rgb(233, 221, 204); /* Slightly lighter shade for contrast */
-  border-radius: 12px; /* Smooth corners */
-  padding: 30px; /* Ample padding for content spacing */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for better visibility */
-  align-self: flex-start; /* Aligns with the top of the container */
-  position: sticky; /* Optional: keeps it visible on scroll */
-  top: 20px; /* Ensures it sticks from the top */
-}
-
-.cart h2, .cart h3, .payment h3 {
-  margin: 0;
-  font-size: 25px; /* Increased font size */
-  color: #333; /* Darker color for emphasis */
-}
-
-.cart a{
-  font-size: 15px; /* Larger font size */
-  font-family: Verdana, Geneva, Tahoma, sans-serif;
-  font-style: italic;
-}
-
-.cart-item {
-  display: flex;
-  align-items: center;
-  margin-top: 20px;
-  border-bottom: 2px solid #ddd; /* Thicker border for clarity */
-  padding-bottom: 15px; /* Extra padding for spacing */
-}
-
-.cart-item img {
-  width: 100px; /* Larger image size */
-  height: 100px; /* Larger image size */
-  object-fit: cover;
-  border-radius: 10px; /* Adjusted for a modern look */
-}
-
-.cart-item div {
-  margin-left: 15px; /* Increased spacing */
-  flex: 1;
-}
-
-.cart-item h4 {
-  margin: 0;
-  font-size: 15px; /* Increased font size */
-}
-
-.cart-item p {
-  margin: 8px 0 0; /* Adjusted spacing */
-  font-size: 20px; /* Larger font size */
-  color: #666; /* Slightly lighter color */
-}
-
-.cart-item .price{
-  font-size: 15px; /* Larger font size */
-  font-family: Verdana, Geneva, Tahoma, sans-serif;
-  font-style: italic;
-  font-weight: 900;
-}
-
-.quantity input {
-  width: 60px; /* Wider input field */
-  text-align: center;
-  font-size: 16px; /* Larger font size */
-}
-
-/* Delete button styles */
-.delete {
-  background: none;
-  border: none;
-  cursor: pointer;
-  color: #aaa; /* Default icon color */
-  font-size: 25px; /* Icon size */
-  padding: 8px; /* Add some padding for better clickability */
-  border-radius: 4px; /* Optional: rounded corners */
-  transition: color 0.3s ease, background-color 0.3s ease; /* Smooth transitions */
-  margin-right: 5rem;
-}
-
-.delete:hover {
-  color: #ff0000; /* Change to red on hover */
-}
-
-
-.payment-options {
-  display: flex;
-  align-items: center;
-  gap: 20px; /* Increased gap for better spacing */
-  margin-bottom: 30px; /* More spacing from other sections */
-}
-
-.payment-options img {
-  width: 60px; /* Larger icons */
-}
-
-form {
-  display: flex;
-  flex-direction: column;
-  gap: 15px; /* Increased gap for better spacing */
-}
-
-form label {
-  font-size: 16px; /* Larger font size */
-  color: #444; /* Slightly darker color */
-}
-
-form input {
-  padding: 12px; /* Increased padding */
-  border: 2px solid #ccc; /* Thicker border */
-  border-radius: 6px; /* Smoother corners */
-  font-size: 16px; /* Larger font size */
-}
-
-form input:focus {
-  border-color: #4caf50; /* Highlight border on focus */
-  outline: none;
-}
-
-.summary {
-  margin-top: 30px; /* Larger margin */
-}
-
-.summary p {
-  display: flex;
-  justify-content: space-between;
-  margin: 15px 0; /* Larger spacing between rows */
-  font-size: 16px; /* Larger font size */
-  font-weight: bold; /* Bold text for emphasis */
-}
-
-.checkout {
-  width: 100%;
-  background-color: #333;
-  color: #fff;
-  padding: 15px; /* Larger button */
-  font-size: 18px; /* Larger font size */
-  border: none;
-  border-radius: 6px; /* Smoother corners */
-  cursor: pointer;
-}
-
-.checkout:hover {
-  background-color: var(--button); /* Darker green for hover effect */
-}
-
-</style>
-
-
-      <div class="container">
-        
-        <div class="cart">
-          <hr>
-          <h3>Shopping Cart</h3>
-          
-          <?php if (isset($_SESSION['cart']) && count($_SESSION['cart']) > 0): ?>
-            <p>You have <?php echo count($_SESSION['cart']); ?> items in your cart.</p>
-
-            <?php foreach ($_SESSION['cart'] as $index => $item): ?>
-              <div class="cart-item">
-              <input type="checkbox" name="selected_customizations[]" value="<?php echo $index; ?>" id="customization-<?php echo $index; ?>" 
-                        onchange="updateTotalPrice()">
-                    <label for="customization-<?php echo $index; ?>">
-                        <h4>Customization #<?php echo $index + 1; ?></h4>
-                    </label>
-                <!-- Product Image -->
-                <img src="<?php echo htmlspecialchars(!empty($customization['expected_image']) ? 'uploads/' . $customization['expected_image'] : '/lasorpresa/images/default-image.jpg'); ?>" 
-                  alt="<?php echo htmlspecialchars($item['name']); ?>" 
-                  width="50">
-
-                <div>
-                  <!-- Product Name -->
-                  <p>Container Type: <?php echo htmlspecialchars($container_name); ?> (₱<?php echo number_format($container_price, 2); ?>)</p>
-                  <!-- Product Quantity -->
-                  <p>Container Color:<?php echo htmlspecialchars($color_name); ?></p>
-                  <p>Remarks: <?php echo htmlspecialchars($customization['remarks'] ?? 'None'); ?></p>
-                </div>
-
-                <!-- Quantity Controls -->
-
-                <!-- Product Price -->
-                <div class="price">
-                  <p>Subtotal: ₱<span class="subtotal" data-price="<?php echo $customization_total; ?>"><?php echo number_format($customization_total, 2); ?></span></p>
-                </div>
-
-                <!-- Delete Item Form -->
-                <form method="POST" action="cart-delete.php" id="delete-form-<?php echo $index; ?>">
-                  <input type="hidden" name="item_index" value="<?php echo $index; ?>">
-                  <button type="button" class="delete" onclick="confirmDelete(<?php echo $index; ?>)">
-                  <i class="fa fa-trash"></i>
-                </button>                
+                    <input type="hidden" name="selected_customizations"
+                    value="<?php echo htmlspecialchars(json_encode($selected_indices)); ?>"> 
+                    <label for="payment_method">Mode of Payment:</label>
+                    <div class="pradio">
+                        <input type="radio" id="gcash" name="payment_method" value="gcash" required>
+                        <label for="gcash">
+                            <img src="../images/Gcash.png" alt="GCash" width="50">
+                            GCash
+                        </label>
+                    </div>
+                    <div class="pradio">
+                        <input type="radio" id="cop" name="payment_method" value="cop" required>
+                        <label for="cop">
+                            <img src="../images/cop.png" alt="Cash on PickUp" width="50">
+                            Cash on Pickup
+                        </label>
+                    </div>
                 </form>
-              </div>
-              
 
-            <?php endforeach; ?>
-          <?php else: ?>
-            <p>Your cart is empty.</p>
-          <?php endif; ?>
+                <hr>
+                <div class="summary">
+                    <p>Subtotal <span>₱<?php echo number_format($customization['total_price'], 2); ?></span></p>
+                    <p>
+                        <strong>Total:</strong>
+                        ₱<?php echo number_format($total_price, 2); ?>
+                    </p>
+                </div>
+                <button class="checkout" type="button" onclick="handleCheckout()" disabled>Checkout</button>
+            </div>
         </div>
-        
 
-        <div class="payment">
-          <h3>Summary</h3>
-          <hr>
-          <div class="summary">
-          <p>Total Price: <span id="total-price">0.00</span></p>
-          </div>
-
-          <button type="submit" class="checkout">Proceed To Checkout</button>
+        <!-- GCash Modal -->
+        <div class="modal" id="gcashModal" style="display: none;">
+        <div class="modal-dialog">
+            <div class="modal-header">
+                GCash Payment
+                <button class="modal-close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>Scan the QR Code to pay:</p>
+                <img src="../images/gcashqr.jpg" alt="GCash QR Code" style="width: 100%; height: auto;">
+                <form id="gcash-form" action="customize-checkout.php" method="POST">
+                    <input type="hidden" name="payment_method" value="gcash">
+                    <input type="hidden" name="selected_customizations"
+                        value="<?php echo htmlspecialchars(json_encode($selected_indices)); ?>">
+                    <label for="reference_number">Reference Number:</label>
+                    <input type="text" name="reference_number" class="form-control" required>
+                    <label for="amount_paid">Amount Paid:</label>
+                    <input type="text" name="amount_paid" class="form-control"
+                        value="<?php echo htmlspecialchars($total_price); ?>" readonly>
+                    <button type="submit" class="btn btn-success">Done</button>
+                </form>
+            </div>
         </div>
-      </div>
-      
+    </div>
 
-      <script>
-    function updateTotalPrice() {
-        const checkboxes = document.querySelectorAll('input[name="selected_customizations[]"]:checked');
-        let totalPrice = 0;
+        <!-- COP Modal -->
+        <!-- COP Modal -->
+        <div class="modal" id="copModal" style="display: none;">
+        <div class="modal-dialog">
+            <div class="modal-header">
+                Cash on Pickup
+                <button class="modal-close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>Your order is confirmed with Cash on Pickup.</p>
+                <form id="cop-form" action="customize-checkout.php" method="POST">
+                    <input type="hidden" name="payment_method" value="cop">
+                    <input type="hidden" name="selected_customizations"
+                        value="<?php echo htmlspecialchars(json_encode($selected_indices)); ?>">
+                    <label for="amount_paid">Amount to Pay Upon Pickup:</label>
+                    <input type="text" name="amount_paid" class="form-control"
+                        value="<?php echo htmlspecialchars($total_price); ?>" readonly>
+                    <button type="submit" class="btn btn-primary">Confirm</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    </body>
 
-        checkboxes.forEach(checkbox => {
-            const cartItem = checkbox.closest('.cart-item');
-            const subtotalElement = cartItem.querySelector('.subtotal');
-            const subtotal = parseFloat(subtotalElement.getAttribute('data-price'));
-            totalPrice += subtotal;
+
+    <script>
+
+        function handleGCash() {
+            const referenceNumber = document.getElementById('reference_number').value.trim();
+            const amountPaid = document.getElementById('amount_paid').value.trim();
+
+            if (!referenceNumber || !amountPaid) {
+                alert('Please fill out all GCash details.');
+                return;
+            }
+
+            // Send POST request for GCash
+            fetch('checkout.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: new URLSearchParams({
+                    payment_method: 'gcash', // Set payment method as GCash
+                    reference_number: referenceNumber,
+                    amount_paid: amountPaid,
+                }),
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        alert(data.message);
+                        window.location.href = 'customer-order.php'; // Redirect to cart or confirmation page
+                    } else {
+                        alert(data.message || 'An error occurred.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Fetch error:', error);
+                    alert('An unexpected error occurred.');
+                });
+        }
+
+
+
+        function toggleGCashModal(show) {
+            const modal = document.getElementById('gcash-modal');
+            modal.style.display = show ? 'block' : 'none';
+        }
+
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const formFields = document.querySelectorAll('#checkout-form input, #checkout-form textarea, #checkout-form input[name="payment_method"]');
+            formFields.forEach(field => {
+                field.addEventListener('input', validateForm);
+            });
         });
 
-        document.getElementById('total-price').textContent = totalPrice.toLocaleString('en-PH', {
-            style: 'currency',
-            currency: 'PHP'
-        }).replace('PHP', '');
-    }
-</script>
+        function validateForm() {
+            // Get the payment method selection
+            const paymentMethod = document.querySelector('input[name="payment_method"]:checked');
 
-</body>
+            // Enable or disable the checkout button based on the payment method selection
+            const checkoutButton = document.querySelector('.checkout');
+            checkoutButton.disabled = !paymentMethod;
+        }
 
-</style>
-<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Add event listener to payment method inputs
+            const paymentMethods = document.querySelectorAll('input[name="payment_method"]');
+            paymentMethods.forEach(method => {
+                method.addEventListener('change', validateForm);
+            });
+
+            // Initial validation
+            validateForm();
+        });
+
+        function toggleCOPModal(show) {
+            const modal = document.getElementById('cop-modal');
+            const total = <?php echo $total; ?>; // Pass total amount from PHP
+            document.getElementById('cop-total').textContent = total.toFixed(2);
+            modal.style.display = show ? 'block' : 'none';
+        }
+
+        function handleCOP() {
+            const total = <?php echo $total; ?>;
+
+            // Send POST request for Cash on Pickup
+            fetch('checkout.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: new URLSearchParams({
+                    payment_method: 'cop', // Ensure payment method is set
+                    reference_number: '0', // Default for COP
+                    amount_paid: total,    // Set total cart value
+                }),
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        alert(data.message);
+                        window.location.href = 'customer-order.php'; // Redirect to cart or confirmation page
+                    } else {
+                        alert(data.message || 'An error occurred.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Fetch error:', error);
+                    alert('An unexpected error occurred.');
+                });
+        }
+
+
+        function handleCheckout() {
+            const paymentMethod = document.querySelector('input[name="payment_method"]:checked');
+
+            if (!paymentMethod) {
+                alert('Please select a payment method.');
+                return;
+            }
+
+            if (paymentMethod.value === 'gcash') {
+                toggleGCashModal(true);
+            } else if (paymentMethod.value === 'cop') {
+                toggleCOPModal(true);
+            }
+        }
+
+        window.onclick = function (event) {
+            const gcashModal = document.getElementById('gcash-modal');
+            const copModal = document.getElementById('cop-modal');
+            if (event.target === gcashModal) {
+                gcashModal.style.display = 'none';
+            }
+            if (event.target === copModal) {
+                copModal.style.display = 'none';
+            }
+        };
+
+
+
+
+        window.onclick = function (event) {
+            const modal = document.getElementById('gcash-modal');
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
+
+        }
+
+        function toggleDropdown() {
+            const dropdown = document.getElementById('userDropdown');
+            dropdown.classList.toggle('show');
+        }
+
+        // Close the dropdown when clicking outside
+        window.onclick = function (event) {
+            if (!event.target.matches('.fa-user')) {
+                const dropdown = document.getElementById('userDropdown');
+                if (dropdown && dropdown.classList.contains('show')) {
+                    dropdown.classList.remove('show');
+                }
+            }
+        };
+
+        <script>
+        $(document).ready(function () {
+            $('#proceed-payment').on('click', function () {
+                if ($('#gcash').is(':checked')) {
+                    $('#gcashModal').fadeIn();
+                } else if ($('#cop').is(':checked')) {
+                    $('#copModal').fadeIn();
+                } else {
+                    alert('Please select a payment method.');
+                }
+            });
+
+            $('.modal-close').on('click', function () {
+                $(this).closest('.modal').fadeOut();
+            });
+        });
+    </script>
+
+    </script>
+    <style>
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.4);
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 10% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 500px;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+        }
+
+        .modal img {
+            max-width: 100%;
+            height: auto;
+            margin-bottom: 20px;
+        }
+
+        /* Input field styles */
+        .modal-content label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 1rem;
+            font-weight: bold;
+            text-align: left;
+        }
+
+        .modal-content input {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+            box-sizing: border-box;
+        }
+
+        .modal-content button {
+            display: inline-block;
+            padding: 10px 20px;
+            font-size: 1rem;
+            color: white;
+            background-color: #28a745;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .modal-content button:hover {
+            background-color: #218838;
+        }
+    </style>
 
 </html>
