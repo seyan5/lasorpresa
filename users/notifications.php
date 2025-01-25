@@ -5,14 +5,13 @@ include("conn.php");
 if (isset($_SESSION['customer']) && isset($_SESSION['customer']['cust_id'])) {
     $customerId = $_SESSION['customer']['cust_id'];
 
-    // Fetch the notifications
+    // Fetch all notifications, including their viewed status
     $statement = $pdo->prepare("
         SELECT p.*, oi.product_id, pr.name
         FROM payment p
         JOIN order_items oi ON p.order_id = oi.order_id
         JOIN product pr ON oi.product_id = pr.p_id
         WHERE p.cust_id = :cust_id
-        AND (p.payment_status = 'pending' OR p.shipping_status != 'delivered')
         ORDER BY p.created_at DESC
     ");
     $statement->execute(['cust_id' => $customerId]);
@@ -20,6 +19,7 @@ if (isset($_SESSION['customer']) && isset($_SESSION['customer']['cust_id'])) {
 }
 ?>
 
+<?php include('navuser.php'); ?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -36,9 +36,9 @@ if (isset($_SESSION['customer']) && isset($_SESSION['customer']['cust_id'])) {
             padding: 0;
         }
 
-        .container {
+        .container1 {
             max-width: 800px;
-            margin: 50px auto;
+            margin: 100px auto;
             background: #fff;
             border-radius: 8px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -53,13 +53,13 @@ if (isset($_SESSION['customer']) && isset($_SESSION['customer']['cust_id'])) {
             text-align: center;
         }
 
-        .notifications-list {
+        .notifications-list1 {
             list-style: none;
             margin: 0;
             padding: 0;
         }
 
-        .notification-item {
+        .notification-item1 {
             display: flex;
             align-items: center;
             padding: 15px;
@@ -67,33 +67,37 @@ if (isset($_SESSION['customer']) && isset($_SESSION['customer']['cust_id'])) {
             transition: background-color 0.3s ease;
         }
 
-        .notification-item:hover {
+        .notification-item1:hover {
             background-color: #fdf0f5;
         }
 
-        .notification-item i {
+        .notification-item1 i {
             font-size: 24px;
             margin-right: 15px;
         }
 
-        .notification-item .bg-warning {
+        .notification-item1 .bg-warning {
             color: #f39c12;
         }
 
-        .notification-item .bg-success {
+        .notification-item1 .bg-success {
             color: #2ecc71;
         }
 
-        .notification-item div {
+        .notification-item1 .bg-delivered {
+            color: #3498db;
+        }
+
+        .notification-item1 div {
             flex: 1;
         }
 
-        .notification-item a {
+        .notification-item1 a {
             text-decoration: none;
             color: #333;
         }
 
-        .notification-item a:hover {
+        .notification-item1 a:hover {
             text-decoration: underline;
         }
 
@@ -110,35 +114,62 @@ if (isset($_SESSION['customer']) && isset($_SESSION['customer']['cust_id'])) {
             padding: 20px;
             color: #7d7d7d;
         }
+
+        /* Add a background for delivered notifications */
+        .delivered-item {
+            background-color: #eaf5ff;
+        }
     </style>
 </head>
 <body>
-    <div class="container">
+    <div class="container1">
         <h2>All Notifications</h2>
 
         <?php if (!empty($payments)): ?>
-            <ul class="notifications-list">
-                <?php foreach ($payments as $payment): ?>
-                    <?php 
-                    // Determine payment status message and shipping status message
-                    $paymentStatus = ($payment['payment_status'] == 'pending') ? 'Payment Pending' : ($payment['payment_status'] == 'paid' ? 'Payment Confirmed' : 'Payment Failed');
-                    $shippingStatus = ($payment['shipping_status'] == 'pending') ? 'Shipping Pending' : ($payment['shipping_status'] == 'shipped' ? 'Shipped' : 'Delivered');
-                    ?>
-                    <li class="notification-item">
-                        <i class="fa fa-credit-card <?php echo $payment['payment_status'] == 'pending' ? 'bg-warning' : 'bg-success'; ?>"></i>
-                        <div>
-                            <a href="order-details.php?order_id=<?php echo $payment['order_id']; ?>&product_id=<?php echo $payment['product_id']; ?>">
-                                <strong>Product: <?php echo htmlspecialchars($payment['name']); ?></strong>
-                                <div class="text-muted small"><?php echo $paymentStatus; ?></div>
-                                <div class="text-muted small"><?php echo $shippingStatus; ?></div>
-                            </a>
-                        </div>
-                    </li>
-                <?php endforeach; ?>
-            </ul>
-        <?php else: ?>
-            <p>No notifications available.</p>
-        <?php endif; ?>
+    <ul class="notifications-list1">
+        <?php foreach ($payments as $payment): ?>
+            <?php 
+            // Determine statuses
+            $paymentStatus = ($payment['payment_status'] == 'pending') ? 'Payment Pending' : ($payment['payment_status'] == 'paid' ? 'Payment Confirmed' : 'Payment Failed');
+            $shippingStatus = ($payment['shipping_status'] == 'pending') ? 'Shipping Pending' : ($payment['shipping_status'] == 'shipped' ? 'Shipped' : 'Delivered');
+            $isDelivered = $payment['shipping_status'] == 'delivered';
+            $isViewed = $payment['viewed'] == 1; // Check if notification is viewed
+            ?>
+            <li class="notification-item1 <?php echo $isViewed ? 'viewed-item' : 'not-viewed-item'; ?> <?php echo $isDelivered ? 'delivered-item' : ''; ?>">
+                <i class="fa fa-credit-card <?php echo $isDelivered ? 'bg-delivered' : ($payment['payment_status'] == 'pending' ? 'bg-warning' : 'bg-success'); ?>"></i>
+                <div>
+                    <a href="order-details.php?order_id=<?php echo $payment['order_id']; ?>&product_id=<?php echo $payment['product_id']; ?>">
+                        <strong>Product: <?php echo htmlspecialchars($payment['name']); ?></strong>
+                        <div class="text-muted small"><?php echo $paymentStatus; ?></div>
+                        <div class="text-muted small"><?php echo $shippingStatus; ?></div>
+                    </a>
+                </div>
+            </li>
+        <?php endforeach; ?>
+    </ul>
+<?php else: ?>
+    <p>No notifications available.</p>
+<?php endif; ?>
     </div>
+
+    <style>
+        /* Viewed notifications */
+.viewed-item {
+    background-color: #f0f0f0; /* Light gray background for viewed notifications */
+    color: #999; /* Lighter text color for viewed */
+}
+
+/* Not viewed notifications */
+.not-viewed-item {
+    background-color: #fff; /* Default white background */
+    font-weight: bold; /* Bold text for emphasis */
+}
+
+/* Optional hover effects */
+.not-viewed-item:hover {
+    background-color: #fdf0f5; /* Slightly different color for hover */
+}
+
+    </style>
 </body>
 </html>

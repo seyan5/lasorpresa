@@ -44,6 +44,8 @@ $reviews = $reviewStmt->fetchAll(PDO::FETCH_ASSOC);
 <script src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js" nomodule></script>
 <link rel="stylesheet" href="../css/prod-details.css">
     <main>
+    <?php include('back.php'); ?>
+    
         <div class="pic">
             <img src="../admin/uploads/<?php echo htmlspecialchars($product['featured_photo']); ?>"
                 alt="<?php echo htmlspecialchars($product['name']); ?>">
@@ -52,7 +54,7 @@ $reviews = $reviewStmt->fetchAll(PDO::FETCH_ASSOC);
         </div>
 
         <!-- Reviews Section -->
-                
+        
         <main>
             <!-- Right Sidebar -->
             <div class="sidebar">          
