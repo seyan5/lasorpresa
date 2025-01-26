@@ -59,8 +59,17 @@ if (isset($_POST['form1'])) {
 ?>
 
 <style>
+:root {
+    --pink: #e84393;
+    --pink: #e84393;
+    --main: #d0bcb3;
+    --font: #d18276;
+    --button: #d6a98f;
+    --bg: rgb(233, 221, 204);
+}
+
 html, body {
-    height: 90%; /* Ensure the body takes the full height of the viewport */
+    height: 100%; /* Ensure the body takes the full height of the viewport */
     margin: 0; /* Remove default margins */
     display: flex;
     justify-content: center; /* Horizontally center the content */
@@ -76,7 +85,7 @@ html, body {
     align-items: center; /* Center items vertically */
     border-radius: 8px;
     margin: auto; /* Centers the container horiz    ontally */
-    margin-top: 7rem; /* Adjust vertical spacing */
+    margin-top: -3rem; /* Adjust vertical spacing */
     width: fit-content; /* Adjust the width to fit content */
     margin-bottom: -5rem;
 }
@@ -88,7 +97,7 @@ html, body {
     margin: 10px; /* Add more spacing between items */
     text-align: center;
     font-size: 1.3rem; /* Make text larger */
-    background-color: #dd91ad;
+    background-color: #333;
     color: white;
     text-decoration: none;
     border-radius: 5px;
@@ -98,13 +107,13 @@ html, body {
 
 /* Hover effect */
 .horizontal-table a:hover {
-    background-color: #f75dd0;
+    background-color: var(--button);
     transform: scale(1.05); /* Slightly enlarge the link */
 }
 
 </style>
 <?php include('navuser.php'); ?>
-<link rel="stylesheet" href="../css/profileupd.css?">
+<link rel="stylesheet" href="../css/profileupd.css">
 
 <section class="content">
             <div class="row">
