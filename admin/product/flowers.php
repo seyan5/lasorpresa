@@ -165,7 +165,7 @@ $i = 1;  // Initialize $i for product numbering
                                     <img src="<?php echo htmlspecialchars($flower['image']); ?>" alt="<?php echo htmlspecialchars($flower['name']); ?>" width="50">
                                 </td>
                                 <td><?php echo htmlspecialchars($flower['name']); ?></td>
-                                <td>$<?php echo number_format($flower['price'], 2); ?></td>
+                                <td>₱ <?php echo number_format($flower['price'], 2); ?></td>
                                 <!-- <td><?php echo htmlspecialchars($flower['quantity']); ?></td> -->
                                 <td>										
                                     <button type="button" class="btn btn-primary btn-xs" data-toggle="modal" data-target="#editFlowerModal" 

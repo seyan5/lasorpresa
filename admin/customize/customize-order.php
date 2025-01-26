@@ -59,25 +59,313 @@ $query->execute();
 $orderitems = $query->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
+
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Custom Order Dashboard</title>
+    <title>La Sorpresa Admin</title>
+    <link rel="stylesheet" href="../../css/settings.css?">
+    <link rel="stylesheet" href="../../css/navdash.css">
+    <link rel="stylesheet" href="../../css/products.css">
+    <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+    
 </head>
+<style>
+/* General Button Styling */
+.btn {
+    padding: 6px 14px; /* Equal padding for both buttons */
+    font-size: 0.85rem; /* Slightly smaller font size for a consistent look */
+    font-weight: 600; /* Bolder text for better visibility */
+    border-radius: 5px; /* Softer rounded corners */
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.3s ease; /* Smooth transition for hover and active states */
+    display: inline-flex; /* Align text and icon horizontally if needed */
+    align-items: center; /* Vertically center text/icon */
+}
 
+/* Button Info (View Pictures) */
+.btn-info {
+    background-color: #007bff; /* Primary blue color */
+    color: white;
+    border: 1px solid #007bff;
+    margin-bottom: 5px;
+}
+
+.btn-info:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+    border-color: #0056b3;
+    transform: translateY(-2px); /* Slight lift effect */
+}
+
+.btn-info:active {
+    background-color: #003f8a; /* Even darker blue on active */
+    border-color: #003f8a;
+    transform: translateY(1px); /* Slight pressed effect */
+}
+
+/* Button Danger (Delete) */
+.btn-danger {
+    background-color: #dc3545; /* Red color */
+    color: white;
+    border: 1px solid #dc3545;
+    width: 5.9rem;
+}
+
+.btn-danger:hover {
+    background-color: #c82333; /* Darker red on hover */
+    border-color: #c82333;
+    transform: translateY(-2px); /* Slight lift effect */
+}
+
+.btn-danger:active {
+    background-color: #a71d2a; /* Even darker red on active */
+    border-color: #a71d2a;
+    transform: translateY(1px); /* Slight pressed effect */
+}
+
+/* Small Button Modifier */
+.btn-sm {
+    padding: 6px 14px; /* Same padding for small buttons */
+    font-size: 0.85rem; /* Ensure the font size is consistent */
+}
+
+/* Add Icon or Text Styling if needed */
+.btn i {
+    margin-right: 5px; /* Space between icon and text */
+}
+    .form-control {
+    padding: 2px 6px; /* Further reduced padding */
+    font-size: 0.75rem; /* Smaller font size */
+    font-family: "NudMotoya Maru W55 W5", sans-serif;
+    transition: border-color 0.3s ease; /* Smooth border color transition */
+    }
+
+    .form-control select {
+        width: auto; /* Make the width dynamic */
+        max-width: 150px; /* Limit the maximum width */
+        min-width: 100px; /* Set a minimum width */
+        text-overflow: ellipsis; /* Ensure overflowed text is truncated */
+        white-space: nowrap; /* Prevent wrapping of text */
+    }
+
+    /* Pagination Styles */
+    .pagination {
+        text-align: center;
+        margin-top: 15px; /* Reduced margin */
+    }
+
+    .pagination a {
+        margin: 0 4px; /* Reduced margin */
+        padding: 6px 10px; /* Reduced padding */
+        background-color: #ddd;
+        color: #333;
+        text-decoration: none;
+        border-radius: 4px;
+        transition: background-color 0.3s ease; /* Smooth transition for hover effect */
+    }
+
+    .pagination a:hover {
+        background-color: #ccc;
+    }
+
+    .pagination .active {
+        background-color: #007bff;
+        color: white;
+    }
+
+    /* Modal Styles */
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0, 0, 0, 0.5);
+        transition: opacity 0.3s ease; /* Smooth fade-in transition */
+    }
+
+    .modal-content {
+        background-color: #fff;
+        margin: 10% auto;
+        padding: 20px;
+        border: 1px solid #ddd;
+        width: 60%;
+        border-radius: 8px;
+        text-align: center;
+    }
+
+    .close {
+        color: #aaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+        cursor: pointer;
+    }
+
+    .close:hover {
+        color: #000;
+    }
+
+    /* Modal Image Styles */
+    .btn-info img {
+        max-width: 100px;
+        margin: 10px;
+    }
+
+    .modal-images {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 10px;
+    }
+
+    .modal-header h4 {
+        margin: 0;
+    }
+
+    /* Table Column Widths */
+    table th:first-child {
+        width: 6%; /* Adjust width for the ID column */
+    }
+
+    table th:nth-child(2) {
+        width: 27%; /* Adjust width for the Customer Information column */
+    }
+
+    table th:nth-child(3) {
+        width: 25%; /* Adjust width for the Product Details column */
+    }
+
+    table th:nth-child(4) {
+        width: 20%; /* Adjust width for the Container Info column */
+    }
+
+    table th:nth-child(5) {
+        width: 14%; /* Adjust width for the Remarks column */
+    }
+
+    table th:nth-child(6) {
+        width: 15%; /* Adjust width for the Payment Information column */
+    }
+
+    table th:nth-child(7) {
+        width: 14%; /* Adjust width for the Amount Paid column */
+    }
+
+    table th:nth-child(8) {
+        width: 15%; /* Adjust width for the Payment Status column */
+    }
+
+    table th:nth-child(9) {
+        width: 23%; /* Adjust width for the Shipping Status column */
+    }
+
+    table th:last-child {
+        width: 18%; /* Adjust width for the Action column */
+    }
+</style>
 <body>
     <div class="container">
-        <h3>Custom Order Dashboard</h3>
-        <div class="d-flex justify-content-start mb-3">
-            <a href="../dashboard.php" class="btn btn-secondary">Back to Dashboard</a>
+        <div class="navigation">
+        <ul>
+                <li>
+                    <a href="#">
+                        <div class="logo-container">
+                            <img src="../../images/logo.png" alt="Logo" class="logo" />
+                        </div>
+                        <span class="title"></span>
+                    </a>
+                </li>
+                <li>
+                    <a href="../dashboard.php">
+                        <span class="icon">
+                            <ion-icon name="home-outline"></ion-icon>
+                        </span>
+                        <span class="title">Dashboard</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="../users.php">
+                        <span class="icon">
+                            <ion-icon name="people-outline"></ion-icon>
+                        </span>
+                        <span class="title">Users</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="../sales-report.php">
+                        <span class="icon">
+                            <ion-icon name="cash-outline"></ion-icon>
+                        </span>
+                        <span class="title">Sales</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="../product/product.php">
+                        <span class="icon">
+                            <ion-icon name="cube-outline"></ion-icon>
+                        </span>
+                        <span class="title">Manage Products</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="../product/flowers.php">
+                        <span class="icon">
+                            <ion-icon name="flower-outline"></ion-icon>
+                        </span>
+                        <span class="title">Manage Flowers</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="../orders/order.php">
+                        <span class="icon">
+                            <ion-icon name="cart-outline"></ion-icon>
+                        </span>
+                        <span class="title">Manage Orders</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="../customize/customize-order.php">
+                        <span class="icon">
+                        <ion-icon name="color-wand-outline"></ion-icon>
+                        </span>
+                        <span class="title"> Customize Orders</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="../settings.php">
+                        <span class="icon">
+                            <ion-icon name="albums-outline"></ion-icon>
+                        </span>
+                        <span class="title">Categories</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="logout.php">
+                        <span class="icon">
+                            <ion-icon name="log-out-outline"></ion-icon>
+                        </span>
+                        <span class="title">Sign Out</span>
+                    </a>
+                </li>
+            </ul>
         </div>
-        <table class="custom-table">
+
+        <div class="first-theme">
+    <h1>Custom Order Dashboard</h1>
+    <div class="tbl-header">
+        <table cellpadding="0" cellspacing="0" border="0">
             <thead>
                 <tr>
-                    <th>#</th>
+                    <th>ID</th>
                     <th>Customer</th>
                     <th>Product Details</th>
                     <th>Container</th>
@@ -86,72 +374,74 @@ $orderitems = $query->fetchAll(PDO::FETCH_ASSOC);
                     <th>Paid Amount</th>
                     <th>Payment Status</th>
                     <th>Shipping Status</th>
-                    <th>Action</th>
+                    <th>Action</th>>
                 </tr>
             </thead>
-            <tbody>
-                <?php foreach ($orderitems as $index => $orderitem): ?>
-                    <tr>
-                        <td><?= $starting_limit + $index + 1; ?></td>
-                        <td>
-                            <strong>Order Item ID:</strong> <?= htmlspecialchars($orderitem['orderitem_id']); ?><br>
-                            <strong>Order ID:</strong> <?= htmlspecialchars($orderitem['order_id']); ?><br>
-                            <strong>Name:</strong> <?= htmlspecialchars($orderitem['customer_name']); ?><br>
-                            <strong>Email:</strong> <?= htmlspecialchars($orderitem['customer_email']); ?>
-                        </td>
-                        <td><?= htmlspecialchars($orderitem['product_details'] ?? 'N/A'); ?></td>
-                        <td>
-                            <?= htmlspecialchars($orderitem['container_type'] ?? 'N/A'); ?><br>
-                            <strong>Color:</strong> <?= htmlspecialchars($orderitem['container_color'] ?? 'N/A'); ?>
-                        </td>
-                        <td><?= htmlspecialchars($orderitem['remarks'] ?? 'N/A'); ?></td>
-                        <td>
-                            <strong>Method:</strong> <?= htmlspecialchars($orderitem['payment_method'] ?? 'N/A'); ?><br>
-                            <strong>Date:</strong> <?= htmlspecialchars($orderitem['order_date'] ?? 'N/A'); ?>
-                        </td>
-                        <td>₱<?= number_format($orderitem['amount_paid'] ?? 0, 2); ?></td>
-                        <td>
-                            <select class="form-control change-status"
-                                data-orderitem-id="<?= $orderitem['orderitem_id']; ?>" data-field="payment_status">
-                                <option value="Pending" <?= $orderitem['payment_status'] == 'Pending' ? 'selected' : ''; ?>>
-                                    Pending</option>
-                                <option value="Paid" <?= $orderitem['payment_status'] == 'Paid' ? 'selected' : ''; ?>>Paid
-                                </option>
-                                <option value="Failed" <?= $orderitem['payment_status'] == 'Failed' ? 'selected' : ''; ?>>
-                                    Failed</option>
-                            </select>
-                        </td>
-                        <td>
-                            <select class="form-control change-status"
-                                data-orderitem-id="<?= $orderitem['orderitem_id']; ?>" data-field="shipping_status">
-                                <option value="Pending" <?= $orderitem['shipping_status'] == 'Pending' ? 'selected' : ''; ?>>
-                                    Pending</option>
-                                <option value="Shipped" <?= $orderitem['shipping_status'] == 'Shipped' ? 'selected' : ''; ?>>
-                                    Shipped</option>
-                                <option value="Delivered" <?= $orderitem['shipping_status'] == 'Delivered' ? 'selected' : ''; ?>>Delivered</option>
-                                <option value="Cancelled" <?= $orderitem['shipping_status'] == 'Cancelled' ? 'selected' : ''; ?>>Cancelled</option>
-                                <option value="ReadyForPickup" <?= $orderitem['shipping_status'] == 'ReadyForPickup' ? 'selected' : ''; ?>>Ready For Pickup</option>
-                            </select>
-                        </td>
+                    <tbody>
+                    <?php foreach ($orderitems as $index => $orderitem): ?>
+                            <tr>
+                            <td><?= $starting_limit + $index + 1; ?></td>
+                                <td>
+                                    <strong>Order Item ID:</strong> <?= htmlspecialchars($orderitem['orderitem_id']); ?><br>
+                                    <strong>Order ID:</strong> <?= htmlspecialchars($orderitem['order_id']); ?><br>
+                                    <strong>Name:</strong> <?= htmlspecialchars($orderitem['customer_name']); ?><br>
+                                    <strong>Email:</strong> <?= htmlspecialchars($orderitem['customer_email']); ?>
+                                </td>
+                                <td>
+                                    <?= htmlspecialchars($orderitem['product_details'] ?? 'N/A'); ?>
+                                </td>
+                                <td>
+                                    <?= htmlspecialchars($orderitem['container_type'] ?? 'N/A'); ?><br>
+                                    <strong>Color:</strong> <?= htmlspecialchars($orderitem['container_color'] ?? 'N/A'); ?>
+                                </td>
+                                <td>
+                                    <?= htmlspecialchars($orderitem['remarks'] ?? 'N/A'); ?>
+                                </td>
+                                <td>
+                                    <strong>Method:</strong> <?= htmlspecialchars($orderitem['payment_method'] ?? 'N/A'); ?><br>
+                                    <strong>Date:</strong> <?= htmlspecialchars($orderitem['order_date'] ?? 'N/A'); ?>
+                                </td>
+                                <td>₱<?= number_format($orderitem['amount_paid'] ?? 0, 2); ?></td>
+                                <td>
+                                <select class="form-control change-status"
+                                    data-orderitem-id="<?= $orderitem['orderitem_id']; ?>" data-field="payment_status">
+                                    <option value="Pending" <?= $orderitem['payment_status'] == 'Pending' ? 'selected' : ''; ?>>
+                                        Pending</option>
+                                    <option value="Paid" <?= $orderitem['payment_status'] == 'Paid' ? 'selected' : ''; ?>>Paid
+                                    </option>
+                                    <option value="Failed" <?= $orderitem['payment_status'] == 'Failed' ? 'selected' : ''; ?>>
+                                        Failed</option>
+                                </select>
+                                </td>
+                                <td>
+                                <select class="form-control change-status"
+                                    data-orderitem-id="<?= $orderitem['orderitem_id']; ?>" data-field="shipping_status">
+                                    <option value="Pending" <?= $orderitem['shipping_status'] == 'Pending' ? 'selected' : ''; ?>>
+                                        Pending</option>
+                                    <option value="Shipped" <?= $orderitem['shipping_status'] == 'Shipped' ? 'selected' : ''; ?>>
+                                        Shipped</option>
+                                    <option value="Delivered" <?= $orderitem['shipping_status'] == 'Delivered' ? 'selected' : ''; ?>>Delivered</option>
+                                    <option value="Cancelled" <?= $orderitem['shipping_status'] == 'Cancelled' ? 'selected' : ''; ?>>Cancelled</option>
+                                    <option value="ReadyForPickup" <?= $orderitem['shipping_status'] == 'ReadyForPickup' ? 'selected' : ''; ?>>Ready For Pickup</option>
+                                </select>
+                                </td>
+                                <td>
+                                <button class="btn btn-info btn-sm"
+                                    onclick="viewImages(<?= $orderitem['orderitem_id']; ?>, <?= $orderitem['order_id']; ?>, '<?= htmlspecialchars($orderitem['expected_image'] ?? ''); ?>', '<?= htmlspecialchars($orderitem['final_image'] ?? ''); ?>')">
+                                    View Pictures
+                                </button>
 
-                        <td>
-                            <button class="btn btn-info btn-sm"
-                                onclick="viewImages(<?= $orderitem['orderitem_id']; ?>, <?= $orderitem['order_id']; ?>, '<?= htmlspecialchars($orderitem['expected_image'] ?? ''); ?>', '<?= htmlspecialchars($orderitem['final_image'] ?? ''); ?>')">
-                                View Pictures
-                            </button>
+                                <button class="btn btn-danger btn-sm" onclick="deleteOrder(<?= $orderitem['order_id']; ?>)">
+                                    Delete
+                                </button>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
 
-                            <button class="btn btn-danger btn-sm" onclick="deleteOrder(<?= $orderitem['order_id']; ?>)">
-                                Delete Order Item
-                            </button>
-
-                        </td>
-                    </tr>
-                <?php endforeach; ?>
-            </tbody>
         </table>
-
-        <!-- Pagination Links -->
-        <div class="pagination">
+    </div>
+    <div class="pagination">
             <?php if ($current_page > 1): ?>
                 <a href="?page=<?= $current_page - 1; ?>" class="btn btn-secondary">Previous</a>
             <?php endif; ?>
@@ -166,9 +456,8 @@ $orderitems = $query->fetchAll(PDO::FETCH_ASSOC);
                 <a href="?page=<?= $current_page + 1; ?>" class="btn btn-secondary">Next</a>
             <?php endif; ?>
         </div>
-    </div>
 
-    <!-- Modal -->
+        <!-- Modal -->
     <div id="imageModal" class="modal">
         <div class="modal-content">
             <span class="close" onclick="closeModal()">&times;</span>
@@ -192,9 +481,6 @@ $orderitems = $query->fetchAll(PDO::FETCH_ASSOC);
             <div id="finalImageStatus" style="margin-top: 10px; color: green;"></div>
         </div>
     </div>
-
-    </div>
-
 
 
     <script>
@@ -407,208 +693,3 @@ $orderitems = $query->fetchAll(PDO::FETCH_ASSOC);
 
 
     </script>
-    <style>
-        /* Keep the existing CSS you provided */
-        @import url(https://db.onlinewebfonts.com/c/90ac3b18aaef9f2db3ac8e062c7a033b?family=NudMotoya+Maru+W55+W5);
-
-        :root {
-            --pink: #e84393;
-        }
-
-        body {
-            font-family: "NudMotoya Maru W55 W5", sans-serif;
-            background-color: #f9f9f9;
-            color: #333;
-            margin: 15px;
-            /* Reduced margin */
-            line-height: 1.4;
-            /* Slightly reduced line height */
-        }
-
-        h3 {
-            text-align: center;
-            margin-bottom: 15px;
-            /* Reduced margin */
-            color: #444;
-            font-size: 2.5rem;
-            /* Slightly smaller font size */
-        }
-
-        .container {
-            width: 85%;
-            /* Reduced width slightly */
-            margin: auto;
-        }
-
-        .custom-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 15px;
-            /* Reduced margin */
-            background-color: #fff;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            /* Reduced shadow */
-            font-family: "NudMotoya Maru W55 W5", sans-serif;
-        }
-
-        .custom-table th,
-        .custom-table td {
-            padding: 12px;
-            /* Reduced padding */
-            text-align: center;
-        }
-
-        .custom-table th {
-            background-color: var(--pink);
-            color: #fff;
-            text-transform: uppercase;
-            font-size: 0.85rem;
-            /* Slightly smaller font size */
-            letter-spacing: 0.8px;
-            /* Slightly reduced letter spacing */
-        }
-
-        .custom-table tr:nth-child(odd) {
-            background-color: #f9f9f9;
-        }
-
-        .custom-table tr:nth-child(even) {
-            background-color: #fff;
-        }
-
-        .custom-table tr:hover {
-            background-color: #f1f1f1;
-        }
-
-        .btn {
-            padding: 6px 12px;
-            /* Reduced padding */
-            font-size: 0.8rem;
-            /* Smaller font size */
-            border-radius: 4px;
-            cursor: pointer;
-            text-decoration: none;
-        }
-
-        .btn-secondary {
-            background-color: #555;
-            color: #fff;
-        }
-
-        .btn-secondary:hover {
-            background-color: #444;
-        }
-
-        .btn-info {
-            background-color: #007bff;
-            color: #fff;
-        }
-
-        .btn-info:hover {
-            background-color: #0056b3;
-        }
-
-        .btn-danger {
-            background-color: #dc3545;
-            color: #fff;
-        }
-
-        .btn-danger:hover {
-            background-color: #a71d2a;
-        }
-
-        .form-control {
-            padding: 4px 8px;
-            /* Reduced padding */
-            font-size: 0.85rem;
-            /* Slightly smaller font size */
-            font-family: "NudMotoya Maru W55 W5", sans-serif;
-        }
-
-        .form-control select {
-            width: 100%;
-        }
-
-        /* Pagination Styles */
-        .pagination {
-            text-align: center;
-            margin-top: 15px;
-            /* Reduced margin */
-        }
-
-        .pagination a {
-            margin: 0 4px;
-            /* Reduced margin */
-            padding: 6px 10px;
-            /* Reduced padding */
-            background-color: #ddd;
-            color: #333;
-            text-decoration: none;
-            border-radius: 4px;
-        }
-
-        .pagination a:hover {
-            background-color: #ccc;
-        }
-
-        .pagination .active {
-            background-color: #007bff;
-            color: white;
-        }
-
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-            background-color: rgba(0, 0, 0, 0.5);
-        }
-
-        .modal-content {
-            background-color: #fff;
-            margin: 10% auto;
-            padding: 20px;
-            border: 1px solid #ddd;
-            width: 60%;
-            border-radius: 8px;
-            text-align: center;
-        }
-
-        .close {
-            color: #aaa;
-            float: right;
-            font-size: 28px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-
-        .close:hover {
-            color: #000;
-        }
-
-        img {
-            max-width: 100px;
-            margin: 10px;
-        }
-
-        .modal-images {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 10px;
-        }
-
-        .modal-header h4 {
-            margin: 0;
-        }
-    </style>
-
-</body>
-
-</html>
