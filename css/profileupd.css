@@ -1,7 +1,14 @@
-:root{
+:root {
     --pink: #e84393;
-  }
-  
+    --pink: #e84393;
+    --main: #d0bcb3;
+    --font: #d18276;
+    --button: #d6a98f;
+    --bg: rgb(233, 221, 204);
+}
+
+
+
 
 /* General Styles */
 .container {
@@ -18,7 +25,7 @@
 h3 {
     margin-bottom: 20px;
     font-size: 24px;
-    color: var(--pink);
+    color: var(--font);
     border-bottom: 2px solid #e9ecef;
     padding-bottom: 5px;
 }
@@ -87,7 +94,7 @@ textarea {
 }
 
 .btn-primary {
-    background-color: var(--pink);
+    background-color: #333;
     color: #fff;
     border: none;
     padding: 10px 15px;
@@ -98,7 +105,7 @@ textarea {
 }
 
 .btn-primary:hover {
-    background-color: #af37b9;
+    background-color: var(--button);
 }
 
 /* Layout Styles */

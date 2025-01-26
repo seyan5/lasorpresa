@@ -23,7 +23,7 @@
     <link rel="stylesheet" href="../css/dropdown.css?">
     <link rel="stylesheet" href="../css/main.css">
 </head>
-<link rel="icon" href="../images/logo.png" type="image/png">
+<link rel="icon" href="../images/logobg.jpg" type="image/png">
 <meta name="theme-color" content="#d0bcb3">
 
     <!-- header -->
@@ -146,7 +146,7 @@
                     View <?php echo count($wishlist) - 5; ?> More Items In Wishlist
                 </a>
             <?php endif; ?>
-            <a href="wishlist.php" class="view-wishlist-button">View My Wishlist</a>
+            <a href="wishlist.php" class="view-shopping-cart-button">View My Wishlist</a>
         </div>
     </div>
 </div>

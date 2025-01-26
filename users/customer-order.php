@@ -49,6 +49,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 ?>
 <style>
+:root {
+    --pink: #e84393;
+    --pink: #e84393;
+    --main: #d0bcb3;
+    --font: #d18276;
+    --button: #d6a98f;
+    --bg: rgb(233, 221, 204);
+}
+
 html, body {
     height: 100%; /* Ensure the body takes the full height of the viewport */
     margin: 0; /* Remove default margins */
@@ -65,7 +74,7 @@ html, body {
     align-items: center; /* Center items vertically */
     border-radius: 8px;
     margin: auto; /* Centers the container horiz    ontally */
-    margin-top: 3rem; /* Adjust vertical spacing */
+    margin-top: 10rem; /* Adjust vertical spacing */
     width: fit-content; /* Adjust the width to fit content */
     margin-bottom: -5rem;
 }
@@ -77,7 +86,7 @@ html, body {
     margin: 10px; /* Add more spacing between items */
     text-align: center;
     font-size: 1.3rem; /* Make text larger */
-    background-color: #dd91ad;
+    background-color: #333;
     color: white;
     text-decoration: none;
     border-radius: 5px;
@@ -87,10 +96,9 @@ html, body {
 
 /* Hover effect */
 .horizontal-table a:hover {
-    background-color: #f75dd0;
+    background-color: var(--button);
     transform: scale(1.05); /* Slightly enlarge the link */
 }
-
 
 
 </style>
