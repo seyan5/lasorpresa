@@ -1,7 +1,11 @@
 <?php
 include('auth.php'); // Ensure the admin is logged in
 include('header.php');
-include('conn.php');
+include_once('conn.php');
+
+// Set default sorting order
+$order_by = isset($_GET['order_by']) ? $_GET['order_by'] : 'DESC';
+$order_by = strtoupper($order_by) === 'ASC' ? 'ASC' : 'DESC';  // Default to DESC if not specified or invalid
 
 // Fetch wishlist items and count of customers who have added each item to their wishlist
 $stmt = $pdo->prepare("
@@ -14,12 +18,11 @@ $stmt = $pdo->prepare("
     FROM wishlist w
     JOIN product p ON w.p_id = p.p_id
     GROUP BY w.p_id
-    ORDER BY product_count DESC
+    ORDER BY product_count $order_by
 ");
 
 $stmt->execute();
 $wishlist_items = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
 ?>
 
 <!DOCTYPE html>
@@ -93,6 +96,27 @@ $wishlist_items = $stmt->fetchAll(PDO::FETCH_ASSOC);
             border-radius: 4px;
             font-weight: bold;
         }
+        .sort-arrow {
+            cursor: pointer;
+            padding-left: 5px;
+        }
+
+        .up-arrow::before {
+            content: "\2191"; /* Unicode for up arrow */
+        }
+
+        .down-arrow::before {
+            content: "\2193"; /* Unicode for down arrow */
+        }
+
+        /* Optional: style for sorted column */
+        th.sorted-asc .up-arrow::before {
+            color: #007bff;
+        }
+
+        th.sorted-desc .down-arrow::before {
+            color: #007bff;
+        }
     </style>
 </head>
 <body>
@@ -107,6 +131,11 @@ $wishlist_items = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         <th>Product Name</th>
                         <th>Price</th>
                         <th>Count (Customers)</th>
+                        <th>Sort<span 
+                                class="sort-arrow <?= $order_by == 'ASC' ? 'up-arrow' : 'down-arrow' ?>" 
+                                onclick="toggleSortOrder()"></span>
+                        </th></th>
+                        
                     </tr>
                 </thead>
                 <tbody>
@@ -130,5 +159,14 @@ $wishlist_items = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <p>No products found in the wishlist.</p>
         <?php endif; ?>
     </div>
+
+    <script>
+        // Function to toggle the sort order when the arrow is clicked
+        function toggleSortOrder() {
+            const currentOrder = '<?= $order_by ?>';
+            const newOrder = currentOrder === 'ASC' ? 'DESC' : 'ASC';
+            window.location.href = `?order_by=${newOrder}`;
+        }
+    </script>
 </body>
 </html>
