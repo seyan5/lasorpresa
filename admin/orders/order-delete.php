@@ -1,8 +1,8 @@
 <?php
 ob_start();
 session_start();
-include("../inc/config.php");
-include("../inc/functions.php");
+include_once('../conn.php');
+
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['order_id'])) {
     try {

@@ -1,6 +1,7 @@
 <?php
 require_once('../header.php');
-include('auth.php');
+include('../auth.php');
+
 
 if(!isset($_REQUEST['id'])) {
 	header('location: ../logout.php');

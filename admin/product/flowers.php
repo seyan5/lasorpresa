@@ -1,6 +1,8 @@
 <?php
 // Database connection
 require_once('../header.php');
+include('../auth.php');
+
 
 
 $stmt = $pdo->prepare("SELECT * FROM flowers");

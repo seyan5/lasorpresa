@@ -1,6 +1,8 @@
 <?php
 include("../config.php");
 require_once 'auth.php';
+include('conn.php');
+
 
 
 if ($_POST) {

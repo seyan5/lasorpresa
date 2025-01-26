@@ -1,8 +1,5 @@
 <?php
-ob_start();
-include("../inc/config.php");
-include("../inc/functions.php");
-include("../inc/CSRF_Protect.php");
+include_once('../conn.php');
 require_once '../auth.php';
 
 // Pagination Variables

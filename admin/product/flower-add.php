@@ -1,7 +1,7 @@
 <?php
 // Database connection
 require_once('../header.php'); // Make sure your connection is set
-include('auth.php');
+include('../auth.php');
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Get form data

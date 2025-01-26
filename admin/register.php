@@ -1,9 +1,6 @@
 <?php
-ob_start();
-session_start();
-include("inc/config.php");
-include("inc/functions.php");
-include("inc/CSRF_Protect.php");
+include('conn.php');
+
 
 if (isset($_POST['register'])) {
     $name = $_POST['name'];

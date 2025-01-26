@@ -1,6 +1,7 @@
 <?php
 include('auth.php'); // Ensure the admin is logged in
-include('header.php'); // Include the database connection
+include('header.php');
+include('conn.php');
 
 // Fetch wishlist items and count of customers who have added each item to their wishlist
 $stmt = $pdo->prepare("
