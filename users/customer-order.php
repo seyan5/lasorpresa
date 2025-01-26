@@ -23,6 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $review = $_POST['review'] ?? null;
   $rating = $_POST['rating'] ?? null;
 
+  // Add or update review
   if ($action === 'add_or_update_review') {
     try {
       // Check if a review already exists
@@ -46,8 +47,48 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
     exit;
   }
+
+  // Cancel order logic
+if ($action === 'cancel_order') {
+  try {
+    // Check if the order exists and if it's in a cancellable state (not shipped or already canceled)
+    $stmt = $pdo->prepare("
+      SELECT o.order_id, o.order_status, pay.shipping_status 
+      FROM orders o
+      JOIN payment pay ON o.order_id = pay.order_id
+      WHERE o.order_id = :order_id AND o.customer_id = :cust_id
+    ");
+    $stmt->execute([ ':order_id' => $order_id, ':cust_id' => $cust_id ]);
+    $order = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if (!$order) {
+      echo json_encode(['success' => false, 'message' => 'Order not found or not associated with this account']);
+      exit;
+    }
+
+    // Check if order_status exists before using it
+    if (!isset($order['order_status'])) {
+      echo json_encode(['success' => false, 'message' => 'Order status is missing']);
+      exit;
+    }
+
+    // If the order is not shipped, update its status to canceled
+    if ($order['shipping_status'] === 'pending' && $order['order_status'] !== 'canceled') {
+      $stmt = $pdo->prepare("UPDATE orders SET order_status = 'canceled' WHERE order_id = :order_id");
+      $stmt->execute([ ':order_id' => $order_id ]);
+
+      echo json_encode(['success' => true, 'message' => 'Order canceled successfully']);
+    } else {
+      echo json_encode(['success' => false, 'message' => 'Order cannot be canceled as it is already shipped or canceled']);
+    }
+  } catch (Exception $e) {
+    echo json_encode(['success' => false, 'message' => $e->getMessage()]);
+  }
+  exit;
+}
 }
 ?>
+
 <style>
 :root {
     --pink: #e84393;
@@ -148,31 +189,33 @@ html, body {
             <?php
             // Query to join the relevant tables and filter by the logged-in customer's ID with pagination
             $stmt = $pdo->prepare("
-              SELECT 
-                c.cust_id, 
-                c.cust_name, 
-                c.cust_email, 
-                p.name AS product_name, 
-                oi.quantity, 
-                p.current_price AS unit_price, 
-                pay.payment_method, 
-                pay.payment_id, 
-                pay.created_at AS payment_date, 
-                pay.amount_paid, 
-                pay.shipping_status, 
-                pay.payment_status, 
-                o.order_id, 
-                p.p_id
-              FROM 
-                customer c
-              JOIN orders o ON c.cust_id = o.customer_id
-              JOIN order_items oi ON o.order_id = oi.order_id
-              JOIN product p ON oi.product_id = p.p_id
-              JOIN payment pay ON o.order_id = pay.order_id
-              WHERE c.cust_id = :cust_id
-              ORDER BY pay.created_at DESC
-              LIMIT :offset, :items_per_page
-            ");
+  SELECT 
+    c.cust_id, 
+    c.cust_name, 
+    c.cust_email, 
+    p.name AS product_name, 
+    oi.quantity, 
+    p.current_price AS unit_price, 
+    pay.payment_method, 
+    pay.payment_id, 
+    pay.created_at AS payment_date, 
+    pay.amount_paid, 
+    pay.shipping_status, 
+    pay.payment_status, 
+    o.order_id, 
+    p.p_id,
+    o.order_status  -- Add this line to fetch the order_status column
+  FROM 
+    customer c
+  JOIN orders o ON c.cust_id = o.customer_id
+  JOIN order_items oi ON o.order_id = oi.order_id
+  JOIN product p ON oi.product_id = p.p_id
+  JOIN payment pay ON o.order_id = pay.order_id
+  WHERE c.cust_id = :cust_id
+  ORDER BY pay.created_at DESC
+  LIMIT :offset, :items_per_page
+");
+
             $stmt->bindParam(':cust_id', $cust_id, PDO::PARAM_INT);
             $stmt->bindParam(':offset', $offset, PDO::PARAM_INT);
             $stmt->bindParam(':items_per_page', $items_per_page, PDO::PARAM_INT);
@@ -212,15 +255,30 @@ html, body {
                     </span>
                   </td>
                   <td class="text-center">
-                    <div style="display: flex; justify-content: center; align-items: center;">
-                      <?php if ($order['shipping_status'] === 'delivered'): ?>
-                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#reviewModal" data-order-id="<?= $order['order_id'] ?>" data-product-id="<?= $order['p_id'] ?>">Add Review</button>
-                      <?php else: ?>
-                        <button class="btn btn-secondary" disabled>Add Review</button>
-                      <?php endif; ?>
-                    </div>
-                  </td>
-                </tr>
+                  <div style="display: flex; justify-content: center; align-items: center;">
+    <!-- Cancel Order Button -->
+    <?php if ($order['shipping_status'] === 'pending' && $order['order_status'] !== 'canceled'): ?>
+        <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#cancelModal" data-order-id="<?= $order['order_id'] ?>">Cancel Order</button>
+    <?php endif; ?>
+
+    <!-- Cancel Indicator -->
+    <?php if ($order['order_status'] === 'canceled'): ?>
+        <span class="badge bg-danger ms-2">Canceled</span>
+    <?php endif; ?>
+
+    <!-- Add Review Button -->
+    <?php
+    // Check if the order has been shipped and a review hasn't been submitted
+    $stmt = $pdo->prepare("SELECT review_id FROM reviews WHERE order_id = :order_id AND product_id = :product_id AND customer_id = :customer_id");
+    $stmt->execute([ ':order_id' => $order['order_id'], ':product_id' => $order['p_id'], ':customer_id' => $cust_id ]);
+    $existing_review = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if ($order['shipping_status'] === 'delivered' && !$existing_review): ?>
+        <button class="btn btn-primary ms-2" data-bs-toggle="modal" data-bs-target="#reviewModal" data-order-id="<?= $order['order_id'] ?>" data-product-id="<?= $order['p_id'] ?>">Add Review</button>
+    <?php endif; ?>
+</div>
+</td>
+               </tr>
               <?php }
             } ?>
           </tbody>
@@ -273,7 +331,43 @@ html, body {
     </div>
   </div>
 
+  <!-- Modal for cancel confirmation -->
+<div class="modal fade" id="cancelModal" tabindex="-1" aria-labelledby="cancelModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="cancelModalLabel">Cancel Order</h5>
+        <button type="button" class="btn-" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        Are you sure you want to cancel this order? This action cannot be undone. <br>
+        Message us on Facebook if you want a refund. 
+      </div>
+      <div class="modal-footer">
+        <form method="POST" action="customer-order.php">
+          <input type="hidden" name="action" value="cancel_order">
+          <input type="hidden" id="cancelOrderId" name="order_id">
+          <button type="submit" class="btn btn-danger">Cancel Order</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </form>
+      </div>
+    </div>
+  </div>
 </div>
+
+
+</div>
+
+<script>
+  const cancelButtons = document.querySelectorAll('[data-bs-toggle="modal"][data-bs-target="#cancelModal"]');
+  
+  cancelButtons.forEach(button => {
+    button.addEventListener('click', function () {
+      const orderId = this.getAttribute('data-order-id');
+      document.getElementById('cancelOrderId').value = orderId;
+    });
+  });
+</script>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 <script>
