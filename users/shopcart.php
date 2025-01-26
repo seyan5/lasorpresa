@@ -11,11 +11,9 @@ include('back.php');
   <div class="cart">
     <hr>
     <h3>Shopping Cart</h3>
-
-    <?php if (isset($_SESSION['cart']) && count($_SESSION['cart']) > 0): ?>
-      <p>You have <?php echo count($_SESSION['cart']); ?> items in your cart.</p>
-
-      <form id="cart-form" method="POST" action="checkout.php">
+    <form id="cart-form" method="POST" action="checkout.php">
+      <?php if (isset($_SESSION['cart']) && count($_SESSION['cart']) > 0): ?>
+        <p>You have <?php echo count($_SESSION['cart']); ?> items in your cart.</p>
         <?php foreach ($_SESSION['cart'] as $index => $item): ?>
           <div class="cart-item">
             <input type="checkbox" class="cart-checkbox" name="selected_items[]" value="<?php echo $index; ?>" checked onchange="updateSummary()">
@@ -33,12 +31,10 @@ include('back.php');
             </div>
           </div>
         <?php endforeach; ?>
-        <button type="submit" class="checkout">Checkout Selected &gt;</button>
-      </form>
-    <?php else: ?>
-      <p>Your cart is empty.</p>
-    <?php endif; ?>
-    <a href="addons.php">Want to get addons?</a>
+      <?php else: ?>
+        <p>Your cart is empty.</p>
+      <?php endif; ?>
+      <a href="addons.php">Want to get addons?</a>
   </div>
 
   <div class="payment">
@@ -48,9 +44,12 @@ include('back.php');
       <p>Subtotal <span id="subtotal">₱0.00</span></p>
       <p>Shipping <span>₱0</span></p>
       <p>Total <span id="total">₱0.00</span></p>
+      <button type="submit" class="checkout">Checkout Selected &gt;</button>
     </div>
   </div>
+</form> <!-- Properly closing the form tag here -->
 </div>
+
 </body>
 
 <script>
