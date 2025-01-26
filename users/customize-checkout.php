@@ -113,22 +113,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['selected_customizatio
                 'order_id' => $order_id,
                 'flower_details' => $flower_details_string,
                 'container_type' => $container_name,
-                'container_color' => $color_name, // Use color name here
+                'container_color' => $color_name,
                 'flower_price' => $customization_total_price - $container_price,
                 'container_price' => $container_price,
                 'total_price' => $customization_total_price,
                 'remarks' => $customization['remarks'] ?? 'None',
             ]);
 
+            $orderitem_id = $pdo->lastInsertId(); // Capture the last inserted `orderitem_id`
             $total_price += $customization_total_price;
 
             // Insert expected image into `custom_images`
             if (!empty($customization['expected_image'])) {
                 $stmt = $pdo->prepare("
-                    INSERT INTO custom_images (order_id, expected_image) 
-                    VALUES (:order_id, :expected_image)
+                    INSERT INTO custom_images (orderitem_id, order_id, expected_image) 
+                    VALUES (:orderitem_id, :order_id, :expected_image)
                 ");
                 $stmt->execute([
+                    'orderitem_id' => $orderitem_id,
                     'order_id' => $order_id,
                     'expected_image' => $customization['expected_image']
                 ]);
