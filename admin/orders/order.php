@@ -78,7 +78,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_status'])) {
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>La Sorpresa Admin</title>
-    <link rel="stylesheet" href="../../css/settings.css?v.1.1">
+    <link rel="stylesheet" href="../../css/settings.css?">
     <link rel="stylesheet" href="../../css/navdash.css">
     <link rel="stylesheet" href="../../css/products.css">
     <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
@@ -231,14 +231,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_status'])) {
                                         <option <?= $order['shipping_status'] === 'delivered' ? 'selected' : '' ?> value="delivered">Delivered</option>
                                     </select>
                                 </td>
-                                <td><?= htmlspecialchars($order['order_status']) ?></td>
+                                <td class="status-canceled">
+                                    <strong><?= htmlspecialchars($order['order_status']) ?></strong>
+                                </td>
                                 <td>
-                                <button class="btn btn-primary" title="Update Order" onclick="updateOrderStatus(<?= $order['order_id'] ?>)">
-                                    <ion-icon name="pencil-outline"></ion-icon>
-                                </button>
-                                <button class="btn btn-danger" title="Delete Order" onclick="deleteOrder(<?= $order['order_id'] ?>)">
-                                    <ion-icon name="trash-outline"></ion-icon>
-                                </button>
+                                <div style="display: flex; gap: 10px;">
+                                    <button class="btn btn-primary" title="Update Order" onclick="updateOrderStatus(<?= $order['order_id'] ?>)">
+                                        <ion-icon name="pencil-outline"></ion-icon>
+                                    </button>
+                                    <button class="btn btn-danger" title="Delete Order" onclick="deleteOrder(<?= $order['order_id'] ?>)">
+                                        <ion-icon name="trash-outline"></ion-icon>
+                                    </button>
+                                </div>
                                     <!-- <button class="btn btn-primary" onclick="updateOrderStatus(<?= $order['order_id'] ?>)">Update</button>
                                     <button class="btn btn-danger" onclick="deleteOrder(<?= $order['order_id'] ?>)">Delete</button> -->
                                 </td>
