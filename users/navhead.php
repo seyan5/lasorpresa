@@ -1,479 +1,71 @@
-<?php
-require("conn.php");
+<div class="icons">
+    <?php 
+    // Initialize notifications count
+    $notificationCount = 0;
 
-// Check if customization session data and POST data exist
-if (!isset($_SESSION['customization']) || empty($_POST['selected_customizations'])) {
-    echo "No customizations selected. Redirecting to cart...";
-    header("refresh:3;url=customize-cart.php");
-    exit;
-}
+    if (isset($_SESSION['customer'])) {
+        $cust_id = $_SESSION['customer']['cust_id'];
 
-// Retrieve customization and customer data
-$all_customizations = $_SESSION['customization'];
-$selected_indices = $_POST['selected_customizations'];
-$customer = $_SESSION['customer'];
-
-// Filter selected customizations
-$grouped_customization = [];
-$total_price = 0;
-
-foreach ($selected_indices as $index) {
-    if (isset($all_customizations[$index])) {
-        $customization = $all_customizations[$index];
-
-        // Calculate total price for this customization
-        $customization_price = 0;
-
-        // Add container price
-        $stmt = $pdo->prepare("SELECT container_name, price FROM container WHERE container_id = ?");
-        $stmt->execute([$customization['container_type']]);
-        $container = $stmt->fetch(PDO::FETCH_ASSOC);
-        $container_name = $container['container_name'] ?? "Unknown Container";
-        $container_price = $container['price'] ?? 0;
-        $customization_price += $container_price;
-
-        // Add flower prices
-        $flower_details = [];
-        foreach ($customization['flowers'] as $flower) {
-            $stmt = $pdo->prepare("SELECT name, price FROM flowers WHERE id = ?");
-            $stmt->execute([$flower['flower_type']]);
-            $flower_data = $stmt->fetch(PDO::FETCH_ASSOC);
-
-            $flower_name = $flower_data['name'] ?? "Unknown Flower";
-            $flower_price = $flower_data['price'] ?? 0;
-            $flower_quantity = $flower['num_flowers'] ?? 0;
-
-            $flower_total = $flower_price * $flower_quantity;
-            $customization_price += $flower_total;
-
-            $flower_details[] = "{$flower_quantity}x {$flower_name} (₱{$flower_total})";
-        }
-
-        $total_price += $customization_price;
-
-        // Fetch expected image
-        $expected_image = !empty($customization['expected_image']) ? $customization['expected_image'] : 'default-image.jpg';
-
-        $grouped_customization[] = [
-            'container_name' => $container_name,
-            'container_price' => $container_price,
-            'flower_details' => $flower_details,
-            'remarks' => $customization['remarks'] ?? 'None',
-            'total_price' => $customization_price,
-            'expected_image' => $expected_image, // Include expected image
-        ];
+        // Fetch the count of notifications for the logged-in user
+        $stmt = $pdo->prepare("SELECT COUNT(*) AS notification_count FROM payment WHERE cust_id = :cust_id");
+        $stmt->execute(['cust_id' => $cust_id]);
+        $notificationData = $stmt->fetch(PDO::FETCH_ASSOC);
+        
+        // Set the count based on the fetched data
+        $notificationCount = $notificationData['notification_count'] ?? 0;
     }
-}
-
-// Check if valid customizations exist
-if (empty($grouped_customization)) {
-    echo "No valid customizations found. Redirecting to cart...";
-    header("refresh:3;url=customize-cart.php");
-    exit;
-}
-?>
-<?php include('navuser.php'); ?>
-<?php include('back.php'); ?>
-<link rel="stylesheet" href="../css/shopcart.css">
-    <body>>
-        </div>
-
-        <div class="container">
-            <div class="cart">
-                <hr>
-                <h3>Order Summary</h3>
-
-                <?php if (isset($_SESSION['cart']) && count($_SESSION['cart']) > 0): ?>
-                    <p>You have <?php echo count($_SESSION['cart']); ?> items in your cart</p>
-
-                    <?php foreach ($grouped_customization as $customization): ?>
-                        <div class="cart-item">
-                            <?php if (isset($item['image']) && $item['image']): ?>
-                              <img src="uploads/<?php echo htmlspecialchars($customization['expected_image']); ?>"
-                                    alt="<?php echo htmlspecialchars($item['name']); ?>" width="50">
-                            <?php else: ?>
-                                <img src="path/to/default-image.jpg" alt="No image available" width="50">
-                            <?php endif; ?>
-
-                            <div>
-                            <p>Container Type:
-                            <?php echo htmlspecialchars($customization['container_name']); ?>
-                            (₱<?php echo number_format($customization['container_price'], 2); ?>)</p>
-                            <p><strong>Flowers:</strong>
-                            <?php foreach ($customization['flower_details'] as $flower): ?>
-                                <li><?php echo htmlspecialchars($flower); ?></li>
-                            <?php endforeach; ?>
-                        </p>                                <p>Remarks: <?php echo htmlspecialchars($customization['remarks']); ?></p>
-                            </div>
-
-                            <div class="quantity">
-                                <?php echo $item['quantity']; ?>
-                            </div>
-
-                            <div class="price">
-                              ₱<?php echo number_format($customization['total_price'], 2); ?>
-                            </div>
-                        </div>
-                    <?php endforeach; ?>
-                <?php else: ?>
-                    <p>Your cart is empty.</p>
-                <?php endif; ?>
-            </div>
-            <div class="payment">
-                <h3>Shipping Information</h3>
-                <form id="checkout-form" action="customize-checkout.php" method="POST">
-                    <label for="cust_name">Full Name: </label>
-                    <span id="cust_name"><?php echo htmlspecialchars($customer['cust_name']); ?></span>
-
-                    <label for="cust_phone">Phone Number: </label>
-                    <span id="cust_phone"><?php echo htmlspecialchars($customer['cust_phone']); ?></span>
-
-                    <label for="address">Address: </label>
-                    <span id="cust_address"><?php echo htmlspecialchars($customer['cust_address']); ?></span>
-
-                    <input type="hidden" name="selected_customizations"
-                    value="<?php echo htmlspecialchars(json_encode($selected_indices)); ?>"> 
-                    <label for="payment_method">Mode of Payment:</label>
-                    <div class="pradio">
-                        <input type="radio" id="gcash" name="payment_method" value="gcash" required>
-                        <label for="gcash">
-                            <img src="../images/Gcash.png" alt="GCash" width="50">
-                            GCash
-                        </label>
-                    </div>
-                    <div class="pradio">
-                        <input type="radio" id="cop" name="payment_method" value="cop" required>
-                        <label for="cop">
-                            <img src="../images/cop.png" alt="Cash on PickUp" width="50">
-                            Cash on Pickup
-                        </label>
-                    </div>
-                </form>
-
-                <hr>
-                <div class="summary">
-                    <p>Subtotal <span>₱<?php echo number_format($customization['total_price'], 2); ?></span></p>
-                    <p>
-                        <strong>Total:</strong>
-                        ₱<?php echo number_format($total_price, 2); ?>
-                    </p>
-                </div>
-                <button class="checkout" type="button" onclick="handleCheckout()" disabled>Checkout</button>
-            </div>
-        </div>
-
-        <!-- GCash Modal -->
-        <div class="modal" id="gcashModal" style="display: none;">
-        <div class="modal-dialog">
-            <div class="modal-header">
-                GCash Payment
-                <button class="modal-close" data-dismiss="modal">&times;</button>
-            </div>
-            <div class="modal-body">
-                <p>Scan the QR Code to pay:</p>
-                <img src="../images/gcashqr.jpg" alt="GCash QR Code" style="width: 100%; height: auto;">
-                <form id="gcash-form" action="customize-checkout.php" method="POST">
-                    <input type="hidden" name="payment_method" value="gcash">
-                    <input type="hidden" name="selected_customizations"
-                        value="<?php echo htmlspecialchars(json_encode($selected_indices)); ?>">
-                    <label for="reference_number">Reference Number:</label>
-                    <input type="text" name="reference_number" class="form-control" required>
-                    <label for="amount_paid">Amount Paid:</label>
-                    <input type="text" name="amount_paid" class="form-control"
-                        value="<?php echo htmlspecialchars($total_price); ?>" readonly>
-                    <button type="submit" class="btn btn-success">Done</button>
-                </form>
-            </div>
-        </div>
-    </div>
-
-        <!-- COP Modal -->
-        <!-- COP Modal -->
-        <div class="modal" id="copModal" style="display: none;">
-        <div class="modal-dialog">
-            <div class="modal-header">
-                Cash on Pickup
-                <button class="modal-close" data-dismiss="modal">&times;</button>
-            </div>
-            <div class="modal-body">
-                <p>Your order is confirmed with Cash on Pickup.</p>
-                <form id="cop-form" action="customize-checkout.php" method="POST">
-                    <input type="hidden" name="payment_method" value="cop">
-                    <input type="hidden" name="selected_customizations"
-                        value="<?php echo htmlspecialchars(json_encode($selected_indices)); ?>">
-                    <label for="amount_paid">Amount to Pay Upon Pickup:</label>
-                    <input type="text" name="amount_paid" class="form-control"
-                        value="<?php echo htmlspecialchars($total_price); ?>" readonly>
-                    <button type="submit" class="btn btn-primary">Confirm</button>
-                </form>
-            </div>
-        </div>
-    </div>
-    </body>
-
-
-    <script>
-
-        function handleGCash() {
-            const referenceNumber = document.getElementById('reference_number').value.trim();
-            const amountPaid = document.getElementById('amount_paid').value.trim();
-
-            if (!referenceNumber || !amountPaid) {
-                alert('Please fill out all GCash details.');
-                return;
-            }
-
-            // Send POST request for GCash
-            fetch('checkout.php', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                },
-                body: new URLSearchParams({
-                    payment_method: 'gcash', // Set payment method as GCash
-                    reference_number: referenceNumber,
-                    amount_paid: amountPaid,
-                }),
-            })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.status === 'success') {
-                        alert(data.message);
-                        window.location.href = 'customer-order.php'; // Redirect to cart or confirmation page
-                    } else {
-                        alert(data.message || 'An error occurred.');
-                    }
-                })
-                .catch(error => {
-                    console.error('Fetch error:', error);
-                    alert('An unexpected error occurred.');
-                });
-        }
-
-
-
-        function toggleGCashModal(show) {
-            const modal = document.getElementById('gcash-modal');
-            modal.style.display = show ? 'block' : 'none';
-        }
-
-
-        document.addEventListener('DOMContentLoaded', () => {
-            const formFields = document.querySelectorAll('#checkout-form input, #checkout-form textarea, #checkout-form input[name="payment_method"]');
-            formFields.forEach(field => {
-                field.addEventListener('input', validateForm);
-            });
-        });
-
-        function validateForm() {
-            // Get the payment method selection
-            const paymentMethod = document.querySelector('input[name="payment_method"]:checked');
-
-            // Enable or disable the checkout button based on the payment method selection
-            const checkoutButton = document.querySelector('.checkout');
-            checkoutButton.disabled = !paymentMethod;
-        }
-
-        document.addEventListener('DOMContentLoaded', () => {
-            // Add event listener to payment method inputs
-            const paymentMethods = document.querySelectorAll('input[name="payment_method"]');
-            paymentMethods.forEach(method => {
-                method.addEventListener('change', validateForm);
-            });
-
-            // Initial validation
-            validateForm();
-        });
-
-        function toggleCOPModal(show) {
-            const modal = document.getElementById('cop-modal');
-            const total = <?php echo $total; ?>; // Pass total amount from PHP
-            document.getElementById('cop-total').textContent = total.toFixed(2);
-            modal.style.display = show ? 'block' : 'none';
-        }
-
-        function handleCOP() {
-            const total = <?php echo $total; ?>;
-
-            // Send POST request for Cash on Pickup
-            fetch('checkout.php', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                },
-                body: new URLSearchParams({
-                    payment_method: 'cop', // Ensure payment method is set
-                    reference_number: '0', // Default for COP
-                    amount_paid: total,    // Set total cart value
-                }),
-            })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.status === 'success') {
-                        alert(data.message);
-                        window.location.href = 'customer-order.php'; // Redirect to cart or confirmation page
-                    } else {
-                        alert(data.message || 'An error occurred.');
-                    }
-                })
-                .catch(error => {
-                    console.error('Fetch error:', error);
-                    alert('An unexpected error occurred.');
-                });
-        }
-
-
-        function handleCheckout() {
-            const paymentMethod = document.querySelector('input[name="payment_method"]:checked');
-
-            if (!paymentMethod) {
-                alert('Please select a payment method.');
-                return;
-            }
-
-            if (paymentMethod.value === 'gcash') {
-                toggleGCashModal(true);
-            } else if (paymentMethod.value === 'cop') {
-                toggleCOPModal(true);
-            }
-        }
-
-        window.onclick = function (event) {
-            const gcashModal = document.getElementById('gcash-modal');
-            const copModal = document.getElementById('cop-modal');
-            if (event.target === gcashModal) {
-                gcashModal.style.display = 'none';
-            }
-            if (event.target === copModal) {
-                copModal.style.display = 'none';
-            }
-        };
-
-
-
-
-        window.onclick = function (event) {
-            const modal = document.getElementById('gcash-modal');
-            if (event.target === modal) {
-                modal.style.display = 'none';
-            }
-
-        }
-
-        function toggleDropdown() {
-            const dropdown = document.getElementById('userDropdown');
-            dropdown.classList.toggle('show');
-        }
-
-        // Close the dropdown when clicking outside
-        window.onclick = function (event) {
-            if (!event.target.matches('.fa-user')) {
-                const dropdown = document.getElementById('userDropdown');
-                if (dropdown && dropdown.classList.contains('show')) {
-                    dropdown.classList.remove('show');
+    ?>
+    <div class="cart-container">
+        <!-- Notification Icon with Count -->
+        <a href="notifications.php" class="notification-icon">
+            <i class="fas fa-bell"></i>
+            <span class="notification-count"><?php echo $notificationCount; ?></span>
+        </a>
+        <div class="notification-dropdown">
+            <p class="recent-notifications-title">Recent Notifications</p>
+            <ul class="recent-notifications-list">
+                <?php 
+                // Fetch notifications for the logged-in user
+                $notifications = [];
+                if (isset($_SESSION['customer'])) {
+                    $stmt = $pdo->prepare("
+                        SELECT p.*, oi.product_id, pr.name, p.payment_status, p.shipping_status
+                        FROM payment p
+                        JOIN order_items oi ON p.order_id = oi.order_id
+                        JOIN product pr ON oi.product_id = pr.p_id
+                        WHERE p.cust_id = :cust_id
+                        ORDER BY p.created_at DESC
+                    ");
+                    $stmt->execute(['cust_id' => $cust_id]);
+                    $notifications = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 }
-            }
-        };
 
-        <script>
-        $(document).ready(function () {
-            $('#proceed-payment').on('click', function () {
-                if ($('#gcash').is(':checked')) {
-                    $('#gcashModal').fadeIn();
-                } else if ($('#cop').is(':checked')) {
-                    $('#copModal').fadeIn();
+                // Display notifications
+                if (!empty($notifications)) {
+                    $totalNotifications = 0;
+                    foreach ($notifications as $notification) {
+                        $totalNotifications++;
+                        if ($totalNotifications <= 5) { // Display only the first 5 notifications
+                            $paymentStatus = ($notification['payment_status'] == 'pending') ? 'Payment Pending' : ($notification['payment_status'] == 'paid' ? 'Paid' : 'Payment Failed');
+                            $shippingStatus = ($notification['shipping_status'] == 'pending') ? 'Shipping Pending' : ($notification['shipping_status'] == 'shipped' ? 'Shipped' : 'Delivered');
+                            echo '<li class="notification-item">';
+                            echo '<span class="notification-product">' . htmlspecialchars($notification['name']) . '</span>';
+                            echo '<span class="notification-status">Status: ' . $paymentStatus . '</span>';
+                            echo '<span class="notification-shipping-status">Shipping: ' . $shippingStatus . '</span>';
+                            echo '</li>';
+                        }
+                    }
                 } else {
-                    alert('Please select a payment method.');
+                    echo '<li class="empty-notifications">No new notifications</li>';
                 }
-            });
-
-            $('.modal-close').on('click', function () {
-                $(this).closest('.modal').fadeOut();
-            });
-        });
-    </script>
-
-    </script>
-    <style>
-        /* Modal styles */
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-            background-color: rgba(0, 0, 0, 0.4);
-        }
-
-        .modal-content {
-            background-color: #fefefe;
-            margin: 10% auto;
-            padding: 20px;
-            border: 1px solid #888;
-            width: 80%;
-            max-width: 500px;
-            border-radius: 8px;
-            text-align: center;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        }
-
-        .close {
-            color: #aaa;
-            float: right;
-            font-size: 28px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-
-        .close:hover,
-        .close:focus {
-            color: black;
-            text-decoration: none;
-        }
-
-        .modal img {
-            max-width: 100%;
-            height: auto;
-            margin-bottom: 20px;
-        }
-
-        /* Input field styles */
-        .modal-content label {
-            display: block;
-            margin-bottom: 5px;
-            font-size: 1rem;
-            font-weight: bold;
-            text-align: left;
-        }
-
-        .modal-content input {
-            width: calc(100% - 20px);
-            padding: 10px;
-            margin-bottom: 15px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            font-size: 1rem;
-            box-sizing: border-box;
-        }
-
-        .modal-content button {
-            display: inline-block;
-            padding: 10px 20px;
-            font-size: 1rem;
-            color: white;
-            background-color: #28a745;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-
-        .modal-content button:hover {
-            background-color: #218838;
-        }
-    </style>
-
-</html>
+                ?>
+            </ul>
+            <?php if (!empty($notifications) && count($notifications) > 5): ?>
+                <a href="notifications.php" class="view-notifications-link" style="font-size: 1.3rem;">
+                    View <?php echo count($notifications) - 5; ?> More Notifications
+                </a>
+            <?php endif; ?>
+            <a href="notifications.php" class="view-notifications-button">View All Notifications</a>
+        </div>
+    </div>
+</div>
