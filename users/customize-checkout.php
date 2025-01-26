@@ -135,27 +135,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['selected_customizatio
                     'expected_image' => $customization['expected_image']
                 ]);
             }
+
+            // Insert into `custom_payment` with `orderitem_id`
+            $stmt = $pdo->prepare("
+                INSERT INTO custom_payment (orderitem_id, order_id, customer_name, customer_email, reference_number, amount_paid, payment_method, payment_status, shipping_status, order_date)
+                VALUES (:orderitem_id, :order_id, :customer_name, :customer_email, :reference_number, :amount_paid, :payment_method, :payment_status, :shipping_status, NOW())
+            ");
+            $stmt->execute([
+                'orderitem_id' => $orderitem_id,
+                'order_id' => $order_id,
+                'customer_name' => $customer['cust_name'],
+                'customer_email' => $customer['cust_email'],
+                'reference_number' => $reference_number,
+                'amount_paid' => $amount_paid,
+                'payment_method' => $payment_method,
+                'payment_status' => $payment_method === 'gcash' ? 'Paid' : 'Pending',
+                'shipping_status' => 'Pending',
+            ]);
         }
 
         // Update total price in `custom_order`
         $stmt = $pdo->prepare("UPDATE custom_order SET total_price = :total_price WHERE order_id = :order_id");
         $stmt->execute(['total_price' => $total_price, 'order_id' => $order_id]);
-
-        // Insert into `custom_payment`
-        $stmt = $pdo->prepare("
-            INSERT INTO custom_payment (order_id, customer_name, customer_email, reference_number, amount_paid, payment_method, payment_status, shipping_status, order_date)
-            VALUES (:order_id, :customer_name, :customer_email, :reference_number, :amount_paid, :payment_method, :payment_status, :shipping_status, NOW())
-        ");
-        $stmt->execute([
-            'order_id' => $order_id,
-            'customer_name' => $customer['cust_name'],
-            'customer_email' => $customer['cust_email'],
-            'reference_number' => $reference_number,
-            'amount_paid' => $amount_paid,
-            'payment_method' => $payment_method,
-            'payment_status' => $payment_method === 'gcash' ? 'Paid' : 'Pending',
-            'shipping_status' => 'Pending',
-        ]);
 
         $pdo->commit();
 

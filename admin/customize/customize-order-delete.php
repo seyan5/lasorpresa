@@ -19,23 +19,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Start a transaction
         $pdo->beginTransaction();
 
-        // Delete from custom_images
+        // Delete related data from other tables
         $stmt = $pdo->prepare("DELETE FROM custom_images WHERE order_id = :order_id");
         $stmt->execute(['order_id' => $orderId]);
 
-        // Delete from custom_finalimages
         $stmt = $pdo->prepare("DELETE FROM custom_finalimages WHERE order_id = :order_id");
         $stmt->execute(['order_id' => $orderId]);
 
-        // Delete from custom_orderitems
         $stmt = $pdo->prepare("DELETE FROM custom_orderitems WHERE order_id = :order_id");
         $stmt->execute(['order_id' => $orderId]);
 
-        // Delete from custom_payment
         $stmt = $pdo->prepare("DELETE FROM custom_payment WHERE order_id = :order_id");
         $stmt->execute(['order_id' => $orderId]);
 
-        // Delete from custom_order
         $stmt = $pdo->prepare("DELETE FROM custom_order WHERE order_id = :order_id");
         $stmt->execute(['order_id' => $orderId]);
 
@@ -51,4 +47,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 } else {
     echo json_encode(["success" => false, "message" => "Invalid request method."]);
 }
+
 ?>
