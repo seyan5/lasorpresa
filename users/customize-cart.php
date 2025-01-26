@@ -133,27 +133,34 @@ $customizations = $_SESSION['customization'];
   }
 
   .summary {
-    margin-top: 30px;
-  }
+  margin-top: 30px;
+  max-height: 300px; /* Set a fixed height for the scrollable area */
+  overflow-y: auto; /* Make the content scrollable */
+}
 
-  .summary p {
-    display: flex;
-    justify-content: space-between;
-    margin: 15px 0;
-    font-size: 16px;
-    font-weight: bold;
-  }
+.summary p {
+  display: flex;
+  justify-content: space-between;
+  margin: 15px 0;
+  font-size: 16px;
+  font-weight: bold;
+  border-bottom: 1px solid #ccc; /* Add a line between orders */
+  padding-bottom: 10px; /* Add some space between the text and the line */
+}
 
-  .checkout {
-    width: 100%;
-    background-color: #333;
-    color: #fff;
-    padding: 15px;
-    font-size: 18px;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-  }
+.checkout {
+  width: 100%;
+  background-color: #333;
+  color: #fff;
+  padding: 15px;
+  font-size: 18px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  position: sticky;
+  bottom: 0; /* Fix the button at the bottom of the container */
+  z-index: 10; /* Ensure the button stays on top of content */
+}
 
   .checkout:hover {
     background-color: var(--button);
@@ -166,53 +173,59 @@ $customizations = $_SESSION['customization'];
         <hr>
         <h3>Your Floral Arrangement Customizations</h3>
         <?php foreach ($customizations as $index => $customization): ?>
-    <div class="cart-item">
-        <input type="checkbox" name="selected_customizations[]" value="<?php echo $index; ?>" id="customization-<?php echo $index; ?>" 
-                onchange="updateTotalPrice()">
-        <label for="customization-<?php echo $index; ?>">
-            <h4><?php echo $index + 1; ?></h4>
-        </label>
-        <img src="<?php echo htmlspecialchars(!empty($customization['expected_image']) ? 'uploads/' . $customization['expected_image'] : '/lasorpresa/images/default-image.jpg'); ?>" 
-             alt="<?php echo htmlspecialchars($item['name']); ?>" 
-             width="50">
-        
-        <?php
-        $stmt = $pdo->prepare("SELECT container_name, price FROM container WHERE container_id = ?");
-        $stmt->execute([$customization['container_type']]);
-        $container = $stmt->fetch(PDO::FETCH_ASSOC);
+          <div class="cart-item">
+    <input type="checkbox" name="selected_customizations[]" value="<?php echo $index; ?>" id="customization-<?php echo $index; ?>" 
+           onchange="updateTotalPrice()">
+    <label for="customization-<?php echo $index; ?>">
+        <h4><?php echo $index + 1; ?></h4>
+    </label>
+    <img src="<?php echo htmlspecialchars(!empty($customization['expected_image']) ? 'uploads/' . $customization['expected_image'] : '/lasorpresa/images/default-image.jpg'); ?>" 
+         alt="<?php echo htmlspecialchars($item['name']); ?>" 
+         width="50">
+    
+    <?php
+    $stmt = $pdo->prepare("SELECT container_name, price FROM container WHERE container_id = ?");
+    $stmt->execute([$customization['container_type']]);
+    $container = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        $stmt = $pdo->prepare("SELECT color_name FROM color WHERE color_id = ?");
-        $stmt->execute([$customization['container_color']]);
-        $color = $stmt->fetch(PDO::FETCH_ASSOC);
+    $stmt = $pdo->prepare("SELECT color_name FROM color WHERE color_id = ?");
+    $stmt->execute([$customization['container_color']]);
+    $color = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        $container_name = $container['container_name'] ?? "Unknown Container";
-        $container_price = $container['price'] ?? 0;
-        $color_name = $color['color_name'] ?? "Unknown Color";
+    $container_name = $container['container_name'] ?? "Unknown Container";
+    $container_price = $container['price'] ?? 0;
+    $flower_price = $container['price'] ?? 0;  // This is used as a default value for now
+    $color_name = $color['color_name'] ?? "Unknown Color";
 
-        $customization_total = $container_price;
-        ?>
-        <div>
-            <p class="container-type">Container Type: <?php echo htmlspecialchars($container_name); ?> (₱<?php echo number_format($container_price, 2); ?>)</p>
-            <p class="container-color">Container Color: <?php echo htmlspecialchars($color_name); ?></p> 
-            <?php foreach ($customization['flowers'] as $flower): ?>
-                <?php
-                $stmt = $pdo->prepare("SELECT name, price FROM flowers WHERE id = ?");
-                $stmt->execute([$flower['flower_type']]);
-                $flower_data = $stmt->fetch(PDO::FETCH_ASSOC);
+    $customization_total = $container_price;  // Start with the container price
 
-                $flower_name = $flower_data['name'] ?? "Unknown Flower";
-                $flower_price = $flower_data['price'] ?? 0;
-                $flower_quantity = $flower['num_flowers'] ?? 0;
-                ?>
-                <p class="flower-details">Flower: <?php echo htmlspecialchars($flower_name); ?> (₱<?php echo number_format($flower_price, 2); ?> each)</p>
-                <p class="flower-details">Quantity: <?php echo htmlspecialchars($flower_quantity); ?></p>
-            <?php endforeach; ?>
-            <p>Remarks: <?php echo htmlspecialchars($customization['remarks'] ?? 'None'); ?></p>
-        </div>
-        <div class="price">
-            <p>Subtotal: ₱<span class="subtotal" data-price="<?php echo $customization_total; ?>"><?php echo number_format($customization_total, 2); ?></span></p>
-        </div>
+    // Loop through each flower and add its price to the total
+    ?>
+    <div>
+        <p class="container-type">Container Type: <?php echo htmlspecialchars($container_name); ?> (₱<?php echo number_format($container_price, 2); ?>)</p>
+        <p class="container-color">Container Color: <?php echo htmlspecialchars($color_name); ?></p> 
+        <?php foreach ($customization['flowers'] as $flower): ?>
+            <?php
+            $stmt = $pdo->prepare("SELECT name, price FROM flowers WHERE id = ?");
+            $stmt->execute([$flower['flower_type']]);
+            $flower_data = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            $flower_name = $flower_data['name'] ?? "Unknown Flower";
+            $flower_price = $flower_data['price'] ?? 0;
+            $flower_quantity = $flower['num_flowers'] ?? 0;
+
+            // Add flower price to customization total (flower price * quantity)
+            $customization_total += $flower_price * $flower_quantity;
+            ?>
+            <p class="flower-details">Flower: <?php echo htmlspecialchars($flower_name); ?> (₱<?php echo number_format($flower_price, 2); ?> each)</p>
+            <p class="flower-details">Quantity: <?php echo htmlspecialchars($flower_quantity); ?></p>
+        <?php endforeach; ?>
+        <p>Remarks: <?php echo htmlspecialchars($customization['remarks'] ?? 'None'); ?></p>
     </div>
+    <div class="price">
+        <p>Subtotal: ₱<span class="subtotal" data-price="<?php echo $customization_total; ?>"><?php echo number_format($customization_total, 2); ?></span></p>
+    </div>
+</div>
 <?php endforeach; ?>
 
         </div>

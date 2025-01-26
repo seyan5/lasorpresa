@@ -100,6 +100,7 @@ html, body {
     transform: scale(1.05); /* Slightly enlarge the link */
 }
 
+/* Button Styling */
 
 </style>
 <?php include('navuser.php'); ?>
@@ -126,16 +127,15 @@ html, body {
                     </div>
                 </div>
             </div>
-<link rel="stylesheet" href="../css/customerorder.css?v.1.1">
+<link rel="stylesheet" href="../css/customerorder.css?">
 <div class="containers">
   <div class="col-md-12"> 
     <div class="container my-4">
       <h1 class="text-center" >My Orders</h1>
       <div class="table-container">
-        <table class="table table-bordered table-hover">
+        <table class="table">
           <thead>
             <tr>
-            
               <th>Product Details</th>
               <th>Payment Information</th>
               <th>Paid Amount</th>
@@ -353,8 +353,17 @@ html, body {
   background-color: #f1f1f1;
 }
 
+button {
+    background-color:rgb(141, 147, 151);
+    color: white;
+    font-size: 12px; /* Smaller font size for secondary buttons */
+    cursor: not-allowed;
+    opacity: 0.7;
+    margin-top: -0.3rem !important;
+}
+
 .btn-primary {
-  background-color: #e84393;
+  background-color: #333;
   color: white;
   font-size: 12px; /* Smaller font size for buttons */
   font-weight: bold;
@@ -362,7 +371,7 @@ html, body {
 }
 
 .btn-primary:hover {
-  background-color: #0056b3;
+  background-color: var(--button);
 }
 
 .btn-secondary {

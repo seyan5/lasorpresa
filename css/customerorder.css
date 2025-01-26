@@ -268,12 +268,8 @@ table {
 
 
 thead th {
-    position: sticky;
-    top: 0; /* Stick the heder to the top without adding extra space */
-    z-index: 2; /* Ensure it stays above table rows */
-    background-color:var(--pink); /* Match the table-dark header background */
-    color: #fff; /* White text for better visibility */
-    padding: 8px; /* Adjust padding for proper alignment */
+    background-color: #333 !important;
+    color: #fff !important;
 }
 
 strong {
@@ -291,7 +287,7 @@ th, td {
 }
 
 th {
-    background-color: var(--pink);
+    background-color: #333;
     color: white;
     text-transform: uppercase;
 }
@@ -329,25 +325,7 @@ td .badge {
     color: white;
 }
 
-button {
-    background-color: #007bff;
-    color: white;
-    border: none;
-    padding: 8px 12px; /* Reduced padding */
-    cursor: pointer;
-    border-radius: 6px;
-    font-size: 0.9rem; /* Reduced font size */
-    transition: background-color 0.3s;
-    font-family: Verdana, Geneva, Tahoma, sans-serif;
-}
 
-button:hover {
-    background-color: #0056b3;
-}
-
-button:focus {
-    outline: none;
-}
 
 /* Style for the close button */
 .btn-close {
