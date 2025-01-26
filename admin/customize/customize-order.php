@@ -339,9 +339,15 @@ $orderitems = $query->fetchAll(PDO::FETCH_ASSOC);
 
         document.querySelectorAll(".change-status").forEach((dropdown) => {
             dropdown.addEventListener("change", function () {
-                const orderId = this.dataset.orderId; // Order ID
+                const orderItemId = this.dataset.orderitemId; // Correct variable: orderitem_id
                 const field = this.dataset.field; // Field to update (payment_status or shipping_status)
                 const value = this.value; // New value selected
+
+                // Validate the field before sending
+                if (!orderItemId || !field || !value) {
+                    alert("Invalid data provided.");
+                    return;
+                }
 
                 // Send the POST request to customize-order-change-status.php
                 fetch("customize-order-change-status.php", {
@@ -350,7 +356,7 @@ $orderitems = $query->fetchAll(PDO::FETCH_ASSOC);
                         "Content-Type": "application/x-www-form-urlencoded", // Form URL encoding
                     },
                     body: new URLSearchParams({
-                        order_id: orderId,
+                        orderitem_id: orderItemId,
                         field: field,
                         value: value,
                     }),
@@ -369,6 +375,7 @@ $orderitems = $query->fetchAll(PDO::FETCH_ASSOC);
                     });
             });
         });
+
 
         function deleteOrder(orderId) {
             if (confirm("Are you sure you want to delete this order? This action cannot be undone.")) {
