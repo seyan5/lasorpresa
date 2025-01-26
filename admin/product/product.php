@@ -101,6 +101,14 @@ require_once '../auth.php';
                     </a>
                 </li>
                 <li>
+                    <a href="../wishlist.php">
+                        <span class="icon">
+                        <ion-icon name="heart-outline"></ion-icon>
+                        </span>
+                        <span class="title"> Wishlists</span>
+                    </a>
+                </li>
+                <li>
                     <a href="../settings.php">
                         <span class="icon">
                             <ion-icon name="albums-outline"></ion-icon>
