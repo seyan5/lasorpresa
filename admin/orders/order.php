@@ -29,7 +29,8 @@ $stmt = $pdo->prepare("SELECT
     pay.amount_paid, 
     pay.shipping_status, 
     pay.payment_status, 
-    o.order_id
+    o.order_id,
+    o.order_status  -- Include order status
 FROM 
     customer c
 JOIN orders o ON c.cust_id = o.customer_id
@@ -38,6 +39,7 @@ JOIN product p ON oi.product_id = p.p_id
 JOIN payment pay ON o.order_id = pay.order_id
 ORDER BY pay.created_at DESC
 LIMIT :limit OFFSET :offset");
+
 
 $stmt->bindParam(':limit', $limit, PDO::PARAM_INT);
 $stmt->bindParam(':offset', $offset, PDO::PARAM_INT);
@@ -186,6 +188,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_status'])) {
                     <th>Paid Amount</th>
                     <th>Payment Status</th>
                     <th>Shipping Status</th>
+                    <th>Order Status</th>
                     <th>Action</th>
                 </tr>
             </thead>
@@ -223,6 +226,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_status'])) {
                                         <option <?= $order['shipping_status'] === 'delivered' ? 'selected' : '' ?> value="delivered">Delivered</option>
                                     </select>
                                 </td>
+                                <td><?= htmlspecialchars($order['order_status']) ?></td>
                                 <td>
                                 <button class="btn btn-primary" title="Update Order" onclick="updateOrderStatus(<?= $order['order_id'] ?>)">
                                     <ion-icon name="pencil-outline"></ion-icon>

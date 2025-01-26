@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 26, 2025 at 08:11 AM
+-- Generation Time: Jan 26, 2025 at 04:19 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -126,7 +126,7 @@ INSERT INTO `customer` (`cust_id`, `cust_name`, `cust_email`, `cust_phone`, `cus
 (8, 'test', 'lasorpresa76@mail.com', '431431', 'asddsa', 'sdadsa', '1233', NULL, NULL, NULL, NULL, NULL, '$2y$10$Tdnqmz4o870Sp2xBBK6Vhe1oogE5lNEneUDpw1ksqtMuQeFIE6XRC', '2025-01-07 22:50:56', '2025-01-07 14:50:56', 'inactive'),
 (10, 'Johnwayne', 'jpdeogracias@gmail.com', '09214991751', 'Blk 31 Lt 2 Lhinnete Homea\r\nBiga Tanza Cavite', 'Cavite', '3313', 'Johnwayne', '09214991751', 'Blk 31 Lt 2 Lhinnete Homea\r\nBiga Tanza Cavite', 'Cavite', '2213', '979d472a84804b9f647bc185a877a8b5', '2025-01-07 23:00:23', '2025-01-08 07:40:52', 'active'),
 (12, 'jay', 'jaycantemprate31@gmail.com', '31', 'ggfddf', 'hgftr', '1233', NULL, NULL, NULL, NULL, NULL, '$2y$10$VW2.gZt0DtqBcaGqIrIJW.KHw.ySiAiBaBIO1qux6PNd1HiBW9TEm', '2025-01-07 23:02:28', '2025-01-07 15:02:28', 'inactive'),
-(13, 'seyan1', 'seanammiel@gmail.com', '0956193051213', 'Brgy Tapia General Trias Cavite', 'street', '3123', NULL, NULL, NULL, NULL, NULL, '$2y$10$1WFoqvQ/Jp6UwxcfQDKHIOvxFgoah5HVmBlt3j.xqLUEpEuzAO1kW', '2025-01-09 02:59:24', '2025-01-13 04:19:12', 'active'),
+(13, 'seyan1', 'seanammiel@gmail.com', '0956193051213', 'Brgy Tapia General Trias Cavite', 'street', '3123', NULL, NULL, NULL, NULL, NULL, '$2y$10$1WFoqvQ/Jp6UwxcfQDKHIOvxFgoah5HVmBlt3j.xqLUEpEuzAO1kW', '2025-01-09 02:59:24', '2025-01-26 09:16:59', 'active'),
 (14, 'xofahon', 'xofahon594@pariag.com', '09214991751', 'Blk 31 Lt 2 Lhinnete Homea', 'Cavite', '4311', NULL, NULL, NULL, NULL, NULL, '$2y$10$/c10sj9aSwwRD0Ewr89zieFX.SIibYEpdJlBIa1egTnI7ANFEdAnm', '2025-01-09 22:30:52', '2025-01-09 14:31:19', 'active'),
 (15, 'nayes', 'seanammiel6@gmail.com', '0956193051213', 'pogi', 'street', '412', NULL, NULL, NULL, NULL, NULL, '$2y$10$cDKe.kOz/lOgArraceM6vuzZ9wPjbbSM48DOIb7ddjlhFQI52pbSC', '2025-01-24 00:15:06', '2025-01-23 16:15:06', 'inactive');
 
@@ -183,7 +183,9 @@ CREATE TABLE `custom_images` (
 --
 
 INSERT INTO `custom_images` (`image_id`, `orderitem_id`, `order_id`, `expected_image`) VALUES
-(78, 239, 182, '1737874605_rose white wrapper.jpg');
+(78, 239, 182, '1737874605_rose white wrapper.jpg'),
+(79, 240, 183, '1737901529_vday chocolate bouquet1.jpg'),
+(80, 241, 184, '1737901594_vday chocolate bouquet1.jpg');
 
 -- --------------------------------------------------------
 
@@ -206,7 +208,9 @@ CREATE TABLE `custom_order` (
 --
 
 INSERT INTO `custom_order` (`order_id`, `cust_id`, `customer_name`, `customer_email`, `shipping_address`, `total_price`, `order_date`) VALUES
-(182, 13, 'seyan1', 'seanammiel@gmail.com', 'Brgy Tapia General Trias Cavite', 500.00, '2025-01-26 06:56:52');
+(182, 13, 'seyan1', 'seanammiel@gmail.com', 'Brgy Tapia General Trias Cavite', 500.00, '2025-01-26 06:56:52'),
+(183, 13, 'seyan1', 'seanammiel@gmail.com', 'Brgy Tapia General Trias Cavite', 400.00, '2025-01-26 14:25:44'),
+(184, 13, 'seyan1', 'seanammiel@gmail.com', 'Brgy Tapia General Trias Cavite', 800.00, '2025-01-26 14:26:42');
 
 -- --------------------------------------------------------
 
@@ -232,7 +236,9 @@ CREATE TABLE `custom_orderitems` (
 --
 
 INSERT INTO `custom_orderitems` (`orderitem_id`, `order_id`, `flower_details`, `container_type`, `container_color`, `flower_price`, `container_price`, `color_price`, `remarks`, `total_price`) VALUES
-(239, 182, '1x Sunflower (₱400)', 'Vase', 'Red', 400.00, 100.00, 0.00, 'asdasd', 500.00);
+(239, 182, '1x Sunflower (₱400)', 'Vase', 'Red', 400.00, 100.00, 0.00, 'asdasd', 500.00),
+(240, 183, '1x Tulip (₱300)', 'Vase', 'Red', 300.00, 100.00, 0.00, 'asdas', 400.00),
+(241, 184, '1x Tulip (₱300), 1x Sunflower (₱400)', 'Vase', 'Pink', 700.00, 100.00, 0.00, 'asdasd', 800.00);
 
 -- --------------------------------------------------------
 
@@ -261,7 +267,9 @@ CREATE TABLE `custom_payment` (
 --
 
 INSERT INTO `custom_payment` (`cpayment_id`, `orderitem_id`, `order_id`, `customer_name`, `customer_email`, `reference_number`, `amount_paid`, `payment_method`, `payment_status`, `shipping_status`, `order_date`, `created_at`, `updated_at`) VALUES
-(119, 239, 182, 'seyan1', 'seanammiel@gmail.com', 'N/A', 500.00, 'cop', 'Pending', 'Shipped', '2025-01-26 14:56:52', '2025-01-26 06:56:52', '2025-01-26 07:10:08');
+(119, 239, 182, 'seyan1', 'seanammiel@gmail.com', 'N/A', 500.00, 'cop', 'Pending', 'Shipped', '2025-01-26 14:56:52', '2025-01-26 06:56:52', '2025-01-26 07:10:08'),
+(120, 240, 183, 'seyan1', 'seanammiel@gmail.com', 'N/A', 400.00, 'cop', 'Pending', 'Pending', '2025-01-26 22:25:44', '2025-01-26 14:25:44', '2025-01-26 14:25:44'),
+(121, 241, 184, 'seyan1', 'seanammiel@gmail.com', '123', 800.00, 'gcash', 'Paid', 'Pending', '2025-01-26 22:26:42', '2025-01-26 14:26:42', '2025-01-26 14:26:42');
 
 -- --------------------------------------------------------
 
@@ -344,9 +352,9 @@ CREATE TABLE `flowers` (
 --
 
 INSERT INTO `flowers` (`id`, `name`, `quantity`, `price`, `image`) VALUES
-(4, 'Sunflower', 97, 400.00, '../uploads/flower_1737299490_sunflower1.png'),
+(4, 'Sunflower', 96, 400.00, '../uploads/flower_1737299490_sunflower1.png'),
 (5, 'Rose', 99, 300.00, '../uploads/flower_1737299498_rose.jpg'),
-(6, 'Tulip', 97, 300.00, '../uploads/flower_1737299503_tulip.jpg');
+(6, 'Tulip', 95, 300.00, '../uploads/flower_1737299503_tulip.jpg');
 
 -- --------------------------------------------------------
 
@@ -385,18 +393,9 @@ CREATE TABLE `orders` (
   `postal_code` varchar(20) NOT NULL,
   `phone` varchar(20) NOT NULL,
   `total` decimal(10,2) NOT NULL,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `order_status` varchar(50) DEFAULT 'pending'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `orders`
---
-
-INSERT INTO `orders` (`order_id`, `customer_id`, `full_name`, `address`, `city`, `postal_code`, `phone`, `total`, `created_at`) VALUES
-(63, 13, 'seyan1', 'Brgy Tapia General Trias Cavite', 'street', '3123', '0956193051213', 24.00, '2025-01-15 14:29:59'),
-(64, 13, 'seyan1', 'Brgy Tapia General Trias Cavite', 'street', '3123', '0956193051213', 2777.00, '2025-01-19 12:15:35'),
-(65, 13, 'seyan1', 'Brgy Tapia General Trias Cavite', 'street', '3123', '0956193051213', 20000.00, '2025-01-20 15:32:52'),
-(66, 13, 'seyan1', 'Brgy Tapia General Trias Cavite', 'street', '3123', '0956193051213', 8500.00, '2025-01-25 10:25:56');
 
 -- --------------------------------------------------------
 
@@ -411,17 +410,6 @@ CREATE TABLE `order_items` (
   `quantity` int(11) NOT NULL,
   `price` decimal(10,2) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `order_items`
---
-
-INSERT INTO `order_items` (`order_item_id`, `order_id`, `product_id`, `quantity`, `price`) VALUES
-(66, 63, 33, 2, 12.00),
-(67, 64, 60, 1, 2777.00),
-(68, 65, 53, 4, 5000.00),
-(69, 66, 47, 1, 4000.00),
-(70, 66, 61, 1, 4500.00);
 
 -- --------------------------------------------------------
 
@@ -438,22 +426,12 @@ CREATE TABLE `payment` (
   `reference_number` varchar(255) DEFAULT NULL,
   `amount_paid` decimal(10,2) NOT NULL,
   `payment_method` enum('gcash','cop') NOT NULL,
-  `payment_status` enum('pending','paid','failed') DEFAULT 'pending',
-  `shipping_status` enum('pending','shipped','delivered','readyforpickup') DEFAULT 'pending',
+  `payment_status` enum('pending','paid','failed','canceled') DEFAULT 'pending',
+  `shipping_status` enum('pending','shipped','delivered','readyforpickup','canceled') DEFAULT 'pending',
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   `viewed` tinyint(1) DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `payment`
---
-
-INSERT INTO `payment` (`payment_id`, `cust_id`, `order_id`, `cust_name`, `cust_email`, `reference_number`, `amount_paid`, `payment_method`, `payment_status`, `shipping_status`, `created_at`, `updated_at`, `viewed`) VALUES
-(59, 13, 63, 'seyan1', 'seanammiel@gmail.com', '0', 24.00, 'cop', 'pending', 'delivered', '2025-01-15 14:29:59', '2025-01-15 14:30:10', 0),
-(60, 13, 64, 'seyan1', 'seanammiel@gmail.com', '0', 2777.00, 'cop', 'pending', 'pending', '2025-01-19 12:15:35', '2025-01-19 12:15:35', 0),
-(61, 13, 65, 'seyan1', 'seanammiel@gmail.com', '123123', 3223.00, 'gcash', 'pending', 'pending', '2025-01-20 15:32:52', '2025-01-20 15:32:52', 0),
-(62, 13, 66, 'seyan1', 'seanammiel@gmail.com', '0', 8500.00, 'cop', 'pending', 'pending', '2025-01-25 10:25:56', '2025-01-25 10:25:56', 0);
 
 -- --------------------------------------------------------
 
@@ -490,12 +468,12 @@ INSERT INTO `product` (`p_id`, `name`, `old_price`, `current_price`, `quantity`,
 (38, 'Sunflower with Pink Wrapper', '4500', '3000', 10, 'product-featured-38.jpg', 'Sunflower with Pink Wrapper', 'Sunflower with Pink Wrapper', 'Sunflower with Pink Wrapper', '', 'Sunflower with Pink Wrapper', 1, 1, 16),
 (39, 'Life Size Teddy Bear Red', '2000', '1500', 10, 'product-featured-39.jpg', 'Life Size Teddy Bear Red', 'Life Size Teddy Bear Red', 'Life Size Teddy Bear Red', '', 'Life Size Teddy Bear Red', 1, 1, 19),
 (40, 'Life Size Teddy Bear Pink', '2000', '1500', 10, 'product-featured-40.jpg', 'Life Size Teddy Bear Pink', 'Life Size Teddy Bear Pink', 'Life Size Teddy Bear Pink', '', 'Life Size Teddy Bear Pink', 1, 1, 19),
-(42, '1 Sunflower with Brown Wrapper', '1500', '1000', 100, 'product-featured-42.jpg', '1 Sunflower with Brown Wrapper', '1 Sunflower with Brown Wrapper', '1 Sunflower with Brown Wrapper', '', '1 Sunflower with Brown Wrapper', 1, 1, 16),
+(42, '1 Sunflower with Brown Wrapper', '1500', '1000', 98, 'product-featured-42.jpg', '1 Sunflower with Brown Wrapper', '1 Sunflower with Brown Wrapper', '1 Sunflower with Brown Wrapper', '', '1 Sunflower with Brown Wrapper', 1, 1, 16),
 (43, 'Kitkat', '50', '40', 100, 'product-featured-43.jpg', 'Kitkat', 'Kitkat', 'Kitkat', '', 'Kitkat', 1, 1, 17),
 (44, 'All Soul\'s Day ', '2900', '2400', 100, 'product-featured-44.jpg', 'All Soul\'s Day ', 'All Soul\'s Day ', 'All Soul\'s Day ', '', 'All Soul\'s Day ', 1, 1, 24),
 (45, 'All Soul\'s Day White Flower', '2900', '2400', 100, 'product-featured-45.jpg', 'All Soul\'s Day White Flowers', 'All Soul\'s Day White Flowers', 'All Soul\'s Day White Flowers', '', 'All Soul\'s Day White Flowers', 1, 1, 24),
 (46, '15pcs Rose With Black Wrapper', '4000', '4000', 50, 'product-featured-46.jpg', 'Rose With Black Wrapper', 'Rose With Black Wrapper', 'Rose With Black Wrapper', '', 'Rose With Black Wrapper', 1, 1, 14),
-(47, '15 Roses With White Wrapper', '4000', '4000', 99, 'product-featured-47.jpg', '15 Roses With White Wrapper', '15 Roses With White Wrapper', '15 Roses With White Wrapper', '', '15 Roses With White Wrapper', 1, 1, 14),
+(47, '15 Roses With White Wrapper', '4000', '4000', 97, 'product-featured-47.jpg', '15 Roses With White Wrapper', '15 Roses With White Wrapper', '15 Roses With White Wrapper', '', '15 Roses With White Wrapper', 1, 1, 14),
 (48, 'Bundle Chocolates (Ferrero and Toblerone)', '1000', '1000', 10, 'product-featured-48.jpg', 'Bundle Chocolates (Ferrero and Toblerone)', 'Bundle Chocolates (Ferrero and Toblerone)', 'Bundle Chocolates (Ferrero and Toblerone)', '', 'Bundle Chocolates (Ferrero and Toblerone)', 1, 1, 17),
 (49, '1 Tulip Boquet', '700', '700', 16, 'product-featured-49.jpg', '1 Tulip Boquet', '1 Tulip Boquet', '1 Tulip Boquet', '', '1 Tulip Boquet', 1, 1, 15),
 (50, '3 Sunflower Bouquet', '1700', '1700', 5, 'product-featured-50.jpg', '3 Sunflower Bouquet', '3 Sunflower Bouquet', '3 Sunflower Bouquet', '', '3 Sunflower Bouquet', 1, 1, 16),
@@ -508,7 +486,7 @@ INSERT INTO `product` (`p_id`, `name`, `old_price`, `current_price`, `quantity`,
 (57, 'Vday\'s Flower Basket 2', '2000', '1700', 21, 'product-featured-57.jpg', 'Vday\'s Flower Basket', 'Vday\'s Flower Basket', 'Vday\'s Flower Basket', '', 'Vday\'s Flower Basket', 1, 1, 23),
 (58, 'Vday\'s Flower Basket 3', '2000', '1700', 16, 'product-featured-58.jpg', 'Vday\'s Flower Basket', 'Vday\'s Flower Basket', 'Vday\'s Flower Basket', '', 'Vday\'s Flower Basket', 1, 1, 23),
 (59, 'Vday\'s Flower Basket 4', '1700', '1800', 12, 'product-featured-59.jpg', 'Vday\'s Flower Basket', 'Vday\'s Flower Basket', 'Vday\'s Flower Basket', '', 'Vday\'s Flower Basket', 1, 1, 23),
-(60, '6pcs Rose Bouquet ', '3200', '2777', 99, 'product-featured-60.jpg', '6pcs Rose Boquet ', '6pcs Rose Bouquet ', '6pcs Rose Bouquet ', '', '6pcs Rose Bouquet ', 1, 1, 14),
+(60, '6pcs Rose Bouquet ', '3200', '2777', 98, 'product-featured-60.jpg', '6pcs Rose Boquet ', '6pcs Rose Bouquet ', '6pcs Rose Bouquet ', '', '6pcs Rose Bouquet ', 1, 1, 14),
 (61, '12pcs Rose Bouquet ', '121', '4500', 4199, 'product-featured-61.jpg', '12pcs Rose Bouquet ', '12pcs Rose Bouquet ', '12pcs Rose Bouquet ', '', '12pcs Rose Bouquet ', 1, 1, 14),
 (62, 'Mixed 12pcs Pink and Red Roses Bouquet ', '4500', '4333', 16, 'product-featured-62.jpg', 'Mixed 12pcs Pink and Red Roses Bouquet ', 'Mixed 12pcs Pink and Red Roses Bouquet ', 'Mixed 12pcs Pink and Red Roses Bouquet ', '', 'Mixed 12pcs Pink and Red Roses Bouquet ', 1, 1, 14),
 (63, 'All Soul\'s Day Mixed Flowers in a Basket', '3000', '3200', 16, 'product-featured-63.jpg', 'All Soul\'s Day Mixed Flowers in a Basket', 'All Soul\'s Day Mixed Flowers in a Basket', 'All Soul\'s Day Mixed Flowers in a Basket', '', 'All Soul\'s Day Mixed Flowers in a Basket', 1, 1, 24),
@@ -742,13 +720,6 @@ CREATE TABLE `reviews` (
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `customer_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `reviews`
---
-
-INSERT INTO `reviews` (`review_id`, `order_id`, `product_id`, `review`, `rating`, `created_at`, `customer_id`) VALUES
-(6, 63, 33, 'go', 5, '2025-01-20 07:56:30', 13);
 
 -- --------------------------------------------------------
 
@@ -1219,13 +1190,6 @@ ALTER TABLE `order_items`
   ADD KEY `product_id` (`product_id`);
 
 --
--- Indexes for table `payment`
---
-ALTER TABLE `payment`
-  ADD PRIMARY KEY (`payment_id`),
-  ADD KEY `cust_id` (`cust_id`);
-
---
 -- Indexes for table `product`
 --
 ALTER TABLE `product`
@@ -1340,25 +1304,25 @@ ALTER TABLE `custom_finalimages`
 -- AUTO_INCREMENT for table `custom_images`
 --
 ALTER TABLE `custom_images`
-  MODIFY `image_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=79;
+  MODIFY `image_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=81;
 
 --
 -- AUTO_INCREMENT for table `custom_order`
 --
 ALTER TABLE `custom_order`
-  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=183;
+  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=185;
 
 --
 -- AUTO_INCREMENT for table `custom_orderitems`
 --
 ALTER TABLE `custom_orderitems`
-  MODIFY `orderitem_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=240;
+  MODIFY `orderitem_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=242;
 
 --
 -- AUTO_INCREMENT for table `custom_payment`
 --
 ALTER TABLE `custom_payment`
-  MODIFY `cpayment_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=120;
+  MODIFY `cpayment_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=122;
 
 --
 -- AUTO_INCREMENT for table `email_verifications`
@@ -1388,19 +1352,13 @@ ALTER TABLE `mid_category`
 -- AUTO_INCREMENT for table `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=67;
+  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=69;
 
 --
 -- AUTO_INCREMENT for table `order_items`
 --
 ALTER TABLE `order_items`
-  MODIFY `order_item_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=71;
-
---
--- AUTO_INCREMENT for table `payment`
---
-ALTER TABLE `payment`
-  MODIFY `payment_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=63;
+  MODIFY `order_item_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=74;
 
 --
 -- AUTO_INCREMENT for table `product`
@@ -1532,12 +1490,6 @@ ALTER TABLE `orders`
 ALTER TABLE `order_items`
   ADD CONSTRAINT `order_items_ibfk_1` FOREIGN KEY (`order_id`) REFERENCES `orders` (`order_id`) ON DELETE CASCADE,
   ADD CONSTRAINT `order_items_ibfk_2` FOREIGN KEY (`product_id`) REFERENCES `product` (`p_id`) ON DELETE CASCADE;
-
---
--- Constraints for table `payment`
---
-ALTER TABLE `payment`
-  ADD CONSTRAINT `payment_ibfk_1` FOREIGN KEY (`cust_id`) REFERENCES `customer` (`cust_id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `reviews`
