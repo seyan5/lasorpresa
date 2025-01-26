@@ -3,24 +3,32 @@ ob_start();
 session_start();
 include("../inc/config.php");
 
-if (isset($_GET['order_id'])) {
-    $orderId = $_GET['order_id'];
+if (isset($_GET['orderitem_id'])) { // Use orderitem_id instead of order_id
+    $orderitemId = $_GET['orderitem_id'];
 
-    // Fetch expected images
-    $stmt = $pdo->prepare("SELECT expected_image FROM custom_images WHERE order_id = :order_id");
-    $stmt->execute([':order_id' => $orderId]);
-    $expectedImages = $stmt->fetchAll(PDO::FETCH_COLUMN);
+    try {
+        // Fetch expected images for the given orderitem_id
+        $stmt = $pdo->prepare("SELECT expected_image FROM custom_images WHERE orderitem_id = :orderitem_id");
+        $stmt->execute([':orderitem_id' => $orderitemId]);
+        $expectedImages = $stmt->fetchAll(PDO::FETCH_COLUMN);
 
-    // Fetch final images
-    $stmt = $pdo->prepare("SELECT final_image FROM custom_finalimages WHERE order_id = :order_id");
-    $stmt->execute([':order_id' => $orderId]);
-    $finalImages = $stmt->fetchAll(PDO::FETCH_COLUMN);
+        // Fetch final images for the given orderitem_id
+        $stmt = $pdo->prepare("SELECT final_image FROM custom_finalimages WHERE orderitem_id = :orderitem_id");
+        $stmt->execute([':orderitem_id' => $orderitemId]);
+        $finalImages = $stmt->fetchAll(PDO::FETCH_COLUMN);
 
-    echo json_encode([
-        'expected_images' => $expectedImages,
-        'final_images' => $finalImages,
-    ]);
+        echo json_encode([
+            'success' => true,
+            'expected_images' => $expectedImages,
+            'final_images' => $finalImages,
+        ]);
+    } catch (Exception $e) {
+        echo json_encode([
+            'success' => false,
+            'message' => 'Failed to fetch images: ' . $e->getMessage(),
+        ]);
+    }
 } else {
-    echo json_encode(['success' => false, 'message' => 'Invalid order ID.']);
+    echo json_encode(['success' => false, 'message' => 'Invalid orderitem_id.']);
 }
 ?>

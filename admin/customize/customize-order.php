@@ -8,13 +8,13 @@ include("../inc/CSRF_Protect.php");
 // Define how many results per page
 $results_per_page = 8;
 
-// Find out the total number of orders
-$total_query = $pdo->prepare("SELECT COUNT(*) FROM custom_order");
+// Find out the total number of order items
+$total_query = $pdo->prepare("SELECT COUNT(*) FROM custom_orderitems");
 $total_query->execute();
-$total_orders = $total_query->fetchColumn();
+$total_orderitems = $total_query->fetchColumn();
 
 // Calculate total pages
-$total_pages = ceil($total_orders / $results_per_page);
+$total_pages = ceil($total_orderitems / $results_per_page);
 
 // Get the current page number from the query string, default is 1
 $current_page = isset($_GET['page']) && is_numeric($_GET['page']) ? (int) $_GET['page'] : 1;
@@ -28,36 +28,35 @@ $starting_limit = ($current_page - 1) * $results_per_page;
 // Fetch data with limit and offset
 $query = $pdo->prepare(
     "SELECT 
+        coi.orderitem_id,
         co.order_id,
         co.customer_name,
         co.customer_email,
         co.shipping_address,
         co.order_date,
-        GROUP_CONCAT(DISTINCT coi.flower_details SEPARATOR '<br>') AS product_details,
-        GROUP_CONCAT(DISTINCT CONCAT(coi.container_type, ' (₱', coi.container_price, ')') SEPARATOR ', ') AS container_types,
-        GROUP_CONCAT(DISTINCT coi.container_color SEPARATOR ', ') AS container_colors,
-        GROUP_CONCAT(DISTINCT coi.remarks SEPARATOR '<br>') AS remarks,
+        coi.flower_details AS product_details,
+        CONCAT(coi.container_type, ' (₱', coi.container_price, ')') AS container_type,
+        coi.container_color AS container_color,
+        coi.remarks AS remarks,
         cp.payment_method,
         cp.amount_paid,
         cp.payment_status,
         cp.shipping_status,
-        GROUP_CONCAT(DISTINCT ci.expected_image SEPARATOR ', ') AS expected_images,
-        GROUP_CONCAT(DISTINCT cf.final_image SEPARATOR ', ') AS final_images
-    FROM custom_order co
-    LEFT JOIN custom_orderitems coi ON co.order_id = coi.order_id
+        ci.expected_image,
+        cf.final_image
+    FROM custom_orderitems coi
+    LEFT JOIN custom_order co ON coi.order_id = co.order_id
     LEFT JOIN custom_payment cp ON co.order_id = cp.order_id
-    LEFT JOIN custom_images ci ON co.order_id = ci.order_id
-    LEFT JOIN custom_finalimages cf ON co.order_id = cf.order_id
-    GROUP BY co.order_id
-    ORDER BY co.order_id DESC
+    LEFT JOIN custom_images ci ON coi.orderitem_id = ci.orderitem_id
+    LEFT JOIN custom_finalimages cf ON coi.orderitem_id = cf.orderitem_id
+    ORDER BY coi.orderitem_id DESC
     LIMIT :starting_limit, :results_per_page"
 );
 
 $query->bindValue(':starting_limit', $starting_limit, PDO::PARAM_INT);
 $query->bindValue(':results_per_page', $results_per_page, PDO::PARAM_INT);
 $query->execute();
-$orders = $query->fetchAll(PDO::FETCH_ASSOC);
-
+$orderitems = $query->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
 <!DOCTYPE html>
@@ -67,6 +66,340 @@ $orders = $query->fetchAll(PDO::FETCH_ASSOC);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Custom Order Dashboard</title>
+</head>
+
+<body>
+    <div class="container">
+        <h3>Custom Order Dashboard</h3>
+        <div class="d-flex justify-content-start mb-3">
+            <a href="../dashboard.php" class="btn btn-secondary">Back to Dashboard</a>
+        </div>
+        <table class="custom-table">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Customer</th>
+                    <th>Product Details</th>
+                    <th>Container</th>
+                    <th>Remarks</th>
+                    <th>Payment Info</th>
+                    <th>Paid Amount</th>
+                    <th>Payment Status</th>
+                    <th>Shipping Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($orderitems as $index => $orderitem): ?>
+                    <tr>
+                        <td><?= $starting_limit + $index + 1; ?></td>
+                        <td>
+                            <strong>Order Item ID:</strong> <?= htmlspecialchars($orderitem['orderitem_id']); ?><br>
+                            <strong>Order ID:</strong> <?= htmlspecialchars($orderitem['order_id']); ?><br>
+                            <strong>Name:</strong> <?= htmlspecialchars($orderitem['customer_name']); ?><br>
+                            <strong>Email:</strong> <?= htmlspecialchars($orderitem['customer_email']); ?>
+                        </td>
+                        <td><?= htmlspecialchars($orderitem['product_details'] ?? 'N/A'); ?></td>
+                        <td>
+                            <?= htmlspecialchars($orderitem['container_type'] ?? 'N/A'); ?><br>
+                            <strong>Color:</strong> <?= htmlspecialchars($orderitem['container_color'] ?? 'N/A'); ?>
+                        </td>
+                        <td><?= htmlspecialchars($orderitem['remarks'] ?? 'N/A'); ?></td>
+                        <td>
+                            <strong>Method:</strong> <?= htmlspecialchars($orderitem['payment_method'] ?? 'N/A'); ?><br>
+                            <strong>Date:</strong> <?= htmlspecialchars($orderitem['order_date'] ?? 'N/A'); ?>
+                        </td>
+                        <td>₱<?= number_format($orderitem['amount_paid'] ?? 0, 2); ?></td>
+                        <td>
+                            <select class="form-control change-status"
+                                data-orderitem-id="<?= $orderitem['orderitem_id']; ?>" data-field="payment_status">
+                                <option value="Pending" <?= $orderitem['payment_status'] == 'Pending' ? 'selected' : ''; ?>>
+                                    Pending</option>
+                                <option value="Paid" <?= $orderitem['payment_status'] == 'Paid' ? 'selected' : ''; ?>>Paid
+                                </option>
+                                <option value="Failed" <?= $orderitem['payment_status'] == 'Failed' ? 'selected' : ''; ?>>
+                                    Failed</option>
+                            </select>
+                        </td>
+                        <td>
+                            <select class="form-control change-status"
+                                data-orderitem-id="<?= $orderitem['orderitem_id']; ?>" data-field="shipping_status">
+                                <option value="Pending" <?= $orderitem['shipping_status'] == 'Pending' ? 'selected' : ''; ?>>
+                                    Pending</option>
+                                <option value="Shipped" <?= $orderitem['shipping_status'] == 'Shipped' ? 'selected' : ''; ?>>
+                                    Shipped</option>
+                                <option value="Delivered" <?= $orderitem['shipping_status'] == 'Delivered' ? 'selected' : ''; ?>>Delivered</option>
+                                <option value="Cancelled" <?= $orderitem['shipping_status'] == 'Cancelled' ? 'selected' : ''; ?>>Cancelled</option>
+                                <option value="ReadyForPickup" <?= $orderitem['shipping_status'] == 'ReadyForPickup' ? 'selected' : ''; ?>>Ready For Pickup</option>
+                            </select>
+                        </td>
+
+                        <td>
+                            <button class="btn btn-info btn-sm"
+                                onclick="viewImages(<?= $orderitem['orderitem_id']; ?>, <?= $orderitem['order_id']; ?>, '<?= htmlspecialchars($orderitem['expected_image'] ?? ''); ?>', '<?= htmlspecialchars($orderitem['final_image'] ?? ''); ?>')">
+                                View Pictures
+                            </button>
+
+                            <button class="btn btn-danger btn-sm" onclick="deleteOrder(<?= $orderitem['order_id']; ?>)">
+                                Delete Order Item
+                            </button>
+
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+
+        <!-- Pagination Links -->
+        <div class="pagination">
+            <?php if ($current_page > 1): ?>
+                <a href="?page=<?= $current_page - 1; ?>" class="btn btn-secondary">Previous</a>
+            <?php endif; ?>
+
+            <?php for ($page = 1; $page <= $total_pages; $page++): ?>
+                <a href="?page=<?= $page; ?>" class="btn <?= $page == $current_page ? 'active' : ''; ?>">
+                    <?= $page; ?>
+                </a>
+            <?php endfor; ?>
+
+            <?php if ($current_page < $total_pages): ?>
+                <a href="?page=<?= $current_page + 1; ?>" class="btn btn-secondary">Next</a>
+            <?php endif; ?>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div id="imageModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <div class="modal-header">
+                <h4>Order Images</h4>
+            </div>
+            <h5>Expected Images</h5>
+            <div id="expectedImagesContainer" class="modal-images"></div>
+
+            <h5>Final Images</h5>
+            <div id="finalImagesContainer" class="modal-images"></div>
+
+            <form id="addFinalImageForm" enctype="multipart/form-data">
+                <input type="hidden" id="orderitemIdInput" name="orderitem_id">
+                <input type="hidden" id="orderIdInput" name="order_id">
+                <input type="file" name="final_image" required>
+                <button type="submit" class="btn btn-info">Add Final Image</button>
+            </form>
+
+
+            <div id="finalImageStatus" style="margin-top: 10px; color: green;"></div>
+        </div>
+    </div>
+
+    </div>
+
+
+
+    <script>
+        function viewImages(orderitemId, orderId, expectedImages = null, finalImages = null) {
+            const modal = document.getElementById("imageModal");
+            const expectedContainer = document.getElementById("expectedImagesContainer");
+            const finalContainer = document.getElementById("finalImagesContainer");
+            const orderitemIdInput = document.getElementById("orderitemIdInput");
+            const orderIdInput = document.getElementById("orderIdInput");
+
+            // Set the orderitem_id and order_id for the add-final-image form
+            orderitemIdInput.value = orderitemId;
+            orderIdInput.value = orderId;
+
+            // Fetch updated data from the server
+            fetch(`get-order-images.php?orderitem_id=${orderitemId}`)
+                .then((response) => response.json())
+                .then((data) => {
+                    // Clear existing images
+                    expectedContainer.innerHTML = "";
+                    finalContainer.innerHTML = "";
+
+                    // Populate Expected Images
+                    if (data.expected_images && data.expected_images.length) {
+                        data.expected_images.forEach((img) => {
+                            const imgElement = document.createElement("img");
+                            imgElement.src = `../../users/uploads/${img.trim()}`;
+                            imgElement.alt = "Expected Image";
+                            expectedContainer.appendChild(imgElement);
+                        });
+                    } else {
+                        expectedContainer.textContent = "No expected images available.";
+                    }
+
+                    // Populate Final Images with Remove Button
+                    if (data.final_images && data.final_images.length) {
+                        data.final_images.forEach((img) => {
+                            const imgWrapper = document.createElement("div");
+                            imgWrapper.style.display = "inline-block";
+                            imgWrapper.style.margin = "10px";
+
+                            const imgElement = document.createElement("img");
+                            imgElement.src = `final_image_uploads/${img.trim()}`;
+                            imgElement.alt = "Final Image";
+                            imgElement.style.display = "block";
+                            imgElement.style.marginBottom = "5px";
+
+                            const removeButton = document.createElement("button");
+                            removeButton.textContent = "Remove";
+                            removeButton.classList.add("btn", "btn-danger", "btn-sm");
+                            removeButton.onclick = function () {
+                                removeFinalImage(orderitemId, img.trim(), imgWrapper);
+                            };
+
+                            imgWrapper.appendChild(imgElement);
+                            imgWrapper.appendChild(removeButton);
+                            finalContainer.appendChild(imgWrapper);
+                        });
+                    } else {
+                        finalContainer.textContent = "No final images available.";
+                    }
+
+                    // Display the modal
+                    modal.style.display = "block";
+                })
+                .catch((error) => {
+                    console.error("Error:", error);
+                    alert("Failed to load images.");
+                });
+        }
+
+
+        function removeFinalImage(orderItemId, imageName, imgWrapper) {
+            if (confirm("Are you sure you want to remove this image?")) {
+                const data = {
+                    orderitem_id: orderItemId,
+                    image_name: imageName,
+                };
+
+                console.log("Data being sent to server:", data); // Debugging
+
+                fetch("remove-final-image.php", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(data),
+                })
+                    .then((response) => response.json())
+                    .then((data) => {
+                        console.log("Response from server:", data); // Debugging
+                        if (data.success) {
+                            imgWrapper.remove(); // Remove the image element from the modal
+                            alert(data.message);
+                        } else {
+                            alert(data.message);
+                        }
+                    })
+                    .catch((error) => {
+                        console.error("Error:", error);
+                        alert("Failed to remove the image.");
+                    });
+            }
+        }
+
+
+        document.getElementById("addFinalImageForm").addEventListener("submit", function (e) {
+            e.preventDefault(); // Prevent default form submission
+
+            const form = e.target;
+            const formData = new FormData(form);
+            const orderitemId = document.getElementById("orderitemIdInput").value;
+            const orderId = document.getElementById("orderIdInput").value;
+
+            fetch("add-final-image.php", {
+                method: "POST",
+                body: formData,
+            })
+                .then((response) => response.json())
+                .then((data) => {
+                    if (data.success) {
+                        alert(data.message);
+
+                        // Refresh final images in the modal
+                        viewImages(orderitemId, orderId); // Reload modal content
+                    } else {
+                        alert(data.message);
+                    }
+                })
+                .catch((error) => {
+                    console.error("Error:", error);
+                    alert("Failed to upload the image.");
+                });
+        });
+
+
+        function closeModal() {
+            const modal = document.getElementById("imageModal");
+            modal.style.display = "none"; // Hide modal
+            document.getElementById("expectedImagesContainer").innerHTML = ""; // Clear containers
+            document.getElementById("finalImagesContainer").innerHTML = "";
+            document.getElementById("finalImageStatus").textContent = ""; // Clear status message
+        }
+
+        document.querySelectorAll(".change-status").forEach((dropdown) => {
+            dropdown.addEventListener("change", function () {
+                const orderId = this.dataset.orderId; // Order ID
+                const field = this.dataset.field; // Field to update (payment_status or shipping_status)
+                const value = this.value; // New value selected
+
+                // Send the POST request to customize-order-change-status.php
+                fetch("customize-order-change-status.php", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/x-www-form-urlencoded", // Form URL encoding
+                    },
+                    body: new URLSearchParams({
+                        order_id: orderId,
+                        field: field,
+                        value: value,
+                    }),
+                })
+                    .then((response) => response.json())
+                    .then((data) => {
+                        if (data.success) {
+                            alert(data.message); // Success message
+                        } else {
+                            alert(data.message); // Error message
+                        }
+                    })
+                    .catch((error) => {
+                        console.error("Error:", error);
+                        alert("Failed to update the status.");
+                    });
+            });
+        });
+
+        function deleteOrder(orderId) {
+            if (confirm("Are you sure you want to delete this order? This action cannot be undone.")) {
+                fetch("customize-order-delete.php", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/x-www-form-urlencoded",
+                    },
+                    body: new URLSearchParams({
+                        order_id: orderId,
+                    }),
+                })
+                    .then((response) => response.json())
+                    .then((data) => {
+                        if (data.success) {
+                            alert(data.message); // Show success message
+                            location.reload(); // Reload the page to reflect changes
+                        } else {
+                            alert(data.message); // Show error message
+                        }
+                    })
+                    .catch((error) => {
+                        console.error("Error:", error);
+                        alert("Failed to delete the order.");
+                    });
+            }
+        }
+
+
+
+    </script>
     <style>
         /* Keep the existing CSS you provided */
         @import url(https://db.onlinewebfonts.com/c/90ac3b18aaef9f2db3ac8e062c7a033b?family=NudMotoya+Maru+W55+W5);
@@ -268,323 +601,6 @@ $orders = $query->fetchAll(PDO::FETCH_ASSOC);
             margin: 0;
         }
     </style>
-</head>
-
-<body>
-    <div class="container">
-        <h3>Custom Order Dashboard</h3>
-        <div class="d-flex justify-content-start mb-3">
-            <a href="../dashboard.php" class="btn btn-secondary">Back to Dashboard</a>
-        </div>
-        <table class="custom-table">
-            <thead>
-                <tr>
-                    <th>#</th>
-                    <th>Customer</th>
-                    <th>Product Details</th>
-                    <th>Container</th>
-                    <th>Remarks</th>
-                    <th>Payment Info</th>
-                    <th>Paid Amount</th>
-                    <th>Payment Status</th>
-                    <th>Shipping Status</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php foreach ($orders as $index => $order): ?>
-                    <tr>
-                        <td><?= $starting_limit + $index + 1; ?></td>
-                        <td>
-                            <strong>Id:</strong> <?= htmlspecialchars($order['order_id']); ?><br>
-                            <strong>Name:</strong> <?= htmlspecialchars($order['customer_name']); ?><br>
-                            <strong>Email:</strong> <?= htmlspecialchars($order['customer_email']); ?>
-                        </td>
-                        <td><?= $order['product_details'] ?? 'N/A'; ?></td>
-                        <td>
-                            <?= htmlspecialchars($order['container_types'] ?? 'N/A'); ?><br>
-                            <strong>Colors:</strong> <?= htmlspecialchars($order['container_colors'] ?? 'N/A'); ?>
-                        </td>
-                        <td><?= htmlspecialchars($order['remarks'] ?? 'N/A'); ?></td>
-                        <td>
-                            <strong>Method:</strong> <?= htmlspecialchars($order['payment_method'] ?? 'N/A'); ?><br>
-                            <strong>Date:</strong> <?= htmlspecialchars($order['order_date'] ?? 'N/A'); ?>
-                        </td>
-                        <td>₱<?= number_format($order['amount_paid'] ?? 0, 2); ?></td>
-                        <td>
-                            <select class="form-control change-status" data-order-id="<?= $order['order_id']; ?>"
-                                data-field="payment_status">
-                                <option value="Pending" <?= $order['payment_status'] == 'Pending' ? 'selected' : ''; ?>>Pending
-                                </option>
-                                <option value="Paid" <?= $order['payment_status'] == 'Paid' ? 'selected' : ''; ?>>Paid</option>
-                                <option value="Failed" <?= $order['payment_status'] == 'Failed' ? 'selected' : ''; ?>>Failed
-                                </option>
-                            </select>
-                        </td>
-                        <td>
-                            <select class="form-control change-status" data-order-id="<?= $order['order_id']; ?>"
-                                data-field="shipping_status">
-                                <option value="Pending" <?= $order['shipping_status'] == 'Pending' ? 'selected' : ''; ?>>
-                                    Pending</option>
-                                <option value="Shipped" <?= $order['shipping_status'] == 'Shipped' ? 'selected' : ''; ?>>
-                                    Shipped</option>
-                                <option value="Delivered" <?= $order['shipping_status'] == 'Delivered' ? 'selected' : ''; ?>>
-                                    Delivered</option>
-                                <option value="Cancelled" <?= $order['shipping_status'] == 'Cancelled' ? 'selected' : ''; ?>>
-                                    Cancelled</option>
-                                <option value="ReadyForPickup" <?= $order['shipping_status'] == 'ReadyForPickup' ? 'selected' : ''; ?>>Ready For Pickup</option>
-                            </select>
-                        </td>
-
-                        <td>
-                            <button class="btn btn-info btn-sm"
-                                onclick="viewImages(<?= $order['order_id']; ?>, '<?= htmlspecialchars($order['expected_images'] ?? ''); ?>', '<?= htmlspecialchars($order['final_images'] ?? ''); ?>')">
-                                View Pictures
-                            </button>
-                            <button class="btn btn-danger btn-sm" onclick="deleteOrder(<?= $order['order_id']; ?>)">
-                                Delete Order
-                            </button>
-                        </td>
-
-                    </tr>
-                <?php endforeach; ?>
-            </tbody>
-        </table>
-
-        <!-- Pagination Links -->
-        <div class="pagination">
-            <?php if ($current_page > 1): ?>
-                <a href="?page=<?= $current_page - 1; ?>" class="btn btn-secondary">Previous</a>
-            <?php endif; ?>
-
-            <?php for ($page = 1; $page <= $total_pages; $page++): ?>
-                <a href="?page=<?= $page; ?>" class="btn <?= $page == $current_page ? 'active' : ''; ?>">
-                    <?= $page; ?>
-                </a>
-            <?php endfor; ?>
-
-            <?php if ($current_page < $total_pages): ?>
-                <a href="?page=<?= $current_page + 1; ?>" class="btn btn-secondary">Next</a>
-            <?php endif; ?>
-        </div>
-    </div>
-
-    <!-- Modal -->
-    <div id="imageModal" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="closeModal()">&times;</span>
-            <div class="modal-header">
-                <h4>Order Images</h4>
-            </div>
-            <h5>Expected Images</h5>
-            <div id="expectedImagesContainer" class="modal-images"></div>
-
-            <h5>Final Images</h5>
-            <div id="finalImagesContainer" class="modal-images"></div>
-
-            <form id="addFinalImageForm" enctype="multipart/form-data">
-                <input type="hidden" id="orderIdInput" name="order_id">
-                <input type="file" name="final_image" required>
-                <button type="submit" class="btn btn-info">Add Final Image</button>
-            </form>
-
-            <div id="finalImageStatus" style="margin-top: 10px; color: green;"></div>
-        </div>
-    </div>
-
-    </div>
-
-
-
-    <script>
-        function viewImages(orderId, expectedImages = null, finalImages = null) {
-            const modal = document.getElementById("imageModal");
-            const expectedContainer = document.getElementById("expectedImagesContainer");
-            const finalContainer = document.getElementById("finalImagesContainer");
-            const orderIdInput = document.getElementById("orderIdInput");
-
-            // Set the order ID for the add-final-image form
-            orderIdInput.value = orderId;
-
-            // Fetch updated data from the server
-            fetch(`get-order-images.php?order_id=${orderId}`)
-                .then((response) => response.json())
-                .then((data) => {
-                    // Clear existing images
-                    expectedContainer.innerHTML = "";
-                    finalContainer.innerHTML = "";
-
-                    // Populate Expected Images
-                    if (data.expected_images && data.expected_images.length) {
-                        data.expected_images.forEach((img) => {
-                            const imgElement = document.createElement("img");
-                            imgElement.src = `../../users/uploads/${img.trim()}`;
-                            imgElement.alt = "Expected Image";
-                            expectedContainer.appendChild(imgElement);
-                        });
-                    } else {
-                        expectedContainer.textContent = "No expected images available.";
-                    }
-
-                    // Populate Final Images with Remove Button
-                    if (data.final_images && data.final_images.length) {
-                        data.final_images.forEach((img) => {
-                            const imgWrapper = document.createElement("div");
-                            imgWrapper.style.display = "inline-block";
-                            imgWrapper.style.margin = "10px";
-
-                            const imgElement = document.createElement("img");
-                            imgElement.src = `final_image_uploads/${img.trim()}`;
-                            imgElement.alt = "Final Image";
-                            imgElement.style.display = "block";
-                            imgElement.style.marginBottom = "5px";
-
-                            const removeButton = document.createElement("button");
-                            removeButton.textContent = "Remove";
-                            removeButton.classList.add("btn", "btn-danger", "btn-sm");
-                            removeButton.onclick = function () {
-                                removeFinalImage(orderId, img.trim(), imgWrapper);
-                            };
-
-                            imgWrapper.appendChild(imgElement);
-                            imgWrapper.appendChild(removeButton);
-                            finalContainer.appendChild(imgWrapper);
-                        });
-                    } else {
-                        finalContainer.textContent = "No final images available.";
-                    }
-
-                    // Display the modal
-                    modal.style.display = "block";
-                })
-                .catch((error) => {
-                    console.error("Error:", error);
-                    alert("Failed to load images.");
-                });
-        }
-
-        function removeFinalImage(orderId, imageName, imgWrapper) {
-            if (confirm("Are you sure you want to remove this image?")) {
-                fetch("remove-final-image.php", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ order_id: orderId, image_name: imageName }),
-                })
-                    .then((response) => response.json())
-                    .then((data) => {
-                        if (data.success) {
-                            imgWrapper.remove(); // Remove the image element from the modal
-                            alert(data.message);
-                        } else {
-                            alert(data.message);
-                        }
-                    })
-                    .catch((error) => {
-                        console.error("Error:", error);
-                        alert("Failed to remove the image.");
-                    });
-            }
-        }
-
-        document.getElementById("addFinalImageForm").addEventListener("submit", function (e) {
-            e.preventDefault(); // Prevent default form submission
-
-            const form = e.target;
-            const formData = new FormData(form);
-            const orderId = document.getElementById("orderIdInput").value;
-
-            fetch("add-final-image.php", {
-                method: "POST",
-                body: formData,
-            })
-                .then((response) => response.json())
-                .then((data) => {
-                    if (data.success) {
-                        alert(data.message);
-
-                        // Refresh final images in the modal
-                        viewImages(orderId); // Reload modal content
-                    } else {
-                        alert(data.message);
-                    }
-                })
-                .catch((error) => {
-                    console.error("Error:", error);
-                    alert("Failed to upload the image.");
-                });
-        });
-
-        function closeModal() {
-            const modal = document.getElementById("imageModal");
-            modal.style.display = "none"; // Hide modal
-            document.getElementById("expectedImagesContainer").innerHTML = ""; // Clear containers
-            document.getElementById("finalImagesContainer").innerHTML = "";
-            document.getElementById("finalImageStatus").textContent = ""; // Clear status message
-        }
-
-        document.querySelectorAll(".change-status").forEach((dropdown) => {
-            dropdown.addEventListener("change", function () {
-                const orderId = this.dataset.orderId; // Order ID
-                const field = this.dataset.field; // Field to update (payment_status or shipping_status)
-                const value = this.value; // New value selected
-
-                // Send the POST request to customize-order-change-status.php
-                fetch("customize-order-change-status.php", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/x-www-form-urlencoded", // Form URL encoding
-                    },
-                    body: new URLSearchParams({
-                        order_id: orderId,
-                        field: field,
-                        value: value,
-                    }),
-                })
-                    .then((response) => response.json())
-                    .then((data) => {
-                        if (data.success) {
-                            alert(data.message); // Success message
-                        } else {
-                            alert(data.message); // Error message
-                        }
-                    })
-                    .catch((error) => {
-                        console.error("Error:", error);
-                        alert("Failed to update the status.");
-                    });
-            });
-        });
-
-        function deleteOrder(orderId) {
-            if (confirm("Are you sure you want to delete this order? This action cannot be undone.")) {
-                fetch("customize-order-delete.php", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/x-www-form-urlencoded",
-                    },
-                    body: new URLSearchParams({
-                        order_id: orderId,
-                    }),
-                })
-                    .then((response) => response.json())
-                    .then((data) => {
-                        if (data.success) {
-                            alert(data.message); // Show success message
-                            location.reload(); // Reload the page to reflect changes
-                        } else {
-                            alert(data.message); // Show error message
-                        }
-                    })
-                    .catch((error) => {
-                        console.error("Error:", error);
-                        alert("Failed to delete the order.");
-                    });
-            }
-        }
-
-
-    </script>
-
 
 </body>
 
