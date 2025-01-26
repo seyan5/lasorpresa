@@ -2,31 +2,69 @@
 ob_start();
 session_start();
 include("../inc/config.php");
-include("../inc/functions.php");
-include("../inc/CSRF_Protect.php");
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $orderId = $_POST['order_id'] ?? null;
-    $finalImage = $_FILES['final_image'] ?? null;
+    if (isset($_POST['orderitem_id'], $_POST['order_id']) && isset($_FILES['final_image'])) {
+        $orderitemId = $_POST['orderitem_id'];
+        $orderId = $_POST['order_id'];
+        $finalImage = $_FILES['final_image'];
 
-    if ($orderId && $finalImage) {
-        $uploadDir = 'final_image_uploads/';
-        $fileName = time() . '_' . basename($finalImage['name']);
-        $filePath = $uploadDir . $fileName;
+        // Validate the uploaded file
+        $targetDir = "final_image_uploads/";
+        $targetFile = $targetDir . basename($finalImage['name']);
+        $imageFileType = strtolower(pathinfo($targetFile, PATHINFO_EXTENSION));
 
-        if (move_uploaded_file($finalImage['tmp_name'], $filePath)) {
-            $stmt = $pdo->prepare("INSERT INTO custom_finalimages (order_id, final_image) VALUES (:order_id, :final_image)");
-            $stmt->execute([
-                ':final_image' => $fileName,
-                ':order_id' => $orderId
+        // Allowed file types
+        $allowedTypes = ['jpg', 'jpeg', 'png', 'gif'];
+
+        if (!in_array($imageFileType, $allowedTypes)) {
+            echo json_encode([
+                'success' => false,
+                'message' => 'Only JPG, JPEG, PNG, and GIF files are allowed.',
             ]);
+            exit;
+        }
 
-            echo json_encode(['success' => true, 'message' => 'Final image added successfully!']);
+        // Move the uploaded file
+        if (move_uploaded_file($finalImage['tmp_name'], $targetFile)) {
+            try {
+                // Insert into custom_finalimages table
+                $stmt = $pdo->prepare("
+                    INSERT INTO custom_finalimages (orderitem_id, order_id, final_image)
+                    VALUES (:orderitem_id, :order_id, :final_image)
+                ");
+                $stmt->execute([
+                    ':orderitem_id' => $orderitemId,
+                    ':order_id' => $orderId,
+                    ':final_image' => basename($finalImage['name']),
+                ]);
+
+                echo json_encode([
+                    'success' => true,
+                    'message' => 'Final image added successfully!',
+                ]);
+            } catch (Exception $e) {
+                echo json_encode([
+                    'success' => false,
+                    'message' => 'Failed to add final image: ' . $e->getMessage(),
+                ]);
+            }
         } else {
-            echo json_encode(['success' => false, 'message' => 'Failed to upload the image.']);
+            echo json_encode([
+                'success' => false,
+                'message' => 'Failed to upload image.',
+            ]);
         }
     } else {
-        echo json_encode(['success' => false, 'message' => 'Invalid data.']);
+        echo json_encode([
+            'success' => false,
+            'message' => 'Invalid input. Order item ID, order ID, and final image are required.',
+        ]);
     }
-
+} else {
+    echo json_encode([
+        'success' => false,
+        'message' => 'Invalid request method.',
+    ]);
 }
+?>

@@ -1,6 +1,12 @@
 :root {
     --pink: #e84393;
+    --pink: #e84393;
+    --main: #d0bcb3;
+    --font: #d18276;
+    --button: #d6a98f;
+    --bg: rgb(233, 221, 204);
 }
+
 
 /* General Reset */
 * {
@@ -163,7 +169,7 @@ main {
     width: 100%;
     padding: 15px;
     font-size: 16px;
-    background-color: #f181b7;
+    background-color: #333;
     color: #ffffff;
     border: none;
     border-radius: 5px;
@@ -173,7 +179,7 @@ main {
 }
 
 .sidebar button:hover {
-    background-color: var(--pink);
+    background-color: var(--button);
 }
 
 @media screen and (max-width: 768px) {

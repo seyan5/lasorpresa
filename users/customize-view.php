@@ -1,4 +1,4 @@
-<?php
+<?php 
 ob_start();
 session_start();
 include("../admin/inc/config.php");
@@ -14,31 +14,33 @@ if (!isset($_SESSION['customer']['cust_email'])) {
 try {
     $cust_email = $_SESSION['customer']['cust_email']; // Get the logged-in user's email
 
-    // Fetch data grouped by order_id for the logged-in customer, including payment and shipping statuses
+    // Updated SQL query to fetch data grouped by orderitem_id
     $sql = "SELECT 
+                o.orderitem_id, 
                 o.order_id, 
                 o.container_type, 
                 o.container_color, 
-                GROUP_CONCAT(DISTINCT CONCAT(o.flower_type, ' (', o.num_flowers, ')') SEPARATOR ', ') AS flower_details, 
-                SUM(co.total_price) AS order_total_price,
+                o.container_price,
+                o.flower_details, 
+                o.total_price AS orderitem_total_price,
                 cp.payment_status,
                 cp.shipping_status,
-                GROUP_CONCAT(DISTINCT ci.expected_image SEPARATOR ', ') AS expected_images,
-                GROUP_CONCAT(DISTINCT cf.final_image SEPARATOR ', ') AS final_images
+                ci.expected_image,
+                cf.final_image
             FROM custom_orderitems o
-            INNER JOIN custom_order co ON o.order_id = co.order_id
+            INNER JOIN custom_order coo ON o.order_id = coo.order_id
             LEFT JOIN custom_payment cp ON o.order_id = cp.order_id
-            LEFT JOIN custom_images ci ON o.order_id = ci.order_id
-            LEFT JOIN custom_finalimages cf ON o.order_id = cf.order_id
-            WHERE co.customer_email = :customer_email
-            GROUP BY o.order_id
-            ORDER BY o.order_id ASC;";
+            LEFT JOIN custom_images ci ON o.orderitem_id = ci.orderitem_id
+            LEFT JOIN custom_finalimages cf ON o.orderitem_id = cf.orderitem_id
+            WHERE coo.customer_email = :customer_email
+            ORDER BY o.orderitem_id ASC;";
     
     $stmt = $pdo->prepare($sql);
     $stmt->execute([':customer_email' => $cust_email]);
 
     $orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
+    // Output styles and structure
     echo "<style>
             body {
                 font-family: Arial, sans-serif;
@@ -46,7 +48,6 @@ try {
                 margin: 0;
                 padding: 0;
             }
-
             .header {
                 background-color: #f8f8f8;
                 padding: 20px 40px;
@@ -55,7 +56,6 @@ try {
                 justify-content: flex-start;
                 border-bottom: 2px solid #ddd;
             }
-
             .back-link {
                 font-size: 18px;
                 color: #dd91ad;
@@ -65,12 +65,10 @@ try {
                 font-weight: bold;
                 transition: color 0.3s ease, transform 0.3s ease;
             }
-
             .back-link:hover {
                 color: #b56e7c;
                 transform: translateX(-5px);
             }
-
             .orders-container {
                 width: 80%;
                 margin: 30px auto;
@@ -80,13 +78,11 @@ try {
                 border-radius: 8px;
                 box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
             }
-
             h2 {
                 font-size: 24px;
                 color: #333;
                 margin-bottom: 20px;
             }
-
             .order-section {
                 margin-bottom: 20px;
                 padding: 15px;
@@ -95,59 +91,50 @@ try {
                 border-radius: 8px;
                 box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
             }
-
-            .order-section:last-child {
-                margin-bottom: 0;
-            }
-
-            .order-section h3 {
-                font-size: 20px;
-                color: #333;
-                margin-bottom: 10px;
-            }
-
             p, label {
                 font-size: 16px;
                 color: #555;
                 margin: 5px 0;
             }
-
             label {
                 font-weight: bold;
                 color: #333;
             }
-
             img {
-                max-width: 10%; 
+                max-width: 10%;
                 display: block;
                 margin: 10px 0;
                 border: 1px solid #ddd;
                 border-radius: 5px;
                 box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
             }
-
-            .order-section p:last-child {
-                font-weight: bold;
-                color: #b56e7c;
-            }
-
-            /* Add responsiveness for smaller screens */
             @media (max-width: 768px) {
                 .orders-container {
                     width: 95%;
                 }
-
                 .header {
                     padding: 15px 20px;
                 }
             }
-        </style>";
+            .btn-secondary {
+                position: fixed; /* Sticks the button to a fixed position */
+                top: 4rem; /* Positions it 20px from the bottom of the screen */
+                left: 4rem; /* Positions it 20px from the left of the screen */
+                background-color: #333; /* Secondary button color */
+                color: #ffffff; /* White text */
+                border: none; /* Removes border */
+                border-radius: 5px; /* Smooth corners */
+                padding: 10px 20px; /* Adds padding for a comfortable size */
+                font-size: 16px; /* Adjusts text size */
+                cursor: pointer; /* Changes cursor to pointer on hover */
+                box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Adds a subtle shadow */
+                transition: background-color 0.3s ease; /* Smooth hover effect */
+            }
 
-    echo "<div class='header'>
-            <a href='customer-profile-update.php' class='back-link'>
-                <span class='back-arrow'>&lt;</span> Back to Profile
-            </a>
-          </div>";
+            .btn-secondary:hover {
+                background-color: #d6a98f; /* Slightly darker color on hover */
+            }
+        </style>";
 
     echo "<div class='orders-container'>";
     echo "<h2>My Custom Orders</h2>";
@@ -155,46 +142,30 @@ try {
     if (!empty($orders)) {
         foreach ($orders as $order) {
             echo "<div class='order-section'>
-                    <h3>Order ID: {$order['order_id']}</h3>
+                    <h3>Order Item ID: {$order['orderitem_id']}</h3>
+                    <p><label>Order ID:</label> {$order['order_id']}</p>
                     <p><label>Container Type:</label> {$order['container_type']}</p>
-                    <p><label>Container Color:</label> {$order['container_color']}</p>";
+                    <p><label>Container Color:</label> {$order['container_color']}</p>
+                    <p><label>Container Price:</label> ₱{$order['container_price']}</p>
+                    <p><label>Flower Details:</label> {$order['flower_details']}</p>
+                    <p><label>Order Item Total Price:</label> ₱{$order['orderitem_total_price']}</p>
+                    <p><label>Payment Status:</label> {$order['payment_status']}</p>
+                    <p><label>Shipping Status:</label> {$order['shipping_status']}</p>";
 
-            // Check if flower_details is available
-            if (!empty($order['flower_details'])) {
-                $flowerDetails = explode(", ", $order['flower_details']);
-                foreach ($flowerDetails as $flowerDetail) {
-                    echo "<p><label>Flower:</label> {$flowerDetail}</p>";
-                }
+            // Expected image
+            if (!empty($order['expected_image'])) {
+                echo "<p><strong>Expected Image:</strong></p>";
+                echo "<img src='uploads/{$order['expected_image']}' alt='Expected Image'>";
             } else {
-                echo "<p>No flowers available for this order.</p>";
+                echo "<p>No expected image available.</p>";
             }
 
-            echo "<p><label>Order Total Price:</label> ₱{$order['order_total_price']}</p>";
-
-            // Add payment and shipping statuses
-            echo "<p><label>Payment Status:</label> {$order['payment_status']}</p>";
-            echo "<p><label>Shipping Status:</label> {$order['shipping_status']}</p>";
-
-            // Display the expected images
-            if (!empty($order['expected_images'])) {
-                echo "<p><strong>Expected Images:</strong></p>";
-                $expectedImages = explode(", ", $order['expected_images']);
-                foreach ($expectedImages as $image) {
-                    echo "<img src='uploads/{$image}' alt='Expected Image'>";
-                }
+            // Final image
+            if (!empty($order['final_image'])) {
+                echo "<p><strong>Final Image:</strong></p>";
+                echo "<img src='../admin/customize/final_image_uploads/{$order['final_image']}' alt='Final Image'>";
             } else {
-                echo "<p>No expected images available.</p>";
-            }
-
-            // Display the final images
-            if (!empty($order['final_images'])) {
-                echo "<p><strong>Final Images:</strong></p>";
-                $finalImages = explode(", ", $order['final_images']);
-                foreach ($finalImages as $image) {
-                    echo "<img src='../admin/customize/final_image_uploads/{$image}' alt='Final Image'>";
-                }
-            } else {
-                echo "<p>No final images available.</p>";
+                echo "<p>No final image available.</p>";
             }
 
             echo "</div>";
@@ -209,3 +180,7 @@ try {
     echo "Error: " . $e->getMessage();
 }
 ?>
+
+
+<button onclick="history.back()" class="btn btn-secondary">Back</button>
+

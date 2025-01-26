@@ -48,13 +48,89 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   }
 }
 ?>
+<style>
+:root {
+    --pink: #e84393;
+    --pink: #e84393;
+    --main: #d0bcb3;
+    --font: #d18276;
+    --button: #d6a98f;
+    --bg: rgb(233, 221, 204);
+}
 
-<?php include('profnav.php'); ?>
+html, body {
+    height: 100%; /* Ensure the body takes the full height of the viewport */
+    margin: 0; /* Remove default margins */
+    display: flex;
+    justify-content: center; /* Horizontally center the content */
+    align-items: center; /* Vertically center the content */
+}
+
+
+.horizontal-table {
+    display: flex;
+    flex-wrap: wrap; /* Allows items to wrap on smaller screens */
+    justify-content: center; /* Center items horizontally */
+    align-items: center; /* Center items vertically */
+    border-radius: 8px;
+    margin: auto; /* Centers the container horiz    ontally */
+    margin-top: 10rem; /* Adjust vertical spacing */
+    width: fit-content; /* Adjust the width to fit content */
+    margin-bottom: -5rem;
+}
+
+/* Style the links */
+.horizontal-table a {
+    display: block;
+    padding: 10px 28px; /* Increase padding for larger clickable areas */
+    margin: 10px; /* Add more spacing between items */
+    text-align: center;
+    font-size: 1.3rem; /* Make text larger */
+    background-color: #333;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+/* Hover effect */
+.horizontal-table a:hover {
+    background-color: var(--button);
+    transform: scale(1.05); /* Slightly enlarge the link */
+}
+
+
+</style>
+<?php include('navuser.php'); ?>
+<link rel="stylesheet" href="../css/profileupd.css?">
+
+<section class="content">
+            <div class="row">
+                <div class="">
+                    <div class="">
+                        <div class="">
+                            <table>
+                                <thead>
+                                </thead>
+                                <tbody>
+                                <div class="horizontal-table">
+                                    <a href="customer-profile-update.php">Update Profile</a>
+                                    <a href="customer-password-update.php">Update Password</a>
+                                    <a href="customer-order.php">Orders</a>
+                                    <a href="customize-view.php">Custom Orders</a>
+                                </div>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
 <link rel="stylesheet" href="../css/customerorder.css?v.1.1">
 <div class="containers">
   <div class="col-md-12"> 
     <div class="container my-4">
-      <h1 class="text-center">My Orders</h1>
+      <h1 class="text-center" >My Orders</h1>
       <div class="table-container">
         <table class="table table-bordered table-hover">
           <thead>

@@ -235,15 +235,15 @@ form input:focus {
 
                 <!-- Quantity Controls -->
                 <div class="quantity">
-    <form method="POST" action="cart-update.php" class="quantity-form">
-        <input type="hidden" name="item_index" value="<?php echo $index; ?>">
-        <div class="quantity-controls">
-            <button type="submit" name="action" value="decrease" class="btn-control">-</button>
-            <span class="quantity-value"><?php echo htmlspecialchars($item['quantity']); ?></span>
-            <button type="submit" name="action" value="increase" class="btn-control">+</button>
-        </div>
-    </form>
-</div>
+                  <form method="POST" action="cart-update.php" class="quantity-form">
+                    <input type="hidden" name="item_index" value="<?php echo $index; ?>">
+                    <div class="quantity-controls">
+                        <button type="submit" name="action" value="decrease" class="btn-control">-</button>
+                        <span class="quantity-value"><?php echo htmlspecialchars($item['quantity']); ?></span>
+                        <button type="submit" name="action" value="increase" class="btn-control">+</button>
+                    </div>
+                  </form>
+                </div>
 
 
                 <!-- Product Price -->

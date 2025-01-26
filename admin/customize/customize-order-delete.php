@@ -16,23 +16,36 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     try {
-        // Delete from custom_orderitems
+        // Start a transaction
+        $pdo->beginTransaction();
+
+        // Delete related data from other tables
+        $stmt = $pdo->prepare("DELETE FROM custom_images WHERE order_id = :order_id");
+        $stmt->execute(['order_id' => $orderId]);
+
+        $stmt = $pdo->prepare("DELETE FROM custom_finalimages WHERE order_id = :order_id");
+        $stmt->execute(['order_id' => $orderId]);
+
         $stmt = $pdo->prepare("DELETE FROM custom_orderitems WHERE order_id = :order_id");
         $stmt->execute(['order_id' => $orderId]);
 
-        // Delete from custom_payment
         $stmt = $pdo->prepare("DELETE FROM custom_payment WHERE order_id = :order_id");
         $stmt->execute(['order_id' => $orderId]);
 
-        // Delete from custom_order
         $stmt = $pdo->prepare("DELETE FROM custom_order WHERE order_id = :order_id");
         $stmt->execute(['order_id' => $orderId]);
 
+        // Commit the transaction
+        $pdo->commit();
+
         echo json_encode(["success" => true, "message" => "Order deleted successfully."]);
     } catch (Exception $e) {
+        // Rollback the transaction on error
+        $pdo->rollBack();
         echo json_encode(["success" => false, "message" => "Failed to delete order: " . $e->getMessage()]);
     }
 } else {
     echo json_encode(["success" => false, "message" => "Invalid request method."]);
 }
+
 ?>

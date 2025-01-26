@@ -26,14 +26,14 @@ if (isset($_SESSION['customer'])) {
   
 
 ?>
-
+<?php include('back.php'); ?>
 <style>
   .container {
     display: flex;
     max-width: 1600px; 
     margin: 40px auto; 
     gap: 30px; 
-    margin-top: 25rem; 
+    margin-top: 20rem; 
   }
 
   .wishlist {
@@ -41,7 +41,7 @@ if (isset($_SESSION['customer'])) {
     border-radius: 12px; 
     padding: 30px; 
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
-    max-height: calc(100vh - 10rem); 
+    max-height: calc(75vh - 10rem); 
     overflow-y: auto; 
   }
 
@@ -106,20 +106,59 @@ if (isset($_SESSION['customer'])) {
     font-family: Verdana, Geneva, Tahoma, sans-serif;
     font-style: italic;
   }
-  .add-to-cart {
-    background-color: #4CAF50; 
-    border: none; 
-    color: white; 
-    padding: 10px 20px; 
-    text-align: center; 
-    font-size: 16px; 
-    cursor: pointer; 
-    border-radius: 5px;
-    margin-left: 10px;
+
+
+/* Style for the Add to Cart button */
+#addToCartButton {
+  display: flex;
+  align-items: center;
+  background-color: #4CAF50; /* Green background */
+  color: white;
+  padding: 5px 10px;
+  border-radius: 5px;
+  border: none;
+  font-size: 13px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
-.add-to-cart:hover {
-    background-color: #45a049;
+/* Add spacing between icon and text */
+#addToCartButton ion-icon {
+  margin-right: 8px;
+  font-size: 20px;
+}
+
+/* Hover effect */
+#addToCartButton:hover {
+  background-color: #45a049; /* Slightly darker green */
+  transform: scale(1.05);
+}
+
+/* Active (clicked) state */
+#addToCartButton:active {
+  transform: scale(0.98); /* Slight shrink effect */
+}
+
+/* Disabled state (when out of stock or other conditions) */
+#addToCartButton:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.remove {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #aaa; /* Default icon color */
+  font-size: 25px; /* Icon size */
+  padding: 8px; /* Add some padding for better clickability */
+  border-radius: 4px; /* Optional: rounded corners */
+  transition: color 0.3s ease, background-color 0.3s ease; /* Smooth transitions */
+  margin-right: 5rem;
+}
+
+.remove:hover {
+  color: #ff0000; /* Change to red on hover */
 }
 
 </style>
@@ -151,13 +190,13 @@ if (isset($_SESSION['customer'])) {
           data-name="<?php echo htmlspecialchars($item['name']); ?>" 
           data-price="<?php echo $item['current_price']; ?>"
           data-stock="<?php echo $item['quantity']; ?>"> 
-    <ion-icon name="cart"></ion-icon> Add to Cart
+        Add to Cart
   </button>
 
   <!-- Remove Button -->
   <form method="POST" action="wishlist-remove.php" id="remove-form-<?php echo $index; ?>">
     <input type="hidden" name="item_id" value="<?php echo $item['id']; ?>"> <!-- Assuming `id` is the primary key -->
-    <button type="button" class="remove" onclick="confirmRemove(<?php echo $index; ?>)">🗑️</button>
+    <button type="button" class="remove" onclick="confirmRemove(<?php echo $index; ?>)"><i class="fa fa-trash"></i></button>
   </form>
 </div>
       <?php endforeach; ?>

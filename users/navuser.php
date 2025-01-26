@@ -23,7 +23,8 @@
     <link rel="stylesheet" href="../css/dropdown.css?">
     <link rel="stylesheet" href="../css/main.css">
 </head>
-
+<link rel="icon" href="../images/logobg.jpg" type="image/png">
+<meta name="theme-color" content="#d0bcb3">
 
     <!-- header -->
 
@@ -82,13 +83,73 @@
         <a href="shopcart.php" class="view-shopping-cart-button">View My Shopping Cart</a>
     </div>
 </div>
+<div class="icons">
+    <?php 
+    // Initialize wishlist count
+    $count = 0;
+    
+    if (isset($_SESSION['customer'])) {
+        $cust_id = $_SESSION['customer']['cust_id'];
 
-            <div class="wishlist-container">
-                <a href="wishlist.php" class="wishlist-icon">
-                    <i class="fas fa-heart"></i>
+        // Fetch the count of wishlist items for the logged-in user
+        $stmt = $pdo->prepare("SELECT COUNT(*) AS wishlist_count FROM wishlist WHERE cust_id = :cust_id");
+        $stmt->execute(['cust_id' => $cust_id]);
+        $wishlistData = $stmt->fetch(PDO::FETCH_ASSOC);
+        
+        // Set the count based on the fetched data
+        $count = $wishlistData['wishlist_count'] ?? 0;
+    }
+    ?>
+    <div class="cart-container">
+        <a href="wishlist.php" class="wishlist-icon">
+            <i class="fas fa-heart"></i>
+            <span class="cart-count"><?php echo $count; ?></span>
+        </a>
+        <div class="wishlist-dropdown">
+            <p class="recent-products-title">Recently Added Wishlist Items</p>
+            <ul class="recent-products-list">
+                <?php 
+                // Fetch wishlist items for the logged-in user
+                $wishlist = [];
+                if (isset($_SESSION['customer'])) {
+                    $stmt = $pdo->prepare("
+                        SELECT p.name, p.featured_photo AS image, p.current_price AS price
+                        FROM wishlist w
+                        JOIN product p ON w.p_id = p.p_id
+                        WHERE w.cust_id = :cust_id
+                        ORDER BY w.id DESC
+                    ");
+                    $stmt->execute(['cust_id' => $cust_id]);
+                    $wishlist = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                }
+
+                // Display wishlist items
+                if (!empty($wishlist)) {
+                    $totalItems = 0;
+                    foreach ($wishlist as $item) {
+                        $totalItems++;
+                        if ($totalItems <= 5) { // Display only the first 5 items
+                            echo '<li class="product-item">';
+                            echo '<img src="../admin/uploads/' . (!empty($item['image']) ? htmlspecialchars($item['image']) : 'default-image.jpg') . '" alt="' . htmlspecialchars($item['name']) . '" class="product-image" style="width:50px; height:50px; object-fit:cover; margin-right:10px;">';
+                            echo '<span class="product-name">' . htmlspecialchars($item['name']) . '</span>';
+                            echo '<span class="product-price">₱' . htmlspecialchars(number_format($item['price'], 2)) . '</span>';
+                            echo '</li>';
+                        }
+                    }
+                } else {
+                    echo '<li class="empty-wishlist">Your wishlist is empty</li>';
+                }
+                ?>
+            </ul>
+            <?php if (!empty($wishlist) && count($wishlist) > 5): ?>
+                <a href="wishlist.php" class="view-wishlist-link" style="font-size: 1.3rem;">
+                    View <?php echo count($wishlist) - 5; ?> More Items In Wishlist
                 </a>
-            </div>
-
+            <?php endif; ?>
+            <a href="wishlist.php" class="view-shopping-cart-button">View My Wishlist</a>
+        </div>
+    </div>
+</div>
 
             <div class="user-dropdown">
     <a href="#" class="fas fa-user" onclick="toggleDropdown()">
@@ -357,6 +418,16 @@ document.addEventListener('click', (event) => {
 
     .dropdown-menu a:hover {
         background-color: #f1f1f1;
+    }
+    .wishlist-count {
+    background-color: red;
+    color: white;
+    border-radius: 50%;
+    font-size: 0.8rem;
+    padding: 2px 6px;
+    position: absolute;
+    top: -5px;
+    right: -5px;
     }
 </style>
 

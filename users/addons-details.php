@@ -40,7 +40,7 @@ $reviews = $reviewStmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
 <?php include('navuser.php'); ?>
-<link rel="stylesheet" href="../css/prod-details.css">
+<link rel="stylesheet" href="../css/prod-details.css?">
 
     <main>
         <div class="pic">
