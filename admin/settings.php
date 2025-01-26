@@ -211,40 +211,40 @@ if(isset($_POST['form2'])) {
 
             <div class="box box-info">
             <h1>Colors</h1>
-    <div class="box-body table-responsive table-container">
-        <table id="example1" class="table table-bordered table-hover table-striped">
-            <thead>
-                <tr>
-                    <th>#</th>
-                    <th>Color Name</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php
-                $i = 0;
-                $statement = $pdo->prepare("SELECT * FROM color ORDER BY color_id ASC");
-                $statement->execute();
-                $result = $statement->fetchAll(PDO::FETCH_ASSOC);							
-                foreach ($result as $row) {
-                    $i++;
-                    ?>
-                    <tr>
-                        <td><?php echo $i; ?></td>
-                        <td><?php echo $row['color_name']; ?></td>
-                        <td>
-                            <a href="#" class="btn btn-primary btn-xs" data-toggle="modal" data-target="#editColorModal" data-id="<?php echo $row['color_id']; ?>" data-name="<?php echo $row['color_name']; ?>">Edit</a>
-                            <a href="#" class="btn btn-danger btn-xs" data-href="settings/color-delete.php?id=<?php echo $row['color_id']; ?>" data-toggle="modal" data-target="#confirm-delete">Delete</a>
-                        </td>
-                    </tr>
-                    <?php
-                }
-                ?>
-            </tbody>
-        </table>
-    </div>
-    <section class="content-header" style="background-color: white !important;">
-    <div class="content-header-right">
+            <div class="box-body table-responsive table-container">
+                <table id="example1" class="table table-bordered table-hover table-striped">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Color Name</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+                        $i = 0;
+                        $statement = $pdo->prepare("SELECT * FROM color ORDER BY color_id ASC");
+                        $statement->execute();
+                        $result = $statement->fetchAll(PDO::FETCH_ASSOC);							
+                        foreach ($result as $row) {
+                            $i++;
+                            ?>
+                            <tr>
+                                <td><?php echo $i; ?></td>
+                                <td><?php echo $row['color_name']; ?></td>
+                                <td>
+                                    <a href="#" class="btn btn-primary btn-xs" data-toggle="modal" data-target="#editColorModal" data-id="<?php echo $row['color_id']; ?>" data-name="<?php echo $row['color_name']; ?>">Edit</a>
+                                    <a href="#" class="btn btn-danger btn-xs" data-href="settings/color-delete.php?id=<?php echo $row['color_id']; ?>" data-toggle="modal" data-target="#confirm-delete">Delete</a>
+                                </td>
+                            </tr>
+                            <?php
+                        }
+                        ?>
+                    </tbody>
+                </table>
+            </div>
+        <section class="content-header" style="background-color: white !important;">
+        <div class="content-header-right">
         <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#addColorModal">Add New</button>
     </div>
 </section>     
