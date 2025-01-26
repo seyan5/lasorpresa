@@ -163,6 +163,8 @@ include("../admin/inc/CSRF_Protect.php");
     }
   };
 </script>
+
+
 <style>
   :root {
     --pink: #e84393;
