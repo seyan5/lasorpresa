@@ -814,3 +814,21 @@ icons-container .icons span{
 }
 
 
+.wishlist-dropdown {
+    display: none;
+    position: absolute;
+    right: 0;
+    top: 40px; /* Closer to the icon */
+    width: 280px; /* Reduced width */
+    background-color: white;
+    box-shadow: 0 3px 4px rgba(0, 0, 0, 0.1); /* Softer shadow */
+    border-radius: 3px; /* Smaller radius */
+    font-size: 1.4rem;
+    z-index: 1000;
+    text-align: center;
+    overflow-y: auto; /* Enable vertical scrolling if content overflows */
+}
+
+.cart-container:hover .wishlist-dropdown {
+    display: block;
+}
