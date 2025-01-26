@@ -1,9 +1,8 @@
 <?php
 ob_start();
 session_start();
-include("../inc/config.php");
-include("../inc/functions.php");
-include("../inc/CSRF_Protect.php");
+include_once('../conn.php');
+
 require '../../mail/PHPMailer/src/Exception.php';
 require '../../mail/PHPMailer/src/PHPMailer.php';
 require '../../mail/PHPMailer/src/SMTP.php';

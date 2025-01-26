@@ -27,7 +27,6 @@ if (isset($_POST['form1'])) {
         $valid = 0;
         $error_message .= "Current price cannot be empty.<br>";
     }
-   
 
     // File Handling
     if (isset($_FILES['product_photo']['name']) && $_FILES['product_photo']['name'] !== '') {
@@ -52,9 +51,6 @@ if (isset($_POST['form1'])) {
                 current_price=?, 
                 quantity=?, 
                 description=?, 
-                short_description=?, 
-                feature=?, 
-                `condition`=?, 
                 is_featured=?, 
                 is_active=?, 
                 ecat_id=? 
@@ -65,9 +61,6 @@ if (isset($_POST['form1'])) {
                 $_POST['current_price'],
                 $_POST['quantity'],
                 $_POST['description'],
-                $_POST['short_description'],
-                $_POST['feature'],
-                $_POST['condition'],
                 $_POST['is_featured'],
                 $_POST['is_active'],
                 $_POST['ecat_id'],
@@ -90,9 +83,6 @@ if (isset($_POST['form1'])) {
                 current_price=?, 
                 quantity=?, 
                 description=?, 
-                short_description=?, 
-                feature=?, 
-                `condition`=?, 
                 is_featured=?, 
                 is_active=?, 
                 ecat_id=?, 
@@ -104,9 +94,6 @@ if (isset($_POST['form1'])) {
                 $_POST['current_price'],
                 $_POST['quantity'],
                 $_POST['description'],
-                $_POST['short_description'],
-                $_POST['feature'],
-                $_POST['condition'],
                 $_POST['is_featured'],
                 $_POST['is_active'],
                 $_POST['ecat_id'],
@@ -115,29 +102,18 @@ if (isset($_POST['form1'])) {
             ]);
         }
 
-        // Handle colors
-        $statement = $pdo->prepare("DELETE FROM product_color WHERE p_id=?");
-        $statement->execute([$_REQUEST['id']]);
-        if (!empty($_POST['color'])) {
-            foreach ($_POST['color'] as $value) {
-                $statement = $pdo->prepare("INSERT INTO product_color (color_id, p_id) VALUES (?, ?)");
-                $statement->execute([$value, $_REQUEST['id']]);
-            }
-        }
-
         $success_message = "Product has been updated successfully.";
     }
 }
 ?>
 
-
 <section class="content-header">
-	<div class="content-header-left">
-		<h1>Edit Product</h1>
-	</div>
-	<div class="content-header-right">
-		<a href="product.php" class="btn btn-primary btn-sm">View All</a>
-	</div>
+    <div class="content-header-left">
+        <h1>Edit Product</h1>
+    </div>
+    <div class="content-header-right">
+        <a href="product.php" class="btn btn-primary btn-sm">View All</a>
+    </div>
 </section>
 
 <?php
@@ -145,18 +121,17 @@ $statement = $pdo->prepare("SELECT * FROM product WHERE p_id=?");
 $statement->execute(array($_REQUEST['id']));
 $result = $statement->fetchAll(PDO::FETCH_ASSOC);
 foreach ($result as $row) {
-	$name = $row['name'];
-	$old_price = $row['old_price'];
-	$current_price = $row['current_price'];
-	$quantity = $row['quantity'];
-	$featured_photo = $row['featured_photo'];
-	$description = $row['description'];
-	$short_description = $row['short_description'];
-	$feature = $row['feature'];
-	$condition = $row['condition'];
-	$is_featured = $row['is_featured'];
-	$is_active = $row['is_active'];
-	$ecat_id = $row['ecat_id'];
+    $name = $row['name'];
+    $old_price = $row['old_price'];
+    $current_price = $row['current_price'];
+    $quantity = $row['quantity'];
+    $featured_photo = $row['featured_photo'];
+    $description = $row['description'];
+    $feature = $row['feature'];
+    $condition = $row['condition'];
+    $is_featured = $row['is_featured'];
+    $is_active = $row['is_active'];
+    $ecat_id = $row['ecat_id'];
 }
 
 $statement = $pdo->prepare("SELECT * 
@@ -169,247 +144,175 @@ $statement = $pdo->prepare("SELECT *
 $statement->execute(array($ecat_id));
 $result = $statement->fetchAll(PDO::FETCH_ASSOC);
 foreach ($result as $row) {
-	$ecat_name = $row['ecat_name'];
+    $ecat_name = $row['ecat_name'];
     $mcat_id = $row['mcat_id'];
     $tcat_id = $row['tcat_id'];
 }
-
-$statement = $pdo->prepare("SELECT * FROM product_color WHERE p_id=?");
-$statement->execute(array($_REQUEST['id']));
-$result = $statement->fetchAll(PDO::FETCH_ASSOC);							
-foreach ($result as $row) {
-	$color_id[] = $row['color_id'];
-}
 ?>
 
-
 <section class="content">
+    <div class="row">
+        <div class="col-md-12">
 
-	<div class="row">
-		<div class="col-md-12">
+            <!-- Success and Error Messages -->
+            <?php if($error_message): ?>
+                <div class="alert alert-danger">
+                    <strong>Error!</strong> <?php echo $error_message; ?>
+                </div>
+            <?php endif; ?>
 
-			<?php if($error_message): ?>
-			<div class="callout callout-danger">
-			
-			<p>
-			<?php echo $error_message; ?>
-			</p>
-			</div>
-			<?php endif; ?>
+            <?php if($success_message): ?>
+                <div class="alert alert-success">
+                    <strong>Success!</strong> <?php echo $success_message; ?>
+                </div>
+            <?php endif; ?>
 
-			<?php if($success_message): ?>
-			<div class="callout callout-success">
-			
-			<p><?php echo $success_message; ?></p>
-			</div>
-			<?php endif; ?>
+            <!-- Product Form -->
+            <form class="form-horizontal" action="" method="post" enctype="multipart/form-data">
+                <div class="box box-info">
+                    <div class="box-body">
 
-			<form class="form-horizontal" action="" method="post" enctype="multipart/form-data">
+                        <!-- Top Level Category -->
+                        <div class="form-group">
+                            <label for="tcat_id" class="col-sm-3 control-label">Top Level Category Name <span class="text-danger">*</span></label>
+                            <div class="col-sm-4">
+                                <select name="tcat_id" id="tcat_id" class="form-control select2">
+                                    <option value="">Select Top Level Category</option>
+                                    <?php
+                                    $statement = $pdo->prepare("SELECT * FROM top_category ORDER BY tcat_name ASC");
+                                    $statement->execute();
+                                    $result = $statement->fetchAll(PDO::FETCH_ASSOC);
+                                    foreach ($result as $row) {
+                                        ?>
+                                        <option value="<?php echo $row['tcat_id']; ?>" <?php if($row['tcat_id'] == $tcat_id){echo 'selected';} ?>><?php echo $row['tcat_name']; ?></option>
+                                        <?php
+                                    }
+                                    ?>
+                                </select>
+                            </div>
+                        </div>
 
-				<div class="box box-info">
-					<div class="box-body">
-						<div class="form-group">
-							<label for="" class="col-sm-3 control-label">Top Level Category Name <span>*</span></label>
-							<div class="col-sm-4">
-								<select name="tcat_id" class="form-control select2 top-cat">
-		                            <option value="">Select Top Level Category</option>
-		                            <?php
-		                            $statement = $pdo->prepare("SELECT * FROM top_category ORDER BY tcat_name ASC");
-		                            $statement->execute();
-		                            $result = $statement->fetchAll(PDO::FETCH_ASSOC);   
-		                            foreach ($result as $row) {
-		                                ?>
-		                                <option value="<?php echo $row['tcat_id']; ?>" <?php if($row['tcat_id'] == $tcat_id){echo 'selected';} ?>><?php echo $row['tcat_name']; ?></option>
-		                                <?php
-		                            }
-		                            ?>
-		                        </select>
-							</div>
-						</div>
-						<div class="form-group">
-							<label for="" class="col-sm-3 control-label">Mid Level Category Name <span>*</span></label>
-							<div class="col-sm-4">
-								<select name="mcat_id" class="form-control select2 mid-cat">
-		                            <option value="">Select Mid Level Category</option>
-		                            <?php
-		                            $statement = $pdo->prepare("SELECT * FROM mid_category WHERE tcat_id = ? ORDER BY mcat_name ASC");
-		                            $statement->execute(array($tcat_id));
-		                            $result = $statement->fetchAll(PDO::FETCH_ASSOC);   
-		                            foreach ($result as $row) {
-		                                ?>
-		                                <option value="<?php echo $row['mcat_id']; ?>" <?php if($row['mcat_id'] == $mcat_id){echo 'selected';} ?>><?php echo $row['mcat_name']; ?></option>
-		                                <?php
-		                            }
-		                            ?>
-		                        </select>
-							</div>
-						</div>
-						<div class="form-group">
-							<label for="" class="col-sm-3 control-label">End Level Category Name <span>*</span></label>
-							<div class="col-sm-4">
-								<select name="ecat_id" class="form-control select2 end-cat">
-		                            <option value="">Select End Level Category</option>
-		                            <?php
-		                            $statement = $pdo->prepare("SELECT * FROM end_category WHERE mcat_id = ? ORDER BY ecat_name ASC");
-		                            $statement->execute(array($mcat_id));
-		                            $result = $statement->fetchAll(PDO::FETCH_ASSOC); 
-		                            foreach ($result as $row) {
-		                                ?>
-		                                <option value="<?php echo $row['ecat_id']; ?>" <?php if($row['ecat_id'] == $ecat_id){echo 'selected';} ?>><?php echo $row['ecat_name']; ?></option>
-		                                <?php
-		                            }
-		                            ?>
-		                        </select>
-							</div>
-						</div>
-						<div class="form-group">
-							<label for="" class="col-sm-3 control-label">Product Name <span>*</span></label>
-							<div class="col-sm-4">
-								<input type="text" name="name" class="form-control" value="<?php echo $name; ?>">
-							</div>
-						</div>	
-						<div class="form-group">
-							<label for="" class="col-sm-3 control-label">Old Price<br><span style="font-size:10px;font-weight:normal;">(In USD)</span></label>
-							<div class="col-sm-4">
-								<input type="text" name="old_price" class="form-control" value="<?php echo $old_price; ?>">
-							</div>
-						</div>	
-						<div class="form-group">
-							<label for="" class="col-sm-3 control-label">Current Price <span>*</span><br><span style="font-size:10px;font-weight:normal;">(In USD)</span></label>
-							<div class="col-sm-4">
-								<input type="text" name="current_price" class="form-control" value="<?php echo $current_price; ?>">
-							</div>
-						</div>	
-						<div class="form-group">
-							<label for="" class="col-sm-3 control-label">Quantity <span>*</span></label>
-							<div class="col-sm-4">
-								<input type="text" name="quantity" class="form-control" value="<?php echo $quantity; ?>">
-							</div>
-						</div>
-						</div>
-						<div class="form-group">
-							<label for="" class="col-sm-3 control-label">Select Color</label>
-							<div class="col-sm-4">
-								<select name="color[]" class="form-control select2" multiple="multiple">
-									<?php
-									$is_select = '';
-									$statement = $pdo->prepare("SELECT * FROM color ORDER BY color_id ASC");
-									$statement->execute();
-									$result = $statement->fetchAll(PDO::FETCH_ASSOC);			
-									foreach ($result as $row) {
-										if(isset($color_id)) {
-											if(in_array($row['color_id'],$color_id)) {
-												$is_select = 'selected';
-											} else {
-												$is_select = '';
-											}
-										}
-										?>
-										<option value="<?php echo $row['color_id']; ?>" <?php echo $is_select; ?>><?php echo $row['color_name']; ?></option>
-										<?php
-									}
-									?>
-								</select>
-							</div>
-						</div>
-						<div class="form-group">
-							<label for="" class="col-sm-3 control-label">Existing Featured Photo</label>
-							<div class="col-sm-4" style="padding-top:4px;">
-								<img src="../assets/uploads/<?php echo $featured_photo; ?>" alt="" style="width:150px;">
-								<input type="hidden" name="current_photo" value="<?php echo $featured_photo; ?>">
-							</div>
-						</div>
-						<div class="form-group">
-							<label for="" class="col-sm-3 control-label">Change Featured Photo </label>
-							<div class="col-sm-4" style="padding-top:4px;">
-								<input type="file" name="featured_photo">
-							</div>
-						</div>
-						<div class="form-group">
-							<label for="" class="col-sm-3 control-label">Other Photos</label>
-							<div class="col-sm-4" style="padding-top:4px;">
-								<table id="ProductTable" style="width:100%;">
-			                        <tbody>
-			                        	<?php
-			                        	$statement = $pdo->prepare("SELECT * FROM product_photo WHERE p_id=?");
-			                        	$statement->execute(array($_REQUEST['id']));
-			                        	$result = $statement->fetchAll(PDO::FETCH_ASSOC);
-			                        	foreach ($result as $row) {
-			                        		?>
-											<tr>
-				                                <td>
-				                                    <img src="../uploads/product_photos/<?php echo $row['photo']; ?>" alt="" style="width:150px;margin-bottom:5px;">
-				                                </td>
-				                                <td style="width:28px;">
-				                                	<a onclick="return confirmDelete();" href="product-other-photo-delete.php?id=<?php echo $row['pp_id']; ?>&id1=<?php echo $_REQUEST['id']; ?>" class="btn btn-danger btn-xs">X</a>
-				                                </td>
-				                            </tr>
-			                        		<?php
-			                        	}
-			                        	?>
-			                        </tbody>
-			                    </table>
-							</div>
-							<div class="col-sm-2">
-			                    <input type="button" id="btnAddNew" value="Add Item" style="margin-top: 5px;margin-bottom:10px;border:0;color: #fff;font-size: 14px;border-radius:3px;" class="btn btn-warning btn-xs">
-			                </div>
-						</div>
-						<div class="form-group">
-							<label for="" class="col-sm-3 control-label">Description</label>
-							<div class="col-sm-8">
-								<textarea name="description" class="form-control" cols="30" rows="10" id="editor1"><?php echo $description; ?></textarea>
-							</div>
-						</div>
-						<div class="form-group">
-							<label for="" class="col-sm-3 control-label">Short Description</label>
-							<div class="col-sm-8">
-								<textarea name="short_description" class="form-control" cols="30" rows="10" id="editor1"><?php echo $short_description; ?></textarea>
-							</div>
-						</div>
-						<div class="form-group">
-							<label for="" class="col-sm-3 control-label">Features</label>
-							<div class="col-sm-8">
-								<textarea name="feature" class="form-control" cols="30" rows="10" id="editor3"><?php echo $feature; ?></textarea>
-							</div>
-						</div>
-						<div class="form-group">
-							<label for="" class="col-sm-3 control-label">Conditions</label>
-							<div class="col-sm-8">
-								<textarea name="condition" class="form-control" cols="30" rows="10" id="editor4"><?php echo $condition; ?></textarea>
-							</div>
-						</div>
-						</div>
-						<div class="form-group">
-							<label for="" class="col-sm-3 control-label">Is Featured?</label>
-							<div class="col-sm-8">
-								<select name="is_featured" class="form-control" style="width:auto;">
-									<option value="0" <?php if($is_featured == '0'){echo 'selected';} ?>>No</option>
-									<option value="1" <?php if($is_featured == '1'){echo 'selected';} ?>>Yes</option>
-								</select> 
-							</div>
-						</div>
-						<div class="form-group">
-							<label for="" class="col-sm-3 control-label">Is Active?</label>
-							<div class="col-sm-8">
-								<select name="is_active" class="form-control" style="width:auto;">
-									<option value="0" <?php if($is_active == '0'){echo 'selected';} ?>>No</option>
-									<option value="1" <?php if($is_active == '1'){echo 'selected';} ?>>Yes</option>
-								</select> 
-							</div>
-						</div>
-						<div class="form-group">
-							<label for="" class="col-sm-3 control-label"></label>
-							<div class="col-sm-6">
-								<button type="submit" class="btn btn-success pull-left" name="form1">Update</button>
-							</div>
-						</div>
-					</div>
-				</div>
+                        <!-- Mid Level Category -->
+                        <div class="form-group">
+                            <label for="mcat_id" class="col-sm-3 control-label">Mid Level Category Name <span class="text-danger">*</span></label>
+                            <div class="col-sm-4">
+                                <select name="mcat_id" id="mcat_id" class="form-control select2">
+                                    <option value="">Select Mid Level Category</option>
+                                    <?php
+                                    $statement = $pdo->prepare("SELECT * FROM mid_category WHERE tcat_id = ? ORDER BY mcat_name ASC");
+                                    $statement->execute(array($tcat_id));
+                                    $result = $statement->fetchAll(PDO::FETCH_ASSOC);
+                                    foreach ($result as $row) {
+                                        ?>
+                                        <option value="<?php echo $row['mcat_id']; ?>" <?php if($row['mcat_id'] == $mcat_id){echo 'selected';} ?>><?php echo $row['mcat_name']; ?></option>
+                                        <?php
+                                    }
+                                    ?>
+                                </select>
+                            </div>
+                        </div>
 
-			</form>
+                        <!-- End Level Category -->
+                        <div class="form-group">
+                            <label for="ecat_id" class="col-sm-3 control-label">End Level Category Name <span class="text-danger">*</span></label>
+                            <div class="col-sm-4">
+                                <select name="ecat_id" id="ecat_id" class="form-control select2">
+                                    <option value="">Select End Level Category</option>
+                                    <?php
+                                    $statement = $pdo->prepare("SELECT * FROM end_category WHERE mcat_id = ? ORDER BY ecat_name ASC");
+                                    $statement->execute(array($mcat_id));
+                                    $result = $statement->fetchAll(PDO::FETCH_ASSOC);
+                                    foreach ($result as $row) {
+                                        ?>
+                                        <option value="<?php echo $row['ecat_id']; ?>" <?php if($row['ecat_id'] == $ecat_id){echo 'selected';} ?>><?php echo $row['ecat_name']; ?></option>
+                                        <?php
+                                    }
+                                    ?>
+                                </select>
+                            </div>
+                        </div>
 
+                        <!-- Product Name -->
+                        <div class="form-group">
+                            <label for="name" class="col-sm-3 control-label">Product Name <span class="text-danger">*</span></label>
+                            <div class="col-sm-4">
+                                <input type="text" name="name" id="name" class="form-control" value="<?php echo $name; ?>" required>
+                            </div>
+                        </div>
 
-		</div>
-	</div>
+                        <!-- Old Price -->
+                        <div class="form-group">
+                            <label for="old_price" class="col-sm-3 control-label">Old Price</label>
+                            <div class="col-sm-4">
+                                <input type="text" name="old_price" id="old_price" class="form-control" value="<?php echo $old_price; ?>">
+                            </div>
+                        </div>
 
+                        <!-- Current Price -->
+                        <div class="form-group">
+                            <label for="current_price" class="col-sm-3 control-label">Current Price <span class="text-danger">*</span><br></label>
+                            <div class="col-sm-4">
+                                <input type="text" name="current_price" id="current_price" class="form-control" value="<?php echo $current_price; ?>" required>
+                            </div>
+                        </div>
+
+                        <!-- Quantity -->
+                        <div class="form-group">
+                            <label for="quantity" class="col-sm-3 control-label">Quantity <span class="text-danger">*</span></label>
+                            <div class="col-sm-4">
+                                <input type="text" name="quantity" id="quantity" class="form-control" value="<?php echo $quantity; ?>" required>
+                            </div>
+                        </div>
+
+                        <!-- Description -->
+                        <div class="form-group">
+                            <label for="description" class="col-sm-3 control-label">Description</label>
+                            <div class="col-sm-8">
+                                <textarea name="description" id="editor1" class="form-control" cols="30" rows="10"><?php echo $description; ?></textarea>
+                            </div>
+                        </div>
+
+                        <!-- Featured -->
+                        <div class="form-group">
+                            <label for="is_featured" class="col-sm-3 control-label">Is Featured?</label>
+                            <div class="col-sm-8">
+                                <select name="is_featured" id="is_featured" class="form-control">
+                                    <option value="0" <?php if($is_featured == 0){echo 'selected';} ?>>No</option>
+                                    <option value="1" <?php if($is_featured == 1){echo 'selected';} ?>>Yes</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Active Status -->
+                        <div class="form-group">
+                            <label for="is_active" class="col-sm-3 control-label">Is Active?</label>
+                            <div class="col-sm-8">
+                                <select name="is_active" id="is_active" class="form-control">
+                                    <option value="0" <?php if($is_active == 0){echo 'selected';} ?>>No</option>
+                                    <option value="1" <?php if($is_active == 1){echo 'selected';} ?>>Yes</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Featured Image -->
+                        <div class="form-group">
+                            <label for="product_photo" class="col-sm-3 control-label">Featured Image</label>
+                            <div class="col-sm-8">
+                                <?php if ($featured_photo != '') { ?>
+                                    <img src="../uploads/<?php echo $featured_photo; ?>" height="150" class="img-thumbnail mb-2">
+                                <?php } ?>
+                                <input type="file" name="product_photo" id="product_photo" class="form-control mb-2">
+                                <input type="hidden" name="current_photo" value="<?php echo $featured_photo; ?>">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Form Submit Button -->
+                    <div class="box-footer text-center">
+                        <button type="submit" name="form1" class="btn btn-success btn-lg">Update</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
 </section>

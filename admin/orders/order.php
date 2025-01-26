@@ -1,8 +1,5 @@
 <?php
-ob_start();
-include("../inc/config.php");
-include("../inc/functions.php");
-include("../inc/CSRF_Protect.php");
+include_once('../conn.php');
 require_once '../auth.php';
 
 // Pagination Variables
@@ -154,6 +151,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_status'])) {
                         <ion-icon name="color-wand-outline"></ion-icon>
                         </span>
                         <span class="title"> Customize Orders</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="../wishlist.php">
+                        <span class="icon">
+                        <ion-icon name="heart-outline"></ion-icon>
+                        </span>
+                        <span class="title"> Wishlists</span>
                     </a>
                 </li>
                 <li>

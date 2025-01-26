@@ -1,9 +1,6 @@
 <?php
-ob_start();
-include("inc/config.php");
-include("inc/functions.php");
-include("inc/CSRF_Protect.php");
-require_once 'auth.php';
+include('conn.php');
+
 
 // Pagination Variables
 $limit = 5; // Number of records per page

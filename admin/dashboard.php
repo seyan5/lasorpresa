@@ -1,8 +1,6 @@
 <?php
 ob_start();
-include("inc/config.php");
-include("inc/functions.php");
-include("inc/CSRF_Protect.php");
+include_once('conn.php');
 include('auth.php');
 
 // Query to fetch recent customers, ordered by the registration date
@@ -136,6 +134,14 @@ try {
                         <ion-icon name="color-wand-outline"></ion-icon>
                         </span>
                         <span class="title"> Customize Orders</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="wishlist.php">
+                        <span class="icon">
+                        <ion-icon name="heart-outline"></ion-icon>
+                        </span>
+                        <span class="title"> Wishlists</span>
                     </a>
                 </li>
                 <li>

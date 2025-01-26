@@ -1,6 +1,6 @@
 <?php
 include('auth.php');
-
+include('conn.php');
 // Include database configuration
 include '../config.php';
 
@@ -303,6 +303,14 @@ if ($result->num_rows > 0) {
                         <ion-icon name="color-wand-outline"></ion-icon>
                         </span>
                         <span class="title"> Customize Orders</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="wishlist.php">
+                        <span class="icon">
+                        <ion-icon name="heart-outline"></ion-icon>
+                        </span>
+                        <span class="title"> Wishlists</span>
                     </a>
                 </li>
                 <li>

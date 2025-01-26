@@ -1,5 +1,6 @@
 <?php require_once('../header.php');
-include('auth.php'); ?>
+include('../auth.php');
+?>
 
 <?php
 if(isset($_POST['form1'])) {

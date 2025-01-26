@@ -1,7 +1,8 @@
 <?php
 // Database connection
 require_once('../header.php');
-include('auth.php');
+include('../auth.php');
+
 
 $id = $_GET['id'] ?? 0;
 

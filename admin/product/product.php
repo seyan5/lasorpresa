@@ -101,6 +101,14 @@ require_once '../auth.php';
                     </a>
                 </li>
                 <li>
+                    <a href="../wishlist.php">
+                        <span class="icon">
+                        <ion-icon name="heart-outline"></ion-icon>
+                        </span>
+                        <span class="title"> Wishlists</span>
+                    </a>
+                </li>
+                <li>
                     <a href="../settings.php">
                         <span class="icon">
                             <ion-icon name="albums-outline"></ion-icon>
@@ -196,6 +204,8 @@ require_once '../auth.php';
                                 <td><?php echo $row['name']; ?></td>
                                 <td>₱ <?php echo $row['old_price']; ?></td>
                                 <td>₱ <?php echo $row['current_price']; ?></td>
+                                <td>₱ <?php echo number_format($row['old_price'], 2); ?></td>
+                                <td>₱ <?php echo number_format($row['current_price'], 2); ?></td>
                                 <td style="color: <?php echo ($row['quantity'] <= 10) ? 'red' : 'black'; ?>;">
                                 <?php echo $row['quantity']; ?>
                                 </td>

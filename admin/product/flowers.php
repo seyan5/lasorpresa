@@ -1,6 +1,8 @@
 <?php
 // Database connection
 require_once('../header.php');
+include('../auth.php');
+
 
 
 $stmt = $pdo->prepare("SELECT * FROM flowers");
@@ -98,6 +100,14 @@ $i = 1;  // Initialize $i for product numbering
                     </a>
                 </li>
                 <li>
+                    <a href="../wishlist.php">
+                        <span class="icon">
+                        <ion-icon name="heart-outline"></ion-icon>
+                        </span>
+                        <span class="title"> Wishlists</span>
+                    </a>
+                </li>
+                <li>
                     <a href="../settings.php">
                         <span class="icon">
                             <ion-icon name="albums-outline"></ion-icon>
@@ -168,13 +178,14 @@ $i = 1;  // Initialize $i for product numbering
                                 <td>₱ <?php echo number_format($flower['price'], 2); ?></td>
                                 <!-- <td><?php echo htmlspecialchars($flower['quantity']); ?></td> -->
                                 <td>										
-                                    <button type="button" class="btn btn-primary btn-xs" data-toggle="modal" data-target="#editFlowerModal" 
-                                        data-id="<?php echo $flower['id']; ?>" 
-                                        data-name="<?php echo htmlspecialchars($flower['name']); ?>" 
-                                        data-quantity="<?php echo $flower['quantity']; ?>" 
-                                        data-price="<?php echo $flower['price']; ?>">
-                                        Edit
-                                    </button>
+                                <button type="button" class="btn btn-primary btn-xs" data-toggle="modal" data-target="#editFlowerModal" 
+                                    data-id="<?php echo $flower['id']; ?>" 
+                                    data-name="<?php echo htmlspecialchars($flower['name']); ?>" 
+                                    data-quantity="<?php echo $flower['quantity']; ?>" 
+                                    data-price="<?php echo $flower['price']; ?>"
+                                    data-image="<?php echo $flower['image']; ?>">
+                                    Edit
+                                </button>
                                     <a href="#" class="btn btn-danger btn-xs" data-href="flower-delete.php?id=<?php echo $flower['id']; ?>" data-toggle="modal" data-target="#confirm-delete">Delete</a>  
                                 </td>
                             </tr>
@@ -263,7 +274,7 @@ $i = 1;  // Initialize $i for product numbering
                     <div class="form-group">
                         <label for="edit-image">Flower Image:</label>
                         <input type="file" name="image" id="edit-image" class="form-control">
-                        <img id="current-image" src="#" alt="Flower Image" style="max-width: 100px; margin-top: 10px;">
+                        <img id="current-image" src="" alt="Flower Image" style="max-width: 100px; margin-top: 10px;">
                     </div>
 
                     <!-- Modal Footer -->
@@ -310,12 +321,16 @@ $i = 1;  // Initialize $i for product numbering
 
         // Populate Edit Modal with product data
         $('#editFlowerModal').on('show.bs.modal', function(e) {
-            var button = $(e.relatedTarget);
-            $('#edit-id').val(button.data('id'));
-            $('#edit-name').val(button.data('name'));
-            $('#edit-quantity').val(button.data('quantity'));
-            $('#edit-price').val(button.data('price'));
-        });
+    var button = $(e.relatedTarget);
+    $('#edit-id').val(button.data('id'));
+    $('#edit-name').val(button.data('name'));
+    $('#edit-quantity').val(button.data('quantity'));
+    $('#edit-price').val(button.data('price'));
+    
+    // Set the current image source dynamically
+    var imageSrc = button.data('image');
+    $('#current-image').attr('src', imageSrc ? imageSrc : 'default-image.jpg');  // Set a default image if none exists
+});
     </script>
 </body>
 

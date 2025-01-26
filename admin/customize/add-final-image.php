@@ -1,7 +1,8 @@
 <?php
 ob_start();
 session_start();
-include("../inc/config.php");
+include_once('../conn.php');
+
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['orderitem_id'], $_POST['order_id']) && isset($_FILES['final_image'])) {
