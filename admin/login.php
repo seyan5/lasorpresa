@@ -5,12 +5,20 @@ include("inc/config.php");
 include("inc/functions.php");
 include("inc/CSRF_Protect.php");
 
+
+require '../mail/PHPMailer/src/Exception.php';
+require '../mail/PHPMailer/src/PHPMailer.php';
+require '../mail/PHPMailer/src/SMTP.php';
+
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
 if (isset($_POST['login'])) {
     $email = $_POST['email'];
     $password = $_POST['password'];
 
     try {
-        // Correct query to bind the :email parameter and include user_type
+        // Query to get user details
         $stmt = $pdo->prepare("SELECT id, name, email, password, user_type FROM users WHERE email = :email");
         $stmt->execute([':email' => $email]);
 
@@ -19,19 +27,41 @@ if (isset($_POST['login'])) {
         if ($user) {
             // Check if the password matches
             if (password_verify($password, $user['password'])) {
-                // Start the session and store user data
-                $_SESSION['id'] = $user['id'];
-                $_SESSION['name'] = $user['name'];
-                $_SESSION['email'] = $user['email'];
-                $_SESSION['user_type'] = $user['user_type'];
+                // Generate a 6-digit OTP
+                $otp = rand(100000, 999999);
 
-                // Redirect based on user type
-                if ($user['user_type'] === 'admin') {
-                    header("Location: dashboard.php"); // Change to admin dashboard page
-                } else {
-                    header("Location: login.php"); // Change to user home page
+                // Store OTP in session temporarily
+                $_SESSION['otp'] = $otp;
+                $_SESSION['otp_email'] = $email;
+                $_SESSION['user_data'] = $user; // Store user data for login post-OTP
+
+                // Send OTP via email
+                $mail = new PHPMailer(true);
+
+                try {
+                    $mail->isSMTP();
+                    $mail->Host = 'smtp.gmail.com'; // Replace with your SMTP host
+                    $mail->SMTPAuth = true;
+                    $mail->Username = 'jpdeogracias@gmail.com'; // Replace with your email
+                    $mail->Password = 'scut aysl nlei jyng'; // Replace with your email password
+                    $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
+                    $mail->Port = 465;
+
+                    $mail->setFrom('lasorpresa@gmail.com', 'Lasorpresa'); // Replace with your email
+                    $mail->addAddress($email);
+
+                    $mail->isHTML(true);
+                    $mail->Subject = 'Your Login OTP';
+                    $mail->Body = "Hello, <br>Your OTP for login is: <strong>$otp</strong>. It will expire in 5 minutes.";
+
+                    $mail->send();
+
+                    // Redirect to OTP verification page
+                    header("Location: verify-otp.php");
+                    exit;
+                } catch (Exception $e) {
+                    echo "Error sending OTP: " . $mail->ErrorInfo;
                 }
-                exit;
             } else {
                 echo "Incorrect password. Please try again.";
             }
@@ -43,6 +73,7 @@ if (isset($_POST['login'])) {
     }
 }
 ?>
+
 
 
 <!DOCTYPE html>
