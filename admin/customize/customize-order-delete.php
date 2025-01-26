@@ -1,9 +1,9 @@
 <?php
 ob_start();
 session_start();
-include("../inc/config.php");
-include("../inc/functions.php");
-include("../inc/CSRF_Protect.php");
+include_once('../conn.php');
+
+
 
 header('Content-Type: application/json');
 

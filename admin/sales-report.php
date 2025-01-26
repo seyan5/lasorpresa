@@ -1,9 +1,6 @@
 <?php
-ob_start();
-include('auth.php');
-include("inc/config.php");
-include("inc/functions.php");
-include("inc/CSRF_Protect.php");
+include('conn.php');
+
 
 $dateFilter = isset($_GET['filter']) ? $_GET['filter'] : 'all';
 $productTypeFilter = isset($_GET['product_type']) ? $_GET['product_type'] : 'all';  // Added filter for product type

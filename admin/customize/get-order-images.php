@@ -1,7 +1,9 @@
 <?php
 ob_start();
 session_start();
-include("../inc/config.php");
+include_once('../conn.php');
+
+
 
 if (isset($_GET['orderitem_id'])) { // Use orderitem_id instead of order_id
     $orderitemId = $_GET['orderitem_id'];

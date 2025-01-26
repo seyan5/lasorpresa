@@ -1,9 +1,6 @@
 <?php
-ob_start();
-session_start();
-include("inc/config.php");
-include("inc/functions.php");
-include("inc/CSRF_Protect.php");
+include('conn.php');
+
 
 // Check if the user is an admin
 if ($_SESSION['user_type'] !== 'admin') {

@@ -1,6 +1,6 @@
 <?php
 include('auth.php');
-
+include('conn.php');
 // Include database configuration
 include '../config.php';
 
