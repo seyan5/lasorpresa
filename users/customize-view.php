@@ -14,26 +14,26 @@ if (!isset($_SESSION['customer']['cust_email'])) {
 try {
     $cust_email = $_SESSION['customer']['cust_email']; // Get the logged-in user's email
 
-    // Updated SQL query to fetch data directly from custom_orderitems
+    // Updated SQL query to fetch data grouped by orderitem_id
     $sql = "SELECT 
+                o.orderitem_id, 
                 o.order_id, 
                 o.container_type, 
                 o.container_color, 
                 o.container_price,
-                GROUP_CONCAT(DISTINCT o.flower_details SEPARATOR ', ') AS flower_details, 
-                SUM(o.total_price) AS order_total_price,
+                o.flower_details, 
+                o.total_price AS orderitem_total_price,
                 cp.payment_status,
                 cp.shipping_status,
-                GROUP_CONCAT(DISTINCT ci.expected_image SEPARATOR ', ') AS expected_images,
-                GROUP_CONCAT(DISTINCT cf.final_image SEPARATOR ', ') AS final_images
+                ci.expected_image,
+                cf.final_image
             FROM custom_orderitems o
             INNER JOIN custom_order coo ON o.order_id = coo.order_id
             LEFT JOIN custom_payment cp ON o.order_id = cp.order_id
-            LEFT JOIN custom_images ci ON o.order_id = ci.order_id
-            LEFT JOIN custom_finalimages cf ON o.order_id = cf.order_id
+            LEFT JOIN custom_images ci ON o.orderitem_id = ci.orderitem_id
+            LEFT JOIN custom_finalimages cf ON o.orderitem_id = cf.orderitem_id
             WHERE coo.customer_email = :customer_email
-            GROUP BY o.order_id
-            ORDER BY o.order_id ASC;";
+            ORDER BY o.orderitem_id ASC;";
     
     $stmt = $pdo->prepare($sql);
     $stmt->execute([':customer_email' => $cust_email]);
@@ -42,7 +42,6 @@ try {
 
     // Output styles and structure
     echo "<style>
-            /* CSS Styles */
             body {
                 font-family: Arial, sans-serif;
                 background-color: #f4f4f4;
@@ -143,45 +142,30 @@ try {
     if (!empty($orders)) {
         foreach ($orders as $order) {
             echo "<div class='order-section'>
-                    <h3>Order ID: {$order['order_id']}</h3>
+                    <h3>Order Item ID: {$order['orderitem_id']}</h3>
+                    <p><label>Order ID:</label> {$order['order_id']}</p>
                     <p><label>Container Type:</label> {$order['container_type']}</p>
                     <p><label>Container Color:</label> {$order['container_color']}</p>
-                    <p><label>Container Price:</label> ₱{$order['container_price']}</p>";
+                    <p><label>Container Price:</label> ₱{$order['container_price']}</p>
+                    <p><label>Flower Details:</label> {$order['flower_details']}</p>
+                    <p><label>Order Item Total Price:</label> ₱{$order['orderitem_total_price']}</p>
+                    <p><label>Payment Status:</label> {$order['payment_status']}</p>
+                    <p><label>Shipping Status:</label> {$order['shipping_status']}</p>";
 
-            // Display flower details
-            if (!empty($order['flower_details'])) {
-                $flowerDetails = explode(", ", $order['flower_details']);
-                foreach ($flowerDetails as $flowerDetail) {
-                    echo "<p><label>Flower:</label> {$flowerDetail}</p>";
-                }
+            // Expected image
+            if (!empty($order['expected_image'])) {
+                echo "<p><strong>Expected Image:</strong></p>";
+                echo "<img src='uploads/{$order['expected_image']}' alt='Expected Image'>";
             } else {
-                echo "<p>No flowers available for this order.</p>";
+                echo "<p>No expected image available.</p>";
             }
 
-            echo "<p><label>Order Total Price:</label> ₱{$order['order_total_price']}</p>";
-            echo "<p><label>Payment Status:</label> {$order['payment_status']}</p>";
-            echo "<p><label>Shipping Status:</label> {$order['shipping_status']}</p>";
-
-            // Expected images
-            if (!empty($order['expected_images'])) {
-                echo "<p><strong>Expected Images:</strong></p>";
-                $expectedImages = explode(", ", $order['expected_images']);
-                foreach ($expectedImages as $image) {
-                    echo "<img src='uploads/{$image}' alt='Expected Image'>";
-                }
+            // Final image
+            if (!empty($order['final_image'])) {
+                echo "<p><strong>Final Image:</strong></p>";
+                echo "<img src='../admin/customize/final_image_uploads/{$order['final_image']}' alt='Final Image'>";
             } else {
-                echo "<p>No expected images available.</p>";
-            }
-
-            // Final images
-            if (!empty($order['final_images'])) {
-                echo "<p><strong>Final Images:</strong></p>";
-                $finalImages = explode(", ", $order['final_images']);
-                foreach ($finalImages as $image) {
-                    echo "<img src='../admin/customize/final_image_uploads/{$image}' alt='Final Image'>";
-                }
-            } else {
-                echo "<p>No final images available.</p>";
+                echo "<p>No final image available.</p>";
             }
 
             echo "</div>";

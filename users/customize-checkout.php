@@ -113,47 +113,50 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['selected_customizatio
                 'order_id' => $order_id,
                 'flower_details' => $flower_details_string,
                 'container_type' => $container_name,
-                'container_color' => $color_name, // Use color name here
+                'container_color' => $color_name,
                 'flower_price' => $customization_total_price - $container_price,
                 'container_price' => $container_price,
                 'total_price' => $customization_total_price,
                 'remarks' => $customization['remarks'] ?? 'None',
             ]);
 
+            $orderitem_id = $pdo->lastInsertId(); // Capture the last inserted `orderitem_id`
             $total_price += $customization_total_price;
 
             // Insert expected image into `custom_images`
             if (!empty($customization['expected_image'])) {
                 $stmt = $pdo->prepare("
-                    INSERT INTO custom_images (order_id, expected_image) 
-                    VALUES (:order_id, :expected_image)
+                    INSERT INTO custom_images (orderitem_id, order_id, expected_image) 
+                    VALUES (:orderitem_id, :order_id, :expected_image)
                 ");
                 $stmt->execute([
+                    'orderitem_id' => $orderitem_id,
                     'order_id' => $order_id,
                     'expected_image' => $customization['expected_image']
                 ]);
             }
+
+            // Insert into `custom_payment` with `orderitem_id`
+            $stmt = $pdo->prepare("
+                INSERT INTO custom_payment (orderitem_id, order_id, customer_name, customer_email, reference_number, amount_paid, payment_method, payment_status, shipping_status, order_date)
+                VALUES (:orderitem_id, :order_id, :customer_name, :customer_email, :reference_number, :amount_paid, :payment_method, :payment_status, :shipping_status, NOW())
+            ");
+            $stmt->execute([
+                'orderitem_id' => $orderitem_id,
+                'order_id' => $order_id,
+                'customer_name' => $customer['cust_name'],
+                'customer_email' => $customer['cust_email'],
+                'reference_number' => $reference_number,
+                'amount_paid' => $amount_paid,
+                'payment_method' => $payment_method,
+                'payment_status' => $payment_method === 'gcash' ? 'Paid' : 'Pending',
+                'shipping_status' => 'Pending',
+            ]);
         }
 
         // Update total price in `custom_order`
         $stmt = $pdo->prepare("UPDATE custom_order SET total_price = :total_price WHERE order_id = :order_id");
         $stmt->execute(['total_price' => $total_price, 'order_id' => $order_id]);
-
-        // Insert into `custom_payment`
-        $stmt = $pdo->prepare("
-            INSERT INTO custom_payment (order_id, customer_name, customer_email, reference_number, amount_paid, payment_method, payment_status, shipping_status, order_date)
-            VALUES (:order_id, :customer_name, :customer_email, :reference_number, :amount_paid, :payment_method, :payment_status, :shipping_status, NOW())
-        ");
-        $stmt->execute([
-            'order_id' => $order_id,
-            'customer_name' => $customer['cust_name'],
-            'customer_email' => $customer['cust_email'],
-            'reference_number' => $reference_number,
-            'amount_paid' => $amount_paid,
-            'payment_method' => $payment_method,
-            'payment_status' => $payment_method === 'gcash' ? 'Paid' : 'Pending',
-            'shipping_status' => 'Pending',
-        ]);
 
         $pdo->commit();
 

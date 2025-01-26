@@ -60,56 +60,50 @@ foreach ($selected_indices as $index) {
             'flower_details' => $flower_details,
             'remarks' => $customization['remarks'] ?? 'None',
             'total_price' => $customization_price,
-            'expected_image' => $expected_image, // Include expected image
+            'expected_image' => $expected_image,
         ];
     }
 }
 
 // Check if valid customizations exist
 if (empty($grouped_customization)) {
-    echo "No valid customizations found. Redirecting to cart...";
-    header("refresh:3;url=customize-cart.php");
-    exit;
+    echo "<p>Your cart is empty.</p>";
+    $total_price = 0; // Ensure total_price is set to 0
 }
 ?>
 <?php include('navuser.php'); ?>
 <?php include('back.php'); ?>
 <link rel="stylesheet" href="../css/shopcart.css">
+
 <body>
     <div class="container">
         <div class="cart">
             <hr>
             <h3>Order Summary</h3>
 
-            <?php if (isset($_SESSION['cart']) && count($_SESSION['cart']) > 0): ?>
-                <p>You have <?php echo count($_SESSION['cart']); ?> items in your cart</p>
+            <?php if (!empty($grouped_customization)): ?>
+                <p>You have <?php echo count($grouped_customization); ?> items in your cart</p>
 
                 <?php foreach ($grouped_customization as $customization): ?>
                     <div class="cart-item">
-                        <?php if (isset($customization['expected_image']) && $customization['expected_image']): ?>
-                            <img src="uploads/<?php echo htmlspecialchars($customization['expected_image']); ?>"
-                                alt="<?php echo htmlspecialchars($customization['container_name']); ?>" width="50">
+                        <?php if (!empty($customization['expected_image'])): ?>
+                            <img src="uploads/<?php echo htmlspecialchars($customization['expected_image']); ?>" alt="<?php echo htmlspecialchars($customization['container_name']); ?>" width="50">
                         <?php else: ?>
                             <img src="path/to/default-image.jpg" alt="No image available" width="50">
                         <?php endif; ?>
 
                         <div>
-                            <p>Container Type: <?php echo htmlspecialchars($customization['container_name']); ?>
-                            (₱<?php echo number_format($customization['container_price'], 2); ?>)</p>
+                            <p>Container Type: <?php echo htmlspecialchars($customization['container_name']); ?> (₱<?php echo number_format($customization['container_price'], 2); ?>)</p>
                             <p>Flowers:
                                 <?php foreach ($customization['flower_details'] as $flower): ?>
-                                <?php echo htmlspecialchars($flower); ?>
+                                    <?php echo htmlspecialchars($flower); ?><br>
                                 <?php endforeach; ?>
                             </p>
                             <p>Remarks: <?php echo htmlspecialchars($customization['remarks']); ?></p>
                         </div>
 
-                        <div class="quantity">
-                            <?php echo $item['quantity']; ?>
-                        </div>
-
                         <div class="price">
-                            ₱<?php echo number_format($customization['total_price'], 2); ?>
+                            ₱<?php echo number_format($customization['total_price'] ?? 0, 2); ?>
                         </div>
                     </div>
                 <?php endforeach; ?>
@@ -117,20 +111,20 @@ if (empty($grouped_customization)) {
                 <p>Your cart is empty.</p>
             <?php endif; ?>
         </div>
+
         <div class="payment">
             <h3>Payment</h3>
             <form id="checkout-form" action="customize-checkout.php" method="POST">
                 <label for="cust_name">Full Name: </label>
-                <span id="cust_name"><?php echo htmlspecialchars($customer['cust_name']); ?></span>
+                <span id="cust_name"><?php echo htmlspecialchars($customer['cust_name'] ?? ''); ?></span>
 
                 <label for="cust_phone">Phone Number: </label>
-                <span id="cust_phone"><?php echo htmlspecialchars($customer['cust_phone']); ?></span>
+                <span id="cust_phone"><?php echo htmlspecialchars($customer['cust_phone'] ?? ''); ?></span>
 
                 <label for="address">Address: </label>
-                <span id="cust_address"><?php echo htmlspecialchars($customer['cust_address']); ?></span>
+                <span id="cust_address"><?php echo htmlspecialchars($customer['cust_address'] ?? ''); ?></span>
 
-                <input type="hidden" name="selected_customizations"
-                value="<?php echo htmlspecialchars(json_encode($selected_indices)); ?>"> 
+                <input type="hidden" name="selected_customizations" value="<?php echo htmlspecialchars(json_encode($selected_indices)); ?>">
                 <label for="payment_method">Mode of Payment:</label>
                 <div class="pradio">
                     <input type="radio" id="gcash" name="payment_method" value="gcash" required>
@@ -150,11 +144,8 @@ if (empty($grouped_customization)) {
 
             <hr>
             <div class="summary">
-                <p>Subtotal <span>₱<?php echo number_format($customization['total_price'], 2); ?></span></p>
-                <p>
-                    <strong>Total:</strong>
-                    ₱<?php echo number_format($total_price, 2); ?>
-                </p>
+                <p>Subtotal <span>₱<?php echo number_format($total_price ?? 0, 2); ?></span></p>
+                <p><strong>Total:</strong> ₱<?php echo number_format($total_price ?? 0, 2); ?></p>
             </div>
             <button class="checkout" type="button" onclick="handleCheckout()" disabled>Checkout</button>
         </div>
