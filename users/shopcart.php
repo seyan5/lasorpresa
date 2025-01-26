@@ -3,9 +3,9 @@ session_start();
 include("../admin/inc/config.php");
 include("../admin/inc/functions.php");
 include("../admin/inc/CSRF_Protect.php");
-?>
-<?php include('navuser.php'); ?>
-<?php include('back.php'); ?>
+include('navuser.php');
+include('back.php');
+ ?>
 
 <div class="container">
   <div class="cart">
