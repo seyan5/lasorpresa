@@ -131,7 +131,7 @@ include("../admin/inc/CSRF_Protect.php");
                     Let us help you make every occasion unforgettable with the perfect arrangement crafted just for you.
 
                     Surprise them beautifully, with La Sorpresa by J & B.</p>
-                <a href="#" class="btn">Learn More!</a>
+                <a href="contacts.php" class="btn">Learn More!</a>
             </div>
         </div>
 

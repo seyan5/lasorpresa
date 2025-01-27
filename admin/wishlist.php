@@ -25,6 +25,8 @@ $stmt->execute();
 $wishlist_items = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -121,6 +123,7 @@ $wishlist_items = $stmt->fetchAll(PDO::FETCH_ASSOC);
 </head>
 <body>
     <div class="container">
+        
         <h1>Wishlist Items</h1>
 
         <?php if (count($wishlist_items) > 0) : ?>
