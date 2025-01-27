@@ -190,7 +190,7 @@
             FROM payment p
             JOIN order_items oi ON p.order_id = oi.order_id
             JOIN product pr ON oi.product_id = pr.p_id
-            LEFT JOIN custom_payment cp ON p.order_id = cp.order_id
+            LEFT JOIN custom_payment cp ON p.order_id = cp.orderitem_id
             WHERE p.cust_id = :cust_id
             ORDER BY p.created_at DESC
         ");
@@ -205,12 +205,12 @@
             <?php 
             // Validate payment and shipping status
             $paymentStatus = isset($payment['payment_status']) ? 
-                             ($payment['payment_status'] == 'pending' ? ' Pending' : 
+                             ($payment['payment_status'] == 'pending' ? 'Pending' : 
                              ($payment['payment_status'] == 'paid' ? 'Paid' : 'Payment Failed')) : 'Unknown';
 
             // Modified Shipping status logic
             $shippingStatus = isset($payment['shipping_status']) ? 
-                              ($payment['shipping_status'] == 'pending' ? ' Pending' : 
+                              ($payment['shipping_status'] == 'pending' ? 'Pending' : 
                               ($payment['shipping_status'] == 'shipped' ? 'Shipped' : 
                               ($payment['shipping_status'] == 'delivered' ? 'Delivered' : 
                               ($payment['shipping_status'] == 'readyforpickup' ? 'Ready for Pickup' : '')))) : 'Unknown';
@@ -261,6 +261,7 @@
         </li>
     <?php } ?>
 </div>
+
 
 
 
