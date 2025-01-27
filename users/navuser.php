@@ -203,9 +203,17 @@
         <hr>
         <?php foreach ($payments as $payment): ?>
             <?php 
-            // Payment and Shipping status for normal orders
-            $paymentStatus = ($payment['payment_status'] == 'pending') ? 'Payment Pending' : ($payment['payment_status'] == 'paid' ? 'Paid' : 'Payment Failed');
-            $shippingStatus = ($payment['shipping_status'] == 'pending') ? 'Shipping Pending' : ($payment['shipping_status'] == 'shipped' ? 'Shipped' : 'Delivered');
+            // Validate payment and shipping status
+            $paymentStatus = isset($payment['payment_status']) ? 
+                             ($payment['payment_status'] == 'pending' ? ' Pending' : 
+                             ($payment['payment_status'] == 'paid' ? 'Paid' : 'Payment Failed')) : 'Unknown';
+
+            // Modified Shipping status logic
+            $shippingStatus = isset($payment['shipping_status']) ? 
+                              ($payment['shipping_status'] == 'pending' ? ' Pending' : 
+                              ($payment['shipping_status'] == 'shipped' ? 'Shipped' : 
+                              ($payment['shipping_status'] == 'delivered' ? 'Delivered' : 
+                              ($payment['shipping_status'] == 'readyforpickup' ? 'Ready for Pickup' : '')))) : 'Unknown';
 
             // Custom payment and shipping status for custom orders
             $customPaymentStatus = $payment['custom_payment_status'] ?? null;
@@ -253,6 +261,8 @@
         </li>
     <?php } ?>
 </div>
+
+
 
 
 
