@@ -3,7 +3,9 @@ include("conn.php");
 include('navuser.php');
 include('back.php');
 ?>
-
+<div class="ccart">
+  <a href="customize-cart.php" class="button">View your Customization Cart</a>
+</div>
 <div class="container">
   <div class="cart">
     <hr>
@@ -57,11 +59,8 @@ include('back.php');
         <p>Your cart is empty.</p>
       <?php endif; ?>
       <a href="addons.php">Want to get addons?</a>
-  </div>
-  
-
+  </div>  
   <div class="payment">
-  <a href="customize-cart.php">View your Customization Cart?</a>
     <h3>Summary</h3>
     <hr>
     <div class="summary">
@@ -249,334 +248,392 @@ include('back.php');
 
 
 <style>
-  :root {
-    --pink: #e84393;
-    --main: #d0bcb3;
-    --font: #d18276;
-    --button: #d6a98f;
+:root {
+  --pink: #e84393;
+  --main: #d0bcb3;
+  --font: #d18276;
+  --button: #d6a98f;
+}
+
+.container {
+  display: flex;
+  max-width: 1600px;
+  margin: 40px auto;
+  gap: 30px;
+  margin-top: 0;
+}
+
+/* Cart and Payment sections */
+.cart,
+.payment {
+  border-radius: 12px;
+  padding: 30px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.cart {
+  flex: 3;
+  margin-top: -5rem;
+  max-height: 50vh;
+  overflow-y: auto;
+  padding-right: 10px;
+  scrollbar-width: thin;
+  scrollbar-color: #ccc transparent;
+}
+
+/* Scrollbar styles */
+.cart::-webkit-scrollbar {
+  width: 8px;
+}
+
+.cart::-webkit-scrollbar-thumb {
+  background: #ccc;
+  border-radius: 4px;
+}
+
+.cart::-webkit-scrollbar-thumb:hover {
+  background: #aaa;
+}
+
+.cart::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.cart p {
+  font-size: 15px;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  font-style: italic;
+}
+
+.payment {
+  background-color: rgb(233, 221, 204);
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 400px;
+  margin: 20px auto;
+}
+
+/* Titles and Links */
+.cart h2, .cart h3, .payment h3 {
+  margin: 0;
+  font-size: 25px;
+  color: #333;
+}
+
+.cart a {
+  font-size: 15px;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  font-style: italic;
+}
+
+.cart-checkbox {
+  margin: 10px;
+}
+
+.cart-item {
+  display: flex;
+  align-items: center;
+  margin-top: 20px;
+  border-bottom: 2px solid #ddd;
+  padding-bottom: 15px;
+}
+
+.cart-item img {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+.cart-item div {
+  margin-left: 15px;
+  flex: 1;
+}
+
+.cart-item h4 {
+  margin: 0;
+  font-size: 15px;
+}
+
+.cart-item p {
+  margin: 8px 0 0;
+  font-size: 20px;
+  color: #666;
+}
+
+.cart-item .price {
+  font-size: 15px;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  font-style: italic;
+  font-weight: 900;
+}
+
+.quantity input {
+  width: 60px;
+  text-align: center;
+  font-size: 16px;
+}
+
+/* Delete button */
+.delete {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #aaa;
+  font-size: 25px;
+  padding: 8px;
+  border-radius: 4px;
+  transition: color 0.3s ease, background-color 0.3s ease;
+  margin-right: 5rem;
+}
+
+.delete:hover {
+  color: #ff0000;
+}
+
+.payment-options {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+.payment-options img {
+  width: 60px;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+form label {
+  font-size: 16px;
+  color: #444;
+}
+
+form input {
+  padding: 12px;
+  border: 2px solid #ccc;
+  border-radius: 6px;
+  font-size: 16px;
+}
+
+form input:focus {
+  border-color: #4caf50;
+  outline: none;
+}
+
+.summary {
+  margin-top: 30px;
+}
+
+.summary p {
+  display: flex;
+  justify-content: space-between;
+  margin: 15px 0;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.checkout {
+  width: 100%;
+  background-color: #333;
+  color: #fff;
+  padding: 15px;
+  font-size: 18px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.checkout:hover {
+  background-color: var(--button);
+}
+
+/* Quantity controls */
+.quantity-form {
+  display: flex;
+  align-items: center;
+}
+
+.quantity-form button {
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
+  padding: 5px;
+  cursor: pointer;
+}
+
+.quantity-form span {
+  margin: 0 10px;
+  font-weight: bold;
+}
+
+/* Quantity controls alignment */
+.quantity-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-control {
+  background-color: #007bff;
+  color: black;
+  border: none;
+  padding: 5px 10px;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.btn-control:hover {
+  background-color: #0056b3;
+}
+
+.quantity-value {
+  min-width: 24px;
+  text-align: center;
+  font-size: 16px;
+}
+
+/* Ccart positioning */
+.ccart {
+  margin-left: 132rem;
+  margin-top: 20rem;
+}
+
+.ccart .button {
+  background-color: #333;
+  color: white;
+  padding: 8px 16px;
+  text-decoration: none;
+  border-radius: 4px;
+  font-size: 14px;
+  display: inline-block;
+  transition: background-color 0.3s ease;
+}
+
+.ccart .button:hover {
+  background-color: var(--button);
+}
+
+/* Media Queries for Responsiveness */
+
+@media (max-width: 1020px) {
+  .container {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  
+  .cart {
+    flex: 2;
+    max-height: 50vh;
+    margin-top: 0;
+  }
+  
+  .payment {
+    max-width: 300px;
+    margin: 20px auto;
   }
 
+  .cart-item img {
+    width: 80px;
+    height: 80px;
+  }
+
+  .cart-item h4 {
+    font-size: 14px;
+  }
+
+  .cart-item p {
+    font-size: 18px;
+  }
+
+  .quantity input {
+    width: 50px;
+  }
+
+  .summary p {
+    font-size: 14px;
+  }
+
+  .checkout {
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 780px) {
   .container {
-    display: flex;
-    max-width: 1600px;
-    /* Increased max-width for larger layout */
-    margin: 40px auto;
-    /* Larger margin for spacing */
-    gap: 30px;
-    /* Increased gap between cart and payment sections */
-    margin-top: 25rem;
-    /* Adjusted margin-top for better alignment */
+    flex-direction: column;
+    align-items: center;
+    margin: 20px;
   }
 
   .cart,
   .payment {
-    border-radius: 12px;
-    /* Smoother corners */
-    padding: 30px;
-    /* Larger padding for better spacing */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    /* Added shadow for both */
-  }
-
-  .cart {
-    flex: 3;
-    margin-top: -5rem;
-    max-height: 50vh;
-    /* Set a max height to limit the cart size */
-    overflow-y: auto;
-    /* Enable vertical scrolling */
-    padding-right: 10px;
-    scrollbar-width: thin;
-    /* Slim scrollbar */
-    scrollbar-color: #ccc transparent;
-    /* Custom scrollbar color */
-  }
-
-  /* Optional: Custom scrollbar styles for Webkit browsers (e.g., Chrome, Edge, Safari) */
-  .cart::-webkit-scrollbar {
-    width: 8px;
-    /* Scrollbar width */
-  }
-
-  .cart::-webkit-scrollbar-thumb {
-    background: #ccc;
-    /* Scrollbar thumb color */
-    border-radius: 4px;
-    /* Rounded corners */
-  }
-
-  .cart::-webkit-scrollbar-thumb:hover {
-    background: #aaa;
-    /* Hover color */
-  }
-
-  .cart::-webkit-scrollbar-track {
-    background: transparent;
-    /* Scrollbar track color */
-  }
-
-
-  .cart p {
-    font-size: 15px;
-    /* Larger font size */
-    font-family: Verdana, Geneva, Tahoma, sans-serif;
-    font-style: italic;
-  }
-
-  .payment {
-    width: 400px;
-    /* Fixed width for consistent size */
+    padding: 20px;
+    width: 100%;
     max-width: 100%;
-    /* Ensures it doesn’t overflow the container on smaller screens */
-    background-color: rgb(233, 221, 204);
-    /* Slightly lighter shade for contrast */
-    border-radius: 12px;
-    /* Smooth corners */
-    padding: 30px;
-    /* Ample padding for content spacing */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    /* Subtle shadow for better visibility */
-    align-self: flex-start;
-    /* Aligns with the top of the container */
-    position: sticky;
-    /* Optional: keeps it visible on scroll */
-    top: 20px;
-    /* Ensures it sticks from the top */
-  }
-
-  .cart h2,
-  .cart h3,
-  .payment h3 {
-    margin: 0;
-    font-size: 25px;
-    /* Increased font size */
-    color: #333;
-    /* Darker color for emphasis */
-  }
-
-  .cart a {
-    font-size: 15px;
-    /* Larger font size */
-    font-family: Verdana, Geneva, Tahoma, sans-serif;
-    font-style: italic;
-  }
-
-  .cart-checkbox{
-    margin: 10px;
   }
 
   .cart-item {
-    display: flex;
-    align-items: center;
-    margin-top: 20px;
-    border-bottom: 2px solid #ddd;
-    /* Thicker border for clarity */
-    padding-bottom: 15px;
-    /* Extra padding for spacing */
+    flex-direction: column;
+    align-items: flex-start;
   }
 
   .cart-item img {
-    width: 100px;
-    /* Larger image size */
-    height: 100px;
-    /* Larger image size */
-    object-fit: cover;
-    border-radius: 10px;
-    /* Adjusted for a modern look */
+    width: 70px;
+    height: 70px;
   }
 
   .cart-item div {
-    margin-left: 15px;
-    /* Increased spacing */
-    flex: 1;
-  }
-
-  .cart-item h4 {
-    margin: 0;
-    font-size: 15px;
-    /* Increased font size */
-  }
-
-  .cart-item p {
-    margin: 8px 0 0;
-    /* Adjusted spacing */
-    font-size: 20px;
-    /* Larger font size */
-    color: #666;
-    /* Slightly lighter color */
-  }
-
-  .cart-item .price {
-    font-size: 15px;
-    /* Larger font size */
-    font-family: Verdana, Geneva, Tahoma, sans-serif;
-    font-style: italic;
-    font-weight: 900;
-  }
-
-  .quantity input {
-    width: 60px;
-    /* Wider input field */
-    text-align: center;
-    font-size: 16px;
-    /* Larger font size */
-  }
-
-  /* Delete button styles */
-  .delete {
-    background: none;
-    border: none;
-    cursor: pointer;
-    color: #aaa;
-    /* Default icon color */
-    font-size: 25px;
-    /* Icon size */
-    padding: 8px;
-    /* Add some padding for better clickability */
-    border-radius: 4px;
-    /* Optional: rounded corners */
-    transition: color 0.3s ease, background-color 0.3s ease;
-    /* Smooth transitions */
-    margin-right: 5rem;
-  }
-
-  .delete:hover {
-    color: #ff0000;
-    /* Change to red on hover */
-  }
-
-
-  .payment-options {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-    /* Increased gap for better spacing */
-    margin-bottom: 30px;
-    /* More spacing from other sections */
-  }
-
-  .payment-options img {
-    width: 60px;
-    /* Larger icons */
-  }
-
-  form {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    /* Increased gap for better spacing */
-  }
-
-  form label {
-    font-size: 16px;
-    /* Larger font size */
-    color: #444;
-    /* Slightly darker color */
-  }
-
-  form input {
-    padding: 12px;
-    /* Increased padding */
-    border: 2px solid #ccc;
-    /* Thicker border */
-    border-radius: 6px;
-    /* Smoother corners */
-    font-size: 16px;
-    /* Larger font size */
-  }
-
-  form input:focus {
-    border-color: #4caf50;
-    /* Highlight border on focus */
-    outline: none;
-  }
-
-  .summary {
-    margin-top: 30px;
-    /* Larger margin */
+    margin-left: 0;
+    margin-top: 10px;
   }
 
   .summary p {
-    display: flex;
-    justify-content: space-between;
-    margin: 15px 0;
-    /* Larger spacing between rows */
-    font-size: 16px;
-    /* Larger font size */
-    font-weight: bold;
-    /* Bold text for emphasis */
+    font-size: 13px;
   }
 
   .checkout {
-    width: 100%;
-    background-color: #333;
-    color: #fff;
-    padding: 15px;
-    /* Larger button */
-    font-size: 18px;
-    /* Larger font size */
-    border: none;
-    border-radius: 6px;
-    /* Smoother corners */
-    cursor: pointer;
-  }
-
-  .checkout:hover {
-    background-color: var(--button);
-    /* Darker green for hover effect */
-  }
-
-  .quantity-form {
-    display: flex;
-    align-items: center;
-  }
-
-  .quantity-form button {
-    background-color: #f0f0f0;
-    border: 1px solid #ccc;
-    padding: 5px;
-    cursor: pointer;
-  }
-
-  .quantity-form span {
-    margin: 0 10px;
-    font-weight: bold;
-  }
-
-  /* Container to align items side by side */
-  .quantity-controls {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    /* Adjust spacing between controls */
-  }
-
-  /* Button styles */
-  .btn-control {
-    background-color: #007bff;
-    color: black;
-    border: none;
-    padding: 5px 10px;
     font-size: 16px;
-    cursor: pointer;
-    border-radius: 4px;
+    padding: 12px;
+  }
+}
+
+@media (max-width: 430px) {
+  .cart-item img {
+    width: 60px;
+    height: 60px;
   }
 
-  .btn-control:hover {
-    background-color: #0056b3;
+  .cart-item h4 {
+    font-size: 13px;
   }
 
-  /* Quantity display style */
-  .quantity-value {
-    min-width: 24px;
-    text-align: center;
+  .cart-item p {
     font-size: 16px;
   }
 
-  /* Optional: Form styling */
-  .quantity-form {
-    margin: 0;
+  .quantity input {
+    width: 40px;
   }
+
+  .summary p {
+    font-size: 12px;
+  }
+
+  .checkout {
+    font-size: 14px;
+    padding: 10px;
+  }
+}
+
+
+
 </style>
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 
