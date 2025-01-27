@@ -76,11 +76,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       if ($order['shipping_status'] === 'pending' && $order['order_status'] !== 'canceled') {
         $stmt = $pdo->prepare("UPDATE orders SET order_status = 'canceled' WHERE order_id = :order_id");
         $stmt->execute([':order_id' => $order_id]);
-
-        echo json_encode(['success' => true, 'message' => 'Order canceled successfully']);
-      } else {
-        echo json_encode(['success' => false, 'message' => 'Order cannot be canceled as it is already shipped or canceled']);
-      }
+    
+        // Order canceled successfully, alert and redirect
+        echo "<script>
+                alert('Order canceled successfully');
+                window.location.href = 'customer-order.php';  // Redirect back to the order history page
+              </script>";
+    } else {
+        // Order cannot be canceled, alert and redirect
+        echo "<script>
+                alert('Order cannot be canceled as it is already shipped or canceled');
+                window.location.href = 'customer-order.php';  // Redirect back to the order history page
+              </script>";
+    }
+    exit;
+    
     } catch (Exception $e) {
       echo json_encode(['success' => false, 'message' => $e->getMessage()]);
     }
@@ -283,18 +293,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                           <span class="badge bg-danger ms-2">Canceled</span>
                         <?php endif; ?>
 
-                        <!-- Add Review Button -->
+                        <!-- Add Review Button and Redirect to Product Details -->
                         <?php
                         // Check if the order has been shipped and a review hasn't been submitted
-                        $stmt = $pdo->prepare("SELECT review_id FROM reviews WHERE order_id = :order_id AND product_id = :product_id AND customer_id = :customer_id");
+                        $stmt = $pdo->prepare("SELECT review_id, review FROM reviews WHERE order_id = :order_id AND product_id = :product_id AND customer_id = :customer_id");
                         $stmt->execute([':order_id' => $order['order_id'], ':product_id' => $order['p_id'], ':customer_id' => $cust_id]);
                         $existing_review = $stmt->fetch(PDO::FETCH_ASSOC);
 
-                        if ($order['shipping_status'] === 'delivered' && !$existing_review): ?>
-                          <button class="btn btn-primary ms-2" data-bs-toggle="modal" data-bs-target="#reviewModal"
-                            data-order-id="<?= $order['order_id'] ?>" data-product-id="<?= $order['p_id'] ?>">Add
-                            Review</button>
-                        <?php endif; ?>
+                        if ($order['shipping_status'] === 'delivered'):
+                            if ($existing_review):
+                                // Display a button to view the product details of the reviewed product
+                                echo "<div class='existing-review'>";
+                                echo "<a href='product-details.php?p_id=" . $order['p_id'] . "' class='btn btn-primary ms-2'>View Review</a>";
+                                echo "</div>";
+                            else:
+                                // Show the Add Review button if no review has been submitted
+                                echo "<button class='btn btn-primary ms-2' data-bs-toggle='modal' data-bs-target='#reviewModal'
+                                        data-order-id='" . $order['order_id'] . "' data-product-id='" . $order['p_id'] . "'>Add Review</button>";
+                            endif;
+                        endif;
+                        ?>
+
+
                       </div>
                     </td>
                   </tr>

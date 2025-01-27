@@ -118,6 +118,7 @@ $reviews = $reviewStmt->fetchAll(PDO::FETCH_ASSOC);
                 <p><strong>Review:</strong> <?php echo nl2br(htmlspecialchars($review['review'])); ?></p>
                 <p><small>Reviewed on <?php echo htmlspecialchars($review['created_at']); ?></small></p>
             </div>
+            <br>
         <?php endforeach; ?>
     <?php endif; ?>
 </section>

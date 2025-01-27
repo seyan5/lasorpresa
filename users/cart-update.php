@@ -1,20 +1,17 @@
 <?php
 session_start();
 
-if (isset($_POST['item_index']) && isset($_POST['action'])) {
-    $index = (int)$_POST['item_index'];
-    $action = $_POST['action'];
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['index'], $_POST['quantity'])) {
+    $index = intval($_POST['index']);
+    $quantity = intval($_POST['quantity']);
 
     if (isset($_SESSION['cart'][$index])) {
-        if ($action === 'increase') {
-            $_SESSION['cart'][$index]['quantity']++;
-        } elseif ($action === 'decrease' && $_SESSION['cart'][$index]['quantity'] > 1) {
-            $_SESSION['cart'][$index]['quantity']--;
-        }
+        $_SESSION['cart'][$index]['quantity'] = $quantity;
+        $newPrice = $_SESSION['cart'][$index]['price'] * $quantity;
+        echo json_encode(['status' => 'success', 'newPrice' => $newPrice]);
+    } else {
+        echo json_encode(['status' => 'error', 'message' => 'Item not found in cart.']);
     }
+} else {
+    echo json_encode(['status' => 'error', 'message' => 'Invalid request.']);
 }
-
-// Redirect back to the cart page
-header('Location: shopcart.php');
-exit;
-?>

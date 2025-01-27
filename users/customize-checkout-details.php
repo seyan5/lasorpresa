@@ -1,6 +1,15 @@
 <?php
 require("conn.php");
 
+// Ensure user is logged in
+if (!isset($_SESSION['customer'])) {
+    echo "<script>
+            alert('You need to be logged in to access this page!');
+            window.location.href = 'login.php';
+          </script>";
+    exit;
+  }
+
 // Check if customization session data and POST data exist
 if (!isset($_SESSION['customization']) || empty($_POST['selected_customizations'])) {
     echo "No customizations selected. Redirecting to cart...";

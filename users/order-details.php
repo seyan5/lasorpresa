@@ -1,8 +1,5 @@
 <?php
-session_start();
-// Include necessary files for database connection and session management
-include("../admin/inc/config.php");
-include("../admin/inc/functions.php");
+require_once('conn.php');
 
 // Fetch the order_id and product_id from the URL
 $order_id = isset($_GET['order_id']) ? $_GET['order_id'] : null;

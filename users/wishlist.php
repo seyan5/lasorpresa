@@ -1,9 +1,6 @@
 <?php
-ob_start();
-session_start();
-include("../admin/inc/config.php");
-include("../admin/inc/functions.php");
-include("../admin/inc/CSRF_Protect.php");
+require_once('conn.php');
+
 ?>
 <?php include('navuser.php'); ?>
 
@@ -22,10 +19,21 @@ if (isset($_SESSION['customer'])) {
 ?>
 
 <?php
+session_start();
+include("../admin/inc/config.php");
 
-  
+if (isset($_POST['item_id'])) {
+    $item_id = $_POST['item_id'];
 
+    // Delete the wishlist item from the database
+    $stmt = $pdo->prepare("DELETE FROM wishlist WHERE id = :item_id");
+    $stmt->execute(['item_id' => $item_id]);
+
+    echo json_encode(['success' => true]);
+}
 ?>
+
+
 <?php include('back.php'); ?>
 <style>
   .container {
@@ -186,12 +194,13 @@ if (isset($_SESSION['customer'])) {
 
   <!-- Add to Cart Button -->
   <button id="addToCartButton" 
-          data-id="<?php echo $item['p_id']; ?>" 
-          data-name="<?php echo htmlspecialchars($item['name']); ?>" 
-          data-price="<?php echo $item['current_price']; ?>"
-          data-stock="<?php echo $item['quantity']; ?>"> 
-        Add to Cart
-  </button>
+        data-id="<?php echo $item['p_id']; ?>" 
+        data-name="<?php echo htmlspecialchars($item['name']); ?>" 
+        data-price="<?php echo $item['current_price']; ?>"
+        data-stock="<?php echo $item['quantity']; ?>"
+        data-item-id="<?php echo $item['id']; ?>"> 
+    Add to Cart
+</button>
 
   <!-- Remove Button -->
   <form method="POST" action="wishlist-remove.php" id="remove-form-<?php echo $index; ?>">
@@ -226,51 +235,134 @@ if (isset($_SESSION['customer'])) {
 
 <script>
   // Updated addToCart function to take dynamic product details
-  function addToCart(productId, productName, productPrice, productStock) {
-  if (typeof productStock === 'undefined' || productStock === null || productStock <= 0) {
+  function addToCart(productId, productName, productPrice, productStock, itemId) {
+    if (typeof productStock === 'undefined' || productStock === null || productStock <= 0) {
+        Swal.fire({
+            title: 'Out of Stock!',
+            text: `Sorry, the product "${productName}" is currently out of stock.`,
+            icon: 'error',
+            confirmButtonText: 'Okay'
+        });
+        return; // Prevent adding to the cart
+    }
+
+    // Proceed with adding to cart
     Swal.fire({
-      title: 'Out of Stock!',
-      text: `Sorry, the product "${productName}" is currently out of stock.`,
-      icon: 'error',
-      confirmButtonText: 'Okay'
+        title: 'Product added to cart!',
+        text: `Do you want to go to your cart to review your items?`,
+        icon: 'success',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, go to cart',
+        cancelButtonText: 'No, continue shopping'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            window.location.href = 'shopcart.php';  // Redirect to cart
+        }
     });
-    return; // Prevent adding to the cart
-  }
 
-  // Proceed with adding to cart
-  Swal.fire({
-    title: 'Product added to cart!',
-    text: `Do you want to go to your cart to review your items?`,
-    icon: 'success',
-    showCancelButton: true,
-    confirmButtonText: 'Yes, go to cart',
-    cancelButtonText: 'No, continue shopping'
-  }).then((result) => {
-    if (result.isConfirmed) {
-      window.location.href = 'shopcart.php';  // Redirect to cart
-    }
-  });
+    // Send AJAX request to add product to cart
+    fetch('cart-handler.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: `product_id=${productId}&product_name=${encodeURIComponent(productName)}&product_price=${productPrice}`
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            console.log('Cart:', data.cart); // Debugging: Log cart content
 
-  // Send AJAX request to add product to cart
-  fetch('cart-handler.php', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
-    },
-    body: `product_id=${productId}&product_name=${encodeURIComponent(productName)}&product_price=${productPrice}`
-  })
-  .then(response => response.json())
-  .then(data => {
-    if (data.success) {
-      console.log('Cart:', data.cart); // Debugging: Log cart content
-    } else {
-      alert(data.message);
-    }
-  })
-  .catch(error => {
-    console.error('Error:', error);
-  });
+            // Now remove the item from the wishlist after it is added to the cart
+            removeFromWishlist(itemId);
+        } else {
+            alert(data.message);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
 }
+
+function removeFromWishlist(itemId) {
+    // Send request to remove item from wishlist
+    fetch('wishlist-remove.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: `item_id=${itemId}`
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Remove the item from the DOM (effectively removing it from the wishlist)
+            document.getElementById('wishlist-item-' + itemId).remove();
+        } else {
+            console.log("Error removing item from wishlist.");
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+}
+
+// Ensure the add to cart button works for each product in the wishlist
+document.querySelectorAll('#addToCartButton').forEach(button => {
+    button.addEventListener('click', function(event) {
+        event.preventDefault();  // Prevent page reload or form submission
+
+        const productId = this.getAttribute('data-id');
+        const productName = this.getAttribute('data-name');
+        const productPrice = this.getAttribute('data-price');
+        const productStock = this.getAttribute('data-stock');  // Stock quantity from data-attribute
+        const itemId = this.getAttribute('data-item-id');  // The item ID from the wishlist
+
+        console.log(`Product ID: ${productId}, Name: ${productName}, Price: ${productPrice}, Stock: ${productStock}`);  // Debugging the data passed
+
+        addToCart(productId, productName, productPrice, productStock, itemId);  // Call addToCart with product data
+    });
+});
+
+function removeFromWishlist(itemId) {
+    // Send request to remove item from wishlist
+    fetch('wishlist-remove.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: `item_id=${itemId}`
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Remove the item from the DOM (effectively removing it from the wishlist)
+            document.getElementById('wishlist-item-' + itemId).remove();
+        } else {
+            console.log("Error removing item from wishlist.");
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+}
+
+// Ensure the add to cart button works for each product in the wishlist
+document.querySelectorAll('#addToCartButton').forEach(button => {
+    button.addEventListener('click', function(event) {
+        event.preventDefault();  // Prevent page reload or form submission
+
+        const productId = this.getAttribute('data-id');
+        const productName = this.getAttribute('data-name');
+        const productPrice = this.getAttribute('data-price');
+        const productStock = this.getAttribute('data-stock');  // Stock quantity from data-attribute
+        const itemId = this.getAttribute('data-item-id');  // The item ID from the wishlist
+
+        console.log(`Product ID: ${productId}, Name: ${productName}, Price: ${productPrice}, Stock: ${productStock}`);  // Debugging the data passed
+
+        addToCart(productId, productName, productPrice, productStock, itemId);  // Call addToCart with product data
+    });
+});
 
 
 // Ensure the add to cart button works for each product in the wishlist
