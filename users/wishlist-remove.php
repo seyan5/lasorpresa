@@ -1,7 +1,6 @@
 <?php
-session_start();
-include("../admin/inc/config.php");
-include("../admin/inc/functions.php");
+require_once('conn.php');
+
 
 // Ensure the user is logged in
 if (!isset($_SESSION['customer'])) {

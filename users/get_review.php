@@ -1,6 +1,5 @@
 <?php
-session_start();
-include("../admin/inc/config.php");
+require_once('conn.php');
 
 $cust_id = $_SESSION['customer']['cust_id'] ?? null;
 if (!$cust_id) {

@@ -58,11 +58,14 @@ include('back.php');
       <?php endif; ?>
       <a href="addons.php">Want to get addons?</a>
   </div>
+  
 
   <div class="payment">
+  <a href="customize-cart.php">View your Customization Cart?</a>
     <h3>Summary</h3>
     <hr>
     <div class="summary">
+    
       <p>Subtotal <span id="subtotal">₱0.00</span></p>
       <p>Shipping <span>₱0</span></p>
       <p>Total <span id="total">₱0.00</span></p>

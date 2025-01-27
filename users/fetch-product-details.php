@@ -1,5 +1,6 @@
 <?php
 // fetch_product_details.php
+require_once('conn.php');
 
 require 'header.php'; // Ensure you connect to your database
 
