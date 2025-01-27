@@ -34,6 +34,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
+    // Check if the new_status is valid for shipping_status
+    $validShippingStatuses = ['shipped', 'delivered', 'readyforpickup']; // Add 'readyforpickup' here
+    if ($status_column === 'shipping_status' && !in_array($new_status, $validShippingStatuses)) {
+        echo json_encode(['success' => false, 'message' => 'Invalid shipping status']);
+        exit;
+    }
+
     try {
         // Update the order status
         $stmt = $pdo->prepare("UPDATE payment SET $status_column = :new_status WHERE order_id = :order_id");
@@ -44,7 +51,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         if ($stmt->rowCount() > 0) {
             // Notify customer for shipping updates
-            if ($status_column === 'shipping_status' && in_array($new_status, ['shipped', 'delivered'])) {
+            if ($status_column === 'shipping_status' && in_array($new_status, ['shipped', 'delivered', 'readyforpickup'])) {
                 // Fetch the customer details
                 $stmt = $pdo->prepare("
     SELECT 
@@ -66,7 +73,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 $stmt->execute([':order_id' => $order_id]);
 $customer = $stmt->fetch(PDO::FETCH_ASSOC);
 
-            
 if ($customer) {
     sendShippingNotification(
         $customer['cust_email'], 
@@ -80,7 +86,6 @@ if ($customer) {
         $customer['featured_photo']
     );
 }
-
 
             }
             echo json_encode(['success' => true, 'message' => ucfirst($status_column) . ' updated successfully.']);
@@ -161,3 +166,4 @@ function sendShippingNotification($customerEmail, $customerName, $orderId, $ship
         error_log("Error sending email: {$mail->ErrorInfo}");
     }
 }
+?>

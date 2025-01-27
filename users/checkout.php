@@ -1,13 +1,16 @@
 <?php
-session_start();
-include("../admin/inc/config.php");
-include("../admin/inc/functions.php");
+include("conn.php");
 
 // Ensure user is logged in
 if (!isset($_SESSION['customer'])) {
-    header('Location: login.php');
+    echo "<script>
+            alert('You need to be logged in to access this page!');
+            window.location.href = 'login.php';
+          </script>";
     exit;
 }
+
+
 
 // Fetch user details
 $cust_email = $_SESSION['customer']['cust_email'] ?? null;
@@ -46,6 +49,7 @@ foreach ($selected_items as $index) {
 <?php include('back.php'); ?>
 
 <link rel="stylesheet" href="../css/shopcart.css">
+
 
 <body>
     <div class="container">
@@ -138,6 +142,8 @@ foreach ($selected_items as $index) {
         </div>
     </div>
 </body>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 
 <script>
     function handleCheckout() {

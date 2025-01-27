@@ -88,6 +88,10 @@ if (isset($_SESSION['customer']) && isset($_SESSION['customer']['cust_id'])) {
             color: #3498db;
         }
 
+        .notification-item1 .bg-ready {
+            color: #f39c12; /* Optionally, use a different color for 'Ready for Pickup' */
+        }
+
         .notification-item1 div {
             flex: 1;
         }
@@ -130,13 +134,21 @@ if (isset($_SESSION['customer']) && isset($_SESSION['customer']['cust_id'])) {
         <?php foreach ($payments as $payment): ?>
             <?php 
             // Determine statuses
-            $paymentStatus = ($payment['payment_status'] == 'pending') ? 'Payment Pending' : ($payment['payment_status'] == 'paid' ? 'Payment Confirmed' : 'Payment Failed');
-            $shippingStatus = ($payment['shipping_status'] == 'pending') ? 'Shipping Pending' : ($payment['shipping_status'] == 'shipped' ? 'Shipped' : 'Delivered');
+            $paymentStatus = ($payment['payment_status'] == 'pending') ? 'Payment Pending' : 
+                             ($payment['payment_status'] == 'paid' ? 'Payment Confirmed' : 'Payment Failed');
+
+            // Modified Shipping status logic to include 'Ready for Pickup'
+            $shippingStatus = ($payment['shipping_status'] == 'pending') ? 'Shipping Pending' : 
+                              ($payment['shipping_status'] == 'shipped' ? 'Shipped' : 
+                              ($payment['shipping_status'] == 'delivered' ? 'Delivered' : 
+                              ($payment['shipping_status'] == 'readyforpickup' ? 'Ready for Pickup' : '')));
+
             $isDelivered = $payment['shipping_status'] == 'delivered';
+            $isReadyForPickup = $payment['shipping_status'] == 'readyforpickup'; // New check for "Ready for Pickup"
             $isViewed = $payment['viewed'] == 1; // Check if notification is viewed
             ?>
             <li class="notification-item1 <?php echo $isViewed ? 'viewed-item' : 'not-viewed-item'; ?> <?php echo $isDelivered ? 'delivered-item' : ''; ?>">
-                <i class="fa fa-credit-card <?php echo $isDelivered ? 'bg-delivered' : ($payment['payment_status'] == 'pending' ? 'bg-warning' : 'bg-success'); ?>"></i>
+                <i class="fa fa-credit-card <?php echo $isDelivered ? 'bg-delivered' : ($isReadyForPickup ? 'bg-ready' : ($payment['payment_status'] == 'pending' ? 'bg-warning' : 'bg-success')); ?>"></i>
                 <div>
                     <a href="order-details.php?order_id=<?php echo $payment['order_id']; ?>&product_id=<?php echo $payment['product_id']; ?>">
                         <strong>Product: <?php echo htmlspecialchars($payment['name']); ?></strong>

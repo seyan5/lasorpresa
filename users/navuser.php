@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -13,10 +15,14 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Caveat&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
-    <link
-        href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
-        rel="stylesheet">
-        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <!-- SweetAlert2 CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+
+        <!-- SweetAlert2 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.js"></script>
+
 
     <!-- css -->
      <link rel="stylesheet" href="../css/footer.css">
@@ -173,60 +179,94 @@
 <div class="notification-dropdown">
     <a href="#" class="fas fa-bell" onclick="toggleNotificationDropdown()"></a>
     <div class="dropdown-menu" id="notificationDropdown">
-        <?php 
-        // Check if a customer is logged in
-        if (isset($_SESSION['customer']) && isset($_SESSION['customer']['cust_id'])) {
-            $customerId = $_SESSION['customer']['cust_id']; // Get the logged-in customer's ID
+    <?php 
+    // Check if a customer is logged in
+    if (isset($_SESSION['customer']) && isset($_SESSION['customer']['cust_id'])) {
+        $customerId = $_SESSION['customer']['cust_id']; // Get the logged-in customer's ID
 
-            // Fetch payments for the logged-in customer (include all statuses)
-            $statement = $pdo->prepare("
-                SELECT p.*, oi.product_id, pr.name
-                FROM payment p
-                JOIN order_items oi ON p.order_id = oi.order_id
-                JOIN product pr ON oi.product_id = pr.p_id
-                WHERE p.cust_id = :cust_id
-                ORDER BY p.created_at DESC
-            ");
-            $statement->execute(['cust_id' => $customerId]);
-            $payments = $statement->fetchAll(PDO::FETCH_ASSOC);
+        // Fetch payments along with custom_payment status for the logged-in customer
+        $statement = $pdo->prepare("
+            SELECT p.*, oi.product_id, pr.name, cp.payment_status AS custom_payment_status, cp.shipping_status AS custom_shipping_status, cp.order_id AS custom_order_id
+            FROM payment p
+            JOIN order_items oi ON p.order_id = oi.order_id
+            JOIN product pr ON oi.product_id = pr.p_id
+            LEFT JOIN custom_payment cp ON p.order_id = cp.orderitem_id
+            WHERE p.cust_id = :cust_id
+            ORDER BY p.created_at DESC
+        ");
+        $statement->execute(['cust_id' => $customerId]);
+        $payments = $statement->fetchAll(PDO::FETCH_ASSOC);
 
-            if (!empty($payments)): 
-        ?>
-            <p>Notifications</p>
-            <hr>
-            <?php foreach ($payments as $payment): ?>
-                <?php 
-                // Determine payment and shipping statuses
-                $paymentStatus = ($payment['payment_status'] == 'pending') ? 'Payment Pending' : ($payment['payment_status'] == 'paid' ? 'Paid' : 'Payment Failed');
-                $shippingStatus = ($payment['shipping_status'] == 'pending') ? 'Shipping Pending' : ($payment['shipping_status'] == 'shipped' ? 'Shipped' : 'Delivered');
-                $isDelivered = $payment['shipping_status'] == 'delivered';
-                ?>
-                <li class="dropdown-item d-flex align-items-center <?php echo $isDelivered ? 'delivered-item' : ''; ?>">
-                    <i class="fa fa-credit-card me-2 <?php echo $isDelivered ? 'bg-delivered' : ($payment['payment_status'] == 'pending' ? 'bg-warning' : 'bg-success'); ?>" style="padding: 5px; border-radius: 50%;"></i>
-                    <div>
-                        <a href="order-details.php?order_id=<?php echo $payment['order_id']; ?>&product_id=<?php echo $payment['product_id']; ?>" style="text-decoration: none;">
-                            <strong>Product: <?php echo htmlspecialchars($payment['name']); ?></strong>
-                            <div class="text-muted small"><?php echo $paymentStatus; ?></div>
-                            <div class="text-muted small"><?php echo $shippingStatus; ?></div>
-                        </a>
-                    </div>
-                </li>
-            <?php endforeach; ?>
-            <hr>
-            <a href="notifications.php" class="btn btn-link">View All</a>
-        <?php else: ?>
-            <li>
-                <span class="dropdown-item text-center text-muted">No notifications available</span>
+        if (!empty($payments)): 
+    ?>
+        <p>Notifications</p>
+        <hr>
+        <?php foreach ($payments as $payment): ?>
+            <?php 
+            // Validate payment and shipping status
+            $paymentStatus = isset($payment['payment_status']) ? 
+                             ($payment['payment_status'] == 'pending' ? 'Pending' : 
+                             ($payment['payment_status'] == 'paid' ? 'Paid' : 'Payment Failed')) : 'Unknown';
+
+            // Modified Shipping status logic
+            $shippingStatus = isset($payment['shipping_status']) ? 
+                              ($payment['shipping_status'] == 'pending' ? 'Pending' : 
+                              ($payment['shipping_status'] == 'shipped' ? 'Shipped' : 
+                              ($payment['shipping_status'] == 'delivered' ? 'Delivered' : 
+                              ($payment['shipping_status'] == 'readyforpickup' ? 'Ready for Pickup' : '')))) : 'Unknown';
+
+            // Custom payment and shipping status for custom orders
+            $customPaymentStatus = $payment['custom_payment_status'] ?? null;
+            $customShippingStatus = $payment['custom_shipping_status'] ?? null;
+            $customOrderId = $payment['custom_order_id'] ?? null;
+
+            // Determine the payment type (custom or regular)
+            $isCustomPayment = !is_null($customPaymentStatus) || !is_null($customShippingStatus);
+
+            // Determine if the order is delivered
+            $isDelivered = ($customShippingStatus == 'Delivered') || ($shippingStatus == 'Delivered');
+            ?>
+            <li class="dropdown-item d-flex align-items-center <?php echo $isDelivered ? 'delivered-item' : ''; ?>">
+                <i class="fa fa-credit-card me-2 <?php echo $isDelivered ? 'bg-delivered' : (($customPaymentStatus == 'Pending' || $paymentStatus == 'Payment Pending') ? 'bg-warning' : 'bg-success'); ?>" style="padding: 5px; border-radius: 50%;"></i>
+                <div>
+                    <a href="order-details.php?order_id=<?php echo $customOrderId ?? $payment['order_id']; ?>&product_id=<?php echo $payment['product_id'] ?? ''; ?>" style="text-decoration: none;">
+                        <strong>
+                            <?php if ($isCustomPayment): ?>
+                                Custom Order: #<?php echo htmlspecialchars($customOrderId); ?>
+                            <?php else: ?>
+                                Product: <?php echo htmlspecialchars($payment['name']); ?>
+                            <?php endif; ?>
+                        </strong>
+                        <div class="text-muted small">
+                            <span class="badge bg-primary"><?php echo $isCustomPayment ? 'Custom Payment' : 'Regular Payment'; ?></span>
+                        </div>
+                        <div class="text-muted small">Payment Status: <?php echo $isCustomPayment ? $customPaymentStatus : $paymentStatus; ?></div>
+                        <div class="text-muted small">Shipping Status: <?php echo $isCustomPayment ? $customShippingStatus : $shippingStatus; ?></div>
+                    </a>
+                </div>
             </li>
-        <?php endif; ?>
-        <?php 
-        } else { 
-        ?>
-            <li>
-                <span class="dropdown-item text-center text-muted">No customer logged in</span>
-            </li>
-        <?php } ?>
-    </div>
+        <?php endforeach; ?>
+        <hr>
+        <a href="notifications.php" class="btn btn-link">View All</a>
+    <?php else: ?>
+        <li>
+            <span class="dropdown-item text-center text-muted">No notifications available</span>
+        </li>
+    <?php endif; ?>
+    <?php 
+    } else { 
+    ?>
+        <li>
+            <span class="dropdown-item text-center text-muted">No customer logged in</span>
+        </li>
+    <?php } ?>
+</div>
+
+
+
+
+
+
 </div>
 
 

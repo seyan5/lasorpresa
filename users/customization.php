@@ -1,6 +1,7 @@
 <?php
 require_once('conn.php');
 
+
 // Fetch container types from the 'container' table
 $container_types = [];
 $container_query = $pdo->prepare("SELECT * FROM `container`");
@@ -116,7 +117,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
                                 <!-- Remove Flower Button -->
                                 <button type="button" class="btn btn-danger remove-flower-btn"
-                                    data-index="<?= $index + 1 ?>">X</button>
+                                    data-index="<?= $index + 1 ?>">Remove Flower</button>
                             </div>
                         <?php endforeach; ?>
                     </div>

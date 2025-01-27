@@ -3,12 +3,50 @@ require("conn.php");
 
 if (!isset($_SESSION['customization']) || empty($_SESSION['customization'])) {
     echo "No customization found. Redirecting...";
+    header("refresh:2;url=customization.php");
+    exit;
+}
+
+$customizations = $_SESSION['customization'];
+?>
+
+<?php
+
+// Check if the remove request is sent
+if (isset($_POST['remove_customization']) && isset($_POST['index'])) {
+  $index = (int)$_POST['index'];
+
+  // Remove the customization from the session based on the index
+  if (isset($_SESSION['customization'][$index])) {
+      unset($_SESSION['customization'][$index]);
+
+      // Reindex the session array to prevent any gaps in the indices
+      $_SESSION['customization'] = array_values($_SESSION['customization']);
+  }
+
+  // Send a response back indicating success
+  echo json_encode(['status' => 'success']);
+  exit;
+}
+
+if (!isset($_SESSION['customization']) || empty($_SESSION['customization'])) {
+  echo "No customization found. Redirecting...";
+  header("refresh:3;url=customization.php");
+  exit;
+}
+
+$customizations = $_SESSION['customization'];
+
+
+if (!isset($_SESSION['customization']) || empty($_SESSION['customization'])) {
+    echo "No customization found. Redirecting...";
     header("refresh:3;url=customization.php");
     exit;
 }
 
 $customizations = $_SESSION['customization'];
 ?>
+
 
 <?php include('navuser.php'); ?>
 <?php include('back.php'); ?>
@@ -201,6 +239,7 @@ $customizations = $_SESSION['customization'];
 
     // Loop through each flower and add its price to the total
     ?>
+    
     <div>
         <p class="container-type">Container Type: <?php echo htmlspecialchars($container_name); ?> (₱<?php echo number_format($container_price, 2); ?>)</p>
         <p class="container-color">Container Color: <?php echo htmlspecialchars($color_name); ?></p> 
@@ -224,7 +263,9 @@ $customizations = $_SESSION['customization'];
     </div>
     <div class="price">
         <p>Subtotal: ₱<span class="subtotal" data-price="<?php echo $customization_total; ?>"><?php echo number_format($customization_total, 2); ?></span></p>
+        
     </div>
+    <button type="button" class="remove-customization" onclick="removeCustomization(<?php echo $index; ?>)">Remove</button>
 </div>
 <?php endforeach; ?>
 
@@ -288,4 +329,46 @@ document.querySelector('.checkout').addEventListener('click', function (event) {
     event.preventDefault();  // Prevent the default form submission (if needed)
     document.querySelector('form').submit();  // Submit the form manually
 });
+
+function removeCustomization(index) {
+    // Find the checkbox associated with the customization to be removed
+    const checkbox = document.getElementById(`customization-${index}`);
+    
+    // Uncheck the checkbox if it's selected
+    if (checkbox.checked) {
+        checkbox.checked = false;
+        updateTotalPrice();  // Recalculate the total price
+    }
+
+    // Find the cart item to remove
+    const cartItem = checkbox.closest('.cart-item');
+    if (cartItem) {
+        cartItem.remove();  // Remove the cart item element
+    }
+
+    // Send an AJAX request to the server to remove the customization from the session
+    const xhr = new XMLHttpRequest();
+    xhr.open('POST', '', true);  // Send the request to the current page
+    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+
+    // Send the index of the customization to remove
+    xhr.send('remove_customization=true&index=' + encodeURIComponent(index));
+
+    // After the request is complete, handle the response
+    xhr.onload = function() {
+        if (xhr.status === 200) {
+            const response = JSON.parse(xhr.responseText);
+            if (response.status === 'success') {
+                // Show the alert and redirect
+                alert('Customization removed successfully!');
+                window.location.href = 'customization.php';  // Redirect to customization.php
+            }
+        } else {
+            console.error('Failed to remove customization');
+        }
+    };
+}
+
+
+
 </script>

@@ -202,8 +202,6 @@ require_once '../auth.php';
                                 <td><?php echo $i; ?></td>
                                 <td><img src="../uploads/<?php echo $row['featured_photo']; ?>" alt="<?php echo $row['name']; ?>" style="width:80px;"></td>
                                 <td><?php echo $row['name']; ?></td>
-                                <td>₱ <?php echo $row['old_price']; ?></td>
-                                <td>₱ <?php echo $row['current_price']; ?></td>
                                 <td>₱ <?php echo number_format($row['old_price'], 2); ?></td>
                                 <td>₱ <?php echo number_format($row['current_price'], 2); ?></td>
                                 <td style="color: <?php echo ($row['quantity'] <= 10) ? 'red' : 'black'; ?>;">

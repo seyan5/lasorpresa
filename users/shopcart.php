@@ -1,8 +1,5 @@
 <?php
-session_start();
-include("../admin/inc/config.php");
-include("../admin/inc/functions.php");
-include("../admin/inc/CSRF_Protect.php");
+include("conn.php");
 include('navuser.php');
 include('back.php');
 ?>
@@ -16,32 +13,59 @@ include('back.php');
         <p>You have <?php echo count($_SESSION['cart']); ?> items in your cart.</p>
         <?php foreach ($_SESSION['cart'] as $index => $item): ?>
           <div class="cart-item">
-            <input type="checkbox" class="cart-checkbox" name="selected_items[]" value="<?php echo $index; ?>" checked onchange="updateSummary()">
-            <img
-              src="../admin/uploads/<?php echo !empty($item['image']) ? htmlspecialchars($item['image']) : 'default-image.jpg'; ?>"
-              alt="<?php echo htmlspecialchars($item['name']); ?>" width="50">
-            <div>
-              <p><?php echo htmlspecialchars($item['name']); ?></p>
-              <p><?php echo htmlspecialchars($item['quantity']); ?> pcs.</p>
-            </div>
-            <div class="price">
-              ₱<span class="item-price" data-price="<?php echo $item['price'] * $item['quantity']; ?>">
-                <?php echo number_format($item['price'] * $item['quantity'], 2); ?>
-              </span>
-            </div>
-            <button type="button" class="delete" onclick="confirmDelete(<?php echo $index; ?>)">🗑️</button>
-          </div>
+  <input
+    type="checkbox"
+    class="cart-checkbox"
+    name="selected_items[]"
+    value="<?php echo $index; ?>"
+    checked
+    onchange="updateSummary()"
+  >
+  <img
+    src="../admin/uploads/<?php echo !empty($item['image']) ? htmlspecialchars($item['image']) : 'default-image.jpg'; ?>"
+    alt="<?php echo htmlspecialchars($item['name']); ?>"
+    width="50"
+  >
+  <div>
+    <p><?php echo htmlspecialchars($item['name']); ?></p>
+    <div class="quantity-controls">
+      <button type="button" class="btn-control" onclick="adjustQuantity(<?php echo $index; ?>, -1)">-</button>
+      <span class="quantity-value" id="quantity-<?php echo $index; ?>"><?php echo htmlspecialchars($item['quantity']); ?></span>
+      <button type="button" class="btn-control" onclick="adjustQuantity(<?php echo $index; ?>, 1)">+</button>
+    </div>
+  </div>
+  <div class="price">
+    ₱<span
+      class="item-price"
+      id="price-<?php echo $index; ?>"
+      data-price="<?php echo $item['price']; ?>"
+    >
+      <?php echo number_format($item['price'] * $item['quantity'], 2); ?>
+    </span>
+  </div>
+  <button
+    type="button"
+    class="delete"
+    onclick="confirmDelete(<?php echo $index; ?>)"
+  >
+    🗑️
+  </button>
+</div>
+
         <?php endforeach; ?>
       <?php else: ?>
         <p>Your cart is empty.</p>
       <?php endif; ?>
       <a href="addons.php">Want to get addons?</a>
   </div>
+  
 
   <div class="payment">
+  <a href="customize-cart.php">View your Customization Cart?</a>
     <h3>Summary</h3>
     <hr>
     <div class="summary">
+    
       <p>Subtotal <span id="subtotal">₱0.00</span></p>
       <p>Shipping <span>₱0</span></p>
       <p>Total <span id="total">₱0.00</span></p>
@@ -56,19 +80,26 @@ include('back.php');
 <script>
   // Update subtotal and total dynamically when items are checked or unchecked
   function updateSummary() {
-    const checkboxes = document.querySelectorAll('.cart-checkbox:checked');
-    let subtotal = 0;
+  const cartItems = document.querySelectorAll('.cart-item');
+  let subtotal = 0;
 
-    checkboxes.forEach((checkbox) => {
-      const priceElement = checkbox.parentElement.querySelector('.item-price');
-      const price = parseFloat(priceElement.getAttribute('data-price'));
+  cartItems.forEach((item) => {
+    const checkbox = item.querySelector('.cart-checkbox');
+    if (checkbox.checked) {
+      const priceElement = item.querySelector('.item-price');
+      const priceText = priceElement.textContent.replace(/,/g, ''); // Remove commas
+      const price = parseFloat(priceText);
       subtotal += price;
-    });
+    }
+  });
 
-    // Update the subtotal and total in the summary
-    document.getElementById('subtotal').textContent = `₱${subtotal.toFixed(2)}`;
-    document.getElementById('total').textContent = `₱${subtotal.toFixed(2)}`;
-  }
+  // Update the subtotal and total in the summary
+  document.getElementById('subtotal').textContent = `₱${subtotal.toLocaleString('en-US', { minimumFractionDigits: 2 })}`;
+  document.getElementById('total').textContent = `₱${subtotal.toLocaleString('en-US', { minimumFractionDigits: 2 })}`;
+}
+
+
+
 
   // Initialize the summary when the page loads
   document.addEventListener('DOMContentLoaded', () => {
@@ -163,6 +194,56 @@ include('back.php');
       }
     }
   };
+</script>
+<script>
+  function adjustQuantity(index, change) {
+  const quantityElement = document.getElementById(`quantity-${index}`);
+  const priceElement = document.getElementById(`price-${index}`);
+  const itemPriceText = priceElement.getAttribute('data-price');
+  const itemPrice = parseFloat(itemPriceText); // The raw price without formatting
+
+  // Calculate new quantity
+  let currentQuantity = parseInt(quantityElement.textContent);
+  let newQuantity = currentQuantity + change;
+
+  // Ensure quantity is at least 1
+  if (newQuantity < 1) {
+    Swal.fire({
+      title: 'Minimum Quantity Reached',
+      text: 'Quantity cannot be less than 1.',
+      icon: 'info',
+    });
+    return;
+  }
+
+  // Update quantity in the DOM
+  quantityElement.textContent = newQuantity;
+
+  // Update item price in the DOM
+  const newPrice = itemPrice * newQuantity;
+  priceElement.textContent = newPrice.toLocaleString('en-US', { minimumFractionDigits: 2 });
+
+  // Update the cart summary
+  updateSummary();
+
+  // Make an AJAX request to update the server-side cart
+  fetch('cart-update.php', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: `index=${index}&quantity=${newQuantity}`
+  })
+    .then(response => response.json())
+    .then(data => {
+      if (data.status !== 'success') {
+        Swal.fire('Error!', 'Failed to update the cart. Please try again.', 'error');
+      }
+    })
+    .catch(error => {
+      console.error('Error:', error);
+      Swal.fire('Error!', 'Failed to update the cart.', 'error');
+    });
+}
+
 </script>
 
 
