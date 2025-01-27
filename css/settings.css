@@ -17,10 +17,14 @@ body, html {
 }
 
 /* Style the table */
-table {
-    width: 100%;
+.tbl-header {
+    width: 100%; /* Removed !important */
     border-collapse: collapse;
     margin: 20px 0;
+}
+
+.container{
+    width: 100% !important;
 }
 
 .table-container {
@@ -32,24 +36,88 @@ table {
     padding: 10px; /* Optional: Padding around the table */
 }
 
-table th {
-    text-align: center;  /* Centers the text in the table header */
-    padding: 12px;  /* Adds padding to the header cells */
-    background-color: #dd91ad;  /* Optional: Background color for header */
-    color: white;  /* Optional: Text color */
+.tbl-header {
+    width: 100%; /* Removed the large width value */
+    border-collapse: collapse;
+    margin: 20px 0;
 }
 
+.table-container {
+    max-height: 300px; /* Limit the height of the table area */
+    overflow-y: auto; /* Add vertical scroll when content overflows */
+    border: 1px solid #ddd; /* Optional: Add border for better visibility */
+    border-radius: 8px; /* Smooth corners */
+    margin: 20px 0; /* Add spacing */
+    padding: 10px; /* Padding around the table */
+}
+
+table {
+    width: 100%; /* Ensure the table takes up the full container width */
+    table-layout: fixed; /* Fix column widths */
+    border-collapse: collapse; /* Avoid spacing between cells */
+}
+
+table th, table td {
+    text-align: center; /* Center-align text */
+    padding: 12px; /* Add padding to cells */
+    word-wrap: break-word; /* Allow text to wrap */
+}
+
+table th {
+    color: white; /* Header text color */
+    font-weight: bold;
+}
 
 table th:first-child {
-    width: 10%;  /* Optional: Adjust the width of the first column */
+    width: 5%; /* Adjust width for the ID column */
 }
 
 table th:nth-child(2) {
-    width: 50%;  /* Optional: Adjust the width of the second column */
+    width: 15%; /* Adjust width for the Customer column */
+}
+
+table th:nth-child(3) {
+    width: 25%; /* Adjust width for the Product Details column */
+}
+
+table th:nth-child(4) {
+    width: 15%; /* Adjust width for the Payment Information column */
+}
+
+table th:nth-child(5) {
+    width: 10%; /* Adjust width for the Paid Amount column */
+}
+
+table th:nth-child(6) {
+    width: 10%; /* Adjust width for the Payment Status column */
+}
+
+table th:nth-child(7) {
+    width: 10%; /* Adjust width for the Shipping Status column */
+}
+
+table th:nth-child(8) {
+    width: 10%; /* Adjust width for the Order Status column */
 }
 
 table th:last-child {
-    width: 40%;  /* Optional: Adjust the width of the third column */
+    width: 10%; /* Adjust width for the Action column */
+}
+
+table td {
+    vertical-align: middle; /* Align content to the middle of the cell */
+}
+
+.action-icons {
+    display: flex; /* Use flexbox for alignment */
+    justify-content: center; /* Center icons */
+    gap: 5px; /* Add space between icons */
+}
+
+.order-status {
+    transform: rotate(0); /* Remove rotation */
+    writing-mode: horizontal-tb; /* Ensure text is horizontal */
+    white-space: nowrap; /* Prevent text wrapping */
 }
 
 table tbody {
@@ -84,6 +152,14 @@ tbody a:hover {
 tbody tr:hover {
     background-color: #f1f1f1;
 }
+
+.status-canceled {
+    color: red;
+    text-align: center;
+    padding: 5px ; /* Reduce padding to make the cell smaller */
+    font-size: 14px; /* Optionally reduce font size */
+}
+
 
 /* Container for the horizontal layout */
 .horizontal-table {
