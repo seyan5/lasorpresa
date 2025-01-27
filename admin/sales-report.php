@@ -163,7 +163,6 @@ $productTypes = $productTypesStmt->fetchAll(PDO::FETCH_ASSOC);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sales Report</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
     <div class="container mt-5">
@@ -289,4 +288,128 @@ $productTypes = $productTypesStmt->fetchAll(PDO::FETCH_ASSOC);
         </div>
     </div>
 </body>
+<style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 1rem;
+            background: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 1.5rem;
+            color: #333;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            margin: 0.2rem;
+            text-decoration: none;
+            color: #ffffff;
+            background-color: #007bff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .btn-secondary {
+            background-color: #6c757d;
+        }
+
+        .btn:hover {
+            background-color: #0056b3;
+        }
+
+        .btn-secondary:hover {
+            background-color: #5a6268;
+        }
+
+        .d-flex {
+            display: flex;
+            align-items: center;
+        }
+
+        .justify-content-start {
+            justify-content: flex-start;
+        }
+
+        .justify-content-end {
+            justify-content: flex-end;
+        }
+
+        .justify-content-between {
+            justify-content: space-between;
+        }
+
+        .mb-3 {
+            margin-bottom: 1rem;
+        }
+
+        select {
+            padding: 0.5rem;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            outline: none;
+            margin-left: 0.5rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        table th, table td {
+            text-align: left;
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+        }
+
+        table th {
+            background-color: #f4f4f4;
+            color: #333;
+        }
+
+        .alert {
+            padding: 1rem;
+            background-color: #ffefc6;
+            border: 1px solid #ffcc00;
+            color: #665700;
+            text-align: center;
+            border-radius: 5px;
+        }
+
+        .card {
+            margin-top: 1.5rem;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .card-header {
+            background-color: #f4f4f4;
+            padding: 1rem;
+            font-weight: bold;
+        }
+
+        .card-body {
+            padding: 1rem;
+        }
+
+        p {
+            margin: 0.5rem 0;
+        }
+    </style>
 </html>
