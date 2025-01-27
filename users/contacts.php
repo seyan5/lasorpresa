@@ -1,9 +1,5 @@
 <?php
-
-ob_start();
-session_start();
-include("../admin/inc/config.php");
-include("../admin/inc/functions.php");
+include("conn.php");
 
 ?>
 <?php include('navuser.php'); ?>
@@ -62,6 +58,7 @@ include("../admin/inc/functions.php");
             );
         }
     </script>
+    <?php include('footers.php'); ?>
 
 </body>
 
