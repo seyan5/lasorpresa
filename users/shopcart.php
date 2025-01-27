@@ -29,6 +29,7 @@ include('back.php');
                 <?php echo number_format($item['price'] * $item['quantity'], 2); ?>
               </span>
             </div>
+            <button type="button" class="delete" onclick="confirmDelete(<?php echo $index; ?>)">🗑️</button>
           </div>
         <?php endforeach; ?>
       <?php else: ?>
@@ -112,21 +113,42 @@ include('back.php');
     }
   }
 
-  function confirmDelete(itemIndex) {
-    Swal.fire({
-      title: 'Are you sure?',
-      text: 'You are about to remove this item from your cart.',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonText: 'Yes, remove it!',
-      cancelButtonText: 'Cancel',
-      reverseButtons: true
-    }).then((result) => {
-      if (result.isConfirmed) {
-        document.getElementById('delete-form-' + itemIndex).submit();
-      }
-    });
-  }
+  function confirmDelete(index) {
+  Swal.fire({
+    title: 'Are you sure?',
+    text: 'You are about to remove this item from your cart.',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonText: 'Yes, remove it!',
+    cancelButtonText: 'Cancel',
+    reverseButtons: true
+  }).then((result) => {
+    if (result.isConfirmed) {
+      // Use AJAX to delete the item
+      fetch('cart-delete.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: `item_index=${index}`
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.status === 'success') {
+          // Remove the item from the DOM
+          document.querySelectorAll('.cart-item')[index].remove();
+          updateSummary(); // Recalculate totals dynamically
+          Swal.fire('Deleted!', 'The item has been removed from your cart.', 'success');
+        } else {
+          Swal.fire('Error!', data.message || 'Something went wrong.', 'error');
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        Swal.fire('Error!', 'Failed to remove the item.', 'error');
+      });
+    }
+  });
+}
+
 
   function toggleDropdown() {
     const dropdown = document.getElementById('userDropdown');
@@ -256,6 +278,10 @@ include('back.php');
     /* Larger font size */
     font-family: Verdana, Geneva, Tahoma, sans-serif;
     font-style: italic;
+  }
+
+  .cart-checkbox{
+    margin: 10px;
   }
 
   .cart-item {
