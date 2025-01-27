@@ -1,5 +1,6 @@
 <?php
 require_once('conn.php');
+;
 
 // Fetch the order_id and product_id from the URL
 $order_id = isset($_GET['order_id']) ? $_GET['order_id'] : null;

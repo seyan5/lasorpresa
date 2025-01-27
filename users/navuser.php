@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -15,14 +13,10 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Caveat&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-        <!-- SweetAlert2 CSS -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
-
-        <!-- SweetAlert2 JS -->
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.js"></script>
-
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+        rel="stylesheet">
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <!-- css -->
      <link rel="stylesheet" href="../css/footer.css">
@@ -190,7 +184,7 @@
             FROM payment p
             JOIN order_items oi ON p.order_id = oi.order_id
             JOIN product pr ON oi.product_id = pr.p_id
-            LEFT JOIN custom_payment cp ON p.order_id = cp.orderitem_id
+            LEFT JOIN custom_payment cp ON p.order_id = cp.order_id
             WHERE p.cust_id = :cust_id
             ORDER BY p.created_at DESC
         ");
@@ -203,17 +197,9 @@
         <hr>
         <?php foreach ($payments as $payment): ?>
             <?php 
-            // Validate payment and shipping status
-            $paymentStatus = isset($payment['payment_status']) ? 
-                             ($payment['payment_status'] == 'pending' ? 'Pending' : 
-                             ($payment['payment_status'] == 'paid' ? 'Paid' : 'Payment Failed')) : 'Unknown';
-
-            // Modified Shipping status logic
-            $shippingStatus = isset($payment['shipping_status']) ? 
-                              ($payment['shipping_status'] == 'pending' ? 'Pending' : 
-                              ($payment['shipping_status'] == 'shipped' ? 'Shipped' : 
-                              ($payment['shipping_status'] == 'delivered' ? 'Delivered' : 
-                              ($payment['shipping_status'] == 'readyforpickup' ? 'Ready for Pickup' : '')))) : 'Unknown';
+            // Payment and Shipping status for normal orders
+            $paymentStatus = ($payment['payment_status'] == 'pending') ? 'Payment Pending' : ($payment['payment_status'] == 'paid' ? 'Paid' : 'Payment Failed');
+            $shippingStatus = ($payment['shipping_status'] == 'pending') ? 'Shipping Pending' : ($payment['shipping_status'] == 'shipped' ? 'Shipped' : 'Delivered');
 
             // Custom payment and shipping status for custom orders
             $customPaymentStatus = $payment['custom_payment_status'] ?? null;
@@ -261,9 +247,6 @@
         </li>
     <?php } ?>
 </div>
-
-
-
 
 
 
