@@ -6,18 +6,11 @@ include("../admin/inc/config.php");
 include("../admin/inc/functions.php");
 
 ?>
-
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<?php include('navuser.php'); ?>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
         integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
         integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-    <title>La Sorpresa Flower Shop</title>
     <style>
         #map {
             height: 600px;
@@ -25,45 +18,11 @@ include("../admin/inc/functions.php");
             margin-bottom: 20px;
             border-radius: 10px;
             overflow: hidden;
+            margin-top: 13rem !important;
+            margin: 20px auto; /* Center the map horizontally */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add subtle shadow for a clean look */
         }
 
-        .info-panel {
-            max-width: 600px;
-            margin: 0 auto;
-            padding: 20px;
-            border: 1px solid #ccc;
-            border-radius: 10px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            background-color: #f9f9f9;
-            font-family: Arial, sans-serif;
-        }
-
-        .info-panel h1 {
-            margin: 0;
-            font-size: 1.5rem;
-            color: #333;
-        }
-
-        .info-panel p {
-            margin: 10px 0;
-            font-size: 0.9rem;
-            color: #666;
-        }
-
-        .info-panel button {
-            background-color: #007bff;
-            color: white;
-            border: none;
-            padding: 10px 15px;
-            border-radius: 5px;
-            font-size: 0.9rem;
-            cursor: pointer;
-            text-align: center;
-        }
-
-        .info-panel button:hover {
-            background-color: #0056b3;
-        }
     </style>
 </head>
 
@@ -108,15 +67,7 @@ include("../admin/inc/functions.php");
 
 <style>
     /* Map container styling */
-    #map {
-        height: 500px; /* Adjusted height for better responsiveness */
-        width: 100%; /* Make it fully responsive */
-        max-width: 800px; /* Restrict maximum width for larger screens */
-        margin: 20px auto; /* Center the map horizontally */
-        border-radius: 10px; /* Rounded corners */
-        overflow: hidden;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add subtle shadow for a clean look */
-    }
+    
 
     /* Information panel styling */
     .info-panel {
@@ -133,7 +84,7 @@ include("../admin/inc/functions.php");
     /* Info panel heading */
     .info-panel h1 {
         margin: 0;
-        font-size: 1.8rem; /* Slightly larger font for emphasis */
+        font-size: 3rem !important; /* Slightly larger font for emphasis */
         color: #333333; /* Darker shade for visibility */
         text-align: center; /* Center-align heading */
     }
@@ -141,7 +92,7 @@ include("../admin/inc/functions.php");
     /* Info panel paragraph styling */
     .info-panel p {
         margin: 10px 0;
-        font-size: 1rem; /* Standardized font size */
+        font-size: 1.5rem !important; /* Standardized font size */
         color: #555555; /* Medium shade for readability */
         line-height: 1.5; /* Better spacing between lines */
     }
@@ -154,7 +105,7 @@ include("../admin/inc/functions.php");
         border: none; /* Remove borders */
         padding: 10px 15px; /* Standard padding */
         border-radius: 5px; /* Rounded corners */
-        font-size: 1rem; /* Standardized font size */
+        font-size: 1.5rem !important; /* Standardized font size */
         cursor: pointer; /* Pointer cursor on hover */
         text-align: center; /* Center-align text */
         margin: 10px auto; /* Center the button horizontally */
@@ -189,6 +140,3 @@ include("../admin/inc/functions.php");
         }
     }
 </style>
-
-
-</html>
