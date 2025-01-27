@@ -5,97 +5,79 @@ include("../admin/inc/functions.php");
 include("../admin/inc/CSRF_Protect.php");
 include('navuser.php');
 include('back.php');
- ?>
+?>
 
 <div class="container">
   <div class="cart">
     <hr>
     <h3>Shopping Cart</h3>
-
-    <?php if (isset($_SESSION['cart']) && count($_SESSION['cart']) > 0): ?>
-      <p>You have <?php echo count($_SESSION['cart']); ?> items in your cart.</p>
-
-      <?php foreach ($_SESSION['cart'] as $index => $item): ?>
-        <div class="cart-item">
-          <!-- Product Image -->
-          <img
-            src="../admin/uploads/<?php echo !empty($item['image']) ? htmlspecialchars($item['image']) : 'default-image.jpg'; ?>"
-            alt="<?php echo htmlspecialchars($item['name']); ?>" width="50">
-
-          <div>
-            <!-- Product Name -->
-            <p><?php echo htmlspecialchars($item['name']); ?></p>
-            <!-- Product Quantity -->
-            <p><?php echo htmlspecialchars($item['quantity']); ?> pcs.</p>
+    <form id="cart-form" method="POST" action="checkout.php">
+      <?php if (isset($_SESSION['cart']) && count($_SESSION['cart']) > 0): ?>
+        <p>You have <?php echo count($_SESSION['cart']); ?> items in your cart.</p>
+        <?php foreach ($_SESSION['cart'] as $index => $item): ?>
+          <div class="cart-item">
+            <input type="checkbox" class="cart-checkbox" name="selected_items[]" value="<?php echo $index; ?>" checked onchange="updateSummary()">
+            <img
+              src="../admin/uploads/<?php echo !empty($item['image']) ? htmlspecialchars($item['image']) : 'default-image.jpg'; ?>"
+              alt="<?php echo htmlspecialchars($item['name']); ?>" width="50">
+            <div>
+              <p><?php echo htmlspecialchars($item['name']); ?></p>
+              <p><?php echo htmlspecialchars($item['quantity']); ?> pcs.</p>
+            </div>
+            <div class="price">
+              ₱<span class="item-price" data-price="<?php echo $item['price'] * $item['quantity']; ?>">
+                <?php echo number_format($item['price'] * $item['quantity'], 2); ?>
+              </span>
+            </div>
           </div>
-
-          <!-- Quantity Controls -->
-          <div class="quantity">
-            <form method="POST" action="cart-update.php" class="quantity-form">
-              <input type="hidden" name="item_index" value="<?php echo $index; ?>">
-              <div class="quantity-controls">
-                <button type="submit" name="action" value="decrease" class="btn-control">-</button>
-                <span class="quantity-value"><?php echo htmlspecialchars($item['quantity']); ?></span>
-                <button type="submit" name="action" value="increase" class="btn-control">+</button>
-              </div>
-            </form>
-          </div>
-
-
-          <!-- Product Price -->
-          <div class="price">
-            ₱<?php echo number_format($item['price'], 2); ?>
-          </div>
-
-          <!-- Delete Item Form -->
-          <form method="POST" action="cart-delete.php" id="delete-form-<?php echo $index; ?>">
-            <input type="hidden" name="item_index" value="<?php echo $index; ?>">
-            <button type="button" class="delete" onclick="confirmDelete(<?php echo $index; ?>)">
-              <i class="fa fa-trash"></i>
-            </button>
-          </form>
-        </div>
-
-
-      <?php endforeach; ?>
-    <?php else: ?>
-      <p>Your cart is empty.</p>
-    <?php endif; ?>
-    <a href="addons.php">Want to get addons?</a>
+        <?php endforeach; ?>
+      <?php else: ?>
+        <p>Your cart is empty.</p>
+      <?php endif; ?>
+      <a href="addons.php">Want to get addons?</a>
   </div>
-
 
   <div class="payment">
     <h3>Summary</h3>
     <hr>
     <div class="summary">
-      <p>Subtotal <span>₱<?php
-      $subtotal = isset($_SESSION['cart'])
-        ? array_sum(array_map(function ($item) {
-          return $item['price'] * $item['quantity'];
-        }, $_SESSION['cart']))
-        : 0;
-      echo number_format($subtotal, 2);
-      ?></span></p>
+      <p>Subtotal <span id="subtotal">₱0.00</span></p>
       <p>Shipping <span>₱0</span></p>
-      <p>Total <span>₱<?php echo number_format($subtotal, 2); ?></span></p>
+      <p>Total <span id="total">₱0.00</span></p>
+      <button type="submit" class="checkout">Checkout Selected &gt;</button>
     </div>
-
-    <button class="checkout" onclick="checkout()">Checkout &gt;</button>
   </div>
+</form> <!-- Properly closing the form tag here -->
 </div>
+
 </body>
 
-
 <script>
+  // Update subtotal and total dynamically when items are checked or unchecked
+  function updateSummary() {
+    const checkboxes = document.querySelectorAll('.cart-checkbox:checked');
+    let subtotal = 0;
 
-  // Check if the user is logged in
+    checkboxes.forEach((checkbox) => {
+      const priceElement = checkbox.parentElement.querySelector('.item-price');
+      const price = parseFloat(priceElement.getAttribute('data-price'));
+      subtotal += price;
+    });
+
+    // Update the subtotal and total in the summary
+    document.getElementById('subtotal').textContent = `₱${subtotal.toFixed(2)}`;
+    document.getElementById('total').textContent = `₱${subtotal.toFixed(2)}`;
+  }
+
+  // Initialize the summary when the page loads
+  document.addEventListener('DOMContentLoaded', () => {
+    updateSummary();
+  });
+
+  // Existing functions (not modified)
   const isLoggedIn = <?php echo isset($_SESSION['customer']['cust_id']) ? 'true' : 'false'; ?>;
-
-  // Check if the cart is empty
   const isCartEmpty = <?php echo isset($_SESSION['cart']) && count($_SESSION['cart']) > 0 ? 'false' : 'true'; ?>;
 
-  // Handle checkout action
   function checkout() {
     if (isCartEmpty) {
       Swal.fire({
@@ -130,8 +112,6 @@ include('back.php');
     }
   }
 
-
-  // Confirm deletion of cart item
   function confirmDelete(itemIndex) {
     Swal.fire({
       title: 'Are you sure?',
@@ -143,17 +123,16 @@ include('back.php');
       reverseButtons: true
     }).then((result) => {
       if (result.isConfirmed) {
-        // If confirmed, submit the form
         document.getElementById('delete-form-' + itemIndex).submit();
       }
     });
   }
+
   function toggleDropdown() {
     const dropdown = document.getElementById('userDropdown');
     dropdown.classList.toggle('show');
   }
 
-  // Close the dropdown when clicking outside
   window.onclick = function (event) {
     if (!event.target.matches('.fa-user')) {
       const dropdown = document.getElementById('userDropdown');
@@ -163,6 +142,7 @@ include('back.php');
     }
   };
 </script>
+
 
 
 <style>
