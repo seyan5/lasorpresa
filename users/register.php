@@ -1,4 +1,4 @@
-<?php
+<?php 
 require_once('conn.php');
 
 require '../mail/PHPMailer/src/Exception.php';
@@ -47,7 +47,6 @@ if (isset($_POST['register'])) {
             exit; // Stop further script execution
         }
         
-
         // Generate a unique verification token
         $token = bin2hex(random_bytes(16));
 
@@ -146,28 +145,32 @@ if (isset($_POST['register'])) {
         </head>
         <body>
             <div class='container'>
-                    <div class='logo'>
-                        <img src='http://localhost/lasorpresa/images/logo.png' alt='Logo'>
-                    </div>
+                <div class='logo'>
+                    <!-- Update logo source to reflect your hosted domain -->
+                    <img src='https://lasorpresa.shop/images/logo.png' alt='Logo'>
+                </div>
                 <h1>Email Verification</h1>
                 <p>Hi $cust_name,</p>
                 <p>Please click the link below to verify your email address:</p>
-                <a href='http://localhost/lasorpresa/users/verify-email.php?token=$token'>Verify Email</a>
+                <!-- Update the verification URL to reflect the new domain -->
+                <a href='https://lasorpresa.shop/users/verify-email.php?token=$token'>Verify Email</a>
                 <p>Thank you!</p>
                 <div class='footer'>
                     <p>If you did not request this, please ignore this email.</p>
                 </div>
             </div>
         </body>
+
         </html>";
 
-            try {
-                $mail->send();
-                echo "Email sent successfully.<br>"; // Debug statement
-            } catch (Exception $e) {
-                echo "Mailer Error: " . $mail->ErrorInfo . "<br>";
-                exit; // Exit if there's an issue with email sending
-            }
+        try {
+            $mail->send();
+            echo "Email sent successfully.<br>"; // Debug statement
+        } catch (Exception $e) {
+            echo "Mailer Error: " . $mail->ErrorInfo . "<br>";
+            exit; // Exit if there's an issue with email sending
+        }
+
         echo "
         <script src='https://cdn.jsdelivr.net/npm/sweetalert2@11'></script>
         <script>
@@ -179,16 +182,13 @@ if (isset($_POST['register'])) {
             }).then(() => {
                 window.location.href = 'login.php'; // Redirect to the login page after the alert
             });
-        </script>
-    ";
+        </script>";
 
     } catch (Exception $e) {
         echo "Error: " . $e->getMessage();
     }
 }
 ?>
-
-
 
 <!DOCTYPE html>
 <html lang="en">
@@ -197,19 +197,19 @@ if (isset($_POST['register'])) {
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="../registerlogin.css">
   <title>Customer Registration</title>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
     <div class="logo-container">
         <img src="../images/logo.png" alt="Logo" class="logo" />
     </div>
 
-    <!-- Flower Image -->
     <div class="flower-container">
         <img src="../images/flower2.png" alt="Flower" class="flower" />
     </div>
 
 <h2>Create Your Account</h2>
-<form action="register.php" method="POST">
+<form action="register.php" method="POST" id="registerForm">
     <div class="infield">
         <label for="cust_name">Full Name:</label>
         <input placeholder="Fullname" type="text" id="cust_name" name="cust_name" required><br>
@@ -225,6 +225,8 @@ if (isset($_POST['register'])) {
     <div class="infield">
         <label for="cust_password">Password:</label>
         <input placeholder="Password" type="password" id="cust_password" name="cust_password" required><br>
+        <small id="password-strength-status"></small><br>
+        <div id="password-strength-meter"></div>
     </div>
     <div class="infield">
         <label for="cust_address">Address:</label>
@@ -238,12 +240,61 @@ if (isset($_POST['register'])) {
         <label for="cust_zip">Zip Code:</label>
         <input placeholder="Zip Code" type="text" id="cust_zip" name="cust_zip" required><br>
     </div>
+
+    <div class="tos" style="font-size: 12px; display: flex; align-items: center; white-space: nowrap;">
+        <input type="checkbox" id="terms" name="terms" required style="margin-right: 5px;">
+        <label for="terms" style="margin-bottom: 0; font-size: 12px;">I agree to the 
+            <a href="../tos.php" id="termsLink" style="color: #e18aaa; font-weight: bold;">Terms and Conditions</a>
+        </label>
+    </div>
+
     <p style="text-align: center; margin-top: 10px; font-size: 14px;">
         Already have an account? 
         <a href="login.php" style="color: #e18aaa; font-weight: bold; text-decoration: none;">Sign In</a>
     </p>
     <button type="submit" name="register">Register</button>
 </form>
+
+<script>
+    // Real-time password strength indicator
+    const passwordField = document.getElementById('cust_password');
+    const strengthMeter = document.getElementById('password-strength-meter');
+    const strengthStatus = document.getElementById('password-strength-status');
+
+    passwordField.addEventListener('input', function() {
+        const password = passwordField.value;
+        let strength = 0;
+
+        // Check password strength
+        if (password.length >= 8) strength++; // Length check
+        if (/[A-Z]/.test(password)) strength++; // Uppercase letter check
+        if (/[a-z]/.test(password)) strength++; // Lowercase letter check
+        if (/[0-9]/.test(password)) strength++; // Number check
+        if (/[\W_]/.test(password)) strength++; // Special character check
+
+        // Update strength meter
+        if (strength === 0) {
+            strengthMeter.style.width = '0';
+            strengthStatus.textContent = '';
+        } else if (strength === 1) {
+            strengthMeter.style.width = '25%';
+            strengthStatus.textContent = 'Weak';
+            strengthStatus.style.color = 'red';
+        } else if (strength === 2) {
+            strengthMeter.style.width = '50%';
+            strengthStatus.textContent = 'Fair';
+            strengthStatus.style.color = 'orange';
+        } else if (strength === 3) {
+            strengthMeter.style.width = '75%';
+            strengthStatus.textContent = 'Good';
+            strengthStatus.style.color = 'yellowgreen';
+        } else {
+            strengthMeter.style.width = '100%';
+            strengthStatus.textContent = 'Strong';
+            strengthStatus.style.color = 'green';
+        }
+    });
+</script>
 
 </body>
 </html>
