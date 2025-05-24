@@ -48,6 +48,7 @@ if (isset($_POST['form1'])) {
             $statement = $pdo->prepare("UPDATE product SET 
                 name=?, 
                 old_price=?, 
+                discount=?, 
                 current_price=?, 
                 quantity=?, 
                 description=?, 
@@ -58,6 +59,7 @@ if (isset($_POST['form1'])) {
             $statement->execute([
                 $_POST['name'],
                 $_POST['old_price'],
+                $_POST['discount'],
                 $_POST['current_price'],
                 $_POST['quantity'],
                 $_POST['description'],
@@ -67,7 +69,7 @@ if (isset($_POST['form1'])) {
                 $_REQUEST['id']
             ]);
         } else {
-            // Delete the existing photo if it exists
+            // Handle file upload and update with new photo
             if (!empty($_POST['current_photo']) && file_exists('../uploads/' . $_POST['current_photo'])) {
                 unlink('../uploads/' . $_POST['current_photo']);
             }
@@ -80,6 +82,7 @@ if (isset($_POST['form1'])) {
             $statement = $pdo->prepare("UPDATE product SET 
                 name=?, 
                 old_price=?, 
+                discount=?, 
                 current_price=?, 
                 quantity=?, 
                 description=?, 
@@ -91,6 +94,7 @@ if (isset($_POST['form1'])) {
             $statement->execute([
                 $_POST['name'],
                 $_POST['old_price'],
+                $_POST['discount'],
                 $_POST['current_price'],
                 $_POST['quantity'],
                 $_POST['description'],
@@ -149,7 +153,7 @@ foreach ($result as $row) {
     $tcat_id = $row['tcat_id'];
 }
 ?>
-
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <section class="content">
     <div class="row">
         <div class="col-md-12">
@@ -248,11 +252,19 @@ foreach ($result as $row) {
                             </div>
                         </div>
 
+                        <!-- Discount -->
+                        <div class="form-group">
+                            <label for="discount" class="col-sm-3 control-label">Discount (%)</label>
+                            <div class="col-sm-4">
+                                <input type="number" name="discount" id="discount" class="form-control" value="<?php echo $discount; ?>" oninput="updateCurrentPrice()">
+                            </div>
+                        </div>
+
                         <!-- Current Price -->
                         <div class="form-group">
                             <label for="current_price" class="col-sm-3 control-label">Current Price <span class="text-danger">*</span><br></label>
                             <div class="col-sm-4">
-                                <input type="text" name="current_price" id="current_price" class="form-control" value="<?php echo $current_price; ?>" required>
+                                <input type="text" name="current_price" id="current_price" class="form-control" value="<?php echo $current_price; ?>" readonly>
                             </div>
                         </div>
 
@@ -316,3 +328,29 @@ foreach ($result as $row) {
         </div>
     </div>
 </section>
+
+<script>
+function updateCurrentPrice() {
+    var oldPrice = parseFloat(document.querySelector('input[name="old_price"]').value);
+    var discount = parseFloat(document.getElementById('discount').value);
+    
+    // Check if discount is greater than 100%
+    if (discount > 100) {
+        // Show SweetAlert message
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Discount cannot exceed 100%',
+        });
+        // Reset the discount field and current price
+        document.getElementById('discount').value = '';  // Clear discount field
+        document.getElementById('current_price').value = '';  // Reset current price field
+        return; // Exit the function if discount is invalid
+    }
+
+    if (!isNaN(oldPrice) && !isNaN(discount)) {
+        var currentPrice = oldPrice - (oldPrice * (discount / 100));
+        document.getElementById('current_price').value = currentPrice.toFixed(2);
+    }
+}
+</script>

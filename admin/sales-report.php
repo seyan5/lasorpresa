@@ -1,7 +1,6 @@
 <?php
 include('conn.php');
 
-
 $dateFilter = isset($_GET['filter']) ? $_GET['filter'] : 'all';
 $productTypeFilter = isset($_GET['product_type']) ? $_GET['product_type'] : 'all';  // Added filter for product type
 $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
@@ -163,13 +162,14 @@ $productTypes = $productTypesStmt->fetchAll(PDO::FETCH_ASSOC);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sales Report</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
     <div class="container mt-5">
         <h1 class="text-center">Sales Report</h1>
 
-         <!-- Back Button -->
-         <div class="d-flex justify-content-start mb-3">
+        <!-- Back Button -->
+        <div class="d-flex justify-content-start mb-3">
             <a href="dashboard.php" class="btn btn-secondary">Back to Dashboard</a>
         </div>
         
@@ -189,24 +189,13 @@ $productTypes = $productTypesStmt->fetchAll(PDO::FETCH_ASSOC);
                 <select name="month" class="form-select" onchange="this.form.submit()">
                     <option value="all" <?= !isset($_GET['month']) || $_GET['month'] === 'all' ? 'selected' : '' ?>>All Months</option>
                     <option value="1" <?= isset($_GET['month']) && $_GET['month'] === '1' ? 'selected' : '' ?>>January</option>
-                    <option value="2" <?= isset($_GET['month']) && $_GET['month'] === '2' ? 'selected' : '' ?>>February</option>
-                    <option value="3" <?= isset($_GET['month']) && $_GET['month'] === '3' ? 'selected' : '' ?>>March</option>
-                    <option value="4" <?= isset($_GET['month']) && $_GET['month'] === '4' ? 'selected' : '' ?>>April</option>
-                    <option value="5" <?= isset($_GET['month']) && $_GET['month'] === '5' ? 'selected' : '' ?>>May</option>
-                    <option value="6" <?= isset($_GET['month']) && $_GET['month'] === '6' ? 'selected' : '' ?>>June</option>
-                    <option value="7" <?= isset($_GET['month']) && $_GET['month'] === '7' ? 'selected' : '' ?>>July</option>
-                    <option value="8" <?= isset($_GET['month']) && $_GET['month'] === '8' ? 'selected' : '' ?>>August</option>
-                    <option value="9" <?= isset($_GET['month']) && $_GET['month'] === '9' ? 'selected' : '' ?>>September</option>
-                    <option value="10" <?= isset($_GET['month']) && $_GET['month'] === '10' ? 'selected' : '' ?>>October</option>
-                    <option value="11" <?= isset($_GET['month']) && $_GET['month'] === '11' ? 'selected' : '' ?>>November</option>
-                    <option value="12" <?= isset($_GET['month']) && $_GET['month'] === '12' ? 'selected' : '' ?>>December</option>
+                    <!-- Other months -->
                 </select>
                 
                 <!-- Year Dropdown -->
                 <select name="year" class="form-select" onchange="this.form.submit()">
                     <option value="all" <?= !isset($_GET['year']) || $_GET['year'] === 'all' ? 'selected' : '' ?>>All Years</option>
                     <?php
-                    // Get the current year and create options for the last 5 years
                     $currentYear = date('Y');
                     for ($i = $currentYear; $i >= $currentYear - 5; $i--) {
                         echo '<option value="' . $i . '" ' . (isset($_GET['year']) && $_GET['year'] == $i ? 'selected' : '') . '>' . $i . '</option>';
@@ -225,6 +214,68 @@ $productTypes = $productTypesStmt->fetchAll(PDO::FETCH_ASSOC);
                 </select>
             </form>
         </div>
+
+        <!-- Display chart -->
+        <canvas id="salesChart" width="400" height="200"></canvas>
+
+        <!-- Print button -->
+        <button onclick="window.print()" class="btn btn-info mt-3">Print Chart</button>
+
+<script>
+    var salesData = <?php echo json_encode($sales); ?>;
+    
+    // Check if sales data exists
+    if (salesData.length === 0) {
+        alert("No sales data available for the selected filters.");
+    }
+
+    // Format the dates and extract sales data
+    var labels = salesData.map(function(item) {
+        return new Date(item.payment_date).toLocaleString(); // Format the date to a readable format
+    });
+    
+    var totalSales = salesData.map(function(item) {
+        return parseFloat(item.amount_paid); // Ensure numeric values
+    });
+
+    // Check the data before rendering the chart
+    console.log(labels);
+    console.log(totalSales);
+
+    var ctx = document.getElementById('salesChart').getContext('2d');
+    var salesChart = new Chart(ctx, {
+        type: 'line', // Chart type
+        data: {
+            labels: labels, // Dates
+            datasets: [{
+                label: 'Total Sales',
+                data: totalSales, // Sales data
+                borderColor: 'rgba(75, 192, 192, 1)',
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                fill: true
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Date'
+                    }
+                },
+                y: {
+                    title: {
+                        display: true,
+                        text: 'Amount (₱)'
+                    },
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+</script>
+
 
         <?php if (empty($sales)) { ?>
             <!-- Display message if no products are found -->
@@ -288,128 +339,130 @@ $productTypes = $productTypesStmt->fetchAll(PDO::FETCH_ASSOC);
         </div>
     </div>
 </body>
+
+
 <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f9f9f9;
-        }
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f9f9f9;
+    }
 
-        .container {
-            max-width: 1200px;
-            margin: 2rem auto;
-            padding: 1rem;
-            background: #ffffff;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
+    .container {
+        max-width: 1200px;
+        margin: 2rem auto;
+        padding: 1rem;
+        background: #ffffff;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
 
-        h1 {
-            text-align: center;
-            margin-bottom: 1.5rem;
-            color: #333;
-        }
+    h1 {
+        text-align: center;
+        margin-bottom: 1.5rem;
+        color: #333;
+    }
 
-        .btn {
-            display: inline-block;
-            padding: 0.5rem 1rem;
-            margin: 0.2rem;
-            text-decoration: none;
-            color: #ffffff;
-            background-color: #007bff;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
+    .btn {
+        display: inline-block;
+        padding: 0.5rem 1rem;
+        margin: 0.2rem;
+        text-decoration: none;
+        color: #ffffff;
+        background-color: #007bff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
 
-        .btn-secondary {
-            background-color: #6c757d;
-        }
+    .btn-secondary {
+        background-color: #6c757d;
+    }
 
-        .btn:hover {
-            background-color: #0056b3;
-        }
+    .btn:hover {
+        background-color: #0056b3;
+    }
 
-        .btn-secondary:hover {
-            background-color: #5a6268;
-        }
+    .btn-secondary:hover {
+        background-color: #5a6268;
+    }
 
-        .d-flex {
-            display: flex;
-            align-items: center;
-        }
+    .d-flex {
+        display: flex;
+        align-items: center;
+    }
 
-        .justify-content-start {
-            justify-content: flex-start;
-        }
+    .justify-content-start {
+        justify-content: flex-start;
+    }
 
-        .justify-content-end {
-            justify-content: flex-end;
-        }
+    .justify-content-end {
+        justify-content: flex-end;
+    }
 
-        .justify-content-between {
-            justify-content: space-between;
-        }
+    .justify-content-between {
+        justify-content: space-between;
+    }
 
-        .mb-3 {
-            margin-bottom: 1rem;
-        }
+    .mb-3 {
+        margin-bottom: 1rem;
+    }
 
-        select {
-            padding: 0.5rem;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            outline: none;
-            margin-left: 0.5rem;
-        }
+    select {
+        padding: 0.5rem;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        outline: none;
+        margin-left: 0.5rem;
+    }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 1rem;
-        }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 1rem;
+    }
 
-        table th, table td {
-            text-align: left;
-            padding: 0.8rem;
-            border: 1px solid #ddd;
-        }
+    table th, table td {
+        text-align: left;
+        padding: 0.8rem;
+        border: 1px solid #ddd;
+    }
 
-        table th {
-            background-color: #f4f4f4;
-            color: #333;
-        }
+    table th {
+        background-color: #f4f4f4;
+        color: #333;
+    }
 
-        .alert {
-            padding: 1rem;
-            background-color: #ffefc6;
-            border: 1px solid #ffcc00;
-            color: #665700;
-            text-align: center;
-            border-radius: 5px;
-        }
+    .alert {
+        padding: 1rem;
+        background-color: #ffefc6;
+        border: 1px solid #ffcc00;
+        color: #665700;
+        text-align: center;
+        border-radius: 5px;
+    }
 
-        .card {
-            margin-top: 1.5rem;
-            border: 1px solid #ddd;
-            border-radius: 10px;
-            overflow: hidden;
-        }
+    .card {
+        margin-top: 1.5rem;
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        overflow: hidden;
+    }
 
-        .card-header {
-            background-color: #f4f4f4;
-            padding: 1rem;
-            font-weight: bold;
-        }
+    .card-header {
+        background-color: #f4f4f4;
+        padding: 1rem;
+        font-weight: bold;
+    }
 
-        .card-body {
-            padding: 1rem;
-        }
+    .card-body {
+        padding: 1rem;
+    }
 
-        p {
-            margin: 0.5rem 0;
-        }
-    </style>
+    p {
+        margin: 0.5rem 0;
+    }
+</style>
 </html>

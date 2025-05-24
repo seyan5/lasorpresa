@@ -1,7 +1,7 @@
 <?php require_once('../header.php');
 require_once '../auth.php';
 
- ?>
+?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -10,6 +10,7 @@ require_once '../auth.php';
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="stylesheet" href="css/product.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
@@ -34,7 +35,7 @@ require_once '../auth.php';
 
 <body>
     <div class="container">
-    <div class="navigation">
+        <div class="navigation">
             <ul>
                 <li>
                     <a href="#">
@@ -95,7 +96,7 @@ require_once '../auth.php';
                 <li>
                     <a href="../customize/customize-order.php">
                         <span class="icon">
-                        <ion-icon name="color-wand-outline"></ion-icon>
+                            <ion-icon name="color-wand-outline"></ion-icon>
                         </span>
                         <span class="title"> Customize Orders</span>
                     </a>
@@ -103,7 +104,7 @@ require_once '../auth.php';
                 <li>
                     <a href="../wishlist.php">
                         <span class="icon">
-                        <ion-icon name="heart-outline"></ion-icon>
+                            <ion-icon name="heart-outline"></ion-icon>
                         </span>
                         <span class="title"> Wishlists</span>
                     </a>
@@ -144,7 +145,7 @@ require_once '../auth.php';
 
                 <div class="search">
                     <label>
-                    <input type="text" id="productSearch" placeholder="Search by name or category">
+                        <input type="text" id="productSearch" placeholder="Search by name or category">
                         <ion-icon name="search-outline"></ion-icon>
                     </label>
                 </div>
@@ -161,9 +162,12 @@ require_once '../auth.php';
                             <th>#</th>
                             <th>Photo</th>
                             <th>Product Name</th>
-                            <th id="oldPriceHeader" style="cursor: pointer;">Old Price <ion-icon name="swap-vertical-outline"></ion-icon></th>
-                            <th id="currentPriceHeader" style="cursor: pointer;">Current Price <ion-icon name="swap-vertical-outline"></ion-icon></th>
-                            <th id="quantityHeader" style="cursor: pointer;">Quantity <ion-icon name="swap-vertical-outline"></ion-icon></th>
+                            <th id="oldPriceHeader" style="cursor: pointer;">Old Price <ion-icon
+                                    name="swap-vertical-outline"></ion-icon></th>
+                            <th id="currentPriceHeader" style="cursor: pointer;">Current Price <ion-icon
+                                    name="swap-vertical-outline"></ion-icon></th>
+                            <th id="quantityHeader" style="cursor: pointer;">Quantity <ion-icon
+                                    name="swap-vertical-outline"></ion-icon></th>
                             <th>Featured?</th>
                             <th>Active?</th>
                             <th>Category</th>
@@ -197,22 +201,40 @@ require_once '../auth.php';
                                     'quantity' => $row['quantity']
                                 ];
                             }
-                        ?>
+                            ?>
                             <tr>
                                 <td><?php echo $i; ?></td>
-                                <td><img src="../uploads/<?php echo $row['featured_photo']; ?>" alt="<?php echo $row['name']; ?>" style="width:80px;"></td>
+                                <td><img src="../uploads/<?php echo $row['featured_photo']; ?>"
+                                        alt="<?php echo $row['name']; ?>" style="width:80px;"></td>
                                 <td><?php echo $row['name']; ?></td>
                                 <td>₱ <?php echo number_format($row['old_price'], 2); ?></td>
                                 <td>₱ <?php echo number_format($row['current_price'], 2); ?></td>
                                 <td style="color: <?php echo ($row['quantity'] <= 10) ? 'red' : 'black'; ?>;">
-                                <?php echo $row['quantity']; ?>
+                                    <?php echo $row['quantity']; ?>
                                 </td>
-                                <td><?php echo ($row['is_featured'] == 1) ? '<span style="color:green;">Yes</span>' : '<span style="color:red;">No</span>'; ?></td>
-                                <td><?php echo ($row['is_active'] == 1) ? '<span style="color:green;">Yes</span>' : '<span style="color:red;">No</span>'; ?></td>
-                                <td><?php echo $row['tcat_name']; ?><br><?php echo $row['mcat_name']; ?><br><?php echo $row['ecat_name']; ?></td>
+                                <td><?php echo ($row['is_featured'] == 1) ? '<span style="color:green;">Yes</span>' : '<span style="color:red;">No</span>'; ?>
+                                </td>
+                                <td><?php echo ($row['is_active'] == 1) ? '<span style="color:green;">Yes</span>' : '<span style="color:red;">No</span>'; ?>
+                                </td>
+                                <td><?php echo $row['tcat_name']; ?><br><?php echo $row['mcat_name']; ?><br><?php echo $row['ecat_name']; ?>
+                                </td>
                                 <td>
-                                    <a href="product-edit.php?id=<?php echo $row['p_id']; ?>" class="btn btn-primary btn-xs">Edit</a>
-                                    <a href="#" class="btn btn-danger btn-xs" data-href="product-delete.php?id=<?php echo $row['p_id']; ?>" data-toggle="modal" data-target="#confirm-delete">Delete</a>
+                                    <script>
+                                        // Check if the delete success message is set in the session
+                                        <?php if (isset($_SESSION['delete_success'])): ?>
+                                            Swal.fire({
+                                                title: 'Success!',
+                                                text: '<?php echo $_SESSION['delete_success']; ?>',
+                                                icon: 'success',
+                                                confirmButtonText: 'OK'
+                                            });
+                                            <?php unset($_SESSION['delete_success']); // Unset the session variable after showing the message ?>
+                                        <?php endif; ?>
+                                    </script>
+                                    <a href="product-edit.php?id=<?php echo $row['p_id']; ?>"
+                                        class="btn btn-primary btn-xs">Edit</a>
+                                    <a href="#" class="btn btn-danger btn-xs" data-id="<?php echo $row['p_id']; ?>"
+                                        id="deleteBtn">Delete</a>
                                 </td>
                             </tr>
                         <?php } ?>
@@ -225,26 +247,6 @@ require_once '../auth.php';
     <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
 
-    <div class="modal fade" id="confirm-delete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h4 class="modal-title" id="myModalLabel">Delete Confirmation</h4>
-                </div>
-                <div class="modal-body">
-                    <p>Are you sure want to delete this item?</p>
-                    <p style="color:red;">Be careful! This product will be deleted from the order table, payment table,
-                        size table, color table and rating table also.</p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                    <a class="btn btn-danger btn-ok">Delete</a>
-                </div>
-            </div>
-        </div>
-    </div>
 
     <script>
         console.log("Low stock products:", lowStockProducts);
@@ -252,36 +254,36 @@ require_once '../auth.php';
 
         // Check if browser supports notifications
         document.addEventListener('DOMContentLoaded', function () {
-    if ("Notification" in window) {
-        // Request notification permission if not granted
-        Notification.requestPermission().then(permission => {
-            if (permission === "granted" && lowStockProducts.length > 0) {
-                let index = 0;
+            if ("Notification" in window) {
+                // Request notification permission if not granted
+                Notification.requestPermission().then(permission => {
+                    if (permission === "granted" && lowStockProducts.length > 0) {
+                        let index = 0;
 
-                // Show notifications at intervals (every 2 seconds)
-                const notificationInterval = setInterval(() => {
-                    if (index < lowStockProducts.length) {
-                        let product = lowStockProducts[index];
-                        showLowStockNotification(product.name, product.quantity);
-                        index++;
-                    } else {
-                        clearInterval(notificationInterval); // Stop interval when all products are notified
+                        // Show notifications at intervals (every 2 seconds)
+                        const notificationInterval = setInterval(() => {
+                            if (index < lowStockProducts.length) {
+                                let product = lowStockProducts[index];
+                                showLowStockNotification(product.name, product.quantity);
+                                index++;
+                            } else {
+                                clearInterval(notificationInterval); // Stop interval when all products are notified
+                            }
+                        }, 2000); // 2000 ms = 2 seconds
                     }
-                }, 2000); // 2000 ms = 2 seconds
+                });
             }
         });
-    }
-});
 
-// Function to show low stock notification
-function showLowStockNotification(productName, quantity) {
-    const options = {
-        body: `Only ${quantity} units left for ${productName}. Restock soon!`,
-        icon: '../../images/logo.png',
-        tag: `low-stock-${productName}` // Unique tag for each product
-    };
-    new Notification(`Low Stock Alert: ${productName}`, options);
-}
+        // Function to show low stock notification
+        function showLowStockNotification(productName, quantity) {
+            const options = {
+                body: `Only ${quantity} units left for ${productName}. Restock soon!`,
+                icon: '../../images/logo.png',
+                tag: `low-stock-${productName}` // Unique tag for each product
+            };
+            new Notification(`Low Stock Alert: ${productName}`, options);
+        }
 
         document.getElementById('productSearch').addEventListener('keyup', function () {
             let searchValue = this.value.toLowerCase();
@@ -338,6 +340,32 @@ function showLowStockNotification(productName, quantity) {
                 rows.forEach(row => table.appendChild(row));
             }
         });
+
+        document.querySelectorAll('#deleteBtn').forEach(button => {
+            button.addEventListener('click', function (e) {
+                e.preventDefault(); // Prevent the default action (no page redirect yet)
+
+                const productId = this.getAttribute('data-id');  // Get the product ID from the button's data-id attribute
+
+                // Show SweetAlert confirmation dialog
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: "Do you really want to remove this product? This action cannot be undone.",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes, delete it!',
+                    cancelButtonText: 'Cancel'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // If confirmed, redirect to product-delete.php with the product ID
+                        window.location.href = 'product-delete.php?id=' + productId;
+                    }
+                });
+            });
+        });
+
     </script>
 </body>
 

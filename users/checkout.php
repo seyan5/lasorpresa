@@ -74,8 +74,9 @@ foreach ($selected_items as $index) {
             <?php else: ?>
                 <p>Your cart is empty or no items were selected.</p>
             <?php endif; ?>
+            <a href="addons.php">Want to get addons?</a>
         </div>
-
+                
         <div class="payment">
             <h3>Shipping Information</h3>
             <form id="checkout-form">
