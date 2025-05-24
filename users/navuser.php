@@ -1,4 +1,12 @@
+<?php
 
+// Fetch the logo URL from the content table
+$stmt = $pdo->query("SELECT logo FROM content WHERE id = 1");
+$content = $stmt->fetch(PDO::FETCH_ASSOC);
+
+// Set default if the logo is not found
+$logoPath = isset($content['logo']) ? $content['logo'] : "../ivd/";  // Adjust the default path
+?>
 
 <!DOCTYPE html>
 <html lang="en">

@@ -255,24 +255,55 @@ if (isset($_POST['register'])) {
     <button type="submit" name="register">Register</button>
 </form>
 
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 <script>
-    // Real-time password strength indicator
-    const passwordField = document.getElementById('cust_password');
-    const strengthMeter = document.getElementById('password-strength-meter');
-    const strengthStatus = document.getElementById('password-strength-status');
-
-    passwordField.addEventListener('input', function() {
+    document.getElementById('registerForm').addEventListener('submit', function (event) {
+        const passwordField = document.getElementById('cust_password');
         const password = passwordField.value;
-        let strength = 0;
 
-        // Check password strength
+        // Validate password strength
+        const minLength = 8;
+        const hasUpperCase = /[A-Z]/.test(password);
+        const hasLowerCase = /[a-z]/.test(password);
+        const hasNumber = /[0-9]/.test(password);
+        const hasSpecialChar = /[\W_]/.test(password);
+
+        if (password.length < minLength || !hasUpperCase || !hasLowerCase || !hasNumber || !hasSpecialChar) {
+            event.preventDefault(); // Prevent form submission
+            
+            Swal.fire({
+                title: 'Weak Password!',
+                text: 'Your password must be at least 8 characters long, contain an uppercase letter, a number, and a special character.',
+                icon: 'error',
+                confirmButtonText: 'OK'
+            });
+
+            // Preserve input values except password
+            document.getElementById('cust_name').value = document.getElementById('cust_name').value;
+            document.getElementById('cust_email').value = document.getElementById('cust_email').value;
+            document.getElementById('cust_phone').value = document.getElementById('cust_phone').value;
+            document.getElementById('cust_address').value = document.getElementById('cust_address').value;
+            document.getElementById('cust_city').value = document.getElementById('cust_city').value;
+            document.getElementById('cust_zip').value = document.getElementById('cust_zip').value;
+            
+            return false; // Stop form submission
+        }
+    });
+
+    // Real-time password strength indicator
+    document.getElementById('cust_password').addEventListener('input', function () {
+        const password = this.value;
+        let strength = 0;
+        const strengthMeter = document.getElementById('password-strength-meter');
+        const strengthStatus = document.getElementById('password-strength-status');
+
         if (password.length >= 8) strength++; // Length check
         if (/[A-Z]/.test(password)) strength++; // Uppercase letter check
         if (/[a-z]/.test(password)) strength++; // Lowercase letter check
         if (/[0-9]/.test(password)) strength++; // Number check
         if (/[\W_]/.test(password)) strength++; // Special character check
 
-        // Update strength meter
         if (strength === 0) {
             strengthMeter.style.width = '0';
             strengthStatus.textContent = '';
@@ -295,6 +326,7 @@ if (isset($_POST['register'])) {
         }
     });
 </script>
+
 
 </body>
 </html>

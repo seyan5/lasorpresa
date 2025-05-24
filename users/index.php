@@ -2,8 +2,17 @@
 <?php
 require("conn.php");
 
+// Fetch content from the database
+$stmt = $pdo->query("SELECT about, image, logo, video FROM content WHERE id=1");
+$content = $stmt->fetch(PDO::FETCH_ASSOC);
 
+// Set default values if no content is found
+$aboutText = isset($content['about']) ? $content['about'] : "Welcome to La Sorpresa!";
+$imagePath = isset($content['image']) ? $content['image'] : "../uploads/default.jpg";
+$logoPath = isset($content['logo']) ? $content['logo'] : "../uploads/default-logo.jpg";
+$videoPath = isset($content['video']) ? $content['video'] : "../ivd/default-video.mp4";
 ?>
+
 <?php include('navuser.php'); ?>
     <!-- lheader -->
 
@@ -26,14 +35,6 @@ require("conn.php");
             <!--<a href="#" class="btn">Shop now!</a>-->
             <div class="circle"></div>
         </div>
-        
-        <!-- <div class="search-container">
-    <input type="text" id="search-input" placeholder="What are you looking for?" class="search-input">
-    <button class="search-button"><i class="fas fa-search"></i></button>
-    <div id="search-results"></div>
-</div> -->
- <!-- Where the results will be shown -->
-
     </section>
 
 
@@ -110,22 +111,23 @@ require("conn.php");
 
             <div class="content">
                 <h3>why choose us?</h3>
-                <p>Welcome to La Sorpresa by J & B, your trusted flower shop where elegance meets creativity. Founded by
+                    Welcome to La Sorpresa by J & B, your trusted flower shop where elegance meets creativity. Founded by
                     two passionate individuals, J & B, our shop was born out of a shared love for flowers and a
                     commitment to spreading joy through nature’s most beautiful creations.
 
                     At La Sorpresa by J & B, we specialize in crafting bespoke floral arrangements for every
                     occasion—whether it’s a heartfelt surprise, a romantic gesture, or a grand celebration. Each bouquet
                     and design is thoughtfully curated to reflect the emotions and stories behind them, making every
-                    arrangement as unique as the person receiving it.</p>
-                <p>Our mission is simple: to create meaningful moments through the art of floristry. We source only the
+                    arrangement as unique as the person receiving item
+
+                    Our mission is simple: to create meaningful moments through the art of floristry. We source only the
                     freshest and most vibrant blooms, ensuring quality and beauty in every petal. From timeless roses to
                     exotic blooms, we blend creativity and passion to bring your floral visions to life.
 
                     More than just a flower shop, La Sorpresa by J & B is a celebration of love, life, and surprises.
                     Let us help you make every occasion unforgettable with the perfect arrangement crafted just for you.
 
-                    Surprise them beautifully, with La Sorpresa by J & B.</p>
+                    Surprise them beautifully, with La Sorpresa by J & B.</>
                 <a href="contacts.php" class="btn">Learn More!</a>
             </div>
         </div>
