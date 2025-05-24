@@ -128,11 +128,11 @@ function sendShippingNotification($customerEmail, $customerName, $orderId, $ship
         // Email content based on shipping status
         $subject = 'Order ' . ucfirst($shippingStatus) . ': Order ID #' . $orderId;
         $body = "<h3>Dear $customerName,</h3>
-                 <p>Your order (Order ID: <strong>$orderId</strong>) has been $shippingStatus.</p>
+                 <p>Your order has been $shippingStatus.</p>
                  <p><strong>Payment Method:</strong> $paymentMethod</p>
                  <p><strong>Product:</strong> $productName</p>
                  <p><strong>Quantity:</strong> $quantity</p>
-                 <p><strong>Price:</strong> $$price</p>";
+                 <p><strong>Price:</strong> ₱$price</p>";
 
         // If image is available, include it
         if ($encodedImage) {
@@ -149,12 +149,12 @@ function sendShippingNotification($customerEmail, $customerName, $orderId, $ship
         $mail->isSMTP();
         $mail->Host = 'smtp.gmail.com';
         $mail->SMTPAuth = true;
-        $mail->Username = 'jpdeogracias@gmail.com'; // Replace with your email
-        $mail->Password = 'scut aysl nlei jyng'; // Replace with your app password
+        $mail->Username = 'shoplasorpresa@gmail.com'; // Replace with your email
+        $mail->Password = 'ooki ypuc vfqr qlqt'; // Replace with your app password
         $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
         $mail->Port = 587;
 
-        $mail->setFrom('lasorpresa@gmail.com', 'Lasorpresa');
+        $mail->setFrom('shoplasorpresa@gmail.com', 'Lasorpresa');
         $mail->addAddress($customerEmail, $customerName);
 
         $mail->isHTML(true);

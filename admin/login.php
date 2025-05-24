@@ -39,12 +39,12 @@ if (isset($_POST['login'])) {
                     $mail->isSMTP();
                     $mail->Host = 'smtp.gmail.com'; // Replace with your SMTP host
                     $mail->SMTPAuth = true;
-                    $mail->Username = 'jpdeogracias@gmail.com'; // Replace with your email
-                    $mail->Password = 'scut aysl nlei jyng'; // Replace with your email password
+                    $mail->Username = 'shoplasorpresa@gmail.com'; // Replace with your email
+                    $mail->Password = 'ooki ypuc vfqr qlqt'; // Replace with your email password
                     $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
                     $mail->Port = 465;
 
-                    $mail->setFrom('lasorpresa@gmail.com', 'Lasorpresa'); // Replace with your email
+                    $mail->setFrom('shoplasorpresa@gmail.com', 'Lasorpresa'); // Replace with your email
                     $mail->addAddress($email);
 
                     $mail->isHTML(true);
