@@ -80,12 +80,12 @@ if (isset($_POST['register'])) {
         $mail->isSMTP();
         $mail->Host       = 'smtp.gmail.com';
         $mail->SMTPAuth   = true;
-        $mail->Username   = 'jpdeogracias@gmail.com'; // Your email
-        $mail->Password   = 'scut aysl nlei jyng'; // Your email password
+        $mail->Username   = 'shoplasorpresa@gmail.com'; // Your email
+        $mail->Password   = 'ooki ypuc vfqr qlqt'; // Your email password
         $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
         $mail->Port       = 587;
 
-        $mail->setFrom('lasorpresa@gmail.com', 'Lasorpresa'); // From address
+        $mail->setFrom('shoplasorpresa@gmail.com', 'Lasorpresa'); // From address
         $mail->addAddress($cust_email, $cust_name);          // Recipient
 
         $mail->isHTML(true);
