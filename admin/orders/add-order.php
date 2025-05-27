@@ -98,63 +98,65 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add Walk-In Order</title>
+    <link rel="stylesheet" href="add-order.css">
     
     <!-- Include SweetAlert 2 CDN -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
-    <h1>Place Order for Walk-In Customer</h1>
+    <div class="container">
+        <h1>Place Order for Walk-In Customer</h1>
 
-    <!-- Update the form action to reflect the correct data submission -->
-    <form action="add-order.php" method="POST">
-        <!-- Existing form fields -->
-        <label for="customer_id">Select Customer:</label>
-        <select name="customer_id" id="customer_id" required>
-            <option value="">Select Customer</option>
-            <?php foreach ($customers as $customer): ?>
-                <option value="<?= $customer['cust_id'] ?>">
-                    <?= htmlspecialchars($customer['cust_name']) ?>
-                </option>
-            <?php endforeach; ?>
-        </select><br>
+        <!-- Update the form action to reflect the correct data submission -->
+        <form action="add-order.php" method="POST">
+            <!-- Existing form fields -->
+            <label for="customer_id">Select Customer:</label>
+            <select name="customer_id" id="customer_id" required>
+                <option value="">Select Customer</option>
+                <?php foreach ($customers as $customer): ?>
+                    <option value="<?= $customer['cust_id'] ?>">
+                        <?= htmlspecialchars($customer['cust_name']) ?>
+                    </option>
+                <?php endforeach; ?>
+            </select><br>
 
-        <label for="full_name">Full Name:</label>
-        <input type="text" id="full_name" name="full_name" required><br>
+            <label for="full_name">Full Name:</label>
+            <input type="text" id="full_name" name="full_name" required><br>
 
-        <label for="address">Address:</label>
-        <input type="text" id="address" name="address" required><br>
+            <label for="address">Address:</label>
+            <input type="text" id="address" name="address" required><br>
 
-        <label for="city">City:</label>
-        <input type="text" id="city" name="city" required><br>
+            <label for="city">City:</label>
+            <input type="text" id="city" name="city" required><br>
 
-        <label for="postal_code">Postal Code:</label>
-        <input type="text" id="postal_code" name="postal_code" required><br>
+            <label for="postal_code">Postal Code:</label>
+            <input type="text" id="postal_code" name="postal_code" required><br>
 
-        <label for="phone">Phone Number:</label>
-        <input type="text" id="phone" name="phone" required><br>
+            <label for="phone">Phone Number:</label>
+            <input type="text" id="phone" name="phone" required><br>
 
-        <label for="product_id">Product:</label>
-        <select name="product_id" id="product_id" required>
-            <option value="">Select Product</option>
-            <?php foreach ($products as $product): ?>
-                <option value="<?= $product['p_id'] ?>" data-price="<?= $product['current_price'] ?>" data-quantity="<?= $product['quantity'] ?>">
-                    <?= htmlspecialchars($product['name']) ?> - ₱<?= number_format($product['current_price'], 2) ?>
-                </option>
-            <?php endforeach; ?>
-        </select><br>
+            <label for="product_id">Product:</label>
+            <select name="product_id" id="product_id" required>
+                <option value="">Select Product</option>
+                <?php foreach ($products as $product): ?>
+                    <option value="<?= $product['p_id'] ?>" data-price="<?= $product['current_price'] ?>" data-quantity="<?= $product['quantity'] ?>">
+                        <?= htmlspecialchars($product['name']) ?> - ₱<?= number_format($product['current_price'], 2) ?>
+                    </option>
+                <?php endforeach; ?>
+            </select><br>
 
-        <label for="quantity">Quantity:</label>
-        <input type="number" id="quantity" name="quantity" value="1" min="1" required><br>
+            <label for="quantity">Quantity:</label>
+            <input type="number" id="quantity" name="quantity" value="1" min="1" required><br>
 
-        <label for="amount_paid">Amount Paid (₱):</label>
-        <input type="text" id="amount_paid" name="amount_paid" readonly required><br>
+            <label for="amount_paid">Amount Paid (₱):</label>
+            <input type="text" id="amount_paid" name="amount_paid" readonly required><br>
 
-        <!-- Hidden input to hold the price of the selected product -->
-        <input type="hidden" id="unit_price" name="unit_price" value="">
+            <!-- Hidden input to hold the price of the selected product -->
+            <input type="hidden" id="unit_price" name="unit_price" value="">
 
-        <button type="submit">Place Order</button>
-    </form>
-
+            <button type="submit">Place Order</button>
+        </form>
+    </div>
     <script>
         document.getElementById("product_id").addEventListener("change", updateAmount);
         document.getElementById("quantity").addEventListener("input", updateAmount);

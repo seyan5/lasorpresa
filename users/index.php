@@ -111,6 +111,7 @@ $videoPath = isset($content['video']) ? $content['video'] : "../ivd/default-vide
 
             <div class="content">
                 <h3>why choose us?</h3>
+                <p>
                     Welcome to La Sorpresa by J & B, your trusted flower shop where elegance meets creativity. Founded by
                     two passionate individuals, J & B, our shop was born out of a shared love for flowers and a
                     commitment to spreading joy through nature’s most beautiful creations.
@@ -127,7 +128,7 @@ $videoPath = isset($content['video']) ? $content['video'] : "../ivd/default-vide
                     More than just a flower shop, La Sorpresa by J & B is a celebration of love, life, and surprises.
                     Let us help you make every occasion unforgettable with the perfect arrangement crafted just for you.
 
-                    Surprise them beautifully, with La Sorpresa by J & B.</>
+                    Surprise them beautifully, with La Sorpresa by J & B.</p>
                 <a href="contacts.php" class="btn">Learn More!</a>
             </div>
         </div>

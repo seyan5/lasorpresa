@@ -35,7 +35,7 @@ $logoPath = isset($content['logo']) ? $content['logo'] : "../ivd/";  // Adjust t
     <!-- css -->
      <link rel="stylesheet" href="../css/footer.css">
     <link rel="stylesheet" href="../css/dropdown.css?">
-    <link rel="stylesheet" href="../css/main.css">
+    <link rel="stylesheet" href="../css/main.css?v1">
 </head>
 <link rel="icon" href="../images/logobg.jpg" type="image/png">
 <meta name="theme-color" content="#d0bcb3">
@@ -55,7 +55,7 @@ $logoPath = isset($content['logo']) ? $content['logo'] : "../ivd/";  // Adjust t
             <a href="index.php">Home</a>
             <a href="products.php">Flowers</a>
             <a href="occasion.php">Occasion</a>
-            <a href="addons.php">Addons</a>
+            <!-- <a href="addons.php">Addons</a> -->
             <a href="customization.php">Customize</a>
             <a href="review.php">Reviews</a>
 

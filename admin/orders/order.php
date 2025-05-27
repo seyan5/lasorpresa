@@ -104,6 +104,81 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_status'])) {
     <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
 </head>
+<style>
+    /* Base button styles */
+.btnn {
+    display: inline-block;
+    padding: 10px 20px;
+    margin: 5px;
+    font-size: 16px;
+    font-weight: 500;
+    text-align: center;
+    text-decoration: none;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: Arial, sans-serif;
+    line-height: 1.5;
+    user-select: none;
+    vertical-align: middle;
+}
+
+/* Success button variant */
+.btn-successs {
+    background-color: #de91ad;
+    color: #ffffff;
+    border: 1px solid #de91ad;
+    box-shadow: 0 2px 4px rgba(40, 167, 69, 0.2);
+}
+
+/* Hover effects */
+.btn-successs::content:hover {
+    background-color: #218838;
+    border-color: #1e7e34;
+    color: #ffffff;
+    text-decoration: none;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(40, 167, 69, 0.3);
+}
+
+/* Active/pressed state */
+.btn-successs:active {
+    background-color: #1e7e34;
+    border-color: #1c7430;
+    transform: translateY(0);
+    box-shadow: 0 1px 2px rgba(40, 167, 69, 0.4);
+}
+
+/* Focus state for accessibility */
+.btn-successs:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.25);
+}
+
+/* Disabled state (if needed) */
+.btn-successs:disabled,
+.btn-successs.disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* Optional: Add icon support */
+.btn i {
+    margin-right: 8px;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .btn {
+        padding: 12px 24px;
+        font-size: 18px;
+        width: 100%;
+        max-width: 300px;
+    }
+}
+</style>
 <body>
     <div class="container">
         <div class="navigation">
@@ -204,7 +279,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_status'])) {
                 <?php endfor; ?>
             </div>
             <br>
-            <a href="add-order.php" class="btn btn-success">Add Order</a>
+            <a href="add-order.php" class="btnn btn-successs">Add Order</a>
         </div>
     </div>
 

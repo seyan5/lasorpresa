@@ -1,6 +1,6 @@
 <?php require_once('../header.php');
 include('../auth.php'); ?>
-<link rel="stylesheet" href="css/prodadd.css">
+<link rel="stylesheet" href="css/prodadd.css?v3">
 
 <?php
 
