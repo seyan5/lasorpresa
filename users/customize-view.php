@@ -88,10 +88,7 @@ try {
             left: 0;
             width: 100%;
             height: 100%;
-            background: 
-                radial-gradient(circle at 20% 20%, rgba(233, 30, 99, 0.1) 0%, transparent 50%),
-                radial-gradient(circle at 80% 80%, rgba(76, 175, 80, 0.1) 0%, transparent 50%),
-                radial-gradient(circle at 40% 70%, rgba(255, 215, 0, 0.1) 0%, transparent 50%);
+            background: rgb(235, 233, 233);
             pointer-events: none;
             z-index: -1;
         }
@@ -584,8 +581,8 @@ try {
         <?php else: ?>
             <div class="no-orders">
                 <i class="fas fa-seedling"></i>
-                <h3>Your Garden is Empty</h3>
-                <p>You haven't planted any custom orders yet. Start creating your beautiful floral arrangements!</p>
+                <h3>Your Custome Order is Empty</h3>
+                <p>You haven't any custom orders yet. Start creating your beautiful floral arrangements!</p>
             </div>
         <?php endif; ?>
     </div>

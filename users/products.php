@@ -3,7 +3,7 @@ require_once('conn.php');
 
 ?>
 <?php include('navuser.php'); ?>
-<link rel="stylesheet" href="../css/navhead.css?"> 
+<link rel="stylesheet" href="../css/navhead.css?9"> 
 
 <section>
    <div class="container">
@@ -27,8 +27,10 @@ $result = $statement->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
 <?php include('back.php'); ?>
-
-<button onclick="history.back()" class="btn btn-secondary">Back</button>
+<a href="javascript:history.back()" class="back-btn">
+                <i class="fas fa-arrow-left"></i>
+                Back
+            </a>
 
 <div class="filter-condition">
     

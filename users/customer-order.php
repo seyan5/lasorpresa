@@ -281,40 +281,43 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                       </span>
                     </td>
                     <td class="text-center">
-                      <div style="display: flex; justify-content: center; align-items: center;">
+                      <div style="display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 5px;">
                         <!-- Cancel Order Button -->
                         <?php if ($order['shipping_status'] === 'pending' && $order['order_status'] !== 'canceled'): ?>
-                          <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#cancelModal"
+                          <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#cancelModal"
                             data-order-id="<?= $order['order_id'] ?>">Cancel Order</button>
                         <?php endif; ?>
 
                         <!-- Cancel Indicator -->
                         <?php if ($order['order_status'] === 'canceled'): ?>
-                          <span class="badge bg-danger ms-2">Canceled</span>
+                          <span class="badge bg-danger">Canceled</span>
                         <?php endif; ?>
 
-                        <!-- Add Review Button and Redirect to Product Details -->
+                        <!-- Add/View Review Button -->
                         <?php
-                        // Check if the order has been shipped and a review hasn't been submitted
-                        $stmt = $pdo->prepare("SELECT review_id, review FROM reviews WHERE order_id = :order_id AND product_id = :product_id AND customer_id = :customer_id");
+                        // Check if the order has been delivered/shipped and a review status
+                        $stmt = $pdo->prepare("SELECT review_id, review, rating FROM reviews WHERE order_id = :order_id AND product_id = :product_id AND customer_id = :customer_id");
                         $stmt->execute([':order_id' => $order['order_id'], ':product_id' => $order['p_id'], ':customer_id' => $cust_id]);
                         $existing_review = $stmt->fetch(PDO::FETCH_ASSOC);
 
-                        if ($order['shipping_status'] === 'delivered'):
+                        // Show review button when order is shipped or delivered (not just delivered)
+                        if ($order['shipping_status'] === 'shipped' || $order['shipping_status'] === 'delivered'):
                             if ($existing_review):
-                                // Display a button to view the product details of the reviewed product
-                                echo "<div class='existing-review'>";
-                                echo "<a href='product-details.php?p_id=" . $order['p_id'] . "' class='btn btn-primary ms-2'>View Review</a>";
-                                echo "</div>";
+                                // Show "Edit Review" button if review exists
+                                echo "<button class='btn btn-success btn-sm' data-bs-toggle='modal' data-bs-target='#reviewModal'
+                                        data-order-id='" . $order['order_id'] . "' data-product-id='" . $order['p_id'] . "' 
+                                        data-existing-review='true'>Edit Review</button>";
+                                echo "<a href='product-details.php?p_id=" . $order['p_id'] . "' class='btn btn-info btn-sm'>View Product</a>";
                             else:
-                                // Show the Add Review button if no review has been submitted
-                                echo "<button class='btn btn-primary ms-2' data-bs-toggle='modal' data-bs-target='#reviewModal'
-                                        data-order-id='" . $order['order_id'] . "' data-product-id='" . $order['p_id'] . "'>Add Review</button>";
+                                // Show "Add Review" button if no review exists
+                                echo "<button class='btn btn-primary btn-sm' data-bs-toggle='modal' data-bs-target='#reviewModal'
+                                        data-order-id='" . $order['order_id'] . "' data-product-id='" . $order['p_id'] . "' 
+                                        data-existing-review='false'>Add Review</button>";
                             endif;
+                        elseif ($order['shipping_status'] === 'pending'):
+                            echo "<small class='text-muted'>Review available after shipping</small>";
                         endif;
                         ?>
-
-
                       </div>
                     </td>
                   </tr>
@@ -342,7 +345,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       </div>
     </div>
 
-    <!-- Modal for Adding Review -->
+    <!-- Modal for Adding/Editing Review -->
     <div class="modal fade" id="reviewModal" tabindex="-1" aria-labelledby="reviewModalLabel" aria-hidden="true">
       <div class="modal-dialog">
         <div class="modal-content">
@@ -352,15 +355,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
           </div>
           <div class="modal-body">
             <form id="reviewForm">
-              <textarea id="review" rows="3" placeholder="Write your review here"></textarea>
-              <select id="rating">
-                <option value="">Select Rating</option>
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
-                <option value="4">4</option>
-                <option value="5">5</option>
-              </select>
+              <div class="mb-3">
+                <label for="review" class="form-label">Your Review</label>
+                <textarea id="review" class="form-control" rows="4" placeholder="Write your review here..." required></textarea>
+              </div>
+              <div class="mb-3">
+                <label for="rating" class="form-label">Rating</label>
+                <select id="rating" class="form-select" required>
+                  <option value="">Select Rating</option>
+                  <option value="1">⭐ 1 Star</option>
+                  <option value="2">⭐⭐ 2 Stars</option>
+                  <option value="3">⭐⭐⭐ 3 Stars</option>
+                  <option value="4">⭐⭐⭐⭐ 4 Stars</option>
+                  <option value="5">⭐⭐⭐⭐⭐ 5 Stars</option>
+                </select>
+              </div>
               <input type="hidden" id="order-id">
               <input type="hidden" id="product-id">
               <button type="submit" class="btn btn-primary w-100">Submit Review</button>
@@ -376,7 +385,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title" id="cancelModalLabel">Cancel Order</h5>
-            <button type="button" class="btn-" data-bs-dismiss="modal" aria-label="Close"></button>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
             Are you sure you want to cancel this order? This action cannot be undone. <br>
@@ -394,42 +403,63 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       </div>
     </div>
 
-
   </div>
 
   <script>
+    // Handle cancel order modal
     const cancelButtons = document.querySelectorAll('[data-bs-toggle="modal"][data-bs-target="#cancelModal"]');
-
     cancelButtons.forEach(button => {
       button.addEventListener('click', function () {
         const orderId = this.getAttribute('data-order-id');
         document.getElementById('cancelOrderId').value = orderId;
       });
     });
-  </script>
 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-  <script>
-    // Load existing review into the modal for editing
-    reviewModal.addEventListener('show.bs.modal', function (event) {
-      const button = event.relatedTarget;
-      const orderId = button.getAttribute('data-order-id');
-      const productId = button.getAttribute('data-product-id');
-
-      document.getElementById('order-id').value = orderId;
-      document.getElementById('product-id').value = productId;
-
-      // Fetch existing review for the order-product combination
-      fetch(`get_review.php?order_id=${orderId}&product_id=${productId}`)
-        .then(response => response.json())
-        .then(data => {
-          document.getElementById('review').value = data.review || '';
-          document.getElementById('rating').value = data.rating || '';
-        })
-        .catch(error => console.error('Error fetching review:', error));
+    // Handle review modal
+    const reviewModal = document.getElementById('reviewModal');
+    const reviewButtons = document.querySelectorAll('[data-bs-toggle="modal"][data-bs-target="#reviewModal"]');
+    
+    reviewButtons.forEach(button => {
+      button.addEventListener('click', function () {
+        const orderId = this.getAttribute('data-order-id');
+        const productId = this.getAttribute('data-product-id');
+        const hasExistingReview = this.getAttribute('data-existing-review') === 'true';
+        
+        document.getElementById('order-id').value = orderId;
+        document.getElementById('product-id').value = productId;
+        
+        // Update modal title based on whether it's adding or editing
+        const modalTitle = document.getElementById('reviewModalLabel');
+        const submitButton = document.querySelector('#reviewForm button[type="submit"]');
+        
+        if (hasExistingReview) {
+          modalTitle.textContent = 'Edit Review';
+          submitButton.textContent = 'Update Review';
+          
+          // Fetch existing review data
+          fetch(`get_review.php?order_id=${orderId}&product_id=${productId}`)
+            .then(response => response.json())
+            .then(data => {
+              document.getElementById('review').value = data.review || '';
+              document.getElementById('rating').value = data.rating || '';
+            })
+            .catch(error => {
+              console.error('Error fetching review:', error);
+              // Clear the form if there's an error
+              document.getElementById('review').value = '';
+              document.getElementById('rating').value = '';
+            });
+        } else {
+          modalTitle.textContent = 'Add Review';
+          submitButton.textContent = 'Submit Review';
+          // Clear the form for new review
+          document.getElementById('review').value = '';
+          document.getElementById('rating').value = '';
+        }
+      });
     });
 
-    // Handle review form submission for add/update
+    // Handle review form submission
     document.getElementById('reviewForm').addEventListener('submit', function (e) {
       e.preventDefault();
 
@@ -437,6 +467,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       const productId = document.getElementById('product-id').value;
       const review = document.getElementById('review').value;
       const rating = document.getElementById('rating').value;
+
+      if (!review.trim() || !rating) {
+        alert('Please fill in both review and rating fields.');
+        return;
+      }
 
       fetch('', {
         method: 'POST',
@@ -451,14 +486,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         .then(response => response.json())
         .then(data => {
           if (data.success) {
-            alert('Review updated successfully');
+            alert('Review submitted successfully!');
             window.location.reload();
           } else {
             alert('Error: ' + data.message);
           }
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          alert('An error occurred while submitting your review.');
         });
     });
   </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 
   <style>
     @import url(https://db.onlinewebfonts.com/c/90ac3b18aaef9f2db3ac8e062c7a033b?family=NudMotoya+Maru+W55+W5);
@@ -466,16 +507,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     /* General table container styling */
     .table-container {
       max-height: none;
-      /* Remove the max-height to allow the table to grow naturally */
       border: 1px solid #ddd;
       border-radius: 5px;
       background-color: #f9f9f9;
       margin-top: 20px;
       padding: 10px;
       font-family: "NudMotoya Maru W55 W5";
-      /* Apply the same font */
       font-size: 12px;
-      /* Smaller font size for the entire table */
     }
 
     .table thead th {
@@ -489,60 +527,94 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       background-color: #f1f1f1;
     }
 
-    button {
-      background-color: rgb(141, 147, 151);
-      color: white;
-      font-size: 12px;
-      /* Smaller font size for secondary buttons */
-      cursor: not-allowed;
-      opacity: 0.7;
-      margin-top: -0.3rem !important;
+    /* Button styling improvements */
+    .btn-sm {
+      font-size: 11px;
+      padding: 4px 8px;
+      margin: 2px;
+      border-radius: 3px;
+      min-width: 80px;
     }
 
     .btn-primary {
-      background-color: #333;
-      color: white;
-      font-size: 12px;
-      /* Smaller font size for buttons */
-      font-weight: bold;
-      transition: background-color 0.3s ease;
+      background-color: #007bff;
+      border-color: #007bff;
     }
 
     .btn-primary:hover {
-      background-color: var(--button);
+      background-color: #0056b3;
+      border-color: #0056b3;
+    }
+
+    .btn-success {
+      background-color: #28a745;
+      border-color: #28a745;
+    }
+
+    .btn-success:hover {
+      background-color: #218838;
+      border-color: #218838;
+    }
+
+    .btn-info {
+      background-color: #17a2b8;
+      border-color: #17a2b8;
+    }
+
+    .btn-info:hover {
+      background-color: #138496;
+      border-color: #138496;
+    }
+
+    .btn-danger {
+      background-color: #dc3545;
+      border-color: #dc3545;
+    }
+
+    .btn-danger:hover {
+      background-color: #c82333;
+      border-color: #c82333;
     }
 
     .btn-secondary {
       background-color: #6c757d;
-      color: white;
-      font-size: 12px;
-      /* Smaller font size for secondary buttons */
-      cursor: not-allowed;
-      opacity: 0.7;
+      border-color: #6c757d;
     }
 
+    .text-muted {
+      font-size: 10px;
+      font-style: italic;
+    }
+
+    /* Modal improvements */
     .modal-header {
       color: white;
-      font-size: 14px;
-      /* Ensure header font size is appropriate */
     }
 
     .modal .btn-primary {
       background-color: #28a745;
       border-color: #28a745;
+      font-weight: bold;
+    }
+
+    .modal .btn-primary:hover {
+      background-color: #218838;
+      border-color: #218838;
     }
 
     .modal textarea,
     .modal select {
-      width: 100%;
       border-radius: 5px;
       border: 1px solid #ccc;
-      padding: 8px;
-      font-size: 12px;
-      /* Smaller font size for inputs */
-      margin-bottom: 10px;
+      font-size: 14px;
     }
 
+    .form-label {
+      font-weight: bold;
+      color: #333;
+    }
+
+    /* Pagination styling */
     .pagination {
       margin-top: 20px;
       text-align: center;
@@ -556,7 +628,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       border: 1px solid #ddd;
       border-radius: 5px;
       font-size: 12px;
-      /* Smaller font size for pagination */
     }
 
     .pagination a.active {
@@ -568,33 +639,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       background-color: #f1f1f1;
     }
 
-    /* Modal header styling */
-    #reviewModal .modal-header {
-
-      color: white;
+    /* Action column styling */
+    td:last-child {
+      min-width: 120px;
     }
 
-    /* Modal submit button styling */
-    #reviewModal .btn-primary {
-      background-color: #28a745;
-      border-color: #28a745;
-      color: white;
-      font-size: 16px;
-      font-weight: bold;
-    }
-
-    #reviewModal .btn-primary:hover {
-      background-color: #218838;
-    }
-
-    /* Modal text area and select dropdown */
-    #reviewModal textarea,
-    #reviewModal select {
-      width: 100%;
-      border-radius: 5px;
-      border: 1px solid #ccc;
-      padding: 10px;
-      font-size: 14px;
-      margin-bottom: 10px;
+    /* Badge styling */
+    .badge {
+      font-size: 10px;
+      padding: 4px 8px;
     }
   </style>
